@@ -1,0 +1,217 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formData" name="formData">
+
+        <div class="title-label">ตั้งค่าแสดงผลหน้ารายการ</div>
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ChartPerPage">จำนวนข้อมูลที่แสดงต่อหน้า</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('ChartPerPage', $this->data->ChartPerPage, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ChartSortType">เงื่อนไขการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ChartSortType', $this->data->ChartSortType, array('class' => 'form-control required', 'placeholder' => ''), $this->sortTypeOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ChartSortDirection">รูปแบบการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ChartSortDirection', $this->data->ChartSortDirection, array('class' => 'form-control required', 'placeholder' => ''), $this->sortDirectionOption); ?>
+			</div>
+		</div>
+		<hr />  
+
+		<?php if(false): ?>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ChartShowNoDataPerson">ต้องการแสดงแผนผังที่ไม่มีข้อมูลหรือไม่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ChartShowNoDataPerson', empty($this->data->ChartShowNoDataPerson) ? 'Y' : $this->data->ChartShowNoDataPerson, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<?php endif; ?>
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ChartAmountColumn">จำนวนคอลัมน์ที่แสดง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formSelect('ChartAmountColumn', $this->data->ChartAmountColumn, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->columnAmountOption); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+        
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ChartShowImage">แสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ChartShowImage', empty($this->data->ChartShowImage) ? 'Y' : $this->data->ChartShowImage, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ChartShowTitle">แสดงชื่อแผนผัง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ChartShowTitle', empty($this->data->ChartShowTitle) ? 'Y' : $this->data->ChartShowTitle, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ChartShowIntroText">แสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ChartShowIntroText', empty($this->data->ChartShowIntroText) ? 'Y' : $this->data->ChartShowIntroText, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<?php if(false) : ?>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ChartShowAmount">แสดงจำนวนข้อมูลในแผนผัง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ChartShowAmount', empty($this->data->ChartShowAmount) ? 'Y' : $this->data->ChartShowAmount, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
+
+		<div class="title-label">ตั้งค่าการแสดงผลแผนผัง</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="PersonShowImage">แสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowImage', empty($this->data->PersonShowImage) ? 'Y' : $this->data->PersonShowImage, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="PersonShowTitle">แสดงชื่อ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowTitle', empty($this->data->PersonShowTitle) ? 'Y' : $this->data->PersonShowTitle, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="PersonShowJob">แสดงตำแหน่งงาน</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowJob', empty($this->data->PersonShowJob) ? 'Y' : $this->data->PersonShowJob, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="PersonShowWorkgroup">แสดงกลุ่มงาน</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowWorkgroup', empty($this->data->PersonShowWorkgroup) ? 'Y' : $this->data->PersonShowWorkgroup, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="PersonShowDepartment">แสดงหน่วยงาน</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowDepartment', empty($this->data->PersonShowDepartment) ? 'Y' : $this->data->PersonShowDepartment, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="PersonShowLink">แสดงลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowLink', (empty($this->data->PersonShowLink) ? 'Y' : $this->data->PersonShowLink), array('class' => 'form-control required', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="PersonLinkTarget">ลิงค์ Target</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('PersonLinkTarget', empty($this->data->PersonLinkTarget) ? '_blank' : $this->data->PersonLinkTarget, array('class' => 'form-control required', 'placeholder' => ''), $this->targetOption); ?>
+			</div>
+		</div>
+		<hr />
+		
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="PersonVerticalLevel">แสดงแนวตั้งตั้งแต่ระดับชั้นที่</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('PersonVerticalLevel', empty($this->data->PersonVerticalLevel) ? 3 : $this->data->PersonVerticalLevel, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="PersonVisibleLevel">แสดงข้อมูลถึงระดับชั้นที่</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('PersonVisibleLevel', empty($this->data->PersonVisibleLevel) ? 10: $this->data->PersonVisibleLevel, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />		
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formData input[type=checkbox], #formData input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'orgchart', 'controller' => 'setting', 'action' => 'save'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'orgchart', 'controller' => 'setting', 'action' => 'index'), null, true); ?>" ;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+});
+</script>

@@ -1,0 +1,5 @@
+{
+	"name" : "รายการแผนผัง",
+	"controller" : "index",
+	"description" : "แสดงรายการแผนผัง"
+}

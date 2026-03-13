@@ -1,0 +1,273 @@
+<!-- Style OrgChart -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/orgchart/css/jquery.orgchart.min.css'); ?>">
+
+<style>
+    .orgchart { width: 100%; }
+    .orgchart .node { width: 250px; }
+    .orgchart .node.focused { background-color: #ff810061; }
+    .orgchart .node .title { height: auto; padding: 5px; }
+    /* 
+    .orgchart .node .title.title_workgroup { background-color: #457236; }
+    .orgchart .node .title.title_person { background-color: #cc00ff; } 
+    */
+    .orgchart .node .title * { margin-bottom: 5px; float: left; width: 100%; }
+    .orgchart .node .content { height: auto; border: 1px solid #29A0D9; min-height: unset; padding: 5px; margin-right: unset; margin-left: unset; }
+    .orgchart img { background: white; height: 200px; object-fit: cover; }
+    .orgchart .node .title .symbol { display: none; }
+    .orgchart .edge  { display: none; }
+
+    #chart-container { background-color: #eee; margin-bottom: 25px; max-height: 500px; overflow-x: scroll}
+</style>
+
+<div class="panel-detail">
+    <form class="form-horizontal" id="formData" name="formData">
+  
+        <div id="chart-container"></div>
+
+        <div class="form-group">
+            <label for="status" class="control-label col-md-2">กลุ่มงาน : </label>
+            <div class="col-md-3">
+                <?php echo $this->formSelect('lstWorkgroup', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->workgroupOption)); ?>
+            </div>
+            <label for="status" class="control-label col-md-2">บุคคล : </label>
+            <div class="col-md-3">
+                <?php echo $this->formSelect('lstPerson', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->personOption)); ?>
+            </div>
+            <?php if($this->canEdit): ?>
+                <button type="button" class="btn btn-success" id="btnAdd">
+                    <em class="fa fa-plus"></em> เพิ่ม
+                </button>
+                <button type="button" class="btn btn-danger" id="btnDel">
+                    <em class="fa fa-trash"></em> ลบ
+                </button>
+            <?php endif; ?>
+        </div>
+
+        <input type="text" id="selected-node" disabled style="display:none;">
+
+        <?php if($this->canEdit): ?>
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			</div>
+		</div>
+        <?php endif; ?>
+
+    </form>
+</div>
+
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/orgchart/js/jquery.orgchart.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/orgchart/js/html2canvas.min.js'); ?>"></script>
+<script>
+$(function() {
+
+	$("#lstWorkgroup").change(function() {
+		var selectValue = $(this).val();
+		getData("<?php echo $this->url(array("module" => "orgchart", "controller" => "person", "action" => "ajaxlist"), null, true); ?>" + "?id=" + selectValue, "#lstPerson", "-- โปรดเลือก --", "name", "id", "");
+    });
+    
+    var datascource = <?php echo json_encode($this->dataChart); ?>;
+
+    var nodeType = '';
+    var oc = null
+    if(!datascource.title) {
+        nodeType = 'parent';
+    } else {
+        nodeType = 'children';
+        loadChart();
+    }
+
+    var getId = function() {
+      return (new Date().getTime()) * 1000 + Math.floor(Math.random() * 1001);
+    };
+
+    function loadChart() {
+        oc = $('#chart-container').orgchart({
+            'data' : datascource,
+            'nodeTitle': 'title',
+            'pan': true,
+            'zoom': true,
+            'draggable': true,
+            'dropCriteria': function($draggedNode, $dragZone, $dropZone) {
+                if($draggedNode.find('.content').text().indexOf('manager') > -1 && $dropZone.find('.content').text().indexOf('engineer') > -1) {
+                    return false;
+                }
+                return true;
+            }
+        });
+        oc.$chartContainer.on('click', '.node', function() {
+            var $this = $(this);
+            $('#selected-node').val($this.find('.title').text()).data('node', $this);
+        });
+        oc.$chartContainer.on('click', '.orgchart', function(event) {
+            if (!$(event.target).closest('.node').length) {
+                $('#selected-node').val('');
+            }
+        });
+
+        oc.$chart.find('.node').each(function () {
+            if($(this).find('.id').text()[0]=='w') {
+                $(this).find('.title').addClass('title_workgroup');
+            } else if ($(this).find('.id').text()[0] == 'p') {
+                $(this).find('.title').addClass('title_person');
+            }
+        });        
+    }
+
+    $('#btnAdd').on('click', function() {
+        var nodeVals = [];
+        var lstWorkgroup = $("#lstWorkgroup").val();
+        var lstPerson = $("#lstPerson").val();
+        if(lstWorkgroup) {
+            if(lstPerson) {
+                $.post("<?php echo $this->url(array('module' => 'orgchart', 'controller' => 'chart', 'action' => 'persondetail'), null, true);?>/itemid/" + lstPerson, null, function(data) {
+                if (data.result) {
+                        nodeVals.push(data.html);
+                        addNode(nodeVals);
+                    }
+                }, 'json');
+            } else {
+                // DialogWarning('โปรดเลือกข้อมูลบุคคลที่ต้องการเพิ่ม');
+                $.post("<?php echo $this->url(array('module' => 'orgchart', 'controller' => 'chart', 'action' => 'groupdetail'), null, true);?>/itemid/" + lstWorkgroup, null, function(data) {
+                if (data.result) {
+                        nodeVals.push(data.html);
+                        addNode(nodeVals);
+                    }
+                }, 'json');                
+            }
+        } else {
+            DialogWarning('โปรดเลือกข้อมูลที่ต้องการเพิ่ม');
+        }
+    });
+
+    function addNode(nodeVals) {
+        var $chartContainer = $('#chart-container');
+        var $node = $('#selected-node').data('node');
+        if (nodeType !== 'parent' && !$node) {
+            DialogWarning('โปรดเลือกโหนดของแผนผัง');
+            return;
+        }
+        if(nodeType == 'parent') {
+            nodeType = 'children';
+            oc = $chartContainer.orgchart({
+                'data' : { 'title': nodeVals[0] },
+                'nodeTitle': 'title',
+                'pan': true,
+                'zoom': true,
+                'draggable': true,
+                'dropCriteria': function($draggedNode, $dragZone, $dropZone) {
+                    if($draggedNode.find('.content').text().indexOf('manager') > -1 && $dropZone.find('.content').text().indexOf('engineer') > -1) {
+                        return false;
+                    }
+                    return true;
+                },
+                'createNode': function($node, data) {
+                    $node[0].id = getId();
+                }
+            });
+            oc.$chartContainer.on('click', '.node', function() {
+                var $this = $(this);
+                $('#selected-node').val($this.find('.title').text()).data('node', $this);
+            });
+            oc.$chartContainer.on('click', '.orgchart', function(event) {
+                if (!$(event.target).closest('.node').length) {
+                    $('#selected-node').val('');
+                }
+            });
+        } else {
+            var hasChild = $node.parent().attr('colspan') > 0 ? true : false;
+            if (!hasChild) { // no Children
+                var rel = nodeVals.length > 1 ? '110' : '100';
+                oc.addChildren($node, nodeVals.map(function (item) {
+                    return { 'title': item, 'relationship': rel, 'id': getId() };
+                }));
+            } else {
+                oc.addSiblings($node.closest('tr').siblings('.nodes').find('.node:first'), nodeVals.map(function (item) {
+                    return { 'title': item, 'relationship': '110', 'id': getId() };
+                }));
+            }
+        }
+    }
+
+    $("#btnDel").click(function() {
+        var $node = $('#selected-node').data('node');
+        if (!$node) {
+            DialogWarning('โปรดเลือกโหนดของแผนผัง');
+        } else if ($node[0] === $('.orgchart').find('.node:first')[0]) {
+            DialogConfirm("คุณต้องการที่จะลบแผนผังนี้หรือไม่?", "แจ้งเตือนการลบ", function() {
+                nodeType = 'parent';
+                oc.removeNodes($node);
+                $('#selected-node').val('').data('node', null);
+                oc = null;
+            });
+            return;
+        }
+        oc.removeNodes($node);
+        $('#selected-node').val('').data('node', null);
+    });
+
+    <?php if($this->canEdit): ?>
+    $("#btnSave").click(function() {
+        if(oc) {
+            $.post("<?php echo $this->url(array('module' => 'orgchart', 'controller' => 'chart', 'action' => 'updatechart'), null, true);?>/itemid/" + <?php echo $this->data->ID; ?> + "/Hierarchy/" + JSON.stringify(getHierarchy()), null, function(data) {
+                if(data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'orgchart', 'controller' => 'chart', 'action' => 'editchart'), null, true); ?>/itemid/" + <?php echo $this->data->ID; ?>;
+					}, 500);
+                } else {
+                    DialogWarning(data.message);
+                }
+            });
+        } else {
+            $.post("<?php echo $this->url(array('module' => 'orgchart', 'controller' => 'chart', 'action' => 'updatechart'), null, true);?>/itemid/" + <?php echo $this->data->ID; ?>, null, function(data) {
+                if(data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'orgchart', 'controller' => 'chart', 'action' => 'editchart'), null, true); ?>/itemid/" + <?php echo $this->data->ID; ?>;
+					}, 500);
+                } else {
+                    DialogWarning(data.message);
+                }
+            });            
+        }
+    });
+    <?php endif; ?>
+
+    loopChart = function ($chart) {
+      var that = this;
+      var $tr = $chart.find('tr:first');
+      var subObj = { 'id': $tr.find('.node').find('div.id').text() };
+      $tr.siblings(':last').children().each(function() {
+        if (!subObj.children) { subObj.children = []; }
+        subObj.children.push(that.loopChart($(this)));
+      });
+      return subObj;
+    }
+
+    getHierarchy = function () {
+        if (typeof oc.$chart === 'undefined') {
+            return;
+        } else {
+            if (!oc.$chart.find('.node').length) {
+                return;
+            } else {
+                var valid = true;
+                oc.$chart.find('.node').each(function () {
+                    if (!this.id) {
+                        valid = false;
+                        return false;
+                    }
+                });
+                if (!valid) {
+                    return;
+                }
+            }
+        }
+        return this.loopChart(oc.$chart);
+    }
+
+});
+</script>

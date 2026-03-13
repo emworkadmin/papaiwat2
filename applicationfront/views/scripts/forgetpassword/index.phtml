@@ -1,0 +1,92 @@
+<?php 
+/**
+ * SMART D2MS
+ *
+ * @copyright  Copyright (c) 2018 EMWORK Group
+ * @license	EMWORK Group
+ * @version	1.0.0 applicationfront/views/scripts/forgetpassword/index.phtml 2018-02-20
+ * @author	EMWORK Group
+ */
+?>
+
+<style>
+	#btnSave, #btnBack { width: 100%; }
+
+
+	#forgot-panel { padding-top: 50px; padding-bottom: 50px; text-align: center; }
+	#forgot-panel .panel { width: 800px; margin-top: 20px; }
+
+	#forgot-panel .form-control {
+		max-width: 600px;
+		width: 100%;
+	}
+	#forgot-panel .sub-title {
+		max-width: 600px;
+		text-align: center;
+		font-size: 3rem;
+		font-weight: bold;
+		margin: 10px;
+	}
+	#forgot-panel .btn {
+		max-width: 600px;
+		width: 100%;
+		font-size: 20px;
+		font-weight: bold;
+	}
+</style>
+
+	<div id="forgot-panel">
+		<div class="panel panel-default panel-detail">
+			<div class="panel-body">
+			
+				<div class="sub-title"><?php echo Emwork_Translate::text($this->lang, 'auth', 'forgetpassword_index_title'); ?></div>
+				
+				<form class="" id="formForgotpassword" method="POST">
+					<div class="form-group divControl">
+						<?php echo $this->formText('txtEmail', null, array('class' => 'form-control email', 'placeholder' => 'Email', 'title' => 'Email')); ?>
+					</div>
+					<div class="form-group">
+						<button type="button" class="btn btn-primary" id="btnSave"><?php echo Emwork_Translate::text($this->lang, 'auth', 'forgetpassword_index_submit'); ?></button>
+					</div>
+					<div class="form-group">
+						<a class="btn btn-default" id="btnBack" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'auth', 'action' => 'login'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'auth', 'forgetpassword_index_back'); ?></a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+	<?php if($this->lang == 'th'){ ?>
+	<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+	<?php } ?>
+	<script>
+	jQuery(function(){
+
+		$("#formForgotpassword").validate({
+			errorElement: "em",
+			errorPlacement: function(error, element) {
+				error.addClass( "help-block" );
+		        error.appendTo( element.parents("div.divControl"));
+	        }
+	    });
+
+		$("#btnSave").click(function(){
+			var valid = $("#formForgotpassword").valid();
+			if (valid) {
+				$("#btnSave").attr("disabled", "disabled");
+				$.post("<?php echo $this->url(array('module' => 'default', 'controller' => 'forgetpassword', 'action' => 'save'), null, true);?>", $("#formForgotpassword").serializeArray(), function(data){
+					if (data.result) {
+						DialogComplete();
+						setTimeout(function(){
+							window.location = "<?php echo $this->url(array('module' => 'default', 'controller' => 'register', 'action' => 'finish'), null, true); ?>";
+						}, 500);
+					} else {
+						DialogWarning(data.message, '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_title'); ?>', '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_close'); ?>');
+						$("#btnSave").removeAttr("disabled");
+					}
+				}, 'json');
+			}
+		});
+	});
+	</script>

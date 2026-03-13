@@ -1,0 +1,267 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+
+<div class="panel-detail">
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+				
+		<div class="title-label">ตั้งค่าเว็บไซต์</div>			
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtSiteName">ชื่อเว็บไซต์</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtSiteName', $this->data->siteName, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '250')); ?>
+			</div>
+		</div>				
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtSiteDescription">คำอธิบายเว็บไซต์</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formTextarea('txtSiteDescription', $this->data->siteDescription, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '2000', 'rows' => '5')); ?>
+			</div>
+		</div>	
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtSiteKeyword">Keyword</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formTextarea('txtSiteKeyword', $this->data->siteKeyword, array('class' => 'form-control', 'placeholder' => 'Keyword1, Keyword2, Keyword3', 'maxlength' => '2000', 'rows' => '5')); ?>
+				<div class="help-block">คำค้นหาเว็บไซต์ใน google </div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="Picture">รูป Favicon </label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->UploadHtmlControl("SiteFavicon", "SiteFavicon", $this->data->siteFavicon, array('multi' => false, 'exts' => array('png', 'jpg', 'jpeg', 'gif'), 'maxsize' => '1')); ?>
+				<div class="help-block">ขนาดไฟล์ไม่เกิน 1 MB<br />เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="Picture">โลโก้เว็บไซต์ </label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->UploadHtmlControl("SiteLogo", "SiteLogo", $this->data->siteLogo, array('multi' => false, 'exts' => array('png', 'jpg', 'jpeg', 'gif'), 'maxsize' => '1')); ?>
+				<div class="help-block">ขนาดไฟล์ไม่เกิน 1 MB<br />เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png</div>
+			</div>
+		</div>
+				
+		<div class="title-label">ตั้งค่า SMTP</div>			
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtSmtpHost">Host</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtSmtpHost', $this->data->smtpHost, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '255')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtSmtpPort">Port</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtSmtpPort', $this->data->smtpPort, array('class' => 'form-control digits required', 'placeholder' => '25', 'maxlength' => '255')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtSmtpFromEmail">อีเมลผู้ส่ง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtSmtpFromEmail', $this->data->smtpFromEmail, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '250')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtSmtpFromName">ชื่อผู้ส่ง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtSmtpFromName', $this->data->smtpFromName, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '250')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" >ใช้ TLS/SSL</label> 
+			<div class="col-md-3 divControl">
+				<div class="form-inline radio with-icheck">
+					<?php echo $this->formRadio('rdlSmtpUseSsl', $this->data->smtpIsSsl, array('class' => 'required', 'label_class' => 'radio-inline'), array('N' => 'ไม่ใช้', 'Y' => 'ใช้'), " "); ?>
+				</div>						
+			</div>
+			<label class="col-md-3 control-label" for="lstSmtpSslType">ประเภท TLS/SSL</label> 
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('lstSmtpSslType', $this->data->smtpSslType, array('class' => 'form-control'), $this->smtpSslTypeOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" >ใช้การยืนยันตัวตน</label> 
+			<div class="col-md-3 divControl">
+				<div class="form-inline radio with-icheck">
+					<?php echo $this->formRadio('rdlSmtpUseAuth', $this->data->smtpIsAuth, array('class' => 'required', 'label_class' => 'radio-inline'), array('N' => 'ไม่ใช้', 'Y' => 'ใช้'), " "); ?>
+				</div>						
+			</div>
+			<label class="col-md-3 control-label" for="lstSmtpAuthType">ประเภทการยืนยันตัวตน</label> 
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('lstSmtpAuthType', $this->data->smtpAuthType, array('class' => 'form-control'), $this->smtpAuthTypeOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtSmtpAuthUsername">Username</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtSmtpAuthUsername', $this->data->smtpAuthUsername, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtSmtpAuthPassword">Password</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formPassword('txtSmtpAuthPassword', null, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '50')); ?>
+				<span class="help-block">หากใช้ Password เดิม ให้ปล่อยเป็นช่องว่าง</span>
+			</div>
+		</div>
+	
+		<div class="title-label">ตั้งค่า Analytic</div>	
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">Google Analytics</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtAnalyticGoogleAnalytic', $this->data->analyticGoogleAnalytic, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250')); ?>
+				<span class="help-block">หากไม่ใช้งาน ให้ปล่อยเป็นช่องว่าง</span>
+			</div>
+		</div>
+	
+		<div class="title-label">ตั้งค่า reCAPTCHA</div>	
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">Site key</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtGeneralReCaptchaSiteKey', $this->data->reCaptchaSiteKey, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250')); ?>
+				<span class="help-block">หากไม่ใช้งาน ให้ปล่อยเป็นช่องว่าง<br />สามารถเปิดใช้บริการ reCAPTCHA ได้ที่ <a href="https://www.google.com/recaptcha"  target="_blank" title="Google reCAPTCHA">คลิกลิงค์</a></span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">Secret key</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtGeneralReCaptchaSecretKey', $this->data->reCaptchaSecretKey, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250')); ?>
+				<span class="help-block">หากไม่ใช้งาน ให้ปล่อยเป็นช่องว่าง</span>
+			</div>
+		</div>
+	
+		<div class="title-label">ตั้งค่า Facebook API</div>	
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">App ID</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtFacebookAppID', $this->data->facebookAppID, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250')); ?>
+				<span class="help-block">หากไม่ใช้งาน ให้ปล่อยเป็นช่องว่าง</span>
+			</div>
+		</div>
+	
+		<div class="title-label">ตั้งค่า Google Map</div>	
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">API key</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtGoogleMapApiKey', $this->data->googleMapApiKey, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250')); ?>
+				<span class="help-block">
+					หากไม่กรอกข้อมูลนี้ การทำงานที่ใช้ Google Map จะไม่แสดงผล หรือทำงานไม่สมบูรณ์
+					<br />
+					ทั้งนี้ต้องกรอกข้อมูลให้ถูกต้องและสัมพันธ์กับเว็บไซต์นี้
+					<br />
+					สร้าง API Key ของ Google Map ตามขั้นตอน <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">ที่นี่</a>
+				</span>
+			</div>
+		</div>
+	
+		<?php 
+		if (count($this->data->HomeMenus) > 0) : 
+		?>
+		<div class="title-label">ตั้งค่าหน้าแรกสำหรับภาษาอื่นๆ</div>	
+		<?php 
+			foreach ($this->data->HomeMenus as $HomeMenuLangCode => $HomeMenu) :
+		?>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for=""><?php echo $HomeMenu["LanguageName"]; ?></label> 
+			<div class="col-md-4 divControl">
+				<?php echo $this->formSelect($HomeMenuLangCode . 'lstHomeMenuGroupID', $HomeMenu["MenuGroupID"], array('class' => 'form-control ', 'placeholder' => ''), Emwork_Utility::addEmptyOption($this->menuGroupOption)); ?>
+				<span class="help-block">หากไม่กำหนด จะใช้งานตามที่ตั้งค่าหน้าแรกในส่วนจัดการเมนู</span>
+			</div>
+			<div class="col-md-4 divControl">
+				<?php echo $this->formSelect($HomeMenuLangCode . 'lstHomeMenuID', null, array('class' => 'form-control ', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<?php 
+			endforeach;
+		endif; 
+		?>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+
+	<?php 
+	if (count($this->data->HomeMenus) > 0) : 
+		foreach ($this->data->HomeMenus as $HomeMenuLangCode => $HomeMenu) :
+	?>
+	getData("<?php echo $this->url(array('module' => 'system', 'controller' => 'menu', 'action' => 'ajaxlist'), null, true);?>" + "?id=" + "<?php echo $HomeMenu["MenuGroupID"]; ?>", "#<?php echo $HomeMenuLangCode . 'lstHomeMenuID'?>", "-- โปรดเลือก --", "name", "id", "<?php echo $HomeMenu["MenuID"]; ?>");
+	$("#<?php echo $HomeMenuLangCode . 'lstHomeMenuGroupID'?>").change(function(){
+		var selectValue = $(this).val();
+		getData("<?php echo $this->url(array('module' => 'system', 'controller' => 'menu', 'action' => 'ajaxlist'), null, true);?>" + "?id=" + selectValue, "#<?php echo $HomeMenuLangCode . 'lstHomeMenuID'?>", "-- โปรดเลือก --", "name", "id", "");
+	});
+	<?php 	
+		endforeach;
+	endif;
+	?>
+	
+	$("#formEdit").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formEdit input[type=checkbox], #formEdit input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	function toggleSmtpSsl(val) {
+		if (val == 'Y') {
+			$('label[for=lstSmtpSslType]').addClass('labelRequest');
+			$('#lstSmtpSslType').addClass('required');
+		} else {
+			$('label[for=lstSmtpSslType]').removeClass('labelRequest');
+			$('#lstSmtpSslType').removeClass('required');
+		}
+	}
+	$("#formEdit")
+	.on('ifClicked', 'input[name=rdlSmtpUseSsl]', function(event){
+		toggleSmtpSsl($(this).val());
+	});
+	toggleSmtpSsl($('input[name=rdlSmtpUseSsl]:checked').val());
+	
+	function toggleSmtpAuth(val) {
+		if (val == 'Y') {
+			$('label[for=lstSmtpAuthType]').addClass('labelRequest');
+			$('#lstSmtpAuthType').addClass('required');
+			$('label[for=txtSmtpAuthUsername]').addClass('labelRequest');
+			$('#txtSmtpAuthUsername').addClass('required');
+		} else {
+			$('label[for=lstSmtpAuthType]').removeClass('labelRequest');
+			$('#lstSmtpAuthType').removeClass('required');
+			$('label[for=txtSmtpAuthUsername]').removeClass('labelRequest');
+			$('#txtSmtpAuthUsername').removeClass('required');
+		}
+	}
+	$("#formEdit")
+	.on('ifClicked', 'input[name=rdlSmtpUseAuth]', function(event){
+		toggleSmtpAuth($(this).val());
+	});
+	toggleSmtpAuth($('input[name=rdlSmtpUseAuth]:checked').val());
+
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formEdit").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'system', 'controller' => 'manage', 'action' => 'save'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'manage', 'action' => 'index'), null, true); ?>" ;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'SYS-MGT-01'); ?>

@@ -1,0 +1,20 @@
+{
+	"name" : "รายการข้อมูลตามประเภท",
+	"controller" : "type",
+	"description" : "แสดงรายการข้อมูลภายใต้ประเภทที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "type",
+			"type" : "select",
+			"size" : "",
+			"label" : "ประเภท",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Wat_Service_Type",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : false
+		}	
+	]
+}

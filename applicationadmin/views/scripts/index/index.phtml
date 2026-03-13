@@ -1,0 +1,115 @@
+<meta charset="UTF-8">
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+
+<style>
+::-webkit-scrollbar {
+    display: none;
+}
+.card {
+    border-radius: 5px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+.p-20 {
+    padding: 5px 20px;
+}
+.bg-primary {
+    background: #4680ff;
+    color: #ffffff;
+}
+.bg-success {
+    background: #26dad2;
+    color: #ffffff;
+}
+.bg-danger {
+    background: #fc6180;
+    color: #ffffff;
+}
+.media-text-right {
+    text-align: right;
+}
+.media-text-right h2 {
+    font-family: 'ThaiSans Neue';
+    font-size: 41px;
+}
+.media-left em {
+    font-size: 55px;
+}
+
+.viewall {
+    color: white;
+    float: right;
+    font-size: 2rem;
+    cursor: pointer;
+}
+.viewall:hover {
+    color: #666;
+}
+.static-box {
+    min-height: 350px;
+    max-height: 350px;
+}
+.dataTable caption {
+    background-color: #ccc;
+    color: #666;
+    font-weight: bold;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 16px;
+}
+</style>
+
+<!-- Main content -->
+<section class="content">
+
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-md-4">
+            <?php echo $this->partial("index/_viewsite.phtml", $this); ?>
+        </div>
+
+        <div class="col-md-4">
+            <?php echo $this->partial("index/_useronline.phtml", $this); ?>
+        </div>
+
+        <div class="col-md-4">
+            <?php echo $this->partial("index/_useramount.phtml", $this); ?>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <?php echo $this->partial("index/_lastlogin.phtml", $this); ?>
+        </div>
+
+        <?php if($this->Right_article) : ?>
+            <div class="col-md-6 static-box">
+                <?php echo $this->partial("index/_hotnews.phtml", $this); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if($this->Right_complain) : ?>
+            <div class="col-md-6 static-box">
+                <?php echo $this->partial("index/_complain.phtml", $this); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if($this->Right_poll) : ?>
+            <div class="col-md-6 static-box">
+                <?php echo $this->partial("index/_poll.phtml", $this); ?>
+            </div>
+        <?php endif; ?>
+            
+        <?php if($this->Right_faq) : ?>
+            <div class="col-md-6 static-box">
+                <?php echo $this->partial("index/_qanda.phtml", $this); ?>
+            </div>
+        <?php endif; ?>
+
+    </div>
+
+</section>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'HOME'); ?>

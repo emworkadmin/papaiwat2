@@ -1,0 +1,20 @@
+{
+	"name" : "รายการหมวดหมู่",
+	"controller" : "category",
+	"description" : "แสดงรายการหมวดหมู่และ Virtual Reality ภายใต้หมวดหมู่ที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "category",
+			"type" : "select",
+			"size" : "",
+			"label" : "หมวดหมู่",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Vrv_Service_Category",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

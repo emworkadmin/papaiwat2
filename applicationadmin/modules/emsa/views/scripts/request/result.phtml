@@ -1,0 +1,36 @@
+
+<div class="emsa-title">
+	เลขที่แจ้งรับของท่าน
+</div>
+<div class="emsa-receiveno">
+	<span class="emsa-receiveno-label"><?php echo $this->receiveNo; ?></span>
+</div>
+<div class="emsa-thank">
+	ศูนย์บริการลูกค้า Customer service<br />
+	ได้รับทราบประเด็นของท่านเรียบร้อยแล้ว<br />
+	และกำลังเข้าสู่กระบวนการดำเนินการต่อไป
+</div>
+
+<hr class="emsa-hr" />
+
+<div class="emsa-note">
+	<span class="emsa-label-red">หมายเหตุ * </span> เรียนคุณลูกค้า สำหรับการติดตามความคืบหน้าในครั้งต่อๆ ไป ทางบริษัทฯ <br />ใคร่ขอความกรุณาจากท่านในการระบุเลขที่รับแจ้งเพื่อความสะดวกในการให้บริการอย่างเร็วที่สุด
+</div>
+
+
+<script type="text/javascript">
+jQuery(function(){
+	if (emsaDialog != null) {
+		
+		emsaDialog.setTitle("<?php echo $this->title; ?>");
+		emsaDialog.setButtons(
+				[{
+                    label: 'ปิด',
+					action: function(dialog) {
+						dialog.close();
+					}
+                }]
+		);
+	}
+});    
+</script>

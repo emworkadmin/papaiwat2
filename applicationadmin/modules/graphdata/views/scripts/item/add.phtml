@@ -1,0 +1,605 @@
+<?php 
+$defaultDataDetail = null;
+?>
+<!-- jQuery UI 1.11.4 -->
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/story/js/jquery-ui-sortable.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/story/js/jquery.serialize-object.min.js'); ?>"></script>
+<!-- jQueryFiler -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+<!-- lightGallery -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightgallery/css/lightgallery.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery/js/lightgallery.min.js'); ?>"></script>
+<!-- select2 -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/select2/select2.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/select2/select2.min.js'); ?>"></script>
+<!-- wickedpicker -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/wickedpicker/wickedpicker.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/wickedpicker/wickedpicker.min.js'); ?>"></script>
+
+<?php if($this->isiOS) :  ?>
+<style>
+.jFiler.jFiler-theme-default { 
+	position: relative !important;
+}
+input[type="file"]{
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 900000 !important;
+    width: 100% !important;
+    max-width: 300px !important;
+    height: 35px !important;
+    opacity: 0 !important;
+}
+</style>
+<?php endif; ?>
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<div class="nav-tabs-custom">		
+			<ul class="nav nav-tabs">
+				<?php 
+				if (count($this->languages) > 0) :
+					$i = 0;
+					foreach ($this->languages as $lang) :
+						$i ++;
+				?>
+				<li class="<?php echo $i == 1 ? 'active' : ''; ?>" data-tab-lang="<?php echo $lang["Code"]; ?>">
+					<a data-toggle="tab" href="#detail-<?php echo $lang['Code']; ?>" title="<?php echo $lang['Name']; ?>">
+						<?php echo $lang['NameLocal']; ?>
+						<em class="fa fa-warning text-danger warning"></em>
+					</a>
+				</li>
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</ul>
+			<div class="tab-content">
+				<?php 
+				if (count($this->languages) > 0) :
+					$i = 0;
+					foreach ($this->languages as $lang) :
+						$langCode = $lang['Code'];
+						$isRequired = $lang["IsRequired"] == "Y";
+						$isDefault = $lang["IsDefault"] == "Y";
+						$i ++;
+						$sugguestMessage = "";
+		
+						// Setting Validate
+						$labelClassRequired = '';
+						$controlClassRequired = '';
+						if ($isDefault || $isRequired) {
+							$labelClassRequired = ' labelRequest'; 
+							$controlClassRequired = ' required';
+						}
+				?>
+				<div id="detail-<?php echo $lang['Code']; ?>" class="tab-pane fade <?php echo $i == 1 ? 'in active' : ''; ?>">
+					<?php 
+						if (true) :
+					
+							$dataDetail = $this->dataDetails[$langCode];
+							if ($isDefault) : 
+								$defaultDataDetail = $dataDetail;
+							else :
+								$sugguestMessage = "<<โปรดจัดการข้อมูลที่ " . $this->defaultLanguageName . ">>";
+							endif;
+					?>
+
+					<div class="title-label">หัวข้อกราฟ</div>							
+					<div class="form-group">
+						<label class="col-md-3 control-label<?php echo $labelClassRequired; ?>" >ชื่อ</label>
+						<div class="col-md-9 divControl">
+							<?php echo $this->formText("params[{$langCode}][Title]", '', array('class' => 'form-control' . $controlClassRequired, 'placeholder' => '', 'maxlength' => '500')); ?>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-md-3 control-label<?php echo $isDefault ? $labelClassRequired : ''; ?>" >หมวดหมู่</label>
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->formSelect("CategoryIds[]", $this->dataCategoryIds, array('class' => 'form-control' . $controlClassRequired, 'placeholder' => '', 'multiple'=>"multiple"), ($this->graphdataCategoryOption)); ?>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="">รูปภาพหน้าปก</label>
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->UploadHtmlControl("IntroImage", "IntroImage", null, array('multi' => false, 'exts' => array('png', 'jpg', 'gif'))); ?>
+							<div class="help-block">ขนาดไฟล์ไม่เกิน 10 MB<br>เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png</div>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="params-<?php echo $langCode; ?>-IntroText">ข้อความเกริ่นนำ</label> 
+						<div class="col-md-9 divControl">
+							<?php echo $this->formTextarea("params[{$langCode}][IntroText]", null, array('class' => 'form-control', 'style' => 'max-width:100%;', 'rows' => '3', 'cols' => '50', 'maxlength' => '1000')); ?>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-md-12 divControl">
+							<?php echo $this->formTextarea("params[{$langCode}][Detail]", null, array('class' => 'form-control txtDetail')); ?>
+						</div>
+					</div>
+
+					<div class="title-label">ข้อมูลกราฟ</div>	
+					<div class="form-group" >
+						<?php if ($isDefault) : ?>
+						<div class="col-md-12 ">
+							<table class="table table-bordered table-hover" id="tblGraphData">
+								<col width="80" />
+								<col width="120" />
+								<col  />
+								<col width="120" />
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>ประเภท</th>
+										<th>ชื่อ</th>
+										<th>จัดการ</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+							<div>
+								<button type="button" class="btn btn-primary btnGraphdataAdd" data-type="Bar Chart">
+									<em class="fa fa-bar-chart"></em> เพิ่ม Bar Chart
+								</button>
+								<button type="button" class="btn btn-primary btnGraphdataAdd" data-type="Line Chart">
+									<em class="fa fa-line-chart"></em> เพิ่ม Line Chart
+								</button>
+								<button type="button" class="btn btn-primary btnGraphdataAdd" data-type="Pie Chart">
+									<em class="fa fa-pie-chart"></em> เพิ่ม Pie Chart
+								</button>
+								<button type="button" class="btn btn-primary" id="lnkImportExcel">
+									<em class="fa fa-cloud-upload"></em> Import Excel
+								</button>
+							</div>
+						</div>
+						<?php else : ?>
+						<div class="col-md-9 col-md-offset-3 ">
+							<p class="form-control-static">
+								<?php echo $sugguestMessage; ?>
+							</p>
+						</div>
+						<?php endif; ?>
+					</div>
+					
+					<div class="title-label">การเผยแพร่</div>
+					<?php if ($isDefault) : ?>
+					<div class="form-group has-feedback">
+            			<label class="col-md-3 labelRequest control-label" for="PublishDate">วันที่ประกาศ</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][PublishDate]", Emwork_Utility_DateTime::MySQLToDateThai(date('Y-m-d')), array('class' => 'form-control required', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+        					<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+            			</div>
+            			<label class="col-md-3 labelRequest control-label" for="">เวลา</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][PublishDateTime]", date('H:i'), array('class' => 'form-control required', 'id' => 'PublishDateTime')); ?>
+            			</div>
+            		</div>
+            		<div class="form-group has-feedback">
+            			<label class="col-md-3 control-label" for="PublishDown">วันที่ปิดประกาศ</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][PublishDown]", null, array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+            				<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+            				<span id="<?php echo "params-{$langCode}-PublishDownClose"; ?>" class="fa fa-times-circle" style="right: 50px; top: 10px; position: absolute; cursor: pointer; display: none;"></span>
+            			</div>
+            			<label class="col-md-3 control-label" for="">เวลา</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][PublishDownTime]", null, array('class' => 'form-control', 'id' => 'PublishDownTime')); ?>
+            			</div>
+            		</div>
+					<?php else : ?>
+					<div class="form-group">
+						<label class="col-md-3 control-label" >วันที่ประกาศ</label>
+						<div class="col-md-3 divControl">
+							<p class="form-control-static">
+									<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+						<label class="col-md-3 control-label" >วันที่ปิดประกาศ</label>
+						<div class="col-md-3 divControl">
+							<p class="form-control-static">
+									<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+					</div>
+					<?php endif; ?>
+					<?php if ($isDefault) : ?>
+					<div class="form-group">
+						<label class="col-md-3 control-label labelRequest" >สถานะ</label>
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">
+								<?php echo $this->formRadio("params[{$langCode}][IsEnable]", 'Y', array('class' => 'required', 'label_class' => 'radio-inline'), $this->publishOption, " "); ?>
+							</div>						
+						</div>
+					</div>
+					<?php else : ?>
+					<div class="form-group">
+						<label class="col-md-3 control-label" >สถานะ</label>
+						<div class="col-md-9 divControl">
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+					</div>
+					<?php endif; ?>
+					
+					<?php endif;?>
+				</div>
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</div>
+		</div>	
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+<script>
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+
+	<?php if($this->isiOS) : ?>
+	$("input[type=text][id$=PublishDate],input[type=text][id$=PublishDown]").removeAttr("readonly");
+	<?php endif; ?>
+	$("input[type=text][id$=PublishDateTime]").wickedpicker({twentyFour: true, title : 'เวลา', now : '<?php echo date('H:i');?>'});
+	$("input[type=text][id$=PublishDownTime]").wickedpicker({twentyFour: true, title : 'เวลา', now : '0:00'});
+
+	$('select[name^=CategoryIds]').select2();
+	$("#formData input[type=checkbox], #formData input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	var roxyFileman = '<?php echo $this->baseUrl('/fileman/index.html'); ?>';	
+	$( '.txtDetail' ).ckeditor({
+		language: 'th',
+		height: 400,
+		toolbar: [
+		          {name : 'basicstyles', items : ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']},
+		          {name: 'colors', items: [ 'FontSize', 'TextColor', 'BGColor' ] },
+		          {name : 'paragraph', items : ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+		          {name : 'links', items : ['Link', 'Unlink', 'Anchor']},
+		          {name : 'inserts', items : ['Image', 'Table', 'HorizontalRule']},
+		          {name: 'document', items: ['Source']},
+				  {name: 'video', items: ['Video']},
+				  {name: 'html5audio', items: ['Html5audio']}
+		],
+		extraPlugins : 'uploadimage,justify,video,font,panelbutton,colorbutton,html5audio',
+		filebrowserBrowseUrl: roxyFileman+'?integration=ckeditor',
+		filebrowserImageBrowseUrl:roxyFileman+'?integration=ckeditor&type=image',
+		filebrowserVideoBrowseUrl:roxyFileman+'?integration=ckeditor&type=video',
+		extraAllowedGraphdata : 'video [*]{*}(*);source [*]{*}(*);iframe [*]{*}(*);'
+	});
+
+	// Save
+	$("#btnSave").click(function(){
+		<?php foreach ($this->languages as $lang) :?>
+		$("li[data-tab-lang=<?php echo $lang["Code"]; ?>]").removeClass("warning");
+		<?php endforeach;?>
+		var valid = $("#formData").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'graphdata', 'controller' => 'item', 'action' => 'save'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'graphdata', 'controller' => 'item', 'action' => 'edit'), null, true); ?>" + "/itemid/" + data.id;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		} else {
+			<?php foreach ($this->languages as $lang) :?>
+			if ($("#detail-<?php echo $lang["Code"]; ?>").find("input.error,select.error,textarea.error").length > 0) {$("li[data-tab-lang=<?php echo $lang["Code"]; ?>]").addClass("warning");}
+			<?php endforeach;?>
+		}
+	});
+
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'graphdata', 'controller' => 'item', 'action' => 'index'), null, true); ?>";
+	});
+
+	// Graph Data
+	$(".btnGraphdataAdd").click(function(){
+	var type = $(this).data('type');
+	var data = '';
+	var dialogGraphData = BootstrapDialog.show({
+		title: 'ข้อมูลกราฟ',
+		message: $('<div id="dialogGraphData"></div>').load("<?php echo $this->url(array('module' => 'graphdata', 'controller' => 'item', 'action' => 'graphdataform'), null, true); ?>", {"data" : data, "type": type}),
+		closable: true,
+		closeByBackdrop: false,
+		closeByKeyboard: false,
+		autodestroy: true,
+		buttons : [{
+			label: ' ยืนยัน',
+			icon: 'fa fa-check',
+			cssClass: 'btn-primary',
+			action: function(dialog) {
+				var isValid = $("#dialogGraphData #formDialog").valid();
+				if (isValid) {
+					var saveResult = saveGraphData("");
+					if (saveResult) {
+						reindexGraphData();
+						dialog.close();
+					}
+				}
+			}
+		},{
+			label: ' ปิด',
+			icon: 'fa fa-times',
+			action: function(dialog) {                                                                                                    
+				dialog.close();
+			}
+		}]
+	});
+		dialogGraphData.open();
+	});
+	$("#tblGraphData").bind('click', function(e) {
+		var target = $(e.target);		
+		// Edit
+		if (target.hasClass("edit")) {
+			var data = target.parent('td').find('input[type=hidden]').val();
+			var dataId = target.parent('td').parent('tr').attr('data-id');
+			if(dataId == undefined){
+				var data = target.parent('button').parent('td').find('input[type=hidden]').val();
+				var dataId = target.parent('button').parent('td').parent('tr').attr('data-id');
+			}
+			var dialogGraphData = BootstrapDialog.show({
+				title: 'ข้อมูลกราฟ',
+				message: $('<div id="dialogGraphData"></div>').load("<?php echo $this->url(array('module' => 'graphdata', 'controller' => 'item', 'action' => 'graphdataform'), null, true); ?>", {"data" : data }),
+				closable: true,
+	            closeByBackdrop: false,
+	            closeByKeyboard: false,
+	            autodestroy: true,
+				buttons : [{
+					label: ' ยืนยัน',
+					icon: 'fa fa-check',
+					cssClass: 'btn-primary',
+					action: function(dialog) {
+						var isValid = $("#dialogGraphData #formDialog").valid();
+						if (isValid) {
+							var saveResult = saveGraphData(dataId);
+							if (saveResult) {
+								reindexGraphData();
+								dialog.close();
+							}
+						}
+					}
+				},{
+					label: ' ปิด',
+					icon: 'fa fa-times',
+					action: function(dialog) {
+						dialog.close();
+					}
+				}]
+			});
+			dialogGraphData.open();
+		}
+		// Remove
+		if (target.hasClass("remove")) {
+			DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+				target.parent("td").parent("tr").fadeOut('fast', function(){
+					$(this).remove();
+					reindexGraphData();
+				});
+			});
+		}
+	});
+	function saveGraphData(dataId) {
+		var dataObj = $("#dialogGraphData #formDialog").serializeObject();
+
+		var Type = '';
+		var Title = '';
+
+		var chkHasData = false;
+		
+		var obj = {};
+		obj.ID = dataObj.hdfDialogID;
+		obj.Header = {};
+		$.each(dataObj.dialogParamsHeader, function(i, e) {
+			if(i=='<?php echo $this->defaultLanguage;?>'){
+				Type = e.Type;
+				Title = e.Title;
+				Color = e.Color;
+			}
+			obj.Header[i] = {};
+			obj.Header[i].Type = e.Type
+			obj.Header[i].Title = e.Title
+			obj.Header[i].Color = e.Color
+		});
+		obj.Order = {};
+		$.each(dataObj.dialogParams, function(i, e) { 
+			if(i){
+				obj.Order[i] = {};
+				obj.Order[i].Lang = {};
+			}
+			$.each(e, function(i2, e2) { 
+				if(e2.Title!=""){
+					obj.Order[i].Lang[i2] = {};
+					obj.Order[i].Lang[i2].Title = e2.Title;
+					obj.Order[i].Lang[i2].Value = e2.Value;
+					obj.Order[i].Lang[i2].Color = e2.Color;
+					chkHasData = true;
+				}
+			});
+		});
+
+		if (!chkHasData) {
+			DialogWarning("กรุณาเพิ่มข้อมูลอย่างน้อย 1 รายการ");
+			return false;
+		}
+
+		var tempId = uuidv4();
+		if (obj.ID == '') {
+			obj.ID = tempId;
+		}
+		
+		var dataStr = JSON.stringify(obj);
+
+		var html = '';
+		html += '<tr data-id="' + (dataId == "" ? tempId : dataId) + '">';
+		html += '<td class="">';
+		html += '	<em class="fa fa-bars handle"></em> &nbsp;&nbsp;';
+		html += '	<span alt="dataIndex" ></span>';
+		html += '</td>';
+		html += '<td class="">' + Type + '</td>';
+		html += '<td class="">' + Title + '</td>';
+		html += '<td class="">';
+		html += '	<button type="button" class="btn btn-primary edit"><em class="fa fa-pencil-square-o edit"></em></button>';
+		html += '	<button type="button" class="btn btn-danger remove"><em class="fa fa-trash remove"></em></button>';
+		html += '	<input type="hidden" id="params-<?php echo $this->defaultLanguage;?>-Graphdata-' + (dataId == "" ? tempId : dataId) + '" name="params[<?php echo $this->defaultLanguage;?>][Graphdata][' + (dataId == "" ? tempId : dataId) + ']" value="' + '' + '">';
+		html += '</td>';
+		html += '</tr>';
+
+		if (dataId == "") {
+			dataId = tempId;
+			$("#tblGraphData tbody").append(html); 
+		} else {
+			$("#tblGraphData tbody tr[data-id=" + dataId + "]").replaceWith(html); 
+		}
+		$("#tblGraphData tbody tr[data-id=" + dataId + "] input[type=hidden]").val(dataStr);
+
+		return true;
+	}
+	function reindexGraphData() {
+		var idx = 0;
+		$("#tblGraphData tbody tr").each(function(i, e) {
+			idx ++;
+			$(e).find('span[alt=dataIndex]').text(idx);
+		});
+	}
+	$('#tblGraphData tbody').sortable({
+		handle: '.handle',
+		cursor: 'move',
+		update: function ( event, ui ){ reindexGraphData(); }, 
+		start: function ( event, ui ){ 
+		}, 
+		stop: function ( event, ui ){ 
+		}
+	}).disableSelection();
+
+	// Import Excel
+	$('#lnkImportExcel').click(function(e) {
+		var uid = uuidv4();
+		dialogImportFile = BootstrapDialog.show({
+			title: "อัพโหลดไฟล์ Excel",
+			message: $("<div id=\'dialogImportFile\'></div>").load("<?php echo $this->url(array("module" => "graphdata", "controller" => "item", "action" => "dialogimportexcel"), null, true); ?>", {"uid":uid}),
+			closable: true,
+			closeByBackdrop: false,
+			closeByKeyboard: false,
+			autodestroy: true,
+			cssClass: "custom-dialog-import-file",
+			buttons : [
+				{
+					label: "อัพโหลดข้อมูลเข้าสู่ระบบ",
+					icon: "fa fa-cloud-upload",
+					cssClass: "btn-primary",
+					action: function(dialog) {
+						var valid = $('#formDialogImportFile').valid();
+						if(valid){
+							$.post("<?php echo $this->url(array('module' => 'graphdata', 'controller' => 'item', 'action' => 'importexcel'), null, true);?>", $("#formDialogImportFile").serializeArray(), function(data){
+								if (data.result) {
+									DialogComplete("อัพโหลดไฟล์สำเร็จ");
+
+									var html = '';
+									html += '<tr data-id="' + data.id + '">';
+									html += '<td class="">';
+									html += '	<em class="fa fa-bars handle"></em> &nbsp;&nbsp;';
+									html += '	<span alt="dataIndex" ></span>';
+									html += '</td>';
+									html += '<td class="">' + data.type + '</td>';
+									html += '<td class="">' + data.title + '</td>';
+									html += '<td class="">';
+									html += '	<button type="button" class="btn btn-primary edit"><em class="fa fa-pencil-square-o edit"></em></button>';
+									html += '	<button type="button" class="btn btn-danger remove"><em class="fa fa-trash remove"></em></button>';
+									html += '	<input type="hidden" id="params-<?php echo $this->defaultLanguage;?>-Graphdata-' + data.id + '" name="params[<?php echo $this->defaultLanguage;?>][Graphdata][' + data.id + ']" value="' + '' + '">';
+									html += '</td>';
+									html += '</tr>';
+									$("#tblGraphData tbody").append(html);
+									$("#tblGraphData tbody tr[data-id=" + data.id + "] input[type=hidden]").val(data.data);
+									reindexGraphData();
+									
+									dialog.close();
+								} else {
+									DialogWarning(data.message);
+								}
+							}, "json");
+						}
+					}
+				},{
+					label: "ยกเลิก",
+					action: function(dialog) {
+						dialog.close();
+					}
+				}]
+		});
+		dialogImportFile.open();
+	});
+
+});
+
+// --------------------------- Date picker -------------------------- //
+<?php 
+if (count($this->languages) > 0) :
+$i = 0;
+foreach ($this->languages as $lang) :
+$langCode = $lang['Code'];
+?>
+	$('#<?php echo  "params-{$langCode}-PublishDate" ?>').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	$('#<?php echo  "params-{$langCode}-PublishDown" ?>').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	$('#<?php echo  "params-{$langCode}-PublishDown" ?>').change(function(){
+		if ($(this).val() != "") {
+			$("#<?php  echo "params-{$langCode}-PublishDownClose"; ?>").css("display", "block");
+		}
+	});
+	$("#<?php  echo "params-{$langCode}-PublishDownClose"; ?>").click(function(){
+		$('#<?php echo  "params-{$langCode}-PublishDown" ?>').val('');
+		$("#<?php  echo "params-{$langCode}-PublishDownClose"; ?>").css("display", "none");
+	});
+<?php 
+	endforeach;
+endif;
+?>
+
+</script>

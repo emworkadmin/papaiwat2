@@ -1,0 +1,333 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+		
+		<div class="title-label">การตั้งค่าภาษาในเว็บไซต์</div>
+			
+		<div class="form-group">
+			<label class="col-md-4 control-label" >ภาษาที่ใช้</label> 
+			<div class="col-md-8 divControl">
+				<div class="checkbox with-icheck">
+					<?php echo $this->formMultiCheckbox('chkLanguage', $this->data->languages, array('class' => 'required', 'label_class' => 'radio-inline'), $this->languageOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		
+		<div class="title-label">ตั้งค่า SMTP</div>
+			
+		<div class="form-group">
+			<label class="col-md-4 labelRequest control-label" for="txtSmtpHost">Host</label> 
+			<div class="col-md-8 divControl">
+				<?php echo $this->formText('txtSmtpHost', $this->data->smtp_host, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '255')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 labelRequest control-label" for="txtSmtpPort">Port</label> 
+			<div class="col-md-8 divControl">
+				<?php echo $this->formText('txtSmtpPort', $this->data->smtp_port, array('class' => 'form-control digits required', 'placeholder' => '25', 'maxlength' => '255')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 labelRequest control-label" for="txtSmtpFromEmail">อีเมล์ผู้ส่ง</label> 
+			<div class="col-md-8 divControl">
+				<?php echo $this->formText('txtSmtpFromEmail', $this->data->smtp_from_email, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '250')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 control-label" for="txtSmtpFromName">ชื่อผู้ส่ง</label> 
+			<div class="col-md-8 divControl">
+				<?php echo $this->formText('txtSmtpFromName', $this->data->smtp_from_name, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '250')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 labelRequest control-label" >ใช้ TLS/SSL</label> 
+			<div class="col-md-8 divControl">
+				<div class="form-inline radio with-icheck">
+					<?php echo $this->formRadio('rdlSmtpUseSsl', $this->data->smtp_use_ssl, array('class' => 'required', 'label_class' => 'radio-inline'), array('N' => 'ไม่ใช้', 'Y' => 'ใช้'), " "); ?>
+				</div>						
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 control-label" for="lstSmtpSslType">ประเภท TLS/SSL</label> 
+			<div class="col-md-8 divControl">
+				<?php echo $this->formSelect('lstSmtpSslType', $this->data->smtp_ssl_type, array('class' => 'form-control'), $this->smtpSslTypeOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 labelRequest control-label" >ใช้การยืนยันตัวตน</label> 
+			<div class="col-md-8 divControl">
+				<div class="form-inline radio with-icheck">
+					<?php echo $this->formRadio('rdlSmtpUseAuth', $this->data->smtp_use_auth, array('class' => 'required', 'label_class' => 'radio-inline'), array('N' => 'ไม่ใช้', 'Y' => 'ใช้'), " "); ?>
+				</div>						
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 control-label" for="lstSmtpAuthType">ประเภทการยืนยันตัวตน</label> 
+			<div class="col-md-8 divControl">
+				<?php echo $this->formSelect('lstSmtpAuthType', $this->data->smtp_auth_type, array('class' => 'form-control'), $this->smtpAuthTypeOption); ?>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-md-4 control-label" >สถานะกาเปิดใช้งาน Facebook</label> 
+			<div class="col-md-8 divControl">
+				<div class="form-inline radio with-icheck">
+					<?php echo $this->formRadio('isFacebook', empty($this->data->is_facebook) ?'N' : $this->data->is_facebook, array('class' => '', 'label_class' => 'radio-inline'), array('N' => 'ไม่ใช้', 'Y' => 'ใช้'), " "); ?>
+				</div>						
+			</div>
+		</div>
+
+		<div class="form-group hideFacebook">
+			<label class="col-md-4 control-label" for="txtfacebookurl">Facebook URL</label> 
+			<div class="col-md-8 divControl">
+				<?php 
+				if($this->data->is_facebook == 'N'){
+					echo $this->formText('txtfacebookurl', $this->data->facebook_url, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250'));
+				} else {
+					echo $this->formText('txtfacebookurl', $this->data->facebook_url, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250'));
+				}
+				
+				?>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-md-4  control-label" >สถานะกาเปิดใช้งาน Twitter</label> 
+			<div class="col-md-8 divControl">
+				<div class="form-inline radio with-icheck">
+					<?php echo $this->formRadio('isTwitter', empty($this->data->is_twitter) ? 'N' : $this->data->is_twitter, array('class' => '', 'label_class' => 'radio-inline'), array('N' => 'ไม่ใช้', 'Y' => 'ใช้'), " "); ?>
+				</div>						
+			</div>
+		</div>
+		
+		<div class="form-group hideTwitter">
+			<label class="col-md-4 control-label" for="txttwitterurl">Twitter URL</label> 
+			<div class="col-md-8 divControl">
+				<?php 
+				if($this->data->is_twitter == 'Y'){
+					echo $this->formText('txttwitterurl', $this->data->twitter_url, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250'));
+				} else {
+					echo $this->formText('txttwitterurl', $this->data->twitter_url, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250'));
+				}
+				
+				?>
+			</div>
+		</div>
+				<div class="form-group">
+			<label class="col-md-4  control-label" >สถานะกาเปิดใช้งาน Youtube</label> 
+			<div class="col-md-8 divControl">
+				<div class="form-inline radio with-icheck">
+					<?php echo $this->formRadio('isYoutube', empty($this->data->is_youtube) ? 'N' : $this->data->is_youtube, array('class' => '', 'label_class' => 'radio-inline'), array('N' => 'ไม่ใช้', 'Y' => 'ใช้'), " "); ?>
+				</div>						
+			</div>
+		</div>
+		
+		<div class="form-group hideYoutube">
+			<label class="col-md-4 control-label" for="txtyoutubeurl">Youtube URL</label> 
+		<div class="col-md-8 divControl">
+				<?php 
+				if($this->data->is_youtube == 'Y'){
+					echo $this->formText('txtyoutubeurl', $this->data->youtube_url, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250'));
+				} else {
+					echo $this->formText('txtyoutubeurl', $this->data->youtube_url, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250'));
+				}
+				
+				?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4  control-label" >สถานะกาเปิดใช้งาน Instagram</label> 
+			<div class="col-md-8 divControl">
+				<div class="form-inline radio with-icheck">
+					<?php echo $this->formRadio('isInstagram', empty($this->data->is_instagram) ? 'N' : $this->data->is_instagram, array('class' => '', 'label_class' => 'radio-inline'), array('N' => 'ไม่ใช้', 'Y' => 'ใช้'), " "); ?>
+				</div>						
+			</div>
+		</div>
+		
+		<div class="form-group hideInstagram">
+			<label class="col-md-4 control-label" for="txtinstagramurl">Instagram URL</label> 
+			<div class="col-md-8 divControl">
+				<?php
+				if($this->data->is_instagram == 'Y'){
+					echo $this->formText('txtinstagramurl', $this->data->instagram_url, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250'));
+				} else {
+					echo $this->formText('txtinstagramurl', $this->data->instagram_url, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250'));
+				}
+						 
+				?>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-md-4 labelRequest control-label" for="txtSmtpPort">ช่วงเวลาแสดงป้ายสินค้าใหม่</label> 
+			<div class="col-md-8 divControl">
+				<?php echo $this->formText('txtProductNew', $this->data->product_new, array('class' => 'form-control digits required', 'placeholder' => '25', 'maxlength' => '3')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 labelRequest control-label" for="txtSmtpPort">ช่วงเวลาแสดงป้ายสินค้าปรับปรุงใหม่</label> 
+			<div class="col-md-8 divControl">
+				<?php echo $this->formText('txtProductUpdate', $this->data->product_update, array('class' => 'form-control digits required', 'placeholder' => '25', 'maxlength' => '3')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 labelRequest control-label" for="txtSmtpAuthUsername">Username</label> 
+			<div class="col-md-8 divControl">
+				<?php echo $this->formText('txtSmtpAuthUsername', $this->data->smtp_auth_username, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '250')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 control-label" for="txtSmtpAuthPassword">Password</label> 
+			<div class="col-md-8 divControl">
+				<?php echo $this->formPassword('txtSmtpAuthPassword', null, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '50')); ?>
+				<span class="help-block">หากใช้ Password เดิม ให้ปล่อยเป็นช่องว่าง</span>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-8 col-md-offset-4">
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formEdit").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+	
+	toggleFacebook('<?php  echo $this->data->is_facebook?>');
+	$('#formEdit').on('ifClicked', 'input[name=isFacebook]', function(e){
+		toggleFacebook($(this).val());
+	}); 
+	
+	function toggleFacebook(val){
+		if(val == 'Y'){
+			$("div.hideFacebook input[type='text']").prop( "disabled", false );
+			$('label[for=txtfacebookurl]').addClass('labelRequest');
+			$('#txtfacebookurl').addClass('url required');
+			
+		}else{
+			$("div.hideFacebook input[type='text']").prop( "disabled", true );
+			$('label[for=txtfacebookurl]').removeClass('labelRequest');
+			$('#txtfacebookurl').removeClass('url required');
+		}
+	}
+	
+	toggleYoutube('<?php  echo $this->data->is_youtube?>');
+	$('#formEdit').on('ifClicked', 'input[name=isYoutube]', function(e){
+		toggleYoutube($(this).val());
+	}); 
+	
+	function toggleYoutube(val){
+		if(val == 'Y'){
+			$("div.hideYoutube input[type='text']").prop( "disabled", false );
+			$('label[for=txtyoutubeurl]').addClass('labelRequest');
+			$('#txtyoutubeurl').addClass('url required');
+			
+		}else{
+			$("div.hideYoutube input[type='text']").prop( "disabled", true );
+			$('label[for=txtyoutubeurl]').removeClass('labelRequest');
+			$('#txtyoutubeurl').removeClass('url required');
+		}
+	}
+	
+	toggleTwitter('<?php  echo $this->data->is_twitter?>');
+	$('#formEdit').on('ifClicked', 'input[name=isTwitter]', function(e){
+		toggleTwitter($(this).val());
+	}); 
+	
+	function toggleTwitter(val){
+		if(val == 'Y'){
+			$("div.hideTwitter input[type='text']").prop( "disabled", false );
+			$('label[for=txttwitterurl]').addClass('labelRequest');
+			$('#txttwitterurl').addClass('url required');
+
+		}else{
+			$("div.hideTwitter input[type='text']").prop( "disabled", true );
+			$('label[for=txttwitterurl]').removeClass('labelRequest');
+			$('#txttwitterurl').removeClass('url required');
+		}
+	}
+
+	toggleInstagram('<?php  echo $this->data->is_instagram?>');
+	$('#formEdit').on('ifClicked', 'input[name=isInstagram]', function(e){
+		toggleInstagram($(this).val());
+	}); 
+	
+	function toggleInstagram(val){
+		if(val == 'Y'){
+			$("div.hideInstagram input[type='text']").prop( "disabled", false );
+			$('label[for=txtinstagramurl]').addClass('labelRequest');
+			$('#txtinstagramurl').addClass('url required');
+
+		}else{
+			$("div.hideInstagram input[type='text']").prop( "disabled", true );
+			$('label[for=txtinstagramurl]').removeClass('labelRequest');
+			$('#txtinstagramurl').removeClass('url required');
+		}
+	}
+
+	$("#formEdit input[type=checkbox], #formEdit input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-green',radioClass: 'iradio_minimal-green'});
+
+	function toggleSmtpSsl(val) {
+		if (val == 'Y') {
+			$('label[for=lstSmtpSslType]').addClass('labelRequest');
+			$('#lstSmtpSslType').addClass('required');
+		} else {
+			$('label[for=lstSmtpSslType]').removeClass('labelRequest');
+			$('#lstSmtpSslType').removeClass('required');
+		}
+	}
+	$("#formEdit")
+	.on('ifClicked', 'input[name=rdlSmtpUseSsl]', function(event){
+		toggleSmtpSsl($(this).val());
+	});
+	toggleSmtpSsl($('input[name=rdlSmtpUseSsl]:checked').val());
+	
+	function toggleSmtpAuth(val) {
+		if (val == 'Y') {
+			$('label[for=lstSmtpAuthType]').addClass('labelRequest');
+			$('#lstSmtpAuthType').addClass('required');
+			$('label[for=txtSmtpAuthUsername]').addClass('labelRequest');
+			$('#txtSmtpAuthUsername').addClass('required');
+		} else {
+			$('label[for=lstSmtpAuthType]').removeClass('labelRequest');
+			$('#lstSmtpAuthType').removeClass('required');
+			$('label[for=txtSmtpAuthUsername]').removeClass('labelRequest');
+			$('#txtSmtpAuthUsername').removeClass('required');
+		}
+	}
+	$("#formEdit")
+	.on('ifClicked', 'input[name=rdlSmtpUseAuth]', function(event){
+		toggleSmtpAuth($(this).val());
+	});
+	toggleSmtpAuth($('input[name=rdlSmtpUseAuth]:checked').val());
+
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formEdit").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'system', 'controller' => 'manage', 'action' => 'save'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'manage', 'action' => 'index'), null, true); ?>" ;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+});
+</script>

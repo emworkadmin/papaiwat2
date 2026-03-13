@@ -1,0 +1,28 @@
+<table id="tblData" class="table table-bordered table-hover">
+    <caption>รายการแบบฟอร์ม</caption>
+    <thead>
+        <tr>
+            <th>ลำดับ</th>
+            <th>วันที่ตอบแบบฟอร์ม</th>
+            <th>IP Address</th>
+            <?php
+            if(count($this->dataType)>0){
+                foreach($this->dataType as $d){
+                    echo '<th>'.$d['LABEL_'].'</th>';
+                }
+            }
+            ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+            foreach($this->tmp_data as $k => $v) {
+                echo "<tr>";
+                foreach($v as $k2 => $v2) {
+                    echo "<td>" . $v2 . "</td>";
+                }
+                echo "</tr>";
+            }
+        ?>
+    </tbody>
+</table>

@@ -1,0 +1,21 @@
+
+<div class="emsa-title">
+	ลงทะเบียนสำเร็จ
+</div>
+
+<script type="text/javascript">
+jQuery(function(){
+	if (emsaDialog != null) {
+		emsaDialog.setTitle("<?php echo $this->title; ?>");
+		emsaDialog.setButtons(
+				[{
+                    label: 'เริ่มต้นใช้งาน',
+					action: function(dialog) {
+						lh_inst.lh_openchatWindow();
+						dialog.close();
+					}
+                }]
+		);
+	}
+});    
+</script>

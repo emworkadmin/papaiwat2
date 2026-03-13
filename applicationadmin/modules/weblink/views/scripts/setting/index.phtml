@@ -1,0 +1,121 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+
+		<div class="title-label">ค่าพื้นฐานระบบเว็บลิงค์</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemShowType">รูปแบบการแสดงผล</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ItemShowType', empty($this->data->itemShowType) ? 'cards' : $this->data->itemShowType, array('class' => 'form-control', 'placeholder' => ''), $this->showTypeOption); ?>
+			</div>
+		</div>
+		<hr />					
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemSortType">เงื่อนไขการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ItemSortType', empty($this->data->itemSortType) ? 'created' : $this->data->itemSortType, array('class' => 'form-control', 'placeholder' => ''), $this->sortTypeOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemSortDirection">รูปแบบการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ItemSortDirection', empty($this->data->itemSortDirection) ? 'desc' : $this->data->itemSortDirection, array('class' => 'form-control', 'placeholder' => ''), $this->sortDirectionOption); ?>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemWeblinkSizeWidth">ความกว้าง (พิกเซล)</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formText('ItemWeblinkSizeWidth', empty($this->data->itemWeblinkSizeWidth) ? 150 : $this->data->itemWeblinkSizeWidth, array('class' => 'form-control number', 'placeholder' => '')); ?>
+				</div>
+			</div>
+		</div>		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemWeblinkSizeHeight">ความสูง (พิกเซล)</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formText('ItemWeblinkSizeHeight', empty($this->data->itemWeblinkSizeHeight) ? 80 : $this->data->itemWeblinkSizeHeight, array('class' => 'form-control number', 'placeholder' => '')); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemShowTitle">แสดงชื่อเว็บลิงค์เป็นลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowTitle', empty($this->data->itemShowTitle) ? 'Y' : $this->data->itemShowTitle, array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemShowIntroText">แสดงข้อความเกริ่นนำเป็นลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowIntroText', empty($this->data->itemShowIntroText) ? 'Y' : $this->data->itemShowIntroText, array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemShowIntroText">แสดงปุ่มลิ้งค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowButton', empty($this->data->itemShowฺButton) ? 'Y' : $this->data->itemShowฺButton, array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemShowIntroText">CSS</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formTextarea('ItemCustomCss', $this->data->itemCustomCss, array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formEdit").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formEdit input[type=checkbox], #formEdit input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formEdit").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'weblink', 'controller' => 'setting', 'action' => 'save'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'weblink', 'controller' => 'setting', 'action' => 'index'), null, true); ?>" ;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+});
+</script>

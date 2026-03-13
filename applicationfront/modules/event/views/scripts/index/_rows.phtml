@@ -1,0 +1,171 @@
+<style>
+	.inforow-event {
+		margin-bottom: 15px;
+		padding-bottom: 15px;
+		border-bottom: 1px solid #ccc;
+	}
+	.inforow-event .image .image-inner img {
+		width: 100%;
+		height: 250px;
+		object-fit: cover;
+		margin-bottom: 15px;
+	}
+	.inforow-event .detail-title {
+		word-wrap: break-word;
+		font-size: 3rem;
+		font-weight: bold;
+		padding-bottom: 15px;
+	}
+	.inforow-event .detail .detail-data {
+		height: 175px;
+	}
+	.inforow-event .detail .date .startDate span, .inforow-event .detail .date .publishDown span {
+		color: #3c8dbc;
+	}
+	.inforow-event .detail .place {
+	}
+	.inforow-event .detail .place em {
+		color: #3c8dbc;
+		width: 20px;
+		float: left;
+		margin-right: 5px;
+	}
+	.inforow-event .detail .place span {
+		float: left;
+		overflow: hidden;
+		width: calc(100% - 25px);
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+	}	
+	.inforow-event .detail .bottom {
+		clear: left;
+	}
+	.inforow-event .detail .bottom .btn-moredetail a {
+		width: 150px;
+		font-size: 2rem;
+		margin-bottom: 5px;
+		background-color: #1a648f;
+		border: #3c8dbc;		
+	}
+	.inforow-event .detail .bottom .publishDate em, .inforow-event .detail .bottom .createdBy em {
+		color: #1133;
+	    font-size: 1.4rem;
+	}
+	.inforow-event .detail .bottom .publishDate, .inforow-event .detail .bottom .createdBy {
+		color: #3c8dbc;
+	}	
+	.inforow-event:last-child() { margin-bottom: 0px; }
+</style>
+
+
+
+<div class="event-index-rows">
+	<div class="">
+        <?php 
+        if (count($this->items) > 0) :
+			foreach ($this->items as $item) :
+            	$id = $item["ID"];
+            	$title = $item["Title"];
+            	$imageUrl = $this->defaultImageUrl; 
+            	if (!empty($item["IntroImageHashName"])) : 
+            		$imageUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "file" => $item["IntroImageHashName"]), null, true);
+				endif;
+
+				if($this->lang == 'th') {
+					$publishDate = $item["PublishDate"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateThai($item["PublishDate"], "DT_Nd");
+				} else {
+					$publishDate = $item["PublishDate"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateEng($item["PublishDate"], "DT_Nd");
+				}
+
+				if($this->lang == 'th') {
+					$startDate = $item["StartDate"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateThai($item["StartDate"], "DT_Nd") . " : " . $item['StartDate']->format("H:i");
+				} else {
+					$startDate = $item["StartDate"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateEng($item["StartDate"], "DT_Nd") . " : " . $item['StartDate']->format("H:i");
+				}
+
+				if($this->lang == 'th') {
+					$date = $item["EndDate"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateThai($item["EndDate"], "DT_Nd") . " : " . $item['EndDate']->format("H:i");
+				} else {
+					$date = $item["EndDate"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateEng($item["EndDate"], "DT_Nd") . " : " . $item['EndDate']->format("H:i");
+				}
+
+				$place = empty($item['Place']) ? '-' : nl2br($item['Place']);
+				$viewAmount = number_format($item["ViewAmount"]);
+				$AuthorName = $item['AuthorName'];
+            	$url = $this->url(array("module" => "event", "controller" => "event", "action" => "detail", "id" => $this->id, "iid" => $id), null, true);
+				$fixDetail = '';
+				if(!$this->eventSettingEventShowImage) {
+					$fixDetail = 'col-md-offset-3';
+				}
+        ?>
+
+		<div class="inforow-event row">
+
+			<?php if($this->eventSettingEventShowCategory) : ?>
+			<div class="col-md-12">
+				<div class="detail-title">
+					<a href="<?php echo $url; ?>"><?php echo $title; ?></a>
+				</div>
+			</div>
+			<?php endif; ?>
+
+			<?php if ($this->eventSettingEventShowImage) : ?>
+			<div class="image col-md-3 col-sm-12 col-xs-12">
+				<div class="image-inner">
+					<a href="<?php echo $url; ?>">
+						<img alt="image" src="<?php echo $imageUrl; ?>" />
+					</a>
+				</div>
+			</div>
+			<?php endif; ?>
+
+			<div class="detail <?php echo $fixDetail;?> col-md-9 col-sm-12 col-xs-12">
+
+				<div class="detail-data">
+
+					<div class="date">
+					<?php if($this->eventSettingEventShowEndDate) : ?>
+						<div class="startDate"><?php echo Emwork_Translate::text($this->lang, 'event', 'list_startdate'); ?><span> <?php echo empty($startDate) ? '-' : $startDate . ' ' . Emwork_Translate::text($this->lang, 'event', 'list_datetype')?></span></div>
+					<?php endif; ?>
+					<?php if($this->eventSettingEventShowEndDate) : ?>
+						<div class="publishDown"><?php echo Emwork_Translate::text($this->lang, 'event', 'list_enddate'); ?><span> <?php echo empty($endDate) ? '-' : $endDate . ' ' . Emwork_Translate::text($this->lang, 'event', 'list_datetype'); ?></span></div>
+					<?php endif ?>
+					</div>
+
+					<?php if($this->eventSettingEventShowPlace) : ?>
+					<div class="place">
+						<em class="fa fa-map-marker"></em> <span><?php echo $place; ?></span>
+					</div>
+					<?php endif; ?>
+
+				</div>
+
+				<div class="bottom">
+					<div class="btn-moredetail">
+						<a href="<?php echo $url; ?>" class="btn btn-info"><?php echo Emwork_Translate::text($this->lang, 'event', 'list_moredetail'); ?></a>  
+					</div>
+					
+					<?php if($this->eventSettingEventShowPublishDate) : ?>
+					<div class="publishDate col-md-4 col-sm-6 col-xs-12">
+						<em class="fa fa-clock-o"></em> <?php echo Emwork_Translate::text($this->lang, 'event', 'list_publishdate'); ?> <?php echo $publishDate; ?>
+					</div>
+					<?php endif; ?>
+
+					<?php if($this->eventSettingEventShowCreator) : ?>
+					<div class="createdBy col-md-4 col-sm-6 col-xs-12">
+						<em class="fa fa-pencil"></em> <?php echo Emwork_Translate::text($this->lang, 'event', 'list_by'); ?> <?php echo $AuthorName; ?>
+					</div>
+					<?php endif; ?>
+
+				</div>
+
+			</div>
+		</div>
+
+		<?php 
+        	endforeach;
+        endif;
+        ?>
+	</div>
+</div>

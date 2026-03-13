@@ -1,0 +1,120 @@
+<div class="button-zone button-zone-top">
+	<?php if($this->canEdit){ ?>
+	<button class="btn btn-warning btnEdit">
+		<em class="fa fa-edit"></em> 
+		ปรับปรุงข้อมูล
+	</button>
+	<button class="btn btn-danger btnDelete">
+		<em class="fa fa-trash"></em> 
+		ลบข้อมูล
+	</button>
+	<?php } ?>
+	<button class="btn btn-default btnBack">
+		กลับ
+	</button>
+</div>
+<div class="panel panel-default panel-detail">
+	<div class="panel-body">
+		<?php // ข้อมูลทั่วไป ?>
+		<div class="title-label">
+			ข้อมูลทั่วไป
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<p>
+					<strong>Username : </strong>
+					<?php echo $this->data->username; ?>
+				</p>
+				<p>
+					<strong>เบอร์โทรศัพท์ : </strong>
+					<?php echo $this->data->telephone; ?>
+				</p>
+				<p>
+					<strong>เบอร์โทรสาร : </strong>
+					<?php echo $this->data->fax; ?>
+				</p>
+			</div>
+			<div class="col-md-6">
+				<p>
+					<strong>ชื่อ - นามสกุล : </strong>
+					<?php echo ($this->data->title_name_id != 'O' ? $this->data->title_name : $this->data->title_name_other) . $this->data->first_name . ' ' . $this->data->last_name;?>
+				</p>
+				<p>
+					<strong>เบอร์มือถือ : </strong>
+					<?php echo $this->data->mobile; ?>
+				</p>
+				<p>
+					<strong>ช่องทางติดต่ออื่นๆ : </strong>
+					<?php echo $this->data->other_contact; ?>
+				</p>
+			</div>
+		</div>
+		
+		<?php // ข้อมูลการใช้งาน ?>
+		<div class="title-label">
+			ข้อมูลการใช้งาน
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<p>
+					<strong>การใช้งาน : </strong><?php echo $this->statusOption[$this->data->is_enable]; ?>
+				</p>
+			</div>
+			<div class="col-md-6">
+				<p>
+					<strong>เข้าใช้งานครั้งล่าสุด : </strong><?php echo empty($this->data->last_login_date) ? 'ยังไม่เคยเข้าใช้งาน' : Emwork_Utility_DateTime::MySQLToDateThai($this->data->last_login_date, "DT"); ?>
+				</p>
+			</div>
+		</div>
+		
+	</div>
+</div>
+
+<div class="button-zone button-zone-bottom">
+	<?php if($this->canEdit){ ?>
+	<button class="btn btn-warning btnEdit">
+		<em class="fa fa-edit"></em> 
+		ปรับปรุงข้อมูล
+	</button>
+	<button class="btn btn-danger btnDelete">
+		<em class="fa fa-trash"></em> 
+		ลบข้อมูล
+	</button>
+	<?php } ?>
+	<button class="btn btn-default btnBack">
+		กลับ
+	</button>
+</div>
+
+<script>
+$(function () {
+
+	<?php if($this->canEdit){ ?>
+	// Edit
+	$(".btnEdit").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'user', 'action' => 'edit', 'itemid' => $this->data->id), null, true); ?>";
+	});
+	// Delete
+	$(".btnDelete").click(function(){
+		DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+			$.post("<?php echo $this->url(array("module" => 'system', "controller" => 'user', 'action' => 'delete'), null, true); ?>", {'id' : '<?php echo $this->data->id?>'}, function(data){
+				if (data.result) {
+					DialogComplete('ลบสำเร็จ');
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'user', 'action' => 'index'), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		});
+	});
+	<?php } ?>
+
+	// Back
+	$(".btnBack").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'user', 'action' => 'index'), null, true); ?>";
+	});
+	
+});
+</script>

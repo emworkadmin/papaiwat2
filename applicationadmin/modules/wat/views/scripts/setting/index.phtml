@@ -1,0 +1,243 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+
+<div class="panel-detail">
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+				
+		<div class="title-label">ตั้งค่าการแสดงผลรายการข้อมูล</div>			
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemPerPage">จำนวนข้อมูลที่แสดงต่อหน้า</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('ItemPerPage', $this->data->itemPerPage, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemSortType">เงื่อนไขการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ItemSortType', $this->data->itemSortType, array('class' => 'form-control required', 'placeholder' => ''), $this->sortTypeOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemSortDirection">รูปแบบการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ItemSortDirection', $this->data->itemSortDirection, array('class' => 'form-control required', 'placeholder' => ''), $this->sortDirectionOption); ?>
+			</div>
+		</div>
+		<?php if (false) : ?>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemShowNoDataCategory">ต้องการแสดงหมวดหมู่ที่ไม่มีข้อมูลหรือไม่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowNoDataCategory', $this->data->itemShowNoDataCategory, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemCanComment">อนุญาตให้แสดงความคิดเห็น</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemCanComment', $this->data->itemCanComment, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemPublicComment">การแผยแพร่ความคิดเห็น</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemPublicComment', $this->data->itemPublicComment, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->publicCommentOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemAmountColumn">จำนวนคอลัมน์ที่แสดง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formSelect('ItemAmountColumn', $this->data->itemAmountColumn, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->columnAmountOption); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemShowImage">แสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowImage', $this->data->itemShowImage, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<?php if (false) : ?>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemShowCategory">แสดงชื่อหมวดหมู่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowCategory', $this->data->itemShowCategory, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemShowIntroText">แสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowIntroText', $this->data->itemShowIntroText, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<?php if (false) : ?>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemShowAmount">แสดงจำนวนข้อมูลในหมวดหมู่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowAmount', $this->data->itemShowAmount, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
+					
+		<div class="title-label">ตั้งค่าการแสดงผลรายการหมวดหมู่</div>			
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="CategoryPerPage">จำนวนข้อมูลที่แสดงต่อหน้า</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('CategoryPerPage', $this->data->categoryPerPage, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="CategoryAmountColumn">จำนวนคอลัมน์ที่แสดง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formSelect('CategoryAmountColumn', $this->data->categoryAmountColumn, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->columnAmountOption); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="CategoryShowImage">แสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryShowImage', $this->data->categoryShowImage, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<?php if (false) : ?>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="CategoryShowCategory">แสดงชื่อหมวดหมู่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryShowCategory', $this->data->categoryShowCategory, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="CategoryShowIntroText">แสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryShowIntroText', $this->data->categoryShowIntroText, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		
+		<?php if (false) : ?>
+		<div class="title-label">ตั้งค่าการแสดงข้อมูลใหม่และข้อมูลอัพเดท</div>			
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="Newlimitdata">จำนวนข้อมูลใหม่ที่ต้องการแสดง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('Newlimitdata', $this->data->newlimitdata, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="Newdistancedate">ช่วงเวลาของข้อมูลใหม่ที่ต้องการแสดง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('Newdistancedate', $this->data->newdistancedate, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="Updatelimitdata">จำนวนข้อมูลอัพเดทที่ต้องการแสดง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('Updatelimitdata', $this->data->updatelimitdata, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="Updatedistancedate">ช่วงเวลาของข้อมูลอัพเดทที่ต้องการแสดง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('Updatedistancedate', $this->data->updatedistancedate, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<?php endif; ?>
+				
+		<div class="title-label">ตั้งค่าการแสดงผลข้อมูล</div>			
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="">ภาพ Cover ตั้งต้น</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->UploadHtmlControl("CoverImage", "CoverImage", $this->data->CoverImage, array('multi' => false, 'exts' => array('png', 'jpg', 'jpeg', 'gif'), 'maxsize' => '2')); ?>
+				<div class="help-block">ขนาดไฟล์ไม่เกิน 2 MB<br />เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png</div>
+			</div>
+		</div>	
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="">ภาพ Intro ตั้งต้น</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->UploadHtmlControl("IntroImage", "IntroImage", $this->data->IntroImage, array('multi' => false, 'exts' => array('png', 'jpg', 'jpeg', 'gif'), 'maxsize' => '2')); ?>
+				<div class="help-block">ขนาดไฟล์ไม่เกิน 2 MB<br />เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png</div>
+			</div>
+		</div>
+
+		<hr />
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formEdit").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formEdit input[type=checkbox], #formEdit input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formEdit").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'wat', 'controller' => 'setting', 'action' => 'save'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'wat', 'controller' => 'setting', 'action' => 'index'), null, true); ?>" ;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+});
+</script>

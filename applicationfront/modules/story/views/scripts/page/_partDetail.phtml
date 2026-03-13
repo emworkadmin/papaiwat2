@@ -1,0 +1,185 @@
+<div class="detail-content">
+<?php 
+$settingSiteUrl = System_Model_Setting::getValue('SiteUrl', 'General');
+
+if(count($this->dataDetail)>0) :
+		$index = 0;
+		foreach ($this->dataDetail as $item) :
+			$index++;
+			$chkHeightAll = true;
+			
+			$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			$randstring = '';
+			for ($i = 0; $i < 10; $i++) {
+			$randstring .= $characters[rand(0, strlen($characters))];
+			}
+			
+			if($item['DataType'] == 'G') {
+				
+				if(count($item['Data'])>0) {
+					$Number = count($item['Data']);
+					echo '<div id="'. $index .'" class="lightgallery gallery image-' . $Number .' '.$randstring.'">';
+					$index_gallery = 0;
+					foreach ($item['Data'] as $data) {
+						
+						$image = $this->url(array('module' => 'default', 'controller' => 'file', 'action' => 'get', 'file' => $data['FileData']->HashName), null, true);
+						
+						//list($width, $height) = getimagesize($settingSiteUrl.'/file/get/file/'.$data['FileData']->HashName);
+						list($width, $height) = getimagesize(APPLICATION_ROOT . DS .'file' . $data['FileData']->FilePath . DS . $data['FileData']->HashName);
+						if($chkHeightAll && $width>$height){
+						$chkHeightAll = false;
+						}
+						
+						echo '<div data-src="' . $image . '">';
+						echo '<img alt="image" id="image-' .$randstring. '" src="' . $image . '">';
+						echo '</div>';
+						
+					}
+					echo '</div>';
+					
+					if($chkHeightAll){
+					echo '<script>';
+					echo 'function checkPosition_'.$randstring.'() {';
+					echo '	if (window.matchMedia("(max-width: 1023px)").matches) {';
+					
+						if(!in_array($Number, array('1','2','5','7','10'))){
+							echo '$(".'.$randstring.' img").css({"object-fit":"cover"});';
+							echo '$(".'.$randstring.' div").css({"height":"300px"});';
+						}else if($Number=='1'){
+							echo '$(".'.$randstring.' img").css({"width":"auto", "max-width":"100%"});';
+						}else if($Number=='2'){
+							echo '$(".'.$randstring.' img").css({"object-fit":"scale-down"});';
+							echo '$(".'.$randstring.' div").css({"height":"600px"});';
+						}else if($Number=='5'){
+							echo '$(".'.$randstring.'").css({"height":"600px"});';
+							echo '$(".'.$randstring.' img").css({"object-fit":"cover"});';
+							echo '$(".'.$randstring.' div").css({"height":"300px"});';
+							echo '$(".'.$randstring.' div:nth-child(2)").css({"height":"600px"});';
+							echo '$(".'.$randstring.' div:nth-child(4)").css({"top":"300px"});';
+							echo '$(".'.$randstring.' div:nth-child(5)").css({"top":"300px"});';
+						}else if($Number=='7'){
+							echo '$(".'.$randstring.'").css({"height":"900px"});';
+							echo '$(".'.$randstring.' img").css({"object-fit":"cover"});';
+							echo '$(".'.$randstring.' div").css({"height":"300px"});';
+							echo '$(".'.$randstring.' div:nth-child(2)").css({"height":"600px"});';
+							echo '$(".'.$randstring.' div:nth-child(4)").css({"top":"300px"});';
+							echo '$(".'.$randstring.' div:nth-child(5)").css({"top":"300px"});';
+							echo '$(".'.$randstring.' div:nth-child(6)").css({"top":"600px"});';
+							echo '$(".'.$randstring.' div:nth-child(7)").css({"top":"600px"});';
+						}else if($Number=='10'){
+							echo '$(".'.$randstring.'").css({"height":"1200px"});';
+							echo '$(".'.$randstring.' img").css({"object-fit":"cover"});';
+							echo '$(".'.$randstring.' div").css({"height":"300px"});';
+							echo '$(".'.$randstring.' div:nth-child(2)").css({"height":"600px"});';
+							echo '$(".'.$randstring.' div:nth-child(4)").css({"top":"300px"});';
+							echo '$(".'.$randstring.' div:nth-child(5)").css({"top":"300px"});';
+							echo '$(".'.$randstring.' div:nth-child(6)").css({"top":"600px"});';
+							echo '$(".'.$randstring.' div:nth-child(7)").css({"height":"600px","top":"600px"});';
+							echo '$(".'.$randstring.' div:nth-child(8)").css({"top":"600px"});';
+							echo '$(".'.$randstring.' div:nth-child(9)").css({"top":"900px"});';
+							echo '$(".'.$randstring.' div:nth-child(10)").css({"top":"900px"});';
+						}
+
+					echo '	} else {';
+					
+						if(!in_array($Number, array('1','2','5','7','10'))){
+							echo '$(".'.$randstring.' img").css({"object-fit":"scale-down"});';
+							echo '$(".'.$randstring.' div").css({"height":"400px"});';
+						}else if($Number=='1'){
+							echo '$(".'.$randstring.' img").css({"width":"auto", "max-width":"100%"});';
+						}else if($Number=='2'){
+							echo '$(".'.$randstring.' img").css({"object-fit":"scale-down"});';
+							echo '$(".'.$randstring.' div").css({"height":"600px"});';
+						}else if($Number=='5'){
+							echo '$(".'.$randstring.'").css({"height":"800px"});';
+							echo '$(".'.$randstring.' img").css({"object-fit":"scale-down"});';
+							echo '$(".'.$randstring.' div").css({"height":"400px"});';
+							echo '$(".'.$randstring.' div:nth-child(2) img").css({"object-fit":"cover"});';
+							echo '$(".'.$randstring.' div:nth-child(2)").css({"height":"800px"});';
+							echo '$(".'.$randstring.' div:nth-child(4)").css({"top":"400px"});';
+							echo '$(".'.$randstring.' div:nth-child(5)").css({"top":"400px"});';
+						}else if($Number=='7'){
+							echo '$(".'.$randstring.'").css({"height":"1200px"});';
+							echo '$(".'.$randstring.' img").css({"object-fit":"scale-down"});';
+							echo '$(".'.$randstring.' div").css({"height":"400px"});';
+							echo '$(".'.$randstring.' div:nth-child(2) img").css({"object-fit":"cover"});';
+							echo '$(".'.$randstring.' div:nth-child(2)").css({"height":"800px"});';
+							echo '$(".'.$randstring.' div:nth-child(4)").css({"top":"400px"});';
+							echo '$(".'.$randstring.' div:nth-child(5)").css({"top":"400px"});';
+							echo '$(".'.$randstring.' div:nth-child(6)").css({"top":"800px"});';
+							echo '$(".'.$randstring.' div:nth-child(7)").css({"top":"800px"});';
+						}else if($Number=='10'){
+							echo '$(".'.$randstring.'").css({"height":"1600px"});';
+							echo '$(".'.$randstring.' img").css({"object-fit":"scale-down"});';
+							echo '$(".'.$randstring.' div").css({"height":"400px"});';
+							echo '$(".'.$randstring.' div:nth-child(2) img").css({"object-fit":"cover"});';
+							echo '$(".'.$randstring.' div:nth-child(2)").css({"height":"800px"});';
+							echo '$(".'.$randstring.' div:nth-child(4)").css({"top":"400px"});';
+							echo '$(".'.$randstring.' div:nth-child(5)").css({"top":"400px"});';
+							echo '$(".'.$randstring.' div:nth-child(6)").css({"top":"800px"});';
+							echo '$(".'.$randstring.' div:nth-child(7) img").css({"object-fit":"cover"});';
+							echo '$(".'.$randstring.' div:nth-child(7)").css({"height":"800px","top":"800px"});';
+							echo '$(".'.$randstring.' div:nth-child(8)").css({"top":"800px"});';
+							echo '$(".'.$randstring.' div:nth-child(9)").css({"top":"1200px"});';
+							echo '$(".'.$randstring.' div:nth-child(10)").css({"top":"1200px"});';
+						}
+					
+					echo '	}';
+					echo '}';
+					echo 'checkPosition_'.$randstring.'();';
+					echo '$(document).load($(window).bind("resize", checkPosition_'.$randstring.'));';
+					echo '</script>';
+					}else{
+					echo '<script>';
+					echo 'function checkPosition_'.$randstring.'() {';
+						if($Number=='1'){
+							echo '$("#image-' .$randstring. '").css({"width":"'.$width.'px", "max-width":"100%"});';
+						}
+					echo '}';
+					echo 'checkPosition_'.$randstring.'();';
+					echo '$(document).load($(window).bind("resize", checkPosition_'.$randstring.'));';
+					echo '</script>';
+					}
+					
+				}
+				
+			// end Gallery
+			} else if($item['DataType'] == 'D') {
+				
+				if(count($item['Data'])>0) {
+					echo '<div id="'. $index .'" class="description">';
+					foreach ($item['Data'] as $data) {
+						echo $data['Detail'];
+					}
+					echo '</div>';
+				}
+				
+			// end Description
+			} else if($item['DataType'] == 'M') {
+				if(count($item['Data'])>0) {
+
+					echo '<div id="'. $index .'" class="multimedia col-md-12 col-sm-12 col-xs-12">';
+					foreach ($item['Data'] as $data) {
+						if($data['Type'] == 'U') {
+							$video = $this->url(array('module' => 'default', 'controller' => 'file', 'action' => 'get', 'type' => 'thumbnail', 'file' => $data['FileData']->HashName), null, true);
+						echo '<video controls>
+							<source src="'.$video.'" type="'.$data['FileData']->Type.'">
+							</video>';
+						} else {
+							
+						$pattern = '/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/';
+						$match = preg_match($pattern,  $data['YoutubeUrl'], $matches, PREG_OFFSET_CAPTURE);
+
+							echo '<iframe src="https://www.youtube.com/embed/'. $matches[7][0] . '"></iframe>';
+						}
+					}
+					echo '</div>';
+				}
+				
+			}
+			// end MultiMedia
+
+		endforeach;
+endif;
+?>          	
+</div>

@@ -1,0 +1,34 @@
+<?php
+//<!----------------------------------------- ไฟล์เอกสาร ------------------------------------------------>
+if (count ( $this->dataFileDocuments ) > 0) :
+?>
+<style>
+.document-download-amount{ color: #666; font-size: 0.8em; }
+</style>
+<div class="article-document">
+	<hr />
+	<div class="title-label">
+		<img src="<?php echo substr($this->baseUrl("images/icons/icon_document.png"), $this->subStringAdminLen); ?>" /> เอกสาร
+	</div>
+	<?php
+	foreach ( $this->dataFileDocuments as $doc ) :
+		$docUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $doc["hash_name"]), null, true);
+		$docName = $doc["file_name"];
+	?>
+	<div class="docname">
+		<em class="glyphicon glyphicon-download-alt"></em>&nbsp;
+		<a id="lnkDocumentDownload-<?php echo $doc['ContentArticleFileID']; ?>" href="<?php echo $docUrl; ?>" target="_blank">
+			<?php echo $docName; ?>
+		</a>
+	</div>
+	
+	<?php if($doc['Extension']=="pdf"):?>
+		<iframe style="height: 550px; width: 100%;" src="/pdf/web/viewer.html?file=<?php echo $docUrl; ?>"></iframe>
+	<?php endif;?>
+	<?php
+	endforeach;
+	?>
+</div>
+<?php 
+endif; 
+?>

@@ -1,0 +1,20 @@
+{
+	"name" : "แบบสำรวจ",
+	"controller" : "item",
+	"description" : "แสดงแบบสำรวจตามที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "item",
+			"type" : "select",
+			"size" : "",
+			"label" : "แบบสำรวจ",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Poll_Service_Item",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

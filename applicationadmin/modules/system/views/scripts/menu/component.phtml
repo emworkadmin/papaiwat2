@@ -1,0 +1,75 @@
+<?php 
+/**
+ * EM D2MS
+ *
+ * @copyright  Copyright (c) 2018 EMWORK Group
+ * @license	EMWORK Group
+ * @version	1.0.0 applicationadmin/modules/system/views/scripts/menu/component.phtml 
+ * @author	EMWORK Group
+ */
+?>
+<div id="component">
+<?php 
+$fields = $this->config->fields; 
+$params = $this->data == null ? array() : json_decode($this->data->Params, true);
+if (count($fields) > 0) :
+	foreach ($fields as $field) :
+		$value = isset($params[$field->name]) ? $params[$field->name] : ($this->data == null ? $field->default : null);
+		$labelRequired = $field->required ? " labelRequest" : "";
+		$controlRequired = $field->required ? " required" : "";
+?>
+	<div class="form-group">
+		<label class="col-md-3 control-label <?php echo $labelRequired; ?>" for=""><?php echo $field->label; ?></label>
+		<div class="col-md-9 divControl">
+			<?php 
+			switch ($field->type) :
+				case "texteditor" : 
+					echo $this->formTextarea('mparams[' . $field->name . ']', $value, array('class' => 'form-control' . $controlRequired, 'rows' => '5'));
+					break;
+				case "textarea" :
+					echo $this->formTextarea('mparams[' . $field->name . ']', $value, array('class' => 'form-control' . $controlRequired, 'rows' => '5'));
+					break;
+				case "select" :
+					$option = array();
+					if ($field->optiontype == 'dynamic') :
+						$optionFunctionClass = $field->optionfunction->class;
+						$optionFunctionMethod = $field->optionfunction->method;
+						$option = $optionFunctionClass::$optionFunctionMethod();
+					else : 
+						foreach ($field->options as $opt) :
+							$option[$opt->value] = $opt->name;
+						endforeach;
+					endif;
+					echo $this->formSelect('mparams[' . $field->name . ']', $value, array('class' => 'form-control' . $controlRequired), $option);
+					break;
+				case "radio" :
+					$option = array();
+					if ($field->optiontype == 'dynamic') :
+						$optionFunctionClass = $field->optionfunction->class;
+						$optionFunctionMethod = $field->optionfunction->method;
+						$option = $optionFunctionClass::$optionFunctionMethod();
+					else :
+						foreach ($field->options as $opt) :
+							$option[$opt->value] = $opt->name;
+						endforeach;
+					endif;
+					echo $this->formRadio('mparams[' . $field->name . ']', $value, array('class' => 'form-control' . $controlRequired), $option);
+					break;
+				case "text" :
+				default: 
+					echo $this->formText('mparams[' . $field->name . ']', $value, array('class' => 'form-control' . $controlRequired, 'placeholder' => ''));
+					break;
+			endswitch;
+			?>
+		</div>
+	</div>
+<?php 
+	endforeach;
+endif
+?>
+</div>
+<script>
+$(function () {
+	
+});
+</script>

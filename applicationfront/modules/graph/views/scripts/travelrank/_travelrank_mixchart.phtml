@@ -1,0 +1,424 @@
+<style>
+.graph-box.with-color.MixchartExportZone {background-color: #d4effa;}
+
+.graph-box-amount-accommodation {text-align: center; }
+.graph-box-amount-accommodation .fonttop {font-family: "Kanit"; }
+.graph-box-amount-accommodation .unit {font-family: 'Mitr Light'; }
+
+.accommodation-graph .graph-box-subbox-title {background-color: #0071bd;}
+
+
+    #MixchartExportZone.mixchar .export { display: inline-block; width: 100%; font-family: 'Kanit Medium';    margin-bottom: 15px; }
+    #MixchartExportZone.mixchar .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+    #MixchartExportZone.mixchar .export #MixchartYear { margin-right: 4%; }
+    #MixchartExportZone .mixchart-box {background: white;border: 1px solid;    padding: 10px 10px 10px 10px;}
+    #MixchartExportZone .main-mixchart {background: white;font-size: 20px;text-align: center;    margin-bottom: 15px;}
+    #MixchartExportZone.mixchar {margin-top: 30px; background: #d4effa;  padding: 30px 25px 25px; display: inline-block; width: 100%;     margin-bottom: 15px;}
+    #MixchartExportZone .head-mixchart{color: white; background: #0071bd;border: 1px solid;border-color: #0071bd;    padding-bottom: 5px;padding-top: 5px;}
+    #MixchartExportZone .top-box {color: #0071bd;font-size: 17px; }
+    #MixchartExportZone .top-box-2 {color: #0071bd; font-size: 17px; }
+    #MixchartExportZone .fonttop {font-size: 4rem;color :black}
+    #MixchartExportZone span.top-hotel {font-size: 25px;}
+    #MixchartExportZone .form-control {font-size: 14px;}
+    #MixchartExportZone img.img-food {margin-bottom: 2px;}
+    #MixchartExportZone .box-image{font-size: 14px;font-weight: bold;}
+    #MixchartExportZone .export-mixchart.col-md-9 {padding-left: 0px;}
+    #MixchartExportZone .export-mixchart.col-md-3 {padding-right: 0px;}
+    #MixchartExportZone .topmixchart-mixchart.col-md-10 {padding: 0px; padding-left: 5px;}
+    .Situation_seeAll_mixchart a {color: white;}
+    .Situation_seeAll_mixchart {display: inline-block;font-family: 'Mitr Light';font-size: 17px;padding: 12px 30px 12px;margin-bottom: 15px;color: white;background: linear-gradient(to left, #1892d3, #138dce);border-radius: 7px;border: 1px solid white;}    
+    @media (max-width: 1199px) {
+        #MixchartExportZone .fonttop {font-size: 4rem;}
+    }
+</style>
+
+	<div class="graph-box with-color MixchartExportZone" id="MixchartExportZone">
+		<div class="graph-box-title">
+			<div class="row">
+				<div class="col-md-9">
+					<span>สถิติบริการด้านการท่องเที่ยวโดยรวม (สถานพักแรม)</span>
+				</div>
+				<div class="export col-md-3 col-sm-12 col-xs-12">
+					<div class="row">
+						<div class="col-sm-6">
+                            <?php
+                            if(empty($this->TravelRankMixchartDummy)) {
+                                echo $this->formSelect("MixchartYear", $this->MixchartYear, array('class' => 'form-control', 'placeholder' => ''), $this->MixcharyYears);
+                            }
+                            ?>
+						</div>
+						<div class="col-sm-6">
+							<?php echo $this->formSelect("MixchartExport", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		
+		<div class="graph-box-body">
+		
+			<div class="graph-box-amount-accommodation">
+				<div class="top-box row">
+		            <div class="box-image  col-md-2 "style=" ">
+		                <div class="col-md-12" style="">
+		                    <img alt="image" class="img-food" src="<?php echo $this->baseUrl('assets/graph/img/icon_web/2.png'); ?>" >
+		                    <br>
+		                    สถานพักแรม
+		                </div>
+		            </div>
+		            <div class="topmixchart col-md-10">
+			
+		                <div class="col-md-4"style="">
+		                    <div class="mixchart-box" style="">
+		                        จำนวนสถานที่พักแรม 
+		                        <br>
+		                        <div class="fonttop" style="">
+		                            <?php echo number_format($this->HotelAmount, 2); ?>
+		                            <span class="top-hotel unit"><?php echo $this->HotelAmountText; ?>แห่ง</span>
+		                        </div>
+		                    </div>
+		                </div>
+			
+		                <div class="col-md-4"style=" ">
+		                    <div class="mixchart-box" style="">
+		                        จำนวนห้องพัก
+		                        <br>
+		                        <div class="fonttop" style="">
+		                            <?php echo number_format($this->RoomAmount, 2); ?>
+		                            <span class="top-hotel unit"><?php echo $this->RoomAmountText; ?>ห้อง</span>
+		                        </div>
+		                    </div>
+		                </div>
+			
+		                <div class="col-md-4"style=" ">
+		                    <div class="mixchart-box" style="">
+		                        อัตราการเข้าพักเฉลี่ย (OR)
+		                        <br>
+			                    <div class="fonttop" style="">
+			                    	<?php echo number_format($this->ORAmount, 2); ?> 
+			                        <span class="top-hotel unit">%</span>
+			                    </div>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			    
+			    <div class="top-box-2 row">
+		            <div class="box-image  col-md-2 " style=" "></div>	
+		            <div class="topmixchart col-md-10">
+		
+		                <div class="col-md-4"style="">
+		                    <div class="mixchart-box" style="">
+		                        ผู้เข้าพักแรม
+		                        <br>
+		                        <div class="fonttop" style="">
+		                            <?php echo number_format($this->GuestAmount, 1); ?>
+		                            <span class="top-hotel unit"><?php echo $this->GuestAmountText; ?>คน/ครั้ง</span>
+		                        </div>
+		                    </div>
+		                </div>
+		
+		                <div class="col-md-4"style=" ">
+		                    <div class="mixchart-box" style="">
+		                        ระยะเวลาเข้าพักเฉลี่ย (LOS)
+		                        <br>
+		                        <div class="fonttop" style="">
+		                            <?php echo number_format($this->LOSAmount, 2); ?>
+		                            <span class="top-hotel unit"><?php echo $this->LOSAmountText; ?>วัน</span>
+		                        </div>
+		                    </div>
+		                </div>
+		
+		                <div class="col-md-4"style=" ">
+		                    <div class="mixchart-box" style="">
+		                        จำนวนคนต่อห้องพัก
+		                        <br>
+			                    <div class="fonttop" style="">
+			                        <?php echo number_format($this->PersonPerRoom, 2); ?>
+			                        <span class="top-hotel unit"><?php echo $this->PersonPerRoomText; ?>คน/ห้อง</span>
+			                    </div>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+		    </div>
+		    
+		    <div class="mb-15"></div>
+		    
+		    <div class="graph-box-subbox accommodation-graph" >
+				<div class="graph-box-subbox-title">
+					จำนวนผู้เข้าพัก (คน) และอัตราการเข้าพักเฉลี่ย (OR) (%) รายไตรมาส
+				</div>
+				<div class="graph-box-subbox-body">
+					<canvas id="myChartMixchart"></canvas>
+				</div>
+			</div>
+		    
+		
+		</div>		
+		<div class="GUIDE_myChartMixchart TIC-footer">ที่มา : กองเศรษฐกิจการท่องเที่ยวและกีฬา</div>
+		<?php if (!empty($this->mixChartLatestYear)) : ?><div class="GUIDE_myChartMixchart TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->mixChartLatestYear + 543; ?></div><?php endif; ?>
+	</div>
+	
+	<div class="graph-button-zone">
+		<a href="https://app.powerbi.com/groups/me/reports/c34658b1-8c0d-4296-b3b1-786d4120dea5/ReportSection" target="_blank" style="background: linear-gradient(to top, #3388BE, #27A8E2); ">
+			ดูข้อมูลสถิติทั้งหมด
+		</a>
+	</div>
+
+<?php if (false) : ?>
+
+<div class="mixchar" style="" id="MixchartExportZone" >
+
+    <div class="export">
+        <div class="export-mixchart col-md-9">สถิติบริการด้านการท่องเที่ยวโดยรวม (สถานพักแรม)</div>
+        <div class="export-mixchart col-md-3">
+            <!-- <?php echo $this->formSelect("MixchartYear", $this->MixchartYear, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?> -->
+            <?php echo $this->formSelect("MixchartExport", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6 col-md-offset-6 col-sm-offset-6 col-xs-offset-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+    
+    <div class="main-mixchart col-md-12" style="">
+        <div class="top-box col-md-12">
+            <div class="box-image  col-md-2 "style=" ">
+                <div class="col-md-12" style="">
+                    <img alt="image" class="img-food" src="<?php echo $this->baseUrl('assets/graph/img/icon_web/2.png'); ?>" >
+                    <br>
+                    สถานพักแรม
+                </div>
+            </div>
+
+            <div class="topmixchart col-md-10">
+
+                <div class="col-md-4"style="">
+                    <div class="mixchart-box" style="">
+                        จำนวนสถานที่พักแรม 
+                        <br>
+                        <div class="fonttop" style="">
+                            <?php echo number_format($this->HotelAmount, 2); ?>
+                            <span class="top-hotel"><?php echo $this->HotelAmountText; ?>แห่ง</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4"style=" ">
+                    <div class="mixchart-box" style="">
+                        จำนวนห้องพัก
+                        <br>
+                        <div class="fonttop" style="">
+                            <?php echo number_format($this->RoomAmount, 2); ?>
+                            <span class="top-hotel"><?php echo $this->RoomAmountText; ?>ห้อง</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4"style=" ">
+                    <div class="mixchart-box" style="">
+                        อัตราการเข้าพักเฉลี่ย (OR)
+                        <br>
+                    <div class="fonttop" style="">
+                        <?php echo number_format($this->ORAmount, 2); ?>%
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="main-mixchart col-md-12" style="">
+        <div class="top-box-2 col-md-12">
+            <div class="box-image  col-md-2 "style=" ">
+            </div>
+
+            <div class="topmixchart-mixchart col-md-10">
+
+                <div class="col-md-4"style="">
+                    <div class="mixchart-box" style="">
+                        ผู้เข้าพักแรม
+                        <br>
+                        <div class="fonttop" style="">
+                            <?php echo number_format($this->GuestAmount, 1); ?>
+                            <span class="top-hotel"><?php echo $this->GuestAmountText; ?>คน/ครั้ง</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4"style=" ">
+                    <div class="mixchart-box" style="">
+                        ระยะเวลาเข้าพักเฉลี่ย (LOS)
+                        <br>
+                        <div class="fonttop" style="">
+                            <?php echo number_format($this->LOSAmount, 2); ?>
+                            <span class="top-hotel"><?php echo $this->LOSAmountText; ?>วัน</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4"style=" ">
+                    <div class="mixchart-box" style="">
+                        จำนวนคนต่อห้องพัก
+                        <br>
+                    <div class="fonttop" style="">
+                        <?php echo number_format($this->PersonPerRoom, 2); ?>
+                        <span class="top-hotel"><?php echo $this->PersonPerRoomText; ?>คน/ห้อง</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="head-mixchart col-md-12" style="">
+        จำนวนผู้เข้าพัก (คน) และอัตราการเข้าพักเฉลี่ย (OR) (%) รายไตรมาส
+    </div>
+
+    <div class="col-md-12" style="">
+        
+    </div>
+
+    </div>
+</div>
+</div>
+<?php endif; ?>
+
+<div id="previewImage_mix_chart" style="display: none;"></div>
+<a id="downloadImage_mix_chart" href="#In_Out" style="display: none;"></a>
+
+<script>
+
+jQuery(function() {
+
+    var ctxmix = document.getElementById('myChartMixchart');
+    var mixedChart = new Chart(ctxmix, {
+        type: 'bar',
+        data: {
+            datasets: [{
+                label: 'จำนวนผู้เข้าพัก',
+                data: [
+                    <?php
+                    if(count($this->guestByQuarter)>0) {
+                    	foreach ($this->guestByQuarter as $k => $v) {
+                            echo number_format($v['Amount']/1000000, 1) . ",";
+                        }
+                    }
+                    ?>
+                ],
+                backgroundColor: 'rgba(2, 184, 171, 0.6)',
+                borderColor: 'rgb(2, 184, 171)',
+                yAxisID: 'y-axis-1',
+            },{
+                label: 'อัตราเข้าพักเฉลี่ย',
+                data: [
+                    <?php
+                    if(count($this->orByQuarter)>0) {
+                    	foreach ($this->orByQuarter as $k => $v) {
+                            echo number_format($v['Amount'], 1) . ",";
+                        }
+                    }
+                    ?>
+                ],
+                backgroundColor: 'rgba(0,0,0,0)',
+                borderColor: '#000000',
+                type: 'line',
+                lineTension : 0,
+                yAxisID: 'y-axis-2',
+            }],
+            labels: [
+                "<?php echo ($this->MixchartYear + 543); ?>/Q1",
+                "<?php echo ($this->MixchartYear + 543); ?>/Q2",
+                "<?php echo ($this->MixchartYear + 543); ?>/Q3",
+                "<?php echo ($this->MixchartYear + 543); ?>/Q4",
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    display: true,
+                    position: 'left',
+                    id: 'y-axis-1',
+                    ticks: {
+                        fontSize : 14,
+                        beginAtZero: true,
+                        callback: function(value, index, values) {
+                            return value + 'M';
+                        }
+                    }
+                }, {
+                    display: true,
+                    position: 'right',
+                    id: 'y-axis-2',
+                    gridLines: {
+                        drawOnChartArea: false,
+                    },
+                }],
+                xAxes: [{
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        fontSize: 14,
+                        beginAtZero:true
+                    }
+                }]
+            },
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function() {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = "14px ",
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillStyle = '#666';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function(dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            var data = dataset.data[index];
+                            // var tmp_data = data.toFixed(2).toString().split(".");
+							// data = tmp_data[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") + '.' + tmp_data[1];
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x, bar._model.y - data.length);
+                        });
+                    });
+                }
+            },
+			tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            responsive: true
+        }
+    });
+
+});
+
+function setCanvas_MixchartExportZone(val) {
+    html2canvas(document.querySelector("#MixchartExportZone")).then(function(canvas) {
+        $("#previewImage_mix_chart").html(canvas);
+        if(val == 'image') {
+            let imgageData = canvas.toDataURL("image/png");
+            let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+            $("#downloadImage_mix_chart").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+            $("#downloadImage_mix_chart")[0].click();
+            $("#mix_chart_Export").val('export');
+        } else if(val == 'pdf') {
+            let canvas = $("#previewImage_mix_chart canvas")[0];
+            let imgData = canvas.toDataURL("image/jpeg");
+            let pdf = new jsPDF("l", "mm", "a4");
+            pdf.addImage(imgData, 'JPEG', 0, 0);
+            pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+            $("#mix_chart_Export").val('export');
+        }
+    });
+}
+
+$("#MixchartExport").change(function() {
+    setCanvas_MixchartExportZone($(this).val());
+});
+
+</script>

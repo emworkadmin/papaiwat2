@@ -1,0 +1,100 @@
+<!-- bootstrap dialog -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/bootstrap-dialog/bootstrap-dialog.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/bootstrap-dialog/bootstrap-dialog.min.js'); ?>"></script>
+
+<style>
+    .event-infomation { margin-bottom: 15px; background: gainsboro; padding: 10px; display: inline-block; width: 100%; }
+    /* .event-infomation .Contact { text-align: center; } */
+    a#btn-contact { color: white; padding: 4px 7px 2px 7px; background: #3c8dbc; border-radius: 5px; }
+</style>
+
+<div class="event-infomation">
+
+    <div class="StartDate">
+        <div class="col-md-4"><strong><?php echo Emwork_Translate::text($this->lang, 'event', 'list_startdate'); ?></strong></div>
+        <div class="col-md-8"><?php echo $this->data->StartDate == null ? '-' : Emwork_Utility_DateTime::MSSqlToDateThai($this->data->StartDate, "DT_Nd") . " : " . $this->data->StartDate->format("H:i"); ?> <?php echo Emwork_Translate::text($this->lang, 'event', 'list_datetype'); ?></div>
+    </div>
+
+    <div class="EndDate">
+        <div class="col-md-4"><strong><?php echo Emwork_Translate::text($this->lang, 'event', 'list_enddate'); ?></strong></div>
+        <div class="col-md-8"><?php echo $this->data->EndDate == null ? '-' : Emwork_Utility_DateTime::MSSqlToDateThai($this->data->EndDate, "DT_Nd") . " : " . $this->data->EndDate->format("H:i"); ?> <?php echo Emwork_Translate::text($this->lang, 'event', 'list_datetype'); ?></div>
+    </div>
+
+    <div class="Place">
+        <div class="col-md-4"><strong><?php echo Emwork_Translate::text($this->lang, 'event', 'detail_place'); ?></strong></div>
+        <div class="col-md-8"><?php echo empty($this->data->Place) ? '-' : nl2br($this->data->Place); ?></div>
+    </div>
+
+    <div class="Telephone">
+        <div class="col-md-4"><strong><?php echo Emwork_Translate::text($this->lang, 'event', 'detail_telephone'); ?></strong></div>
+        <div class="col-md-8"><?php echo empty($this->data->Telephone) ? '-' : $this->data->Telephone; ?></div>
+    </div>
+
+    <div class="Department">
+        <div class="col-md-4"><strong><?php echo Emwork_Translate::text($this->lang, 'event', 'detail_department'); ?></strong></div>
+        <div class="col-md-8"><?php echo empty($this->data->Department) ? '-' : $this->data->Department; ?></div>
+    </div>
+
+    <?php if($this->data->EmailRecipient) : ?>
+
+    <div class="Contact col-md-8 col-md-offset-4">
+        <a id="btn-contact"><?php echo Emwork_Translate::text($this->lang, 'event', 'detail_contact'); ?></a>
+    </div>
+
+    <?php endif; ?>
+    
+</div>
+
+<script>
+	function buttonZoneDisabled() {
+		$(".button-panel-zone ").attr("disabled", "disabled");
+		$(".button-panel-zone").append('<em class="fa fa-refresh fa-spin"></em>');
+	}
+	function buttonZoneActive() {
+		$(".button-panel-zone ").removeAttr("disabled");
+		$(".button-panel-zone > em").remove();
+	}
+
+    $("#btn-contact").click(function() {
+		var data = '';
+		var dialogMainInfo = BootstrapDialog.show({
+			title: '<?php echo Emwork_Translate::text($this->lang, 'event', 'dialog_contact_title'); ?>',
+            message: $('<div id="dialogMainInfo"></div>').load("<?php echo $this->url(array('module' => 'event', 'controller' => 'mail', 'action' => 'dialog'), null, true); ?>/eventid/<?php echo $this->data->ID; ?>"),
+			closable: true,
+            closeByBackdrop: false,
+            closeByKeyboard: false,
+            autodestroy: true,
+			buttons : [
+                {
+                    label: '<?php echo Emwork_Translate::text($this->lang, 'event', 'dialog_submit'); ?>',
+                    icon: 'fa fa-save',
+                    cssClass: 'button-panel-zone btn btn-info',
+                    action: function(dialog) {
+                       var valid = $("#formDialog").valid();
+                        if(valid) {
+                           buttonZoneDisabled();
+                            $.post("<?php echo $this->url(array("module" => 'event', "controller" => 'mail', 'action' => 'save'), null, true); ?>", $("#formDialog").serialize(), function(data){
+                                if (data.result) {
+                                    DialogComplete(data.message);
+                                    dialog.close();
+                                } else {
+                                    DialogWarning(data.message, '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_title'); ?>', '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_close'); ?>');
+                                }
+                                buttonZoneActive();
+                            }, 'json');
+
+
+                        }
+                    }
+                },
+                {
+				label: '<?php echo Emwork_Translate::text($this->lang, 'event', 'dialog_close'); ?>',
+				icon: 'fa fa-times',
+				action: function(dialog) {
+					dialog.close();
+				}
+			}]
+		});
+		dialogMainInfo.open();
+    });
+</script>

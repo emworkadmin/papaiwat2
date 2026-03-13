@@ -1,0 +1,25 @@
+<?php
+//<!----------------------------------------- ไฟล์เอกสาร ------------------------------------------------>
+if (count ( $this->dataFileDocuments ) > 0) :
+?>
+<div class="article-document">
+	<hr />
+	<div class="title-label">
+		<img alt="image" src="<?php echo $this->baseUrl("images/icons/icon_document.png"); ?>" /> <?php echo Emwork_Translate::text($this->lang, "general", "infodetail_document_title"); ?>
+	</div>
+	<?php
+	foreach ( $this->dataFileDocuments as $doc ) :
+		$docUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $doc["hash_name"]), null, true);
+		$docName = $doc["file_name"];
+	?>
+	<!-- <object data="<?php echo $docUrl; ?>" type="application/pdf" width="100%" height="500px">
+		<p><a href="<?php echo $docUrl; ?>"><?php echo $docName; ?></a></p>
+	</object> -->
+	<iframe style="height: 550px; width: 100%;" src="/pdf/web/viewer.html?file=<?php echo $docUrl; ?>"></iframe>
+	<?php
+	endforeach;
+	?>
+</div>
+<?php 
+endif; 
+?>

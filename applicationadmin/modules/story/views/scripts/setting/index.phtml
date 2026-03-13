@@ -1,0 +1,231 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+				
+		<div class="title-label">ค่าพื้นฐานระบบ<?php echo $this->componentTitle; ?></div>			
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ArticlePerPage">จำนวนข้อมูลที่แสดงต่อหน้า</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('ArticlePerPage', empty($this->data->articlePerPage) ? 10 : $this->data->articlePerPage, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ArticleSortType">เงื่อนไขการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ArticleSortType', empty($this->data->articleSortType) ? "name" : $this->data->articleSortType, array('class' => 'form-control required', 'placeholder' => ''), $this->sortTypeOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ArticleSortDirection">รูปแบบการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ArticleSortDirection', empty($this->data->articleSortDirection) ? "asc" : $this->data->articleSortDirection, array('class' => 'form-control required', 'placeholder' => ''), $this->sortDirectionOption); ?>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ArticleShowNoDataCategory">ต้องการแสดงหมวดหมู่ที่ไม่มีข้อมูลหรือไม่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowNoDataCategory', empty($this->data->articleShowNoDataCategory) ? "Y" : $this->data->articleShowNoDataCategory, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<?php if (false) : ?>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ArticleCanComment">อนุญาตให้แสดงความคิดเห็น</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleCanComment', empty($this->data->articleCanComment) ? "Y" : $this->data->articleCanComment, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ArticlePublicComment">การแผยแพร่ความคิดเห็น</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticlePublicComment', empty($this->data->articlePublicComment) ? "Y" : $this->data->articlePublicComment, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->publicCommentOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<?php endif; ?>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ArticleAmountColumn">จำนวนคอลัมน์ที่แสดง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formSelect('ArticleAmountColumn', $this->data->articleAmountColumn, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->columnAmountOption); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ArticleShowImage">แสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowImage', empty($this->data->articleShowImage) ? "Y" : $this->data->articleShowImage, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ArticleShowCategory">แสดงชื่อหมวดหมู่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowCategory', empty($this->data->articleShowCategory) ? "Y" : $this->data->articleShowCategory, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ArticleShowIntroText">แสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowIntroText', empty($this->data->articleShowIntroText) ? "Y" : $this->data->articleShowIntroText, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ArticleShowAmount">แสดงจำนวนข้อมูลในหมวดหมู่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowAmount', empty($this->data->articleShowAmount) ? "Y" : $this->data->articleShowAmount, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<?php if (false) : ?>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ArticleUseFacebookComment">ใช้ Facebook Comment</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleUseFacebookComment', empty($this->data->articleUseFacebookComment) ? "N" : $this->data->articleUseFacebookComment, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+				<div class="help-block">
+					การใช้งานนี้ต้องตั้งค่า Facebook API ก่อน โปรดตั้งค่า <a href="<?php echo $this->url(array("module" => "system", "controller" => "manage", "action" => "index"), null, true); ?>" target="_blank">ที่นี่</a>
+					<br /> หากยังไม่กำหนดค่า จะไม่สามารถใช้งาน Facebook Comment ได้
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
+					
+		<div class="title-label">ตั้งค่าการแสดงผลหมวดหมู่หลัก</div>			
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="CategoryPerPage">จำนวนข้อมูลที่แสดงต่อหน้า</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('CategoryPerPage', empty($this->data->categoryPerPage) ? 10 : $this->data->categoryPerPage, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="CategoryAmountColumn">จำนวนคอลัมน์ที่แสดง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formSelect('CategoryAmountColumn', empty($this->data->categoryAmountColumn) ? 1 : $this->data->categoryAmountColumn, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->columnAmountOption); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="CategoryShowImage">แสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryShowImage', empty($this->data->categoryShowImage) ? "Y" : $this->data->categoryShowImage, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="CategoryShowCategory">แสดงชื่อหมวดหมู่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryShowCategory', empty($this->data->categoryShowCategory) ? "Y" : $this->data->categoryShowCategory, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="CategoryShowIntroText">แสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryShowIntroText', empty($this->data->categoryShowIntroText) ? "Y" : $this->data->categoryShowIntroText, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+					
+		<div class="title-label">ตั้งค่าการค้นหา</div>			
+		<div class="form-group">
+			<label class="col-md-3 control-label" >สามารถค้นหาด้วยข้อความ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('SearchByText', empty($this->data->searchByText) ? "Y" : $this->data->searchByText, array('class' => 'form-control required', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="SearchCategory1">ค้นหาจากหมวดหมู่หลัก 1</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('SearchCategory1', empty($this->data->searchCategory1) ? null : $this->data->searchCategory1, array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), Emwork_Utility::addEmptyOption($this->storyCategoryOption)); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="SearchCategory2">ค้นหาจากหมวดหมู่หลัก 2</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('SearchCategory2', empty($this->data->searchCategory2) ? null : $this->data->searchCategory2, array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), Emwork_Utility::addEmptyOption($this->storyCategoryOption)); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="SearchCategory3">ค้นหาจากหมวดหมู่หลัก 3</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('SearchCategory3', empty($this->data->searchCategory3) ? null : $this->data->searchCategory3, array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), Emwork_Utility::addEmptyOption($this->storyCategoryOption)); ?>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formEdit").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formEdit input[type=checkbox], #formEdit input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formEdit").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'story', 'controller' => 'setting', 'action' => 'save'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'story', 'controller' => 'setting', 'action' => 'index'), null, true); ?>" ;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'ATR2-0099'); ?>

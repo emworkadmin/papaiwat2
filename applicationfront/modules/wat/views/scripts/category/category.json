@@ -1,0 +1,20 @@
+{
+	"name" : "รายการหมวดหมู่",
+	"controller" : "category",
+	"description" : "แสดงรายการหมวดหมู่และรายการข้อมูลภายใต้หมวดหมู่ที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "category",
+			"type" : "select",
+			"size" : "",
+			"label" : "หมวดหมู่",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Wat_Service_Category",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

@@ -1,0 +1,61 @@
+	<style>
+		.inforow-search {
+			padding-bottom: 30px;
+		}
+
+		.detail-title-search {
+			font-size: 25px;
+			padding-bottom: 15px;
+		}
+
+		.detail-intro-search {
+			font-size: 20px;
+		}
+
+		a.title {
+			color: black;
+		}
+	</style>
+
+
+	<?php 
+	if (count($this->itemData) > 0) :
+		foreach ($this->itemData as $item) :
+
+			$item["Title"] = str_replace($this->textseart,"<span style='background: yellow;'>".$this->textseart.'</span>', $item["Title"]);
+			$item["IntroText"] = str_replace($this->textseart,"<span style='background: yellow;'>".$this->textseart.'</span>', $item["IntroText"]);
+
+			$id = $item["ID"];
+			$title = $item["Title"];
+			$introText = $item["IntroText"];
+
+			$url = '';
+			if($item['DataType'] == 'content') {
+				$url = $this->url(array("module"=>"content","controller"=>"page","action"=>"index","id"=>$item['ID']),null,true);
+			} else if ($item['DataType'] == 'gallery') {
+				$url = $this->url(array("module"=>"gallery","controller"=>"category","action"=>"detail","id"=>"-1","cid"=>"0","iid"=>$item['ID']),null,true);
+			} else if ($item['DataType'] == 'calendar') {
+				$url = $this->url(array("module"=>"calendar","controller"=>"article","action"=>"detail","id"=>"-1","cid"=>"0","iid"=>$item['ID']),null,true);
+			}
+			
+			?>
+				<div class="inforow-search">
+
+					<div class="detail">
+						<div class="detail-title-search">
+							<a class= "title"href="<?php echo $url; ?>" target="_blank"><?php echo $title; ?></a>
+						</div>					
+
+						<div class="detail-intro-search" >
+							<?php echo $introText; ?>
+						</div>
+
+					</div>
+					<!-- <div class="clearfix"></div> -->
+				</div>
+		<?php 
+		endforeach;
+	endif;
+	?>
+
+

@@ -1,0 +1,345 @@
+ /***************** font-face *****************/
+@font-face {
+    font-family: 'ThaiSans Neue';
+    src: url('../fonts/ThaiSansNeue-Regular.eot');
+    src: url('../fonts/ThaiSansNeue-Regular.eot?') format('embedded-opentype'),
+    	url('../fonts/ThaiSansNeue-Regular.woff?') format('woff'),
+    	url('../fonts/ThaiSansNeue-Regular.ttf?') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'ThaiSans Neue';
+    src: url('../fonts/ThaiSansNeue-Bold.eot');
+    src: url('../fonts/ThaiSansNeue-Bold.eot?') format('embedded-opentype'),
+    	url('../fonts/ThaiSansNeue-Bold.woff?') format('woff'),
+    	url('../fonts/ThaiSansNeue-Bold.ttf?') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'ThaiSans Neue';
+    src: url('../fonts/ThaiSansNeue-Italic.eot');
+    src: url('../fonts/ThaiSansNeue-Italic.eot?') format('embedded-opentype'),
+    	url('../fonts/ThaiSansNeue-Italic.woff?') format('woff'),
+    	url('../fonts/ThaiSansNeue-Italic.ttf?') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'ThaiSans Neue';
+    src: url('../fonts/ThaiSansNeue-BoldItalic.eot');
+    src: url('../fonts/ThaiSansNeue-BoldItalic.eot?') format('embedded-opentype'),
+    	url('../fonts/ThaiSansNeue-BoldItalic.woff?') format('woff'),
+    	url('../fonts/ThaiSansNeue-BoldItalic.ttf?') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+/************** Layout ****************/
+body {
+	font-family: "Tahoma";
+	font-size: 13px;
+}
+
+.content-wrapper {
+	background-image: url('../img/white-bg.png');
+}
+.main-header {border-bottom: 2px solid #3abfbb;}
+.main-header .logo {font-size: 1.2em;}
+.main-header .logo .logo-lg img {height: 35px;}
+.main-footer {
+	background-color: #080B10;
+	background-image: url('../img/black-bg.png');
+ 	background-repeat: no-repeat;
+ 	background-position: left;
+	color: #fff;
+	font-size: 12px;
+}
+
+.title-label {
+	color: #ffffff;
+	font-size: 18px;
+	padding: 10px 10px;
+	border-bottom:  none;
+	margin-bottom: 25px;
+	font-weight: bold;
+	background: #3a8adc;
+}
+.title-label .fa {color: #fff;float: right;margin-right: 10px;margin-top: 5px;}
+
+/***************** layout : breadcrumb *****************/
+.content-header > .breadcrumb {
+  position: relative;
+  margin-top: 5px;
+  top: 0;
+  right: 0;
+  float: none;
+  background: #d2d6de;
+  padding-left: 10px;
+}
+.content-header > .breadcrumb li:before {
+  color: #97a0b3;
+}
+
+
+/*********** BOX **************/
+.box-page > .box-header {
+	background: #123558; 
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.box-header.with-border {border-bottom: none;}
+.box-page > .box-header .box-title{
+ 	font-family: 'ThaiSans Neue' ;
+ 	font-weight: bold;
+ 	font-size: 26px;
+ 	color: #ffffff;
+}
+
+.box-page .box-title-submenu {
+	margin-bottom: -10px;
+}
+.box-page .box-title-submenu .box-title-submenu-item {
+	display: inline-block;
+	padding: 0 10px;
+	font-weight: bold;
+	height: 45px;
+	vertical-align: middle;
+	line-height: 45px;
+ 	font-size: 14px;
+}
+.box-page .box-title-submenu .box-title-submenu-active {
+	border-bottom: 3px solid #3A8ADC;
+	color: #fff;
+	cursor: pointer;
+}
+.box-page .box-title-submenu .box-title-submenu-item a {
+	color: #999;
+}
+.box-page .box-title-submenu .box-title-submenu-item a:hover {
+	color: #ededed;
+}
+
+/*********** Button Zone ******************/
+.button-zone {
+	margin-top: 5px;
+	text-align: right;
+}
+.button-zone.button-zone-top {
+	margin-bottom: 20px;
+}
+.button-zone .btn {
+ 	font-family: 'ThaiSans Neue' ;
+ 	font-size: 20px;
+}
+
+/***************** panel *****************/
+.panel-detail {
+	font-size: 16px;
+}
+.panel-detail .form-group {margin-bottom: 25px;}
+.panel-detail input, .panel-detail select, .panel-detail textarea, .panel-detail .divControl {
+	font-family: tahoma;
+	font-size: 14px;
+}
+.panel-detail .help-block {font-size: 12px; margin-bottom: 0px; color: #20409A;}
+.panel-detail label.control-label { padding-top: 5px;}
+.panel-detail .form-inline.radio {padding-top: 0px;}
+.panel-detail .radio-inline {padding-top: 0px;}
+.panel-detail .btn {font-size: 13px;}
+
+/************** Validation ***************/
+.panel-detail .help-block.error, .help-block.error  {color: red; font-style: italic;}
+
+.form-group .labelRequest::after {
+	color: red;
+	content: " *";
+}
+
+/************ Search Panel *****************/
+.searchPanel {
+	font-size: 16px;
+}
+.searchPanel input[type=text], .searchPanel select, .searchPanel .checkbox {
+	font-family: 'tahoma' ;
+	font-size: 13px;
+}
+.searchPanel label.control-label {}
+.searchPanel .btn {font-size: 13px; padding-top: 4px; padding-bottom: 5px;}
+
+/****************Check box & radio ******************/
+.checkbox.with-icheck, .radio.with-icheck {
+	
+}
+.checkbox.with-icheck label {
+	padding-left: 0px;
+}
+.checkbox.with-icheck div[class*=icheckbox] {
+	margin-right: 5px;
+}
+.radio.with-icheck label {
+	padding-left: 0px;
+}
+.radio.with-icheck div[class*=iradio] {
+	margin-right: 5px;
+}
+
+/********* DataTable *************/
+.dataTables_wrapper {
+	clear: both;
+	position: relative;
+}
+.dataTable caption {
+	background-color: #3a8adc;
+	color: #ffffff;
+	font-weight: bold;
+	padding-left: 8px; 
+	padding-right: 8px;
+	font-size: 16px;
+}
+.dataTable thead tr th {
+	background: linear-gradient(#E6E6E6, #FFFFFF); 
+	font-size: 16px;
+	vertical-align: middle;
+}
+.dataTable tbody tr td {
+	font-size: 14px;
+}
+.dataTable .bottom {font-size: 14px;}
+.dataTable .bottom select {font-size: 13px;}
+.dataTable .bottom .dataTables_info , .dataTable .bottom .dataTables_length {float: left; width: auto;}
+.dataTable .bottom .dataTables_paginate{float: right; width: auto;}
+.dataTable .bottom .dataTables_length {padding-top: 4px; margin-left: 10px; padding-left: 10px; border-left: 1px solid #ccc;}
+
+.skin-smart .pagination > .active > a, 
+.skin-smart .pagination > .active > a:focus, 
+.skin-smart .pagination > .active > a:hover, 
+.skin-smart .pagination > .active > span, 
+.skin-smart .pagination > .active > span:focus, 
+.skin-smart .pagination > .active > span:hover {
+	background-color: #485B6E;
+	border-color: #485B6E;
+}
+
+/**************** Map *****************/
+.mapThai .jqvmap-zoomin, .mapThai .jqvmap-zoomout {width: auto; height: auto;}
+.mapDesc {margin-top: 10px;}
+.mapDesc .box-desc {display: inline-block; padding: 5px;}
+.mapDesc .box-color {width: 25px;}
+
+/**************** Overwrite ****************/
+.help-block { font-size: 12px; font-style:italic }
+.skin-smart .btn {
+	font-size: 16px;
+}
+
+.skin-smart .btn-primary {
+  color: #fff;
+  background-color: #485B6E;
+  border-color: #485B6E;
+}
+.skin-smart .btn-primary:focus,
+.skin-smart .btn-primary.focus {
+  color: #fff;
+  background-color: #2C3E50;
+  border-color: #2C3E50;
+}
+.skin-smart .btn-primary:hover {
+  color: #fff;
+  background-color: #2C3E50;
+  border-color: #2C3E50;
+}
+.skin-smart .btn-primary:active,
+.skin-smart .btn-primary.active,
+.skin-smart .open > .dropdown-toggle.btn-primary {
+  color: #fff;
+  background-color: #2C3E50;
+  border-color: #2C3E50;
+}
+.skin-smart .btn-primary:active:hover,
+.skin-smart .btn-primary.active:hover,
+.skin-smart .open > .dropdown-toggle.btn-primary:hover,
+.skin-smart .btn-primary:active:focus,
+.skin-smart .btn-primary.active:focus,
+.skin-smart .open > .dropdown-toggle.btn-primary:focus,
+.skin-smart .btn-primary:active.focus,
+.skin-smart .btn-primary.active.focus,
+.skin-smart .open > .dropdown-toggle.btn-primary.focus {
+  color: #fff;
+  background-color: #2C3E50;
+  border-color: #2C3E50;
+}
+.skin-smart .btn-primary:active,
+.skin-smart .btn-primary.active,
+.skin-smart .open > .dropdown-toggle.btn-primary {
+  background-image: none;
+}
+.skin-smart .btn-primary .badge {
+  color: #EA09B1;
+  background-color: #fff;
+}
+
+.skin-smart .box.box-primary {
+  border-top-color: #EA09B1;
+}
+.skin-smart .box.box-solid.box-primary {
+  border: 1px solid #EA09B1;
+}
+.skin-smart .box.box-solid.box-primary > .box-header {
+  color: #ffffff;
+  background: #EA09B1;
+  background-color: #EA09B1;
+}
+
+.skin-smart .box.box-info {
+  border-top-color: #FA76D9;
+}
+.skin-smart .box.box-solid.box-info {
+  border: 1px solid #FA76D9;
+}
+.skin-smart .box.box-solid.box-info > .box-header {
+  color: #ffffff;
+  background: #FA76D9;
+  background-color: #FA76D9;
+}
+.skin-smart .btn-info {
+  background-color: #FA76D9;
+  border-color: #FF56D4;
+}
+.skin-smart .btn-info:hover,
+.skin-smart .btn-info:active,
+.skin-smart .btn-info.hover {
+  background-color: #FF56D4;
+}
+
+/************* overwrite ***************/
+.skin-smart .sidebar {background-color: #123558;}
+.skin-smart .sidebar-menu {font-family: 'ThaiSans Neue' ; font-size: 18px;}
+.skin-smart .sidebar-menu > li > a {border-left: 3px solid transparent;font-weight: normal;}
+.skin-smart .sidebar-menu > li.active > a {font-weight: normal; background-color: #3a8adc;}
+.skin-smart .sidebar-menu li *{color: white;}
+.skin-smart .sidebar-menu li.header {font-size: 16px;}
+.skin-smart .sidebar-menu > li > .treeview-menu {background-color: #88bdf3;}
+.skin-smart .sidebar-menu > li > .treeview-menu li em {color:#333;}
+.skin-smart .sidebar-menu .treeview-menu > li > a  {font-size: 16px; color: #333;}
+.skin-smart .user-panel {background-color: #1d7dde;}
+.skin-smart .user-panel .user-panel-img {padding: 0px 5px ; text-align: center;}
+.skin-smart .user-panel .user-panel-img .img-logo {max-width: 100%;}
+.skin-smart .user-panel .user-system {font-weight: bold; font-size: 18px; color: #CCCCCC; text-align: center; font-family: "ThaiSans Neue"; padding: 5px;}
+.skin-smart .user-panel .user-system-sub {font-family: 'ThaiSans Neue'; font-weight: bold; font-size: 18px; color: #FFFFFF; text-align: center; margin-bottom: 0px; margin-top: 5px;}
+.skin-smart.sidebar-collapse .user-panel .user-panel-img {padding: 0px;}
+.skin-smart.sidebar-collapse .user-panel .user-system {display: none;}
+.skin-smart.sidebar-collapse .user-panel .user-system-sub {display: none;}
+.skin-smart .divControl .jFiler-theme-default .jFiler-input {margin-bottom: 0px;}
+
+.nav-tabs-custom>.nav-tabs>li.active {border-top-color: #f9eb21;}
+
+.noty_type_warning .noty_text > span {display: inline-block;}
+.noty_type_warning .text-noty-warning {float: left; text-align: left; display: inline-block;}
+
+/***************** Tab & validate *****************/
+.nav-tabs li .warning {display: none;}
+.nav-tabs li.warning .warning {display: inline-block;}
+
+/*** jFiler ****/
+.jFiler-items .icon-jfi-trash.jFiler-item-trash-action {display: inline-block;}

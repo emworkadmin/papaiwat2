@@ -1,0 +1,253 @@
+<!-- jquery filer -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" >
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" >
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>	
+<!-- lightgallery dialog -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightgallery-master/css/lightgallery.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery-master/js/lightgallery.min.js'); ?>"></script>
+
+<style>
+@media only screen and (max-width: 991px) {
+    input#txtTitle{
+        margin-bottom: 10px;
+    }
+    input#txtFirstName{
+    }
+}
+
+
+
+/* Custom Style jQuery Filer */
+.jFiler-items { display: inline-block; margin: 5px 0px; }
+.jFiler-item-thumb-image {
+    width: 180px;
+    height: 120px;
+    background-color: #e4e4e4;
+    border-radius: 10px;
+    position: relative;
+    display: block;
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    box-shadow: 1px 1px 1px #999;
+	overflow: hidden;
+}
+.jFiler-item-thumb-image img { width: 100%; height: 100%; object-fit: cover;}
+.jFiler-item-others { display: none !important; }
+
+.title-label { padding: 8px 15px; font-size: 28px; }
+</style>
+
+<div class="rows webboard">
+	<div class="rows">
+		<div class="panel-body webboard">
+		
+			<?php
+			if (!empty($this->data->errorMessage)) : 
+				echo '<div class="alert alert-warning alert-dismissible"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>' . $this->data->errorMessage . '</div>';
+			endif; 
+			?>	
+			
+            <form class="form-horizontal" id="formRegister" name="formRegister">
+            
+				<div class="title-label" >
+					<span class="title"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'register_index_1'); ?></span>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-md-3 labelRequest control-label" for="TitleNameTH"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_title_name'); ?></label>
+					
+					<div class="col-md-9">
+						<div class="divControl;">	
+							<?php echo $this->formText('txtTitle',null, array('class' => 'form-control required', 'placeholder' => Emwork_Translate::text($this->lang, 'webboard', 'home_home_title_name'), 'maxlength' => '50')); ?>
+						</div>
+					</div>
+					
+				</div>
+
+				<div class="form-group">
+					<label class="col-md-3 labelRequest control-label" for="FirstNameTH"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_first_name'); ?></label>
+					
+					<div class="col-md-9">
+						<div class="divControl;">
+							<?php echo $this->formText('txtFirstName',null, array('class' => 'form-control required', 'placeholder' => Emwork_Translate::text($this->lang, 'webboard', 'home_home_first_name'), 'maxlength' => '50')); ?>
+						</div>
+					</div>
+					
+				</div>
+
+				<div class="form-group">
+					<label class="col-md-3 labelRequest control-label" for="LastNameTH"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_last_name'); ?></label>
+					
+					<div class="col-md-9">
+						<div class="divControl;">
+							<?php echo $this->formText('txtLastName',null, array('class' => 'form-control required', 'placeholder' => Emwork_Translate::text($this->lang, 'webboard', 'home_home_last_name'), 'maxlength' => '50')); ?>
+						</div>
+					</div>
+					
+				</div>
+
+				<div class="form-group">
+					<label class="col-md-3 labelRequest control-label" for="User"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_user'); ?></label>
+					
+					<div class="col-md-9">
+						<div class="divControl;">
+							<?php echo $this->formText('txtUser',null, array('class' => 'form-control required alpha', 'placeholder' => Emwork_Translate::text($this->lang, 'webboard', 'home_home_user'), 'maxlength' => '50')); ?>
+						</div>
+					</div>
+					
+				</div>
+
+				<div class="form-group">
+					<label class="col-md-3 control-label labelRequest" for="txtPassword"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_password'); ?></label>
+					<div class="col-md-9 divControl">
+						<?php echo $this->formPassword('txtPassword', null, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '20')); ?>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-md-3 control-label labelRequest" for="txtConfirmPassword"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'forgetpassword_changepassword_confirmpassword'); ?></label>
+					<div class="col-md-9 divControl">
+						<?php echo $this->formPassword('txtConfirmPassword', null, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '20')); ?>
+					</div>
+				</div>      
+
+				<div class="form-group">
+					<label class="col-md-3 control-label labelRequest" for="txtEmail"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_email'); ?></label>
+					<div class="col-md-9 divControl">
+						<?php echo $this->formText('txtEmail', null, array('class' => 'form-control required email', 'placeholder' => Emwork_Translate::text($this->lang, 'webboard', 'home_home_email'), 'maxlength' => '100')); ?>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-md-3 control-label labelRequest" for="txtCardID"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_identitycardid'); ?></label>
+					<div class="col-md-9 divControl">
+						<?php echo $this->formText('txtCardID', null, array('class' => 'form-control required digits', 'placeholder' => Emwork_Translate::text($this->lang, 'webboard', 'home_home_identitycardid'), 'maxlength' => '100')); ?>
+					</div>
+				</div>
+				
+									
+				<div class="form-group">
+					<label class="col-md-3 control-label" for="txtSex"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_gender'); ?></label>
+					<div class="col-md-9 divControl">
+						<p class="form-control-static">
+							<?php echo $this->formSelect('lstSex', null, array('class' => 'form-control', 'placeholder' => ''), $this->sexOption); ?>
+						</p>
+					</div>
+				</div>
+
+				
+				<div class="form-group">
+					<label class="col-md-3 control-label labelRequest" for="txtTelephone"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_telephone'); ?></label>
+					<div class="col-md-9 divControl">
+						<?php echo $this->formText('txtTelephone', null, array('class' => 'form-control required', 'placeholder' => Emwork_Translate::text($this->lang, 'webboard', 'home_home_telephone'), 'maxlength' => '50')); ?>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-md-3 control-label labelRequest" for="txtAddress"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_address'); ?></label>
+					<div class="col-md-9 divControl">
+						<?php echo $this->formTextarea('txtAddress', null, array('class' => 'form-control required', 'placeholder' => Emwork_Translate::text($this->lang, 'webboard', 'home_home_address') ,'rows' => '3', 'maxlength' => '20')); ?>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="col-md-9 col-md-offset-3 button-panel-zone">
+						<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> <?php echo Emwork_Translate::text($this->lang, 'webboard', 'register_submit'); ?></button>
+						<button type="button" class="btn btn-default" id="btnCancel"> <?php echo Emwork_Translate::text($this->lang, 'webboard', 'register_back'); ?></button>
+					</div>
+				</div>
+				
+			</form>
+    	</div>
+    </div>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+
+<script>
+jQuery(function(){
+
+	$("#formRegister").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+			error.appendTo( element.parents("div.divControl"));
+		}
+	});
+
+	function buttonZoneDisabled() {
+		$(".button-panel-zone button").attr("disabled", "disabled");
+		$(".button-panel-zone").append('<em class="fa fa-refresh fa-spin"></em>');
+	}
+	function buttonZoneActive() {
+		$(".button-panel-zone button").removeAttr("disabled");
+		$(".button-panel-zone > em").remove();
+	}
+
+	$("#btnSave").click(function(){
+		buttonZoneDisabled();
+		var valid = $("#formRegister").valid();
+		if (valid && alphabetcheck) {
+			$.post("<?php echo $this->url(array('module' => 'webboard', 'controller' => 'register', 'action' => 'save'), null, true);?>", $("#formRegister").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'webboard', 'controller' => 'register', 'action' => 'finish'), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message, '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_title'); ?>', '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_close'); ?>');
+					buttonZoneActive();
+				}
+			}, 'json');
+		} else {
+			buttonZoneActive();
+		}
+	});
+	
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'webboard', 'controller' => 'home', 'action' => 'login'), null, true); ?>";
+	});
+
+	var alphabetcheck = true;
+	$.fn.alphabetonly = function(options) {
+		var opts = $.extend( {}, $.fn.alphabetonly.defaults, options );
+		msg = opts.message;
+		color = opts.color;
+		size = opts.size;
+		fontstyle = opts.fontstyle;
+		
+		var letters = /^[A-Za-z]+$/;
+
+		$.each($(this), function(i,e) {
+			var id = $(e).attr("id");
+			$(e).parent().append("<span class='pattern-validate-txt' id='"+id+"' style='display:none;color:"+color+";font-size:"+size+";font-style:"+fontstyle+";'>" + msg + "</span>");
+			$(this).keyup(function() {
+				if($(this).val().length>0) {
+					if( letters.test($(this).val()) ) {
+						$("span#"+id).css({"display":"none"});
+                        alphabetcheck = true;
+					} else {
+						$("span#"+id).css({"display":"block"});
+                        alphabetcheck = false;
+					}
+				} else {
+					$("span#"+id).css({"display":"none"});
+                    alphabetcheck = true;
+				}
+			});
+		});
+	}
+	$.fn.alphabetonly.defaults = {
+		message: "<?php echo Emwork_Translate::text($this->lang, 'webboard', 'register_validate_eng_text'); ?>",
+		color: "red",
+		size: '12px',
+        fontstyle: 'italic'
+	};
+
+	$('.alpha').alphabetonly();
+
+
+});
+</script>

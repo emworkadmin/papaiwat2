@@ -1,0 +1,161 @@
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+		<?php echo $this->formHidden("hdfUpdateType", 'C', null, null); ?>
+
+		<div class="title-label">ตั้งค่าข้อมูล</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="Name">ชื่อ Widget</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText("Name", $this->data->Name, array('class' => 'form-control required', 'maxlength' => '500')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="widgetType">ประเภท Widget</label>
+			<div class="col-md-9 divControl">
+				<div class="form-control-static"><?php echo $this->data->WidgetType; ?></div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="dataType">ประเภทข้อมูล</label>
+			<div class="col-md-9 divControl">
+				<div class="form-control-static"><?php echo $this->data->DataType; ?></div>
+			</div>
+		</div>
+
+		<?php if(in_array($this->data->DataType, array('content','gallery','calendar','story','banner','weblink','event'))){ ?>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingCategory">หมวดหมู่</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect("settingCategory", $this->dataContent->settingCategory, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->categoryOption)); ?>
+			</div>
+		</div>
+		<?php if(in_array($this->data->DataType, array('content','gallery','calendar','story'))){ ?>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingUseCategoryParent">หมวดหมู่ย่อย</label>
+			<div class="col-md-9 divControl">
+				<div class='checkbox with-icheck'>
+					<label class='' for=''>
+						<input type='checkbox' id='settingUseCategoryParent' name='settingUseCategoryParent'/>&nbsp;แสดงหมวดหมู่ย่อย
+					</label>
+				</div>
+			</div>
+		</div>
+		<?php } ?>
+		<hr />
+		<?php } ?>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingLimit">จำนวนที่แสดงผล</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText("settingLimit", $this->dataContent->settingLimit, array('class' => 'form-control digits', 'maxlength' => '10')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="settingSidx">เงื่อนไขการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('settingSidx', $this->dataContent->settingSidx, array('class' => 'form-control required'), Emwork_Utility::addEmptyOption($this->sortTypeOption)); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="settingSord">รูปแบบการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('settingSord', $this->dataContent->settingSord, array('class' => 'form-control required'), Emwork_Utility::addEmptyOption($this->sortDirectionOption)); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="IsEnable">สถานะ</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio("IsEnable", $this->data->IsEnable, array('class' => 'required', 'label_class' => 'radio-inline'), $this->publishOption, " "); ?>
+				</div>						
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<?php endif ; ?>
+				<?php if ($this->canDelete) : ?>
+				<button type="button" class="btn btn-danger" id="btnDelete"><em class="fa fa-trash"></em> ลบข้อมูล</button>
+				<?php endif ; ?>
+				<button type="button" class="btn btn-default" id="btnBack">กลับ</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+    
+	$("#formData input[type=checkbox], #formData input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+	<?php if($this->dataContent->settingUseCategoryParent == 'Y'){ ?>
+	$('#settingUseCategoryParent').prop('checked', true);
+	$("#settingUseCategoryParent").iCheck('update');
+	<?php } ?>
+
+	<?php if ($this->canEdit) : ?> 
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'update'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'edit', "itemid" => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif ; ?>
+
+	<?php if ($this->canDelete) : ?>
+	// Delete
+	$("#btnDelete").click(function(){
+		DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+			$.post("<?php echo $this->url(array("module" => 'widgetmanage', "controller" => 'Item', 'action' => 'delete'), null, true); ?>", {'id' : '<?php echo $this->data->ID?>'}, function(data){
+				if (data.result) {
+					DialogComplete('ลบสำเร็จ');
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'index'), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		});
+	});
+	<?php endif ; ?>
+
+	// Back
+	$("#btnBack").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'index'), null, true); ?>";
+	});
+
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'WDG-MGT-06'); ?>

@@ -1,0 +1,252 @@
+
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+<style >
+/*
+th.ratio {text-align: center;}
+td.ratio {text-align: right;}
+.dataTable caption {background-color: #834EAC; font-size: 18px;}
+.searchPanel .form-control, .searchPanel .btn, .searchPanel .control-label  {color: #000;}
+select option {color: #000;}*/
+
+.dataTable .bottom .dataTables_info , .dataTable .bottom .dataTables_length {float: left; width: auto;}
+.dataTable .bottom .dataTables_paginate{float: right; width: auto;}
+</style>
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-header with-border">
+				<h3 class="box-title">รายการผู้ใช้งาน</h3>
+				<div class="box-tools pull-right">
+					<a class="btn btn-primary" title="เพิ่มผู้ใช้งาน" href="<?php echo $this->url(array('action' => 'formadd')); ?>">
+						<em class="fa fa-plus"></em> เพิ่มผู้ใช้งาน
+                	</a>
+				</div>
+			</div>
+			<div class="box-body">
+				
+				<form class="searchPanel form-horizontal" >
+					<div class="form-group">
+						<label for="textsearch" class="control-label col-md-3">ค้นหาจาก</label>
+						<div class="col-md-9 form-inline">
+							<?php echo $this->formSelect('filtersearch', null, array('class' => 'form-control', 'title' => 'ประเภทการค้นหา'), $this->regionOption); ?>
+							<?php echo $this->formText('textsearch', null, array('class' => 'form-control'));?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="department" class="control-label col-md-3">สังกัด</label>
+						<div class="col-md-9">
+							<?php echo $this->formSelect('department', null, array('class' => 'form-control'), $this->regionOption); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="status" class="control-label col-md-3">สถานะ</label>
+						<div class="col-md-9">
+							<?php echo $this->formSelect('status', null, array('class' => 'form-control'), $this->regionOption); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-9 col-md-offset-3">
+							<button type="button" class="btn btn-primary" id="btnSearch"><span class="fa fa-search"></span> ค้นหา</button>
+							<button type="button" class="btn btn-default" id="btnReset"><span class="fa fa-refresh"></span> เริ่มใหม่</button>
+							<a href="">ค้นหาขั้นสูง</a>
+						</div>
+					</div>
+				</form>
+				
+				
+				<table id="tblUser" class="table table-bordered table-hover">
+				    <thead>
+				        <tr>
+				            <th><input name="select_all" value="1" type="checkbox" title="Select All"></th>
+				            <th>ลำดับ</th>
+				            <th>Username</th>
+				            <th>ชื่อ - นามสกุล</th>
+				            <th>สังกัด</th>
+				            <th>กลุ่มผู้ใช้งาน</th>
+				            <th>เข้าใช้งานครั้งล่าสุด</th>
+				            <th>การใช้งาน</th>
+				        </tr>
+				    </thead>
+				    <tbody>	    
+				    </tbody>
+				</table>
+			
+			</div>
+		</div>
+	</div>
+</div>
+<?php echo $this->render("user/test.phtml"); ?>
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script type="text/javascript">
+//
+//Updates "Select all" control in a data table
+//
+function updateDataTableSelectAllCtrl(table){
+	var $table             = table.table().node();
+	var $chkbox_all        = $('tbody input[type="checkbox"]', $table);
+	var $chkbox_checked    = $('tbody input[type="checkbox"]:checked', $table);
+	var chkbox_select_all  = $('thead input[name="select_all"]', $table).get(0);
+	
+	// If none of the checkboxes are checked
+	if($chkbox_checked.length === 0){
+	   chkbox_select_all.checked = false;
+	   if('indeterminate' in chkbox_select_all){
+	      chkbox_select_all.indeterminate = false;
+	   }
+	
+	// If all of the checkboxes are checked
+	} else if ($chkbox_checked.length === $chkbox_all.length){
+	   chkbox_select_all.checked = true;
+	   if('indeterminate' in chkbox_select_all){
+	      chkbox_select_all.indeterminate = false;
+	   }
+	
+	// If some of the checkboxes are checked
+	} else {
+	   chkbox_select_all.checked = true;
+	   if('indeterminate' in chkbox_select_all){
+	      chkbox_select_all.indeterminate = true;
+	   }
+	}
+}
+
+    jQuery(function(){
+
+    	// --------------- Begin: Table & Search Zone --------------------------
+    	
+    	function renderColumn ( data, type, row, meta ) {
+    		return data;
+    	}
+    	function renderColumnLink ( data, type, row, meta ) {
+    		return '<a href="<?php echo $this->url(array('action' => 'formview'));?>?itemid=' + row.DT_RowId + '">' + data + '</a>';
+    	}
+    	var rows_selected = [];
+    	var tblUser = $('#tblUser').DataTable({
+    		processing: true,
+    		serverSide: true,
+    		responsive: true,
+    		order: [[ 2, "asc" ]],
+    		ajax: {
+    	        url: '<?php echo $this->url(array('action' => 'getlisting')); ?>',
+    	        type: 'POST',
+    	        data: function(d) {
+					d.textstr = $('#textsearch').val();
+					d.filter = $('#filtersearch').val();
+					d.DEPARTMENTID = $('#department').val();
+					d.ISBLOCK = $('#status').val();
+    	        }
+    	    },
+    	    language : {
+				url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+    	    },
+    		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+    		"columns": [
+    		            { "width": "1%", 'orderable': false, 'data' : null, "class" : "select-checkbox"},
+    		            { "width": "40px", 'orderable': false, 'data' : 'NO', "class" : "text-center"},
+    		            { "width": "10%", 'data' : 'username' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            {'data' : 'fullname', 'render' : renderColumnLink},
+    		            { "width": "10%", 'data' : 'departmentname' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "10%", 'data' : 'usergroupname' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "10%", 'data' : 'last_login_date' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "10%", 'data' : 'is_block' , 'render' : renderColumnLink, "class" : "ratio"}
+    		          ],
+			'columnDefs': [{
+				'targets': 0,
+				'searchable': false,
+				'orderable': false,
+				'className': 'dt-body-center',
+				'render': function (data, type, full, meta){
+					return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+				}
+			}],
+		      'rowCallback': function(row, data, dataIndex){
+		          // Get row ID
+		          var rowId = data['DT_RowId'];
+
+		          // If row ID is in the list of selected row IDs
+		          if($.inArray(rowId, rows_selected) !== -1){
+		             $(row).find('input[type="checkbox"]').prop('checked', true);
+		             $(row).addClass('selected');
+		          }
+		       }
+        });
+
+		$('#btnSearch').click(function(){
+			tblUser.ajax.reload();
+		});
+
+		$('#btnReset').click(function(){
+			$(".searchPanel input[type=text]").val('');
+			$(".searchPanel select").val('');
+			tblUser.ajax.reload();
+		});
+        
+
+    	   // Handle click on checkbox
+    	   $('#tblUser tbody').on('click', 'input[type="checkbox"]', function(e){
+    	      var $row = $(this).closest('tr');
+
+    	      // Get row data
+    	      var data = tblUser.row($row).data();
+
+    	      // Get row ID
+    	      var rowId = data['DT_RowId'];
+
+    	      // Determine whether row ID is in the list of selected row IDs 
+    	      var index = $.inArray(rowId, rows_selected);
+
+    	      // If checkbox is checked and row ID is not in list of selected row IDs
+    	      if(this.checked && index === -1){
+    	         rows_selected.push(rowId);
+
+    	      // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+    	      } else if (!this.checked && index !== -1){
+    	         rows_selected.splice(index, 1);
+    	      }
+
+    	      if(this.checked){
+    	         $row.addClass('selected');
+    	      } else {
+    	         $row.removeClass('selected');
+    	      }
+
+    	      // Update state of "Select all" control
+    	      updateDataTableSelectAllCtrl(tblUser);
+
+    	      // Prevent click event from propagating to parent
+    	      e.stopPropagation();
+    	   });
+
+    	   // Handle click on table cells with checkboxes
+    	   $('#tblUser').on('click', 'tbody td, thead th:first-child', function(e){
+    	      $(this).parent().find('input[type="checkbox"]').trigger('click');
+    	   });
+
+    	   // Handle click on "Select all" control
+    	   $('thead input[name="select_all"]', tblUser.table().container()).on('click', function(e){
+    	      if(this.checked){
+    	         $('#tblUser tbody input[type="checkbox"]:not(:checked)').trigger('click');
+    	      } else {
+    	         $('#tblUser tbody input[type="checkbox"]:checked').trigger('click');
+    	      }
+
+    	      // Prevent click event from propagating to parent
+    	      e.stopPropagation();
+    	   });
+
+    	   // Handle table draw event
+    	   tblUser.on('draw', function(){
+    	      // Update state of "Select all" control
+    	      updateDataTableSelectAllCtrl(tblUser);
+    	   });
+    	        
+    	//new $.fn.dataTable.Responsive( tblRanking );
+    	
+    	// --------------- End: Table & Search Zone --------------------------
+
+    });
+    
+</script> 

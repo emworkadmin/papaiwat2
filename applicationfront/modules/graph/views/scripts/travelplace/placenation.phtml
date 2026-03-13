@@ -1,0 +1,17 @@
+<?php echo $this->partial("index/_pluginChartjs.phtml", $this); ?>
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/graph/css/graph.css'); ?>">
+
+<div class="Graph-list Graph-Travelplace-Nation">
+	<div class="Graph-title">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+    </div>
+    <div class="Graph-subtitle">
+        <div class="borderHead"></div>
+    </div>
+    
+    <div class="powerBI">
+    	<iframe src="https://app.powerbi.com/view?r=eyJrIjoiNzA5NzdjMjktMWUyNi00MjlmLWI0OGEtMjMzNjZkNGNlODdhIiwidCI6IjE1MzI4OGE4LTc2MDYtNGM1OS05NDAwLTQwZmVmNmQ4N2JiNiIsImMiOjEwfQ%3D%3D" allowfullscreen="true" width="100%" height="830px" frameborder="0"></iframe>
+    </div>
+</div>

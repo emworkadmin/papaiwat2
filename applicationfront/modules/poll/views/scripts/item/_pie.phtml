@@ -1,0 +1,151 @@
+<link rel="stylesheet" type="text/css" href="/assets/poll/css/style.css">
+<script src="<?php echo $this->baseUrl('assets/poll/js/chart.bundle.min.js'); ?>"></script>
+
+<div class="info infopage poll-item-pie">
+ 	<div class="item-title title-panel">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+		<hr />
+	</div>
+
+	<div class="result-list-panel">
+		<div class="row">
+
+			<form class="form-horizontal" id="formQuestion" name="formQuestion">
+			<input type="hidden" name="hdfID" value="<?php echo $id; ?>" title="HiddenID">
+		
+			<?php 
+			if(count($this->dataQuestion)>0){
+				$index = 1;
+				foreach($this->dataQuestion as $k1=>$v1){
+			?>
+
+			<div class="col-md-12" data-id="<?php echo $v1['ID']; ?>">
+			
+				<div class="poll-question col-md-12">
+					<span class="question-index"><?php echo $index . ". "; ?></span>
+					<span class="question-title"><?php echo $v1['Question']; ?></span>
+				</div>
+
+				<?php if($this->ShowIntroText && $v1['Description']){ ?>
+				<div class="poll-question-desc col-md-12">
+					<?php echo nl2br($v1['Description']); ?>
+				</div>
+				<?php } ?>
+
+				<div class="col-md-8">
+
+					<?php 
+					if(count($v1['OptionList'])>0){
+						foreach($v1['OptionList'] as $k2=>$v2){
+					?>
+
+						<div class="poll-option col-md-12">
+							<div class="col-md-12">
+								<em class="fa fa-circle"></em> &nbsp;&nbsp; <?php echo $v2['Name']; ?>
+							</div>
+						</div>
+
+					<?php
+						}
+					}
+					?>
+
+				</div>
+
+				<div class="col-md-4">
+					<canvas id="charts-<?php echo $v1['ID']; ?>"></canvas>
+					<script>
+						jQuery(function(){
+							var data_<?php echo str_replace("-","_",$v1['ID']); ?> = {
+								labels: [
+									<?php 
+									if(count($v1['OptionList'])>0){
+										$i = 1;
+										$l = count($v1['OptionList']);
+										foreach($v1['OptionList'] as $k2=>$v2){
+											echo '"'.$v2['Name'].'"';
+											if($i != $l){
+												echo ',';
+											}
+											$i++;
+										} 
+									} 
+									?>
+								],
+								datasets: [{
+									data : [
+										<?php 
+										if(count($v1['OptionList'])>0){
+											$i = 1;
+											$l = count($v1['OptionList']);
+											foreach($v1['OptionList'] as $k2=>$v2){
+												echo empty($v2['Amount']) ? 0 : $v2['Amount'];
+												if($i != $l){
+													echo ',';
+												}
+												$i++;
+											} 
+										} 
+										?>
+									],
+									backgroundColor : [
+										<?php 
+										if(count($v1['OptionList'])>0){
+											$i = 1;
+											$l = count($v1['OptionList']);
+											foreach($v1['OptionList'] as $k2=>$v2){
+												echo '"'.$v2['Color'].'"';
+												if($i != $l){
+													echo ',';
+												}
+												$i++;
+											} 
+										} 
+										?>
+									]
+								}]
+							};
+							function chart_<?php echo str_replace("-","_",$v1['ID']); ?>() {
+								var ctx = $("#charts-<?php echo $v1['ID']; ?>");
+								var options = {
+										responsive: true
+									};
+								var chart = new Chart(ctx, {type : 'pie', data: data_<?php echo str_replace("-","_",$v1['ID']); ?>, options: options});
+							}
+							chart_<?php echo str_replace("-","_",$v1['ID']); ?>();
+						});
+					</script>
+				</div>
+
+			</div>
+
+			<?php
+				$index++;
+				}
+			}
+			?>
+
+			</form>
+
+		</div>
+	</div>
+
+	<div class="form-group text-center">
+		<div class="col-md-12 button-panel-zone">
+			<button type="button" class="btn btn-default" id="btnBack"><em class="fa fa-arrow-circle-left"></em> <?php echo Emwork_Translate::text($this->lang, 'poll', 'result_back'); ?></button>
+		</div>
+	</div>
+	
+</div>
+
+<script>
+jQuery(function(){
+
+	$('#btnBack').click(function(){
+		window.location = "<?php echo $this->HomeUrl; ?>";
+	});
+
+});
+</script>

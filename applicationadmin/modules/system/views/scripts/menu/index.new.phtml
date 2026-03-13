@@ -1,0 +1,146 @@
+<link rel="stylesheet"
+	href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+<div>
+	<form class="searchPanel form-horizontal" id="formSearch">
+		<div class="form-group">
+			<div class="col-md-12">
+				<div class="input-group">
+					<p class="form-control-static">ค้นหาเมนู</p>
+					<?php if ($this->canAdd) : ?>
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-primary" id="btnGoAdd">
+							<em class="fa fa-plus"> </em> เพิ่ม
+						</button>
+					</span>
+					<?php endif ; ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-12">
+				<div class="input-group">
+						<?php echo $this->formText('textsearch', null, array('class' => 'form-control', 'placeholder' => 'ค้นหาจากชื่อเมนู'));?>
+						<span class="input-group-btn">
+						<button type="button" class="btn btn-primary" id="btnSearch">
+							<em class="fa fa-search"></em> ค้นหา
+						</button>
+						<button type="button" class="btn btn-warning" id="btnReset">
+							<em class="fa fa-refresh"></em> เริ่มใหม่
+						</button>
+					</span>
+				</div>
+
+			</div>
+		</div>
+		<div id="AdvanceSearch">
+			<div class="form-group">
+				<label for="menuGroupID" class="control-label col-md-2"  >กลุ่มเมนู : </label>
+				<div class="col-md-4">
+					<?php echo $this->formSelect('menuGroupID', null, array('class' => 'form-control'), $this->groupMenu); ?>
+				</div>
+				<label for="is_enable" class="control-label col-md-2">สถานะ : </label>
+				<div class="col-md-4">
+					<?php echo $this->formSelect('is_enable', null, array('class' => 'form-control'), $this->publishOption); ?>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<table id="tblData" class="table table-bordered table-hover">
+	<caption>รายการเมนู</caption>
+	<thead>
+		<tr>
+			<th>ลำดับ</th>
+			<th>ชื่อ</th>
+			<th>กลุ่ม</th>
+			<th>ลำดับ</th>
+			<th>สถานะ</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+
+<!-- DataTables -->
+<script
+	src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script
+	src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script type="text/javascript">
+    jQuery(function(){
+
+    	<?php if ($this->canAdd) : ?>
+    	$("#btnGoAdd").click(function(e) {
+    		window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'menu', 'action' => 'add'), null, true); ?>";
+		});
+		<?php endif ; ?>
+
+    	// --------------- Begin: Table & Search Zone --------------------------
+    	
+    	function renderColumn ( data, type, row, meta ) {
+    		return data;
+    	}
+    	function renderColumnLink ( data, type, row, meta ) {
+    		return '<a href="<?php echo $this->url(array('module' => 'system', 'controller' => 'menu', 'action' => 'edit'), null, true);?>/itemid/' + row.DT_RowId + '">' + data + '</a>';
+    	}
+    	var rows_selected = [];
+    	
+    	var tblData = $('#tblData').DataTable({
+    		processing: true,
+    		//serverSide: true,
+    		responsive: true,
+    		//order: [[ 3, "asc" ]],
+    		/*ajax: {
+    	        url: '<?php echo $this->url(array('module' => 'system', 'controller' => 'menu', 'action' => 'getlist'), null, true); ?>',
+    	        type: 'POST',
+    	        data: function(d) {
+        	        d.textstr = $("#formSearch #textsearch").val();
+        	        d.isEnable = $("#formSearch #is_enable").val();
+        	        d.menuGroupID = $("#formSearch #menuGroupID").val();
+    	        }
+    	    },*/
+    	    language : {
+				url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+    	    },
+    		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+    		"columns": [
+    		            { "width": "10%", 'orderable': false, 'data' : 'NO', "class" : "text-center"},
+    		            { "width": "20%", 'data' : 'nameMenu' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "20%", 'data' : 'groupMenu' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "10%", 'data' : 'ordering' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "10%", 'data' : 'is_enable' , 'render' : renderColumnLink, "class" : "ratio"},
+    		          ]
+        });
+        
+
+		$('#btnSearch').click(function(){
+			//tblData.ajax.reload();
+			loadData();
+		});
+
+		$('#btnReset').click(function(){
+			$(".searchPanel input[type=text]").val('');
+			$(".searchPanel select").val('');
+			//tblData.ajax.reload();
+			loadData();
+		});
+
+		function loadData() {
+			var textstr = $("#formSearch #textsearch").val();
+			var isEnable = $("#formSearch #is_enable").val();
+			var menuGroupID = $("#formSearch #menuGroupID").val();
+			
+			$.post('<?php echo $this->url(array('module' => 'system', 'controller' => 'menu', 'action' => 'getlist'), null, true); ?>', {'textstr' : textstr, 'isEnable' : isEnable, 'menuGroupID' : menuGroupID}, function(data){
+				//tblData.fnClearTable( 0 );
+				//tblData.fnAddData(data);
+				tblData.clear().draw();
+				tblData.rows.add(data.data); // Add new data
+				tblData.columns.adjust().draw(); // Redraw the DataTable
+			}, 'json');
+		}
+		loadData();
+    	
+    });
+    
+</script>

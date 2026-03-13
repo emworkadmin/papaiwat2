@@ -1,0 +1,58 @@
+<!-- OrgChart -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/orgchart/css/jquery.orgchart.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/orgchart/js/jquery.orgchart.min.js'); ?>"></script>
+
+<style>
+    .orgchart { width: 100%; }
+    .orgchart .node .title { height: unset; line-height: unset; }
+    .orgchart .node .title a { color: white; }
+    .orgchart .node .title img { width: 100%; object-fit: cover; height: 200px; }
+    .orgchart .node .title .symbol { display: none; }
+    .orgchart .node .edge { color : green; }
+</style>
+
+<?php echo '<style>' . $this->CSS . '</style>'; ?>
+
+<div class="panel-detail orgchart-chart orgchart-chart-<?php echo $this->data->ID; ?>" id="<?php echo $this->data->ID; ?>">
+
+ 	<div>
+    	<div class="orgchart-title title-panel">
+			<span class="title">
+				<?php echo $this->pageTitle; ?>
+			</span>
+			<hr />
+		</div>
+    </div>
+
+    <div id="chart-container" class=""></div>
+
+</div>
+
+<script>
+$(function() {
+
+    var datascource = <?php echo json_encode($this->dataChart); ?>;
+
+    if(datascource.title) {
+        loadChart();
+    }
+    function loadChart() {
+        oc = $('#chart-container').orgchart({
+            'data' : datascource,
+            'nodeTitle': 'title',
+            // 'pan': true,
+            // 'zoom': true
+            'verticalLevel': <?php echo $this->PersonVerticalLevel; ?>,
+            'visibleLevel': <?php echo $this->PersonVisibleLevel; ?>
+        });
+        oc.$chart.find('.node').each(function () {
+            if($(this).find('.id').text()[0]=='w') {
+                $(this).find('.title').addClass('title_workgroup');
+            } else if ($(this).find('.id').text()[0] == 'p') {
+                $(this).find('.title').addClass('title_person');
+            }
+        });        
+    }
+
+});
+</script>

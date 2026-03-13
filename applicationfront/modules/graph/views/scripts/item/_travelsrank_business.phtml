@@ -1,0 +1,180 @@
+<style>
+
+    .bussinate .export { display: inline-block; width: 100%; font-family: 'Kanit Medium';    margin-bottom: 15px; }
+    .bussinate .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+    .bussinate .export #bussinateYear { margin-right: 4%; }
+
+    .bus-do {background-color: #ff706c;text-align: center;color: white;    font-size: 15px;}
+    .bus-do-static {background-color: #662e91;text-align: center;color: white;    font-size: 15px;}
+    .mydoughnut {background: white;}
+    .bussinate {margin-top: 30px; background: #e6e6e6; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+
+    .Situation_seeAll_business { margin-bottom: 15px; margin-top: 15px; color: white; background: linear-gradient(to top, #0d84c8, #22a0da); padding: 7px 30px 2px; border-radius: 7px; border: 1px solid white; }
+    .Situation_seeAll_business a {color: white;}
+    .bussinate-box {background: white;border: 1px solid;    padding: 10px 10px 10px 10px;}
+    .bus-no { background: white; margin-bottom: 10px;text-align: center;font-size: 39px;color: #00c0ef;}
+    canvas#mydoughnut1 {margin-bottom: 10px;margin-top: 10px;}
+    canvas#mydoughnut2 {margin-bottom: 10px;margin-top: 10px;}
+
+
+
+</style>
+
+<div class="bussinate col-md-12" id="BussinateExportZone" >
+
+    <div class="export">
+        <div class="col-md-9">สถิติธุรกิจนำเที่ยวและผู้นำเที่ยว</div>
+        <div class="col-md-3">
+                <?php echo $this->formSelect("bussinateYear", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?>
+                <?php echo $this->formSelect("bussinateExport", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+    
+
+    <div class="col-md-12">
+
+        <div class="charttopbussinate col-md-4">
+
+            <div class="bus-do col-md-12">
+                จำนวนธุรกิจนำเที่ยว รายประเภท
+            </div>
+            <div class="mydoughnut col-md-12">
+                <canvas id="mydoughnut1"></canvas>
+            </div>
+
+        </div>
+
+        <div class="charttopbussinate col-md-4">
+            <div class="charttopbussinate col-md-12" style="">
+                <div class="bus-do charttopbussinate col-md-12" >
+                    จำนวนธุรกิจนำเที่ยว
+                </div>
+                <div class="bus-no col-md-12">
+                      9,629
+                </div>
+            </div>     
+
+            <div class="charttopbussinate col-md-12" style="">
+                <div class="bus-do-static charttopbussinate col-md-12">
+                    จำนวนผู้นำเที่ยว
+                </div>
+                <div class="bus-no col-md-12" >
+                      3,216
+                </div>
+            </div>
+        </div>
+
+        <div class=" charttopbussinate col-md-4" >
+            <div class="bus-do-static col-md-12" > 
+                จำนวนผู้นำเที่ยว รายประเภท
+            </div>
+            <div class="mydoughnut col-md-12">
+                <canvas id="mydoughnut2"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="col-md-12" style="text-align: center;">
+    <button class="Situation_seeAll_business"><a href="https://app.powerbi.com/groups/me/reports/f957ee2b-1d4e-4586-a217-d009c357ab9a/ReportSection7d5437c3a064b4b285c7" target="_blank">ดูข้อมูลสถิติทั้งหมด</a></button>
+</div>
+
+
+<div id="previewImage_business" style="display: none;"></div>
+<a id="downloadImage_business" href="#In_Out" style="display: none;"></a>
+
+
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/html2canvas/html2canvas.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/chartjs/Chart.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/graph/jspdf/jspdf.min.js');?>"></script>
+<script>
+
+jQuery(function(){
+
+    var ctxdoughnut1 = document.getElementById('mydoughnut1').getContext('2d');
+var myBarChart  = new Chart(ctxdoughnut1, {
+    // The type of chart we want to create
+    type: 'doughnut',
+
+    // The data for our dataset
+    data: {
+        labels: ["บุคคล","นิติบุคคล",],
+        datasets: [{
+            label: "My First dataset",
+            backgroundColor: ['#02b8ab','#354749'],
+            borderColor: ['#02b8ab','#354749'],
+            data: [810 , 500],
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+                showTooltips: {
+                    showLabel: true,
+                    showValue: true,
+                },
+                responsive: true,
+                legend : {
+                    display: false
+                }
+            }
+
+    });
+
+    var ctxdoughnut2 = document.getElementById('mydoughnut2').getContext('2d');
+    var myBarChart  = new Chart(ctxdoughnut2, {
+        // The type of chart we want to create
+        type: 'doughnut',
+
+        // The data for our dataset
+        data: {
+            labels: ["บุคคล","นิติบุคคล",],
+            datasets: [{
+                label: "My First dataset",
+                backgroundColor: ['#fc8281','#dce01d'],
+                borderColor: ['#fc8281','#dce01d'],
+                data: [300 , 500],
+            }]
+        },
+
+            options: {
+                showTooltips: {
+                    showLabel: true,
+                    showValue: true,
+                },
+                responsive: true,
+                legend : {
+                    display: false
+                }
+            }
+
+    });
+
+        function setCanvas_BussinateExportZone(val) {
+        html2canvas(document.querySelector("#BussinateExportZone")).then(function(canvas) {
+            $("#previewImage_business").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_business").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage_business")[0].click();
+                $("#business_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_business canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#business_Export").val('export');
+            }
+        });
+    }
+
+    $("#bussinateExport").change(function() {
+        setCanvas_BussinateExportZone($(this).val());
+    });
+});
+
+</script>

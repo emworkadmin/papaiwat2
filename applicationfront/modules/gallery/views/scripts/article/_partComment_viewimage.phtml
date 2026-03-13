@@ -1,0 +1,230 @@
+<?php
+// Translate 
+$comment_title = Emwork_Translate::text($this->lang, "general", "comment_title");
+$comment_send = Emwork_Translate::text($this->lang, "general", "comment_send");
+$comment_list_title = Emwork_Translate::text($this->lang, "general", "comment_list_title");
+$comment_btn_loadmore = Emwork_Translate::text($this->lang, "general", "comment_btn_loadmore");
+$comment_warning_login_first = Emwork_Translate::text($this->lang, "general", "comment_warning_login_first");
+$comment_warning_send_approve = Emwork_Translate::text($this->lang, "general", "comment_warning_send_approve");
+$comment_warning_send_success = Emwork_Translate::text($this->lang, "general", "comment_warning_send_success");
+$comment_warning_send_fail = Emwork_Translate::text($this->lang, "general", "comment_warning_send_fail");
+$comment_warning_message_length = Emwork_Translate::text($this->lang, "general", "comment_warning_message_length");
+$comment_warning_title = Emwork_Translate::text($this->lang, "general", "comment_warning_title");
+$comment_btn_close = Emwork_Translate::text($this->lang, "general", "comment_btn_close");
+
+if(false):
+// ข้อความสำหรับทดสอบ
+// $comment_title = "แสดงความคิดเห็น";
+// $comment_send = "ส่งความคิดเห็น";
+// $comment_list_title = "ความคิดเห็น";
+// $comment_btn_loadmore = "ดูเพิ่มเติม";
+// $comment_warning_login_first = "กรุณาลงทะเบียนเข้าสู่ระบบ<br>เพื่อแสดงความคิดเห็น";
+// $comment_warning_send_approve = "ความคิดเห็นของท่านอยู่ระหว่างการพิจารณา ขอบคุณที่ร่วมแสดงความคิดเห็น";
+// $comment_warning_send_success = "ส่งความคิดเห็นสำเร็จ";
+// $comment_warning_send_fail = "ส่งความคิดเห็นไม่สำเร็จ";
+// $comment_warning_message_length = "กรุณากรอกความคิดเห็นอย่างน้อย 10 ตัวอักษร";
+// $comment_warning_title = "แจ้งเตือน";
+// $comment_btn_close = "ปิด";
+endif;
+?>
+
+<?php if($this->ReCaptchaSiteKey): ?>
+	<script src='https://www.google.com/recaptcha/api.js?hl=<?php echo $this->lang; ?>'></script>
+<?php endif; ?>
+
+<style>
+.information-comment-panel .review-item { margin-bottom: 30px; color: #3d3d3d; display: block; }
+.information-comment-panel .review-item-list { border-bottom: solid 1px #ccc; }
+.information-comment-panel .review-img { float: left; display: block; width: 70px; height: 70px; }
+.information-comment-panel .review-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.information-comment-panel .review-detail { margin-left: 70px; padding-left: 15px; }
+.information-comment-panel .review-detail .review-name { font-weight: bold; margin-bottom: 7px; }
+.information-comment-panel .review-detail .review-msg { color: #333; margin: 15px 0px; }
+.information-comment-panel .title-panel { color: #226BB2; }
+.information-comment-panel .article-comment { margin-top: 10px; }
+.information-comment-panel #txtMessage { font-size: 2.2rem; }
+.information-comment-panel #btnSendComment { margin-top: 15px; }
+.information-comment-panel #btnLoadMore { background: #7a7a7a; border-color: #7a7a7a; }
+.information-comment-panel #btnLoadMore:hover { background: #666666; }
+</style>
+
+
+<form class="form-horizontal" id="formComment" name="formComment">
+	<input type="hidden" name="hdfFileID" value="<?php echo $this->dataFile->FileInfoID; ?>">
+	<input type="hidden" name="hdfImagePublicComment" value="<?php echo $this->ImagePublicComment; ?>">
+
+	<div class="article-comment-title title-panel">
+		<span class="title">
+			<?php echo $comment_title; ?>
+		</span>
+		
+
+		<span class="AmountComment">
+		<em class="fa fa-comment-o"></em>
+		<span class="Num"></span>
+		Comment
+		</span>
+
+		<hr />
+	</div>
+
+	<div class="article-comment">
+		<div class="row">
+			<div class="col-md-12 review-item">
+				<div class="alert alert-success approveWarning" style="display: none;">
+					<?php echo $comment_warning_send_approve; ?>
+				</div>
+				<div class="review-img">
+					<?php if($this->ProfileImageHashName){ ?>
+						<img alt="image" src="<?php echo $this->url(array('module' => 'default', 'controller' => 'file', 'action' => 'get', 'file' => $this->ProfileImageHashName), null, true); ?>">
+					<?php }else{ ?>
+						<img alt="image" src="<?php echo $this->baseUrl('images/logos/user.png'); ?>">
+					<?php } ?>
+				</div>
+				<div class="review-detail">
+					<textarea name='txtMessage' id='txtMessage' class='form-control' rows='3' cols='80' maxlength="490"></textarea>
+					<?php if($this->ReCaptchaSiteKey): ?>
+						<div id="reCaptcha" class="g-recaptcha text-center" data-sitekey="<?php echo $this->ReCaptchaSiteKey; ?>" style="margin-top: 15px;"></div>
+					<?php endif; ?>
+					<button type="button" class="btn btn-primary" name="btnSendComment" id="btnSendComment">
+						<em class="fa fa-paper-plane"></em>&nbsp;
+						<?php echo $comment_send; ?>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="article-comment-list-title title-panel">
+		<span class="title">
+			<?php echo $comment_list_title; ?>
+		</span>
+		<hr />
+	</div>
+
+	<div class="result-list-panel">
+		<div class="result-list" id="result-list-comment"></div>
+		<button type="button" class="btn btn-primary btn-block" name="btnLoadMore" id="btnLoadMore">
+			<em class="fa fa-refresh"></em>&nbsp;
+			<?php echo $comment_btn_loadmore; ?>
+		</button>
+    </div>
+
+</form>
+
+<script>
+$(function () {
+
+	$("#btnSendComment").click(function() {
+
+		$("#btnSendComment").attr("disabled",true);
+		$("#btnSendComment em").removeClass("fa-paper-plane");
+		$("#btnSendComment em").addClass("fa-refresh fa-spin");
+
+		var userID = '<?php echo $this->UserID; ?>';
+		if(userID == '' || isNaN(userID)){
+			DialogWarning(
+				"<?php echo $comment_warning_login_first; ?>",
+				"<?php echo $comment_warning_title; ?>",
+				"<?php echo $comment_btn_close; ?>"
+			);
+			$("#btnSendComment").attr("disabled",false);
+			$("#btnSendComment em").removeClass("fa-refresh fa-spin fa-spin");
+			$("#btnSendComment em").addClass("fa-paper-plane");
+			return;
+		}
+
+		var msg = $('#txtMessage').val();
+		if(msg.length>=10){
+			$.post("<?php echo $this->url(array('module' => 'gallery', 'controller' => 'article', 'action' => 'savecommentimage'), null, true);?>", $("#formComment").serializeArray(), function(data){
+				if (data.result) {
+					<?php if($this->ArticlePublicComment=='N'){ ?>
+						$('.approveWarning').css("display","");
+					<?php }else{ ?>
+						DialogComplete(
+							"<?php echo $comment_warning_send_success; ?>"
+						);
+						setTimeout(function(){
+							<?php if($this->ControllerName=="category") { ?>
+								window.location = "<?php echo $this->url(array('module' => 'gallery', 'controller' => 'category', 'action' => 'viewimage', "id" => $this->dataParam->id, "cid" => $this->dataParam->cid, "iid" => $this->dataParam->iid, "img" => $this->dataFile->FileInfoID), null, true); ?>";
+							<?php } else { ?>
+								window.location = "<?php echo $this->url(array('module' => 'gallery', 'controller' => 'article', 'action' => 'viewimage', "id" => $this->data->GalleryCategoryID, "iid" => $this->data->ID, "img" => $this->dataFile->FileInfoID), null, true); ?>";
+							<?php } ?>
+						}, 500);
+
+					<?php } ?>
+				} else {
+					DialogWarning(
+						data.message,
+						"<?php echo $comment_warning_title; ?>",
+						"<?php echo $comment_btn_close; ?>"
+					);
+				}
+				
+				$("#btnSendComment").attr("disabled",false);
+				$("#btnSendComment em").removeClass("fa-refresh fa-spin fa-spin");
+				$("#btnSendComment em").addClass("fa-paper-plane");
+			}, 'json');
+		}else{
+			DialogWarning(
+				"<?php echo $comment_warning_message_length; ?>",
+				"<?php echo $comment_warning_title; ?>",
+				"<?php echo $comment_btn_close; ?>"
+			);
+
+			$("#btnSendComment").attr("disabled",false);
+			$("#btnSendComment em").removeClass("fa-refresh fa-spin fa-spin");
+			$("#btnSendComment em").addClass("fa-paper-plane");
+		}
+	});
+
+	var pageIndex = 1;
+	$("#btnLoadMore").click(function(){
+		reloadResultList(pageIndex);
+		pageIndex++;
+	});
+
+	function reloadResultList(page) {
+		
+		$("#btnLoadMore").attr("disabled",true);
+		$("#btnLoadMore em").addClass("fa-spin");
+
+		var sendData = {};
+		sendData.pageIndex = page;
+		sendData.id = '<?php echo $this->dataFile->FileInfoID; ?>';
+		$.post("<?php echo $this->url(array('module' => 'gallery', 'controller' => "article", 'action' => 'getcommentimagelist'), null, true); ?>", sendData, function(data){
+			$(".AmountComment .Num").html(data.recordsTotal);
+			if (data.data.length>0) {
+				var html = '';
+				$(data.data).each(function(i,e) {
+					html += '<div class="col-md-12 review-item review-item-list">';
+					html += '	<div class="row">';
+					html += '		<div class="review-img">';
+					html += '			<img alt="image" src="'+e.ProfileImageUrl+'">';
+					html += '		</div>';
+					html += '		<div class="review-detail">';
+					html += '			<div class="review-name">'+e.ActionFullname+'<span class="pull-right review-date">'+e.ActionDate+'</span></div>';
+					html += '			<div class="review-msg">'+e.Message+'</div>';
+					html += '		</div>';
+					html += '	</div>';
+					html += '</div>';
+				});
+				$("#result-list-comment").append(html);
+				if(data.recordsFiltered<=0){
+					$('#btnLoadMore').css('display', 'none');
+				}
+			} else {
+				$('.article-comment-list-title').css('display', 'none');
+				$('#btnLoadMore').css('display', 'none');
+			}
+
+			$("#btnLoadMore").attr("disabled",false);
+			$("#btnLoadMore em").removeClass("fa-spin");
+
+		}, 'json');
+	}
+
+	$("#btnLoadMore").click();
+
+});
+</script>

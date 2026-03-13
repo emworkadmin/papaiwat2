@@ -1,0 +1,31 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formDialog" name="formDialog">
+		<?php echo $this->formHidden("hdfDialogID", $this->data['ID']); ?>
+
+		<div class="form-group" >
+			<label class="col-md-3 control-label labelRequest">ชื่อพร้อมเพย์</label>		
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText("PromptPayName", $this->data['PromptPayName'], array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '500')); ?>
+			</div>
+		</div>
+		<div class="form-group" >
+			<label class="col-md-3 control-label labelRequest">รหัสพร้อมเพย์</label>		
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText("PromptPayNo", $this->data['PromptPayNo'], array('class' => 'form-control required digits', 'placeholder' => '', 'maxlength' => '13')); ?>
+				<div class="help-block">กรุณากรอกรหัสพร้อมเพย์เฉพาะตัวเลขโดยไม่ต้องเว้นวรรค</div>
+			</div>
+		</div>
+
+	</form>
+</div>
+<script type="text/javascript">
+$(function () {
+	$("#formDialog").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+});
+</script>

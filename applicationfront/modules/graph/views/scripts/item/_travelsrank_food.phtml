@@ -1,0 +1,205 @@
+<style>
+
+    .food .export { display: inline-block; width: 100%; font-family: 'Kanit Medium';    margin-bottom: 15px; }
+    .food .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+    .food .export #foodYear { margin-right: 4%; }
+
+    .Situation_seeAll_food { margin-bottom: 15px; margin-top: 15px; color: white; background: linear-gradient(to top, #ef9187, #de9e94); padding: 7px 30px 2px; border-radius: 7px; border: 1px solid white; }
+    .Situation_seeAll_food a {color: white;}
+    .food-box {background: white;border: 1px solid;    padding: 10px 10px 10px 10px;}
+
+    .main-food {background: white;font-size: 20px;text-align: center;}
+    .food {margin-top: 30px; background: #f0dbe2; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+    .head-food{color: white; background: #d18b89;border: 1px solid;border-color: #d18b89;}
+    .top-box-food {color: #00c0ef;margin-top: 30px;font-size: 17px;    margin-bottom: 15px;}
+    .fonttop {font-size: 50px;color :black}
+    span {font-size: 18px;}
+    .form-control {font-size: 14px;}
+    .box-image-food{font-size: 14px;}
+
+    /* @media screen and (max-width: 992px) {
+        img {width: 20% !important; }       
+    } */
+
+
+</style>
+
+<div class="food" id="FoodExportZone">
+
+    <div class="export">
+        <div class="col-md-9">สถิติบริการด้านการท่องเที่ยวโดยรวม (ร้านอาหาร)</div>
+        <div class="col-md-3">
+                <?php echo $this->formSelect("foodYear", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?>
+                <?php echo $this->formSelect("foodExport", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+    
+    <div class="main-food col-md-12" >
+
+        <div class="top-box-food col-md-12" >
+
+            <div class="box-image-food  col-md-2 ">
+                <div class=" col-md-12" style="">
+                    <img alt="image" src="<?php echo $this->baseUrl('assets\graph\img\icon_web\1.png'); ?>">
+                    <br>
+                    ร้านอาหาร
+                </div>
+            </div>
+
+            <div class=" col-md-10">
+
+                <div class=" col-md-6">
+                    <div class="food-box col-md-12" style="">
+                        จำนวนร้านอาหาร 
+                        <br>
+                        <div class="fonttop" style="">
+                            5,909
+                            <span style="">ร้าน</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class=" col-md-6">
+                    <div class="food-box col-md-12" style="">
+                        ค่าใช้จ่ายเฉลี่ยต่อคนต่อวัน (ค่าอาหาร)
+                        <br>
+                        <div class="fonttop" style="">
+                            563.87 
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="head-food col-md-12" style="">
+                    จำนวนผู้เข้าพักและอัตราการเข้าพัก (OR) รายไตรมาส
+        </div>
+
+        <div class="col-md-12" style="">
+            <canvas id="myChartFood"></canvas>
+        </div>
+
+    </div>
+</div>
+
+<div class="col-md-12" style="text-align: center;">
+    <button class="Situation_seeAll_food"><a href="https://app.powerbi.com/view?r=eyJrIjoiMjk0ZTM2Y2EtYzRmOS00NjQ5LTg5MzctMjFlMjI4NjQ2ZjQwIiwidCI6IjdhNTlkMDM0LTEzNGYtNDI1Ny1hNmJiLTllYWZkNzg5NjA2ZCIsImMiOjEwfQ%3D%3D" target="_blank">ดูข้อมูลสถิติทั้งหมด</a></button>
+</div>
+
+<div id="previewImage_food" style="display: none;"></div>
+<a id="downloadImage_food" href="#In_Out" style="display: none;"></a>
+
+
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/html2canvas/html2canvas.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/chartjs/Chart.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/graph/jspdf/jspdf.min.js');?>"></script>
+<script>
+
+jQuery(function(){
+
+var ctxfood = document.getElementById('myChartFood').getContext('2d');
+var myBarChart  = new Chart(ctxfood, {
+    // The type of chart we want to create
+    type: 'horizontalBar',
+
+    // The data for our dataset
+    data: {
+        labels: ["กรุงเทพมหานคร","เชียงใหม่","เชียงราย","ตาก","กระบี่","พังงา","สตูล","ยะลา","ปัตตานี",],
+        datasets: [{
+            label: "My First dataset",
+            backgroundColor: '#8cc63e',
+            borderColor: '#8cc63e',
+            data: [810 , 500, 450, 400, 320, 310, 250, 200, 100],
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                    
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            var x = -20;
+                            if(data < 0) {
+                                x = +20;
+                            }                                                
+                            ctx.fillText(data, bar._model.x + x, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+                legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        // display: false,
+                        beginAtZero:true
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        // display : false
+                    },
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            responsive: true
+        }
+
+});
+
+
+        function setCanvas_FoodExportZone(val) {
+        html2canvas(document.querySelector("#FoodExportZone")).then(function(canvas) {
+            $("#previewImage_food").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_food").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage_food")[0].click();
+                $("#mix_chart_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_food canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#mix_chart_Export").val('export');
+            }
+        });
+    }
+
+    $("#foodExport").change(function() {
+        setCanvas_FoodExportZone($(this).val());
+    });
+});
+
+</script>

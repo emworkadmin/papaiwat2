@@ -1,0 +1,160 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+		<?php echo $this->formHidden("hdfID", $this->dataInfo->ID); ?>
+				
+		<div class="title-label">ตั้งค่าการแสดงผลหน้ารายการ</div>					
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าเงื่อนไขการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemSortSetting', (isset($this->data["ItemSortSetting"]) ? $this->data["ItemSortSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customItemSortSetting" style="<?php echo (isset($this->data["ItemSortSetting"]) ? $this->data["ItemSortSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ItemSortType">เงื่อนไขการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ItemSortType', (isset($this->data["ItemSortType"]) ? $this->data["ItemSortType"] : $this->dataDefault->itemSortType), array('class' => 'form-control', 'placeholder' => ''), $this->sortTypeOption); ?>
+			</div>
+		</div>
+		<div class="form-group customItemSortSetting" style="<?php echo (isset($this->data["ItemSortSetting"]) ? $this->data["ItemSortSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ItemSortDirection">รูปแบบการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ItemSortDirection', (isset($this->data["ItemSortDirection"]) ? $this->data["ItemSortDirection"] : $this->dataDefault->itemSortDirection), array('class' => 'form-control', 'placeholder' => ''), $this->sortDirectionOption); ?>
+			</div>
+		</div>
+		<hr />		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าการแสดงผลป้ายโฆษณา</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemBannerSizeSetting', (isset($this->data["ItemBannerSizeSetting"]) ? $this->data["ItemBannerSizeSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customItemBannerSizeSetting" style="<?php echo (isset($this->data["ItemBannerSizeSetting"]) ? $this->data["ItemBannerSizeSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ItemBannerSizeWidth">ความกว้าง (พิกเซล)</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formText('ItemBannerSizeWidth', (isset($this->data["ItemBannerSizeWidth"]) ? $this->data["ItemBannerSizeWidth"] : $this->dataDefault->ItemBannerSizeWidth), array('class' => 'form-control number', 'placeholder' => '')); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customItemBannerSizeSetting" style="<?php echo (isset($this->data["ItemBannerSizeSetting"]) ? $this->data["ItemBannerSizeSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ItemBannerSizeHeight">ความสูง (พิกเซล)</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formText('ItemBannerSizeHeight', (isset($this->data["ItemBannerSizeHeight"]) ? $this->data["ItemBannerSizeHeight"] : $this->dataDefault->ItemBannerSizeHeight), array('class' => 'form-control number', 'placeholder' => '')); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงชื่อป้ายโฆษณา</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowTitleSetting', (isset($this->data["ItemShowTitleSetting"]) ? $this->data["ItemShowTitleSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customItemShowTitleSetting" style="<?php echo (isset($this->data["ItemShowTitleSetting"]) ? $this->data["ItemShowTitleSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ItemShowTitle">แสดงชื่อป้ายโฆษณาเป็นลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowTitle', (isset($this->data["ItemShowTitle"]) ? $this->data["ItemShowTitle"] : $this->dataDefault->ItemShowTitle), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowIntroTextSetting', (isset($this->data["ItemShowIntroTextSetting"]) ? $this->data["ItemShowIntroTextSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customItemShowIntroTextSetting" style="<?php echo (isset($this->data["ItemShowIntroTextSetting"]) ? $this->data["ItemShowIntroTextSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ItemShowIntroText">แสดงข้อความเกริ่นนำเป็นลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowIntroText', (isset($this->data["ItemShowIntroText"]) ? $this->data["ItemShowIntroText"] : $this->dataDefault->itemShowIntroText), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่า CSS</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemCustomCssSetting', (isset($this->data["ItemCustomCssSetting"]) ? $this->data["ItemCustomCssSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customItemCustomCssSetting" style="<?php echo (isset($this->data["ItemCustomCssSetting"]) ? $this->data["ItemCustomCssSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ItemCustomCss">CSS</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formTextarea('ItemCustomCss', (isset($this->data["ItemCustomCss"]) ? $this->data["ItemCustomCss"] : $this->dataDefault->itemCustomCss), array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+				</div>
+			</div>
+		</div>
+		
+		<?php if($this->canEdit): ?>
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			</div>
+		</div>
+		<?php endif; ?>
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formEdit").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formEdit input[type=checkbox], #formEdit input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+	$('#formEdit input[type=radio][name$=Setting]').on('ifClicked', function(event){
+		var val = $(this).val();
+		var name = $(this).attr("name");
+		if (val == 'D') {
+			$(".custom" + name).css("display", "none");
+		} else {
+			$(".custom" + name).css("display", "");
+		}
+	});
+
+	<?php if($this->canEdit): ?>
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formEdit").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'banner', 'controller' => 'category', 'action' => 'settingsave'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'banner', 'controller' => 'category', 'action' => 'setting', "itemid" => $this->dataInfo->ID), null, true); ?>" ;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif; ?>
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'BNR-0004'); ?>

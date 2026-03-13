@@ -1,0 +1,74 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formData" name="formData">
+
+        <div class="form-group" >
+            <label class="col-md-3 control-label" for="">วันที่/เวลา</label>	
+            <div class="col-md-9 divControl">
+            	<p class="form-control-static">
+                	<?php echo Emwork_Utility_DateTime::MSSqlToDateThai($this->data->ActionDate, 'DT') ?>
+                </p>
+            </div>
+        </div>
+        <div class="form-group" >
+            <label class="col-md-3 control-label" for="">กิจกรรม</label>	
+            <div class="col-md-9 divControl">
+            	<p class="form-control-static">
+                	<?php echo $this->logTypeOption[$this->data->LogType]; ?>
+                </p>
+            </div>
+        </div>
+        <div class="form-group" >
+            <label class="col-md-3 control-label" for="">ผลลัพธ์</label>	
+            <div class="col-md-9 divControl">
+            	<p class="form-control-static">
+                	<?php echo $this->resultOption[$this->data->Result]; ?>
+                </p>
+            </div>
+        </div>
+        <div class="form-group" >
+            <label class="col-md-3 control-label" for="">Username</label>	
+            <div class="col-md-9 divControl">
+            	<p class="form-control-static">
+                	<?php echo $this->data->Username; ?>
+                </p>
+            </div>
+        </div>
+        <div class="form-group" >
+            <label class="col-md-3 control-label" for="">รหัสผ่านที่ผิดพลาด</label>	
+            <div class="col-md-9 divControl">
+            	<p class="form-control-static">
+                	<?php echo $this->data->Password; ?>
+                </p>
+            </div>
+        </div>
+        <div class="form-group" >
+            <label class="col-md-3 control-label" for="">ชื่อ - นามสกุล</label>	
+            <div class="col-md-9 divControl">
+            	<p class="form-control-static">
+                	<?php echo $this->data->FullName; ?>
+                </p>
+            </div>
+        </div>
+        <div class="form-group" >
+            <label class="col-md-3 control-label" for="">IP Address</label>	
+            <div class="col-md-9 divControl">
+            	<p class="form-control-static">
+                	<?php echo $this->data->IpAddress; ?>
+                </p>
+            </div>
+        </div>
+        <div class="form-group" >
+            <label class="col-md-3 control-label" for="">หมายเหตุ</label>	
+            <div class="col-md-9 divControl">
+            	<p class="form-control-static">
+                	<?php echo $this->data->Note; ?>
+                </p>
+            </div>
+        </div>
+            
+    </form>
+</div>
+<script>
+$(function () {
+});
+</script>

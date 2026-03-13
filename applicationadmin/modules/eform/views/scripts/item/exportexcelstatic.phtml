@@ -1,0 +1,39 @@
+<?php
+    if(count($this->dataType)>0) :
+        foreach($this->dataType as $k => $v) :
+            ?>
+
+            <table id="tblData" class="table table-bordered table-hover">
+                <caption><?php echo $v['Label'];?></caption>
+                <thead>
+                    <tr>
+                        <th>ลำดับ</th>
+                        <th>รายการข้อมูล</th>
+                        <th>จำนวน</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        if(count($v['Value'])>0) {
+                            $i = 0;
+                            foreach ($v['Value'] as $k2 => $v2) {
+                                if($k2 != 'No Data.') {
+                                $i++;
+                                ?>
+                                    <tr>
+                                        <td><?php echo $i; ?></td>
+                                        <td><?php echo $k2; ?></td>
+                                        <td><?php echo $v2['Value']; ?></td>
+                                    </tr>
+                                <?php
+                                }
+                            }
+                        }
+                    ?>
+                </tbody>
+            </table>
+
+            <?php
+        endforeach;
+    endif;
+?>

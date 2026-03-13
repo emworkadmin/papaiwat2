@@ -1,0 +1,80 @@
+<!-- wickedpicker -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/wickedpicker/wickedpicker.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/wickedpicker/wickedpicker.min.js'); ?>"></script>
+
+<style>
+.case-search-zone .title-name-black{width:13%;}
+.case-search-zone .title-search{font-weight: bold;}
+.case-search-zone .box-search{
+	background: #e0e0e0;
+    padding: 25px 95px;
+}
+.case-search-zone .blackNum{
+	float:left;
+	width:40%;
+}
+.case-search-zone .slash{
+    padding: 1px 5px;
+    width: 10%;
+    text-align: center;
+    background: #cacaca;
+}
+.case-search-zone .title-search-date{
+    margin-top: 20px;
+	font-weight: bold;
+}
+.case-search-zone .title-between-date{
+	text-align:right;
+	margin-left: 37px;
+	width: 12%;
+}
+</style>
+<div class="case-search-zone">
+	<form class="form-horizontal" id="formSearch" name="formSearch">
+		<div class="box-search">
+			<div class="title-search"><?php echo Emwork_Translate::text($this->lang, 'case', 'search_case'); ?></div>
+			<div class="row">
+				<div class="col-md-2 title-name-black"><?php echo Emwork_Translate::text($this->lang, 'case', 'black_number'); ?></div>
+				<div class="col-md-2 blackselect">
+						<?php echo $this->formSelect('BlackCasePrefix',null, array('class' => 'form-control', 'placeholder' => ''), $this->dataPrefixBlack); ?>
+				</div>
+				<div class="col-md-2">
+					<span class="blackNum"><?php echo $this->formText('BlackCaseNo', $this->data->CaseCourtCode, array('class' => 'form-control', 'placeholder' => '')); ?></span>
+					<span class="blackNum slash">/</span>
+					<span class="blackNum"><?php echo $this->formText('BlackCaseYear', $this->data->CaseCourtCode, array('class' => 'form-control', 'placeholder' => '')); ?></span>
+				</div>
+				<div class="col-md-2 title-name-black"><?php echo Emwork_Translate::text($this->lang, 'case', 'black_number'); ?></div>
+				<div class="col-md-2 blackselect">	
+						<?php echo $this->formSelect('RedCasePrefix', null, array('class' => 'form-control', 'placeholder' => ''), $this->dataPrefixRed); ?>
+				</div>
+				<div class="col-md-2">
+					<span class="blackNum"><?php echo $this->formText('RedCaseNo', $this->data->CaseCourtCode, array('class' => 'form-control', 'placeholder' => '')); ?></span>
+					<span class="blackNum slash">/</span>
+					<span class="blackNum"><?php echo $this->formText('RedCaseYear', $this->data->CaseCourtCode, array('class' => 'form-control', 'placeholder' => '')); ?></span>
+				</div>
+			</div>
+			<div class="title-search-date"><?php echo Emwork_Translate::text($this->lang ,'case', 'judgment_day'); ?></div>
+			<div class="row">
+				<div class="col-md-3 title-name-black title-begin-date"><?php echo Emwork_Translate::text($this->lang, 'case', 'judment_start'); ?></div>
+				<div class="col-md-3 divControl">
+					<?php echo $this->formText("casebeginDate", $this->lang == 'th' ? Emwork_Utility_DateTime::MySQLToDateThai(date('Y-m-d')) : Emwork_Utility_DateTime::MySQLToDateEng(date('Y-m-d')), array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+					<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+				</div>
+				<div class="col-md-2 title-between-date"><?php echo Emwork_Translate::text($this->lang, 'case', 'judment_end'); ?></div>
+				<div class="col-md-3 divControl">
+					<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+				</div>
+				<div class="col-md-2 btsearch" style=" width: 12%;">
+					<button type="button" class="btn btn-primary" id="btnCaseSearch" style=" width: 100%;margin-left: 4px;">
+						<?php echo Emwork_Translate::text($this->lang, 'general', 'button_search'); ?>&nbsp;<em class="fa fa-search"></em> 
+					</button>
+				</div>
+			</div>	
+		</div>
+	</form>
+</div>
+<script>
+	// --------------------------- Date picker -------------------------- //
+	$('#<?php echo  "casebeginDate" ?>').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	$('#<?php echo  "caseendDate" ?>').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+</script>

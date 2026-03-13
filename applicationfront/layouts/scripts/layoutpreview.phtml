@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<?php 
+
+$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', 'init');
+$appFaviconPath = $this->baseUrl($config->app->faviconpath);
+$appLogoPath = $this->baseUrl($config->app->logopath);
+
+$appSystemName = $config->app->name;
+$appStartYear = $config->app->copyrightstartyear;
+$appEndYear = date('Y');
+$appCompanyName = $config->app->brand;
+$appCompanyUrl = $config->app->brandUrl;
+
+$appSystemName = empty(System_Model_Setting::getValue("SiteName", "Site")) ? $appSystemName : System_Model_Setting::getValue("SiteName", "Site");
+
+$breadcrumbs = count($this->breadcrumb) == 0 ? array(array('name' => 'หน้าแรก')) : $this->breadcrumb;
+$pageName = empty($this->pageName) ? "Page Name" : $this->pageName;
+$pageSubName = empty($this->pageSubName) ? "" : $this->pageSubName;
+$pageResponseTime = "-";
+$pageScreenId = "-";
+$visitorAmount = "-";
+
+$auth = Zend_Auth::getInstance();
+$isLogin = $auth->getIdentity();
+$authData = $auth->getIdentity();
+
+$_moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+$_controllerName = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+$_actionName = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+
+$request = new Zend_Controller_Request_Http();
+$cFontSize = $request->getCookie('font_size');
+$cTheme = $request->getCookie('theme');
+
+// Layout Config & Setting
+$hideBreadcrumb = $this->hideBreadcrumb === true ? true : false;
+$hidePageName = $this->hidePageName === true ? true : false;
+$hideFooterCopyright = $this->hideCopyright === true ? true : false;
+$hideFooterBanner = $this->hideBanner === true ? true : false;
+$hideFooterSitemap = true;
+
+// Get Lang
+$lang = '';
+if (Zend_Registry::isRegistered('lang')) {
+    $lang = Zend_Registry::get('lang');
+} else {
+    $defaultLanguage = System_Model_Setting::getDefaultLanguage();
+    $lang = $defaultLanguage["Code"];
+}
+$languageList = System_Model_Setting::getLanguages();
+
+$socialMediaFacebookUrl = System_Model_Setting::getValue("FacebookUrl", "SocialMedia");
+$socialMediaTwitterUrl = System_Model_Setting::getValue("TwitterUrl", "SocialMedia");
+$socialMediaYoutubeUrl = System_Model_Setting::getValue("YoutubeUrl", "SocialMedia");
+$socialMediaInstagramUrl = System_Model_Setting::getValue("InstagramUrl", "SocialMedia");
+
+$viewAmount = System_Model_Log::viewAmount();
+
+?>
+<html  xmlns="http://www.w3.org/1999/xhtml" xml:lang="th" lang="th">
+	<head>
+	  <meta charset="utf-8">
+	  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	  <title><?php echo $appSystemName;?></title>
+	  
+		<?php if (!empty($this->ogUrl)) : ?>
+		<meta property="og:url"  content="<?php echo $this->ogUrl; ?>" />
+		<meta property="og:type" content="website" />
+		<?php endif; ?>
+		<?php if (!empty($this->ogTitle)) : ?><meta property="og:title"         content="<?php echo $this->ogTitle; ?>" /><?php endif; ?>
+		<?php if (!empty($this->ogDesc)) : ?><meta property="og:description"   content="<?php echo $this->ogDesc; ?>" /><?php endif; ?>
+		<?php if (!empty($this->ogImage)) : ?><meta property="og:image"         content="<?php echo $this->ogImage; ?>" /><?php endif; ?>
+	  
+	  <link type="image/x-icon" href="<?php echo $appFaviconPath; ?>" rel="shortcut icon" />
+	  <!-- Tell the browser to be responsive to screen width -->
+	  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	  <!-- Bootstrap 3.3.6 -->
+	  <link rel="stylesheet" href="<?php echo $this->baseUrl('bootstrap/css/bootstrap.min.css'); ?>">
+	  <!-- Font Awesome -->
+	  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/font-awesome.min.css'); ?>">
+	  <!-- Ionicons -->
+	  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/ionicons.min.css'); ?>">
+	  <!-- Theme style -->
+	  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/AdminLTE.min.css'); ?>">
+	  <!-- AdminLTE Skins. Choose a skin from the css/skins
+	       folder instead of downloading all of them to reduce the load. -->
+	  <?php if (false) : ?><link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/skins/_all-skins.min.css'); ?>"><?php endif;?>
+	  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/skins/_all-skins.css'); ?>">
+	  <!-- iCheck -->
+	  <link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/iCheck/minimal/orange.css'); ?>">
+	  <link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/iCheck/minimal/blue.css'); ?>">
+	  <!-- Date Picker -->
+	  <link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datepicker/datepicker3.css'); ?>">
+	  <!-- Daterange picker -->
+	  <link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/daterangepicker/daterangepicker-bs3.css'); ?>">
+	  <!-- bootstrap wysihtml5 - text editor -->
+	  <link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css'); ?>">
+	  <!-- lightbox -->
+	  <link rel="stylesheet"  href="<?php echo $this->baseUrl('plugins/lightbox/css/lightbox.css'); ?>">
+	  <!-- EMWORK -->
+	  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/emwork.css'); ?>">
+	  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/emwork.responsive.css'); ?>">
+	  
+	  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	  <!--[if lt IE 9]>
+	  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	  <![endif]-->
+	  
+		<!-- jQuery 2.2.0 -->
+		<script src="<?php echo $this->baseUrl('plugins/jQuery/jQuery-2.2.0.min.js'); ?>"></script>
+		<!-- jQuery UI 1.11.4 -->
+		<script src="<?php echo $this->baseUrl('plugins/jQueryUI/jquery-ui.min.js'); ?>"></script>
+		<!-- jQuery validate -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('/plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script> 
+		<!-- jQuery Cookie -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('/plugins/jQueryCookie/jquery.cookie.js'); ?>"></script> 
+	
+		<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+		<script>
+		  $.widget.bridge('uibutton', $.ui.button);
+		</script>
+		<!-- Bootstrap 3.3.6 -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('bootstrap/js/bootstrap.min.js'); ?>"></script>
+		<!-- Sparkline -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/sparkline/jquery.sparkline.min.js'); ?>"></script>
+		<!-- daterangepicker -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/daterangepicker/daterangepicker.js'); ?>"></script>
+		<!-- datepicker -->
+		<?php if ($lang == 'th') { ?>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/datepicker/bootstrap-datepicker-th.min.js'); ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/datepicker/locales/bootstrap-datepicker.th.js'); ?>"></script>
+		<?php }else if ($lang == 'zh') { ?>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/datepicker/bootstrap-datepicker.js'); ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js'); ?>"></script>
+		<?php }else{ ?>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/datepicker/bootstrap-datepicker.js'); ?>"></script>
+		<?php }?>
+		<!-- Bootstrap WYSIHTML5 -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js'); ?>"></script>
+		<!-- Slimscroll -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/slimScroll/jquery.slimscroll.min.js'); ?>"></script>
+		<!-- FastClick -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/fastclick/fastclick.js'); ?>"></script>
+		<!-- iCheck -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/iCheck/icheck.min.js'); ?>"></script>
+		<!-- Bootpag -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/bootpag/jquery.bootpag.min.js'); ?>"></script>
+		<!-- Noty -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/noty/packaged/jquery.noty.packaged.min.js'); ?>"></script>
+		<!-- Jssor slider -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/jssor-slider/jssor.slider.min.js'); ?>"></script>
+		<!-- AdminLTE App -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('dist/js/app.min.js'); ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('dist/js/common.js'); ?>"></script>
+		<script type="text/javascript">
+		$.ajaxSetup({cache: false, global: false});
+		</script>
+		<?php if (false) : ?>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-112743337-1"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());		
+		  gtag('config', 'UA-112743337-1');
+		</script>
+		<?php endif; ?>
+		
+		<style>
+			.main-header ul.nav.navbar-nav.toggle-header-navbar { display: none; }
+		</style>
+	</head>
+
+	<body class="hold-transition skin-smart layout-top-nav">
+		<div class="wrapper">
+			<div  style="position: fixed;z-index: 900; width: 100%;">
+				<header class="main-header">
+					<div class="container">
+						<a class="logo-brand" href="<?php echo $this->url(array("module" => "default", "controller" => "home", "action" => "index"), null, true); ?>">
+							<img src="<?php echo $this->baseUrl("images/logos/logo.png"); ?>" title="Thailand Tourism Directory Logo" />
+						</a>
+						<div class="main-header-right menu-<?php echo $lang; ?>">
+							<div class="main-header-top">
+								<div class="navbar-right">
+								
+									<ul class="nav navbar-nav toggle-header-navbar">
+										<li class="">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" >
+												<em class="fa fa-bars fa-lg"></em>
+											</a>
+											<ul class="dropdown-menu" role="menu">
+											<li class="">
+												<a href="<?php echo $this->url(array("module" => "default", "controller" => "home", "action" => "index"), null, true); ?>" title="<?php echo Emwork_Translate::text($lang, "menu", "menu_main_home"); ?>"><?php echo Emwork_Translate::text($lang, "menu", "menu_main_home"); ?></a>
+											</li>		
+											<li class=""> 
+												<a href="<?php echo $this->url(array("module" => "default", "controller" => "home", "action" => "index"), null, true); ?>#thainesshilight" title="<?php echo Emwork_Translate::text($lang, "menu", "menu_main_thainess"); ?>" ><?php echo Emwork_Translate::text($lang, "menu", "menu_main_thainess"); ?></a>
+											</li>							
+											<li class="">
+												<a href="<?php echo $this->url(array("module" => "default", "controller" => "home", "action" => "index"), null, true); ?>#route" title="<?php echo Emwork_Translate::text($lang, "menu", "menu_main_route"); ?>" ><?php echo Emwork_Translate::text($lang, "menu", "menu_main_route"); ?></a>
+											</li>
+											<li class="">
+												<a href="<?php echo $this->url(array("module" => "default", "controller" => "home", "action" => "index"), null, true); ?>#region" title="<?php echo Emwork_Translate::text($lang, "menu", "menu_main_region"); ?>"><?php echo Emwork_Translate::text($lang, "menu", "menu_main_region"); ?></a>
+											</li>
+											<li class="">
+												<a href="<?php echo $this->url(array("module" => "default", "controller" => "home", "action" => "index"), null, true); ?>#activity" title="<?php echo Emwork_Translate::text($lang, "menu", "menu_main_activity"); ?>" ><?php echo Emwork_Translate::text($lang, "menu", "menu_main_activity"); ?></a>
+											</li>
+										
+											</ul>
+										</li>
+									</ul>
+									
+									<ul class="nav navbar-nav narbar-fontsize hidden-xs">
+										<li class="">
+											<a href="javascript:void(0);" class="dropdown-toggle" data-fontsize="small" >
+												A-
+											</a>
+										</li>
+										<li class="">
+											<a href="javascript:void(0);" class="dropdown-toggle" data-fontsize="normal">
+												A
+											</a>
+										</li>
+										<li class="">
+											<a href="javascript:void(0);" class="dropdown-toggle" data-fontsize="large">
+												A+
+											</a>
+										</li>
+									</ul>
+									<ul class="nav navbar-nav">
+										<li class="">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" >
+												<img src="<?php echo $this->baseUrl("images/icons/global.png"); ?>" />
+												<?php 
+												foreach ($languageList as $l) :
+													if ($lang == $l["Code"]) : echo $l["NameLocal"]; endif;
+												endforeach;
+												?>
+												<em class="fa fa-caret-down fa-lg"></em>
+											</a>
+											<ul class="dropdown-menu" role="menu">
+												<?php 
+												foreach ($languageList as $l) :
+													echo '<li><a href="#" data-lang="' . $l['Code'] . '" onclick="ChangeLanguage(this.getAttribute(\'data-lang\'));">' . $l["NameLocal"] . '</a></li>';
+												endforeach;
+												?>
+											</ul>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="main-header-menu">
+								<div class="navbar-right">
+									<ul class="nav navbar-nav">
+										<li class="">
+											<a href="<?php echo $this->url(array("module" => "default", "controller" => "home", "action" => "index"), null, true); ?>" title="<?php echo Emwork_Translate::text($lang, "menu", "menu_main_home"); ?>"><?php echo Emwork_Translate::text($lang, "menu", "menu_main_home"); ?></a>
+										</li>	
+										<li class="">
+											<a href="<?php echo $this->url(array("module" => "content", "controller" => "category", "action" => "index"), null, true); ?>" title="เส้นทางท่องเที่ยว" >เส้นทางท่องเที่ยว</a>
+										</li>
+										<li class="">
+											<a href="<?php echo $this->url(array("module" => "content", "controller" => "article", "action" => "index"), null, true); ?>" title="ข่าวประชาสัมพันธ์" >ข่าวประชาสัมพันธ์</a>
+										</li>
+										<li class="">
+											<a href="<?php echo $this->url(array("module" => "content", "controller" => "page", "action" => "detail", "itemid" => "5"), null, true); ?>" title="เกี่ยวกับเรา" >เกี่ยวกับเรา</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</header>
+			</div>
+						
+			<div class="content-wrapper" style="margin-top: 68px;">
+				<?php echo $this->layout()->content; ?>
+			</div>
+			
+			<footer class="main-footer">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-9">
+							<div class="footer-title">
+								<span>
+									<img src="<?php echo $this->baseUrl("images/logos/ministrylogo.png"); ?>" />
+									Ministry of Tourism and Sports
+								</span>
+								<span class="footer-social" style="display: none;">
+									<?php if (!empty($socialMediaFacebookUrl)) : ?>
+									<a href="<?php echo $socialMediaFacebookUrl; ?>" title="Facebook" target="_blank"><em class="fa fa-facebook-square"></em></a>
+									<?php endif; ?>
+									<?php if (!empty($socialMediaTwitterUrl)) : ?>
+									<a href="<?php echo $socialMediaTwitterUrl; ?>" title="Twitter" target="_blank"><em class="fa fa-twitter"></em></a>
+									<?php endif; ?>
+									<?php if (!empty($socialMediaYoutubeUrl)) : ?>
+									<a href="<?php echo $socialMediaYoutubeUrl; ?>" title="Youtube" target="_blank"><em class="fa fa-youtube-play"></em></a>
+									<?php endif; ?>
+									<?php if (!empty($socialMediaInstagramUrl)) : ?>
+									<a href="<?php echo $socialMediaInstagramUrl; ?>" title="instagram" target="_blank"><em class="fa fa-instagram"></em></a>
+									<?php endif; ?>
+								</span>
+							</div>
+							<div class="footer-text">
+								<p>
+									This is the official  website of the Ministry of Tourism ans Sports Thailand. The contents listed on this website are intended for <br />
+									informational purposes rather than commercial. And displayed sale is meant as a token of partnership and will always redirect you to our partners' sites.
+								</p>
+							</div>
+							<div class="footer-copyright">
+								<strong><?php echo Emwork_Translate::text($lang, 'general', 'footer_copyright_departmentname_label'); ?></strong>
+								<br />
+								<?php echo Emwork_Translate::text($lang, 'general', 'footer_copyright_departmentaddress_label'); ?>
+								<br />
+								<em class="fa fa-copyright"></em> <?php echo $lang == 'th' ? (date('Y') + 543) : (date('Y'));?> <?php echo Emwork_Translate::text($lang, 'general', 'footer_copyright_departmentname_label'); ?>
+							</div>						
+						</div>
+						<div class="col-md-3">
+							<div id="fb-root"></div>
+							<script>(function(d, s, id) {
+							  var js, fjs = d.getElementsByTagName(s)[0];
+							  if (d.getElementById(id)) return;
+							  js = d.createElement(s); js.id = id;
+							  js.src = 'https://connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v2.11&appId=164551094124059';
+							  fjs.parentNode.insertBefore(js, fjs);
+							}(document, 'script', 'facebook-jssdk'));</script>
+							<div class="fb-page" data-href="https://www.facebook.com/tdtcmots" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/tdtcmots" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/tdtcmots">Thailand Digital Tourism Center - TDTC</a></blockquote></div>
+						</div>
+					</div>
+				</div>
+			</footer>
+			
+			
+		</div>
+		<script>
+		$(function () {
+			$(".narbar-fontsize a").click(function(){
+				var fontSizeType = $(this).data("fontsize");
+				if (fontSizeType == 'small') {
+					$('html').css('font-size', "8px");
+				} else if (fontSizeType == 'normal') {
+					$('html').css('font-size', "10px");
+				} else if (fontSizeType == 'large') {
+					$('html').css('font-size', "12px");
+				}
+			});
+		});
+		</script>
+	</body>
+</html>

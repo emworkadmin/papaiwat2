@@ -1,0 +1,51 @@
+
+<div class="emsa-title">
+	โปรดระบุเลขที่แจ้งรับของท่าน
+</div>
+
+<form class="form-horizontal emsa-form" id="emsa-form">
+	<div class="form-group">
+		<div class="col-md-8 col-md-offset-2">
+			<?php echo $this->formText('emsaTicketID', null, array('class' => 'form-control emsa-tracking-textbox', 'placeholder' => 'กรุณากรอก Ticker ID')); ?>
+		</div>
+	</div>	
+</form>
+
+<div class="alert alert-danger" id="warningMessage" style="display: none; margin-bottom: 0px; margin-top: 30px;"></div>
+
+<script type="text/javascript">
+jQuery(function(){
+	if (emsaDialog != null) {
+		emsaDialog.setTitle("<?php echo $this->title?>");
+		emsaDialog.setButtons(
+				[{
+                    label: 'ตรวจสอบสถานะ',
+					action: function(dialog) {
+						var $button = this;
+						dialog.enableButtons(false);
+	                    $.post("<?php echo $this->url(array("module" => "emsa", "controller" => "tracking", "action" => "search"), null, true);?>", $("#emsa-form").serializeArray(), function(data){
+							if (data.result) {
+								dialog.enableButtons(true);
+								emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'tracking', 'action' => 'detail'), null, true); ?>/id/"+data.CustomerCode));
+							} else {
+								dialog.enableButtons(true);
+								$('#warningMessage').html(data.message);
+								$('#warningMessage').show();
+							}
+		                }, "json");
+					}
+                }, {
+                    label: 'ดูทั้งหมด',
+					action: function(dialog) {
+						emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'tracking', 'action' => 'list'), null, true); ?>"));
+					}
+                }, {
+                    label: 'ยกเลิก',
+					action: function(dialog) {
+						dialog.close();
+					}
+                }]
+		);
+	}
+});    
+</script>

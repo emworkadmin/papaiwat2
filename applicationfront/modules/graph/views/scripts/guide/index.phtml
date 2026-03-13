@@ -1,0 +1,58 @@
+<?php echo $this->partial("index/_pluginChartjs.phtml", $this); ?>
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/graph/css/graph.css'); ?>">
+
+<style>
+
+    .TIC-footer {
+        font-size: 12px;
+        padding-top: 15px;
+    }
+
+    .maintop.col-md-12 {background-color: #e7f4da;padding: 20px 20px 20px 20px;margin-bottom: 20px;margin-top: 40px;}
+    @media (max-width: 1200px) {
+        .lawtop.col-md-8 {font-size: 15px;}
+        .charttop.col-md-4{font-size: 15px !important; }
+        .static { font-size: 30px !important;}
+        /* img {min-width: 70px;width: 100%;} */
+        .number {font-size: 20px !important;}
+     }
+
+    @media (max-width: 500px) {
+        .static { font-size: 20px !important;}
+    }
+</style>
+
+<div class="Graph-list Graph-Guide-Info">
+	<div class="Graph-title">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+	</div>
+    <div class="Graph-subtitle">
+		<div class="borderHead"></div>
+    </div>
+
+    <?php echo $this->partial("guide/_guide_police.phtml", $this); ?>
+	<div class="mb-15" style="margin-bottom: 30px; clear:left;"></div>
+    <?php echo $this->partial("guide/_guide_law.phtml", $this); ?>
+
+</div>
+
+<script>
+
+$("#guide_police_year").change(function() {
+    var Year = {};
+    Year.guide_police_year = $('#guide_police_year').val();
+    Year.guide_law_year = $('#guide_law_year').val();
+    window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'guide', 'action' => 'search'), null, true); ?>/Year/" + JSON.stringify(Year);
+});
+
+$("#guide_law_year").change(function() {
+    var Year = {};
+    Year.guide_police_year = $('#guide_police_year').val();
+    Year.guide_law_year = $('#guide_law_year').val();
+    window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'guide', 'action' => 'search'), null, true); ?>/Year/" + JSON.stringify(Year);
+});
+
+
+</script>

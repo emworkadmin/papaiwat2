@@ -1,0 +1,7 @@
+<?php  
+if($this->data->DataType=='custom'){
+	echo $this->partial("item/_editcustom.phtml", $this);	
+}else{
+	echo $this->partial("item/_edit.phtml", $this);	
+}
+?>

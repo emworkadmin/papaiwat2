@@ -1,0 +1,288 @@
+<style>
+.information{
+		background-attachment: scroll;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+@media print {
+    body * {
+	    visibility: hidden;
+	}
+    .d2ms-box-main, .d2ms-box-main  * {
+    	visibility: visible;
+    }
+    header, footer {display: none;}
+    .information-wrapper {margin-top: 0px;}
+}
+
+@media all {
+  .watermark {
+    display: none;
+  }
+}
+
+@media print {
+	section[id^=d2ms-section] {
+		display: none;	
+	}
+	section.d2ms-section-hasmainbox {
+		display: block;
+	}
+	section.d2ms-section-hasmainbox div[id^=d2ms-section-]{
+		display: none;
+	}
+	section.d2ms-section-hasmainbox div.d2ms-section-ismainbox {
+		display: block;
+	}
+	a[href]:after { content: none !important; }
+	img[src]:after { content: none !important; }
+  .watermark {
+    display: block; 
+    position: absolute;
+    top: 0; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+  	opacity: 0.3;
+  }
+  .watermark img {
+  	width: 100%;
+  }
+  .watermark p {
+  	text-align: center; 
+  	font-size: 2.4rem;
+  }
+  
+}
+.title-label {
+	max-width: 1125px;
+}
+.Title .title {
+	padding-top:5px;
+}
+.department-introimage img{
+	width:100%;
+}
+.department-detail{
+	padding: 20px 0px 20px 0px;;
+}
+.department-document{
+	margin-bottom:20px;
+}
+.department-address{
+	margin-bottom:20px;
+}
+.title-label{
+	border-bottom:0px;
+}
+.showdoc{
+	margin-bottom:20px;
+}
+</style>
+
+<?php 
+if(!empty($this->data->BackgroundColor)){
+	echo '<style>';
+	echo '.information{
+		 background-color:'.$this->data->BackgroundColor.';
+	}';
+	echo '</style>';
+}
+if(!empty($this->dataFileBackgroundImage)){
+	foreach($this->dataFileBackgroundImage as $BackgroundImage){
+		echo '<style>';
+		echo '.information{
+			background-image:url("'.$this->url(array("module" => "default", "controller" => "file", "action" => "get", "size" => "1500", "file" => $BackgroundImage['hash_name']), null, true).'");
+		}';
+		echo '</style>';
+	}
+}
+if($this->data->SlidingBackground=='Y'){
+	echo '<style>';
+	echo '.information{
+			background-attachment: fixed;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: cover;
+	}';
+	echo '</style>';
+}
+?>
+<div class="watermark">
+	<img alt="image" src="<?php echo $this->baseUrl('images/logos/logo.png'); ?>" />
+	<p>
+		<?php echo System_Model_Setting::getValue("SiteName", "Site"); ?>
+	</p>
+</div>
+<div class="infodetail infopage information">
+	<div class="title-panel printable Title">
+    	<div class="container">
+    		<span class="title Head">
+    			<?php echo $this->data->Title; ?>	
+    		</span>
+			<?php if($this->informationSettingDepartmentShowCategory):?>
+				<span class="title Head"><?php echo Emwork_Translate::text($this->lang, 'information', 'workgroup'); ?> 
+					<?php echo $this->data->CategoryName; ?>
+				</span>	
+			<?php endif;?>
+    	</div>
+		<div class="borderHead" style="background:#28abe3;width:50px;height:5px;margin-right:5px;display: inline-block;">
+		</div>
+		<div class="borderHead" style="background:#9ea0a0;width:50px;height:5px;margin-right:5px;display: inline-block;">
+		</div>
+    </div>
+	<div class="information-panel printable" style="">
+		<div class="container">
+			<div>
+				<em class="fa fa-eye"></em> <?php echo number_format($this->data->ViewAmount); ?> 
+				| 
+				<em class="fa fa-print" onclick="javascript:window.print();"></em>
+			</div>
+
+			<?php if ($this->informationSettingInformationShowImage) : ?>
+			<div class="department-introimage">
+				<img alt="image" src="<?php echo $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "size" => "1500", "file" => $this->dataInfo->IntroImageHashName), null, true); ?>" />
+			</div>
+			<?php endif;?>
+			
+			<?php if($this->informationSettingDepartmentShowDetail):?>
+			<div class="department-detail">
+				<?php echo Emwork_Utility::notShowNull($this->data->Detail); ?>
+			</div>
+			<?php endif;?>
+			
+			<?php if($this->informationSettingDepartmentShowDocuments): ?>
+			<div class="department-document">
+				<div class="title-label" style="padding-top:0px;padding-bottom:0px">
+					<h3><?php echo Emwork_Translate::text($this->lang, 'information', 'cost'); ?></h3>
+				</div>
+				<div class="title-label" style="margin-bottom:15px;">
+					<?php
+					foreach ( $this->dataFileDocuments as $doc ) :
+						$docUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $doc["hash_name"]), null, true);
+						$docDownloadUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "download", "file" => $doc["hash_name"]), null, true);
+						$docName = $doc["file_name"];
+					?>
+					<div class="showdoc">
+						<img alt="image" src="<?php echo $this->baseUrl("images/icons/icon_document.png"); ?>" />&nbsp;<a href="<?php echo $docDownloadUrl; ?>" ><?php echo $docName; ?></a>
+						<?php if($doc['Extension']=="pdf"):?>
+							<object data="<?php echo $docUrl; ?>" type="application/pdf" width="100%" height="500px">
+								<p><a href="<?php echo $docUrl; ?>"><?php echo $docName; ?></a></p>
+							</object>
+						<?php endif;?>
+					</div>
+					<?php
+					endforeach;
+					?>
+				</div>
+			</div>
+			<?php endif; ?>
+
+			<div class="department-address">
+				<div class="title-label">
+					<h3><?php echo Emwork_Translate::text($this->lang, 'information', 'contact_title'); ?></h3>
+					<div class="row" style="padding: 15px;background-color: #dedede;margin-left: 20px;">
+						<?php if ($this->informationSettingDepartmentShowAddress) : ?>	
+						<div class="form-group" >
+							<label class="col-md-2 control-label" style="color:#1b5ee4;"><?php echo Emwork_Translate::text($this->lang, 'information', 'address'); ?></label>
+							<div class="col-md-10 divControl">
+								<?php echo $this->data->Address; ?>
+							</div>
+						</div>
+						<?php endif;?>
+						<?php if ($this->informationSettingDepartmentShowJurisdiction) : ?>	
+						<div class="form-group" >
+							<div class="col-md-12">
+								<div class="row">
+									<label class="col-md-2 control-label" style="color:#1b5ee4;"><?php echo Emwork_Translate::text($this->lang, 'information', 'jurisdiction'); ?></label>
+									<div class="col-md-10 divControl">
+										<?php echo $this->data->Jurisdiction; ?>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?php endif;?>
+						<div class="form-group" >
+							<div class="col-md-12">
+								<div class="row">
+									<?php if ($this->informationSettingDepartmentShowTel) : ?>
+									<label class="col-md-2 control-label" style="color:#1b5ee4;"><?php echo Emwork_Translate::text($this->lang, 'information', 'telephone'); ?></label>
+									<div class="col-md-2 divControl">
+										<?php echo $this->data->Telephone; ?>
+									</div>
+									<?php endif;?>
+
+									<?php if ($this->informationSettingDepartmentShowFax) : ?>	
+									<label class="col-md-1 control-label" style="color:#1b5ee4;"><?php echo Emwork_Translate::text($this->lang, 'information', 'fax'); ?></label>
+									<div class="col-md-2 divControl">
+										<?php echo $this->data->Fax; ?>
+									</div>
+									<?php endif;?>
+
+									<?php if ($this->informationSettingDepartmentShowEmail) : ?>
+									<label class="col-md-1 control-label" style="color:#1b5ee4;"><?php echo Emwork_Translate::text($this->lang, 'information', 'email'); ?></label>
+									<div class="col-md-2 divControl">
+										<?php echo $this->data->Email; ?>
+									</div>	
+									<?php endif;?>
+
+								</div>
+							</div>
+						</div>
+						<?php if ($this->informationSettingDepartmentShowWebsite) : ?>
+						<div class="form-group" >
+							<div class="col-md-12">
+								<div class="row">
+									<label class="col-md-2 control-label" style="color:#1b5ee4;"><?php echo Emwork_Translate::text($this->lang, 'information', 'website_department'); ?></label>
+									<div class="col-md-10 divControl">
+										<?php echo $this->data->Website; ?>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?php endif;?>
+
+					</div>
+				</div>
+			</div>
+			<?php if ($this->informationSettingDepartmentShowMap) : ?>
+				<?php if (!empty($this->data->Latitude) && !empty($this->data->Longitude)) : ?>
+					<div class="row">
+						<div class="col-md-12" style="margin-top:20px;margin-bottom:70px;">
+							<h3><?php echo Emwork_Translate::text($this->lang, 'information', 'map'); ?></h3>
+							<div id="mapCanvas" style="width: 100%; height: 350px;"></div>
+						</div>
+					</div>
+				<?php endif;?>
+			<?php endif;?>
+		</div>
+	</div>
+<?php if (!empty($this->data->Latitude) && !empty($this->data->Longitude)) : ?>
+    <script>
+    var map;
+    var marker;
+    function initMap() {		
+    	// Set Map
+    	map = new google.maps.Map(document.getElementById('mapCanvas'), {
+    	    zoom: 15,
+    	    center: new google.maps.LatLng(<?php echo $this->data->Latitude; ?>, <?php echo $this->data->Longitude; ?>), 
+    	    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    	    draggable: true,
+    	    fullscreenControl : false,
+    	    mapTypeControl: true,
+    	    mapTypeControlOptions: {
+    	        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+    	        position: google.maps.ControlPosition.TOP_RIGHT
+    	    }
+    	});
+    	 marker = new google.maps.Marker({
+    	 	position: {lat: <?php echo $this->data->Latitude;?>, lng: <?php echo $this->data->Longitude; ?>},
+    		map: map,
+    		title: '<?php echo str_replace("'", "\'", $this->data->Title);?>'
+    	});
+    }
+	$(".d2ms-box").addClass("row");
+    </script> 
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh2SYeAPs7Sfkv_FfupXHDiqti27WMWj4&amp;callback=initMap&amp;language=th"></script>
+<?php endif;?>

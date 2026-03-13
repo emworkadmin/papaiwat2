@@ -1,0 +1,636 @@
+<!-- jQueryFiler -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+
+<!-- bootstrap dialog -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/bootstrap-dialog/bootstrap-dialog.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/bootstrap-dialog/bootstrap-dialog.min.js'); ?>"></script>
+
+<!-- recaptcha  -->
+<script src='https://www.google.com/recaptcha/api.js?hl=<?php echo $this->lang; ?>'></script>
+
+
+<?php if($this->isiOS) :  ?>
+<style>
+.jFiler.jFiler-theme-default {
+	position: relative !important;
+}
+input[type="file"]{
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 900000 !important;
+    width: 100% !important;
+    max-width: 300px !important;
+    height: 35px !important;
+    opacity: 0 !important;
+}
+</style>
+<?php endif; ?>
+
+<style>
+    .panel-detail .help-block {
+        font-size: 16px;
+        margin-bottom: 0px;
+        color: #20409A;
+    }
+    .validate-txt {
+        color: red !important;
+        display: none;
+    }
+</style>
+
+ <?php 
+ if($this->ItemCustomCss) {
+	echo '<style>'.$this->ItemCustomCss.'</style>';
+ }
+ ?>
+
+<div class="panel panel-default panel-detail eform">
+	<div class="panel-body">
+
+		<div class="item-title title-panel eform-title">
+			<span class="title">
+				<span class="complain-hilight"><?php echo $this->pageTitle;?></span>
+			</span>
+			<hr />
+		</div>
+            
+        <form class="form-horizontal" id="formData" name="formData">
+        <?php echo $this->formHidden("hdfID", $this->ID); ?>
+
+            <div id='ControlParams'>
+            <?php 
+            if (count($this->dataType) > 0) :
+                $i = 0;
+                foreach ($this->dataType as $item) :
+                    $i ++;
+
+                    $dataObj = new stdClass();
+                    $dataObj->ID = $item['ID'];
+                    
+                    $dataObj->EformControlTypeID = $item['EformControlTypeID'];
+                    $dataObj->NAME = $item['NAME_'];
+                    $dataObj->LABEL = $item['LABEL_'];
+                    $dataObj->PLACEHOLDER = $item['PLACEHOLDER_'];
+                    $dataObj->DESCRIPTION = $item['DESCRIPTION_'];
+                    $dataObj->REQUIRED = $item['REQUIRED_'];
+                    $dataObj->VALIDATIONRULE = $item['VALIDATIONRULE_'];
+                    $dataObj->SIZE = $item['SIZE_'];
+                    $dataObj->MAXLENGTH = $item['MAXLENGTH_'];
+                    $dataObj->VALIDATE = $item['VALIDATE_'];
+                    $dataObj->COLS = $item['COLS_'];
+                    $dataObj->ROWS = $item['ROWS_'];
+                    $dataObj->DROPDOWN = json_decode($item['DROPDOWN_']);
+                    $dataObj->OPTION = json_decode($item['OPTION_']);
+                    $dataObj->FLOW = $item['FLOW_'];
+                    $dataObj->FILESIZE = $item['FILESIZE_'];
+                    $dataObj->FILETYPE = $item['FILETYPE_'];
+                    $dataObj->MULTIPLE = $item['MULTIPLE_'];
+                    $dataObj->RESETBUTTON = $item['RESETBUTTON_'];
+                    $dataObj->RESETLABEL = $item['RESETLABEL_'];
+                    $dataObj->MESSAGE = $item['MESSAGE_'];
+
+                    $controlClassRequired = '';
+                    $labelClassRequired = '';
+                    if ($item['REQUIRED_'] == 'Y') {
+                        $labelClassRequired = ' labelRequest'; 
+                        $controlClassRequired = ' required';
+                    }
+
+                    $dataStr = json_encode($dataObj);
+                ?>
+
+					<?php if($dataObj->EformControlTypeID == 8) { ?>
+						<div class="form-group has-feedback">
+					<?php } else { ?>
+						<div class="form-group">
+					<?php } ?>
+
+					<?php if($dataObj->EformControlTypeID == 11) { ?>
+						<label class="col-md-3 control-label eform-label"></label>
+						<div class="col-md-9 divControl eform-div">
+                    <?php } elseif ($dataObj->EformControlTypeID == 9) { ?>
+                        <label class="col-md-3 control-label eform-label"></label>
+						<div class="col-md-9 divControl eform-div button-panel-zone">
+					<?php } else { ?>
+						<label class="col-md-3 control-label eform-label <?php echo $labelClassRequired; ?>"><?php echo $dataObj->LABEL; ?></label>
+						<div class="col-md-9 divControl eform-div">
+					<?php } ?>
+
+                            <?php 
+                            if($dataObj->EformControlTypeID == '1') {
+
+                                echo '<input type="text" value="" name="params[' . $dataObj->NAME . ']" id="' . $dataObj->NAME . '" class="form-control ' . $dataObj->VALIDATIONRULE . '" placeholder="' . $dataObj->PLACEHOLDER . '" size="' . $dataObj->SIZE . '" maxlength="' . $dataObj->MAXLENGTH . '"> ';
+                                
+                            } else if($dataObj->EformControlTypeID == '2') {
+
+								echo $this->formTextarea("params[{$dataObj->NAME}]", null, array("class" => "form-control " . $dataObj->VALIDATIONRULE, "rows" => "4", "col" => "50", "placeholder" => $dataObj->PLACEHOLDER));
+
+                            } else if($dataObj->EformControlTypeID == '3') {
+								
+								if($dataObj->MULTIPLE == 'Y') {
+									echo '<select name="params[' . $dataObj->NAME . '][]" id="' . $dataObj->NAME . '" class="form-control" Multiple>';
+								} else {
+									echo '<select name="params[' . $dataObj->NAME . '][]" id="' . $dataObj->NAME . '" class="form-control">';
+								}
+					
+								$loop_3 = 0;
+                                $loop_3_length = count($dataObj->DROPDOWN);
+                                $select = 'Selected';
+								foreach($dataObj->DROPDOWN as $e) {
+									if($dataObj->MULTIPLE == 'Y') {
+										if($e->check) {
+										echo '<option value="' . $e->value . '" Selected>' . $e->value . '</option>';
+										} else {
+										echo '<option value="' . $e->value . '">' . $e->value . '</option>';
+										}
+									} else {
+										$loop_3++;
+										if($e->check && $loop_3_length == $loop_3) {
+											echo '<option value="' . $e->value . '" Selected>' . $e->value . '</option>';
+										} else {
+                                            echo '<option value="' . $e->value . '" ' . $select . '>' . $e->value . '</option>';
+                                            $select = '';
+										}
+									}
+								}
+                                echo '</select>';
+                                
+                            } else if($dataObj->EformControlTypeID == '4') {
+								
+								if($dataObj->FLOW == 'H') {
+									echo '<div class="checkbox with-icheck">';
+								}
+								foreach($dataObj->OPTION as $e) {
+									
+									if($dataObj->FLOW == 'V') {
+										echo '<div class="checkbox with-icheck">';
+									}
+									echo ' <label class="form-inline" for="">';
+									if($e->check) {
+										echo '<input type="checkbox" value="' . $e->value . '" id="' . $dataObj->NAME . '-' . $e->value .'" name="params[' . $dataObj->NAME . '][]" checked>' . $e->value;
+									} else {
+										echo '<input type="checkbox" value="' . $e->value . '" id="' . $dataObj->NAME . '-' . $e->value .'" name="params[' . $dataObj->NAME . '][]">' . $e->value;
+									}
+									echo '</label>';
+									if($dataObj->FLOW == 'V') {
+										echo '</div>';
+									}
+								}
+								if($dataObj->FLOW == 'H') {
+									echo '</div>';
+								}
+								
+                            } else if($dataObj->EformControlTypeID == '5') {
+
+								if($dataObj->FLOW == 'H') {
+									echo '<div class="radio with-icheck">';
+								}
+								foreach($dataObj->OPTION as $e) {
+									
+									if($dataObj->FLOW == 'V') {
+										echo '<div class="radio with-icheck">';
+									}
+									echo ' <label class="form-inline" for="">';
+									if($e->check) {
+										echo '<input type="radio" checked value="' . $e->value . '" id="' . $dataObj->NAME . '-' . $e->value .'" name="params[' . $dataObj->NAME . '][]">' . $e->value;
+									} else {
+										echo '<input type="radio" value="' . $e->value . '" id="' . $dataObj->NAME . '-' . $e->value .'" name="params[' . $dataObj->NAME . '][]">' . $e->value;
+									}
+									echo '</label>';
+									if($dataObj->FLOW == 'V') {
+										echo '</div>';
+									}
+								}
+								if($dataObj->FLOW == 'H') {
+									echo '</div>';
+								}
+                                                          
+                            } else if($dataObj->EformControlTypeID == '6') {
+
+                                echo '<input type="password" name="params[' . $dataObj->NAME . ']" id="' . $dataObj->NAME . '" class="form-control" placeholder="' . $dataObj->PLACEHOLDER . '" size="' . $dataObj->SIZE . '" maxlength="' . $dataObj->MAXLENGTH . '" autocomplete="off"> ';
+                                
+                            } else if($dataObj->EformControlTypeID == '7') {
+
+                                if($dataObj->FILETYPE == 'I') {
+                                    $extsfile = array('png','jpg','gif');
+                                } elseif ($dataObj->FILETYPE == 'V') {
+                                    $extsfile = array('mp4');
+                                } else {
+                                    $extsfile = array('pdf');
+                                }
+
+                                echo $this->UploadHtmlControl($dataObj->NAME, 'params['.$dataObj->NAME.']', null, array('multi' => $multiple, 'exts' => $extsfile, 'maxsize' => $dataObj->FILESIZE));
+
+                            } else if($dataObj->EformControlTypeID == '8') {
+
+                                echo '<input type="text" name="params[' . $dataObj->NAME . ']" id="' . $dataObj->NAME . '" placeholder="' . $dataObj->PLACEHOLDER . '" value="" class="form-control" data-date-language="th-th" readonly="readonly" aria-required="true">';
+								echo '<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>';
+								echo '<span id="' . $dataObj->NAME . '-Close" class="fa fa-times-circle" style="right: 50px; top: 10px; position: absolute; cursor: pointer; display: none; font-size: 16px;"></span>';
+
+                            ?>
+                                <script type="text/javascript">
+                                    $('#<?php echo $dataObj->NAME ?>').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+									$("#<?php echo $dataObj->NAME ?>").change(function() {
+										if ($(this).val() != "") {
+											$("#<?php echo $dataObj->NAME ?>-Close").css("display", "block");
+										}
+									});
+									$("#<?php echo $dataObj->NAME ?>-Close").click(function() {
+										$("#<?php echo $dataObj->NAME ?>").val('');
+										$("#<?php echo $dataObj->NAME ?>-Close").css("display", "none");
+									});
+                                </script>
+
+                            <?php
+                            } else if($dataObj->EformControlTypeID == '9') {
+
+								echo ' <button type="button" class="btn btn-primary" id="' . $dataObj->NAME . '"><em class="fa fa-save"></em> ' . $dataObj->LABEL . '</button> ';
+								if($dataObj->RESETBUTTON == 'Y') {
+									echo ' <button type="reset" class="btn btn-default" id="' . $dataObj->RESETLABEL . '"><em class="fa fa-refresh"></em> ' . $dataObj->RESETLABEL . '</button>';
+                                }
+                                echo ' <button type="button" class="btn btn-warning" id="btnPreview"><em class="fa fa-eye"></em> ดูตัวอย่าง</button>';
+								
+                                ?>
+
+                                <script>
+                                    $(function() {
+
+                                        $.fn.alphabetonly = function(options) {
+                                            var opts = $.extend( {}, $.fn.alphabetonly.defaults, options );
+                                            msg = opts.message;
+                                            color = opts.color;
+                                            size = opts.size;
+                                            var letters = /^[กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรฤลฦวศษสหฬอฮฯะัาำิีึืฺุู฿เแโใไๅๆ็่้๊๋์ํ๎๏A-Za-z ]+$/;
+                                            $.each($(this), function(i,e) {
+                                                var id = $(e).attr("id");
+                                                $(e).parent().append("<span class='pattern-validate-txt' id='"+id+"' style='display:none;color:"+color+";font-size:"+size+"'>" + msg + "</span>");
+                                                $(this).keyup(function() {
+                                                    if($(this).val().length>0) {
+                                                        if( letters.test($(this).val()) ) {
+                                                            $("span#"+id).css({"display":"none"});
+                                                        } else {
+                                                            $("span#"+id).css({"display":"block"});
+                                                        }
+                                                    } else {
+                                                        $("span#"+id).css({"display":"none"});
+                                                    }
+                                                });
+                                            });
+                                        }
+                                        $.fn.alphabetonly.defaults = {
+                                            message: "โปรดระบุเฉพาะตัวอักษรที่ถูกต้อง !",
+                                            color: "red",
+                                            size: '16px'
+                                        };
+
+                                        $.fn.emailonly = function(options) {
+                                            var opts = $.extend( {}, $.fn.emailonly.defaults, options );
+                                            msg = opts.message;
+                                            color = opts.color;
+                                            size = opts.size;
+                                            var letters = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                                            $.each($(this), function(i,e) {
+                                                var id = $(e).attr("id");
+                                                $(e).parent().append("<span class='pattern-validate-txt' id='"+id+"' style='display:none;color:"+color+";font-size:"+size+"'>" + msg + "</span>");
+                                                $(this).keyup(function() {
+                                                    if($(this).val().length>0) {
+                                                        if( letters.test($(this).val()) ) {
+                                                            $("span#"+id).css({"display":"none"});
+                                                        } else {
+                                                            $("span#"+id).css({"display":"block"});
+                                                        }
+                                                    } else {
+                                                        $("span#"+id).css({"display":"none"});
+                                                    }
+                                                });
+                                            });
+                                        }
+                                        $.fn.emailonly.defaults = {
+                                            message: "โปรดระบุที่อยู่อีเมล์ที่ถูกต้อง !",
+                                            color: "red",
+                                            size: '16px'
+                                        };
+
+                                        $.fn.numbericonly = function(options) {
+                                            var opts = $.extend( {}, $.fn.numbericonly.defaults, options );
+                                            msg = opts.message;
+                                            color = opts.color;
+                                            size = opts.size;
+                                            var letters = /^[1234567890๑๒๓๔ู฿๕๖๗๘๙๐ ]+$/;
+                                            $.each($(this), function(i,e) {
+                                                var id = $(e).attr("id");
+                                                $(e).parent().append("<span class='pattern-validate-txt' id='"+id+"' style='display:none;color:"+color+";font-size:"+size+"'>" + msg + "</span>");
+                                                $(this).keyup(function() {
+                                                    if($(this).val().length>0) {
+                                                        if( letters.test($(this).val()) ) {
+                                                            $("span#"+id).css({"display":"none"});
+                                                        } else {
+                                                            $("span#"+id).css({"display":"block"});
+                                                        }
+                                                    } else {
+                                                        $("span#"+id).css({"display":"none"});
+                                                    }
+                                                });
+                                            });
+                                        }
+                                        $.fn.numbericonly.defaults = {
+                                            message: "โปรดระบุจำนวนเต็มที่ถูกต้อง !",
+                                            color: "red",
+                                            size: '16px'
+                                        };
+
+                                        $.fn.httponly = function(options) {
+                                            var opts = $.extend( {}, $.fn.httponly.defaults, options );
+                                            msg = opts.message;
+                                            color = opts.color;
+                                            size = opts.size;
+                                            var letters = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/;
+                                            $.each($(this), function(i,e) {
+                                                var id = $(e).attr("id");
+                                                $(e).parent().append("<span class='pattern-validate-txt' id='"+id+"' style='display:none;color:"+color+";font-size:"+size+"'>" + msg + "</span>");
+                                                $(this).keyup(function() {
+                                                    if($(this).val().length>0) {
+                                                        if( letters.test($(this).val()) ) {
+                                                            $("span#"+id).css({"display":"none"});
+                                                        } else {
+                                                            $("span#"+id).css({"display":"block"});
+                                                        }
+                                                    } else {
+                                                        $("span#"+id).css({"display":"none"});
+                                                    }
+                                                });
+                                            });
+                                        }
+                                        $.fn.httponly.defaults = {
+                                            message: "โปรดระบุที่อยู่ url ที่ถูกต้อง !",
+                                            color: "red",
+                                            size: '16px'
+                                        };
+
+                                        $.fn.validate = function() {
+                                            var valid = true;
+                                            $.each($(this).find(".validate-txt"), function(i, e) {
+                                                if( $(e).css('display') == 'block') {
+                                                    valid = false;
+                                                }
+                                            });
+                                            $.each($(this).find(".pattern-validate-txt"), function(i, e) {
+                                                if( $(e).css('display') == 'block') {
+                                                    valid = false;
+                                                }
+                                            });                                            
+                                            return valid;
+                                        }
+
+                                        $('.alpha').alphabetonly();
+                                        $('.email').emailonly();
+                                        $('.url').httponly();
+                                        $('.digits').numbericonly();
+
+                                        function checkValidate()
+                                        {
+                                            // Check Required <Select>
+                                            $.each($(".labelRequest").parent().find('select'), function (i, e) {
+                                                if($(e).prop('selectedIndex') < 0) {
+                                                    $(e).parent().find('.validate-txt').css({"display":"block"});
+                                                } else {
+                                                    $(e).parent().find('.validate-txt').css({"display":"none"});
+                                                }
+                                            });
+
+                                            // Check Required <input type="checkbox">
+                                            var ck_l_f = true;
+                                            var ck_l_t = true;
+                                            $.each($(".labelRequest").parent().find('[type=checkbox]'), function (i, e) {
+                                                if(ck_l_f) {
+                                                    $(e).parent().parent().parent().parent().find('.validate-txt').css({"display":"block"});
+                                                    ck_l_f = false;
+                                                }
+                                                if(ck_l_t) {
+                                                    if($(e).is(':checked')) {
+                                                        $(e).parent().parent().parent().parent().find('.validate-txt').css({"display":"none"});
+                                                        ck_l_t = false;
+                                                    }
+                                                }
+                                            });
+
+                                            ck_l_f = true;
+                                            ck_l_t = true;
+                                            // Check Required <input type="radio">
+                                            $.each($(".labelRequest").parent().find('[type=radio]'), function (i, e) {
+                                                if(ck_l_f) {
+                                                    $(e).parent().parent().parent().parent().find('.validate-txt').css({"display":"block"});
+                                                    ck_l_f = false;
+                                                }
+                                                if(ck_l_t) {
+                                                    if($(e).is(':checked')) {
+                                                        $(e).parent().parent().parent().parent().find('.validate-txt').css({"display":"none"});
+                                                        ck_l_t = false;
+                                                    }
+                                                }
+                                            });                                              
+
+                                            // Check Required <input type="text">
+                                            $.each($(".labelRequest").parent().find('input[type=text]'), function (i, e) {
+                                                if($(e).val().length == 0 || $(e).val() == "") {
+                                                    $(e).parent().find('.validate-txt').css({"display":"block"});
+                                                } else {
+                                                    $(e).parent().find('.validate-txt').css({"display":"none"});
+                                                }
+                                            });
+
+                                            // Check Required <input type="password">
+                                            $.each($(".labelRequest").parent().find('[type=password]'), function (i, e) {
+                                                if($(e).val().length == 0 || $(e).val() == "") {
+                                                    $(e).parent().find('.validate-txt').css({"display":"block"});
+                                                } else {
+                                                    $(e).parent().find('.validate-txt').css({"display":"none"});
+                                                }
+                                            });
+
+                                            // Check Required <textarea>
+                                            $.each($(".labelRequest").parent().find('textarea'), function (i, e) {
+                                                if($(e).val().length == 0 || $(e).val() == "") {
+                                                    $(e).parent().find('.validate-txt').css({"display":"block"});
+                                                } else {
+                                                    $(e).parent().find('.validate-txt').css({"display":"none"});
+                                                }
+                                            });
+
+                                            // Check Required file
+                                            $.each($(".labelRequest").parent().find('[type=file]'), function (i, e) {
+                                                if($(e).val().length == 0 || $(e).val() == "") {
+                                                    $(e).parent().parent().parent().find('.validate-txt').css({"display":"block"});
+                                                } else {
+                                                    $(e).parent().parent().parent().find('.validate-txt').css({"display":"none"});
+                                                }
+                                            });
+
+                                            // Check Recaptcha
+                                            <?php 
+                                                if ( in_array($this->tmp_EformControlTypeID, array(10)) ) :
+                                                    ?>
+                                                    if($("#g-recaptcha-response")&&$("#g-recaptcha-response").val()==""||$("#g-recaptcha-response").val().length==0) {
+                                                        $("#recaptcha_validate").css({"display":"block"});
+                                                    } else {
+                                                        $("#recaptcha_validate").css({"display":"none"});
+                                                    }
+                                                    <?php 
+                                                endif;
+                                            ?>
+
+                                        }
+
+                                        function buttonZoneDisabled() {
+                                            $(".button-panel-zone button").attr("disabled", "disabled");
+                                        }
+                                        function buttonZoneActive() {
+                                            $(".button-panel-zone button").removeAttr("disabled");
+                                        }
+
+                                        // BUTTON CLICK
+                                        $("#<?php echo $dataObj->NAME; ?>").click(function() {  
+                                            checkValidate();                                    
+                                            var valid = $("#formData").validate();
+                                            if(valid) {
+                                                buttonZoneDisabled();
+                                                $.post("<?php echo $this->url(array('module' => 'eform', 'controller' => 'item', 'action' => 'save'), null, true);?>", $("#formData").serializeArray(), function(data) {
+                                                    if(data.result) {
+                                                        DialogComplete();
+                                                        setTimeout(function() {
+                                                            window.location = "<?php echo $this->url(array('module' => 'eform', 'controller' => 'item', 'action' => 'finish', 'id' => $this->ID), null, true); ?>";
+                                                        }, 500);                                                        
+                                                    } else {
+                                                        DialogWarning(data.message);
+                                                        buttonZoneActive();
+                                                    }
+                                                });
+                                            }
+                                        });
+                                       
+                                        // Preview
+                                        $("#btnPreview").click(function() {
+                                            checkValidate();
+                                            var valid = $("#formData").validate();
+                                            if(valid) {
+                                                var dialogPreview = BootstrapDialog.show({
+                                                    title: 'ตัวอย่างข้อมูล',
+                                                    message: $('<div id="dialogdialogPreview"></div>').load("<?php echo $this->url(array('module' => 'eform', 'controller' => 'item', 'action' => 'preview'), null, true); ?>", $("#formData").serializeArray()),
+                                                    closable: true,
+                                                    closeByBackdrop: false,
+                                                    closeByKeyboard: false,
+                                                    autodestroy: true,
+                                                    size: BootstrapDialog.SIZE_WIDE,
+                                                    cssClass: "divPreview",
+                                                    buttons : [{
+                                                        label: ' ปิด',
+                                                        icon: 'fa fa-times',
+                                                        action: function(dialog) {
+                                                            dialog.close();
+                                                        }
+                                                    }]
+                                                });
+                                                dialogPreview.open();
+                                            }
+                                        });
+
+                                    });
+                                </script>
+
+                            <?php
+                            } else if($dataObj->EformControlTypeID == '10') {
+
+                                echo '<div id="' . $dataObj->NAME . '" class="g-recaptcha text-center" data-sitekey="' . $this->ReCaptchaSiteKey . '"></div>';
+
+                            } else if($dataObj->EformControlTypeID == '11') {
+
+                                echo '<p class="form-control-static">' . $dataObj->MESSAGE . '</p>';
+
+                            }
+
+                            if($dataObj->DESCRIPTION) {
+                                echo "<div class=\"help-block\">" . $dataObj->DESCRIPTION . "</div>";
+                            }
+
+                            if($dataObj->VALIDATE) {
+
+                                if($dataObj->EformControlTypeID == '10') {
+                                    echo '<div id="recaptcha_validate" class="help-block validate-txt">' . $dataObj->VALIDATE . '</div>';
+                                } else {
+                                    echo '<div class="help-block validate-txt">' . $dataObj->VALIDATE . '</div>';
+                                }
+                            }
+                            
+                            ?>
+                        </div>
+                    </div>
+                    <?php
+                endforeach;
+            endif;
+            ?>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+$(function() {
+    $("#formData input[type=checkbox], #formData input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+    
+    
+    $.fn.serializeObject = function() {
+        var self = this,
+            json = {},
+            push_counters = {},
+            patterns = {
+                "validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
+                "key":      /[a-zA-Z0-9_]+|(?=\[\])/g,
+                "push":     /^$/,
+                "fixed":    /^\d+$/,
+                "named":    /^[a-zA-Z0-9_]+$/
+            };
+        this.build = function(base, key, value) {
+            base[key] = value;
+            return base;
+        };
+        this.push_counter = function(key) {
+            if(push_counters[key] === undefined) {
+                push_counters[key] = 0;
+            }
+            return push_counters[key]++;
+        };
+        $.each($(this).serializeArray(), function() {
+            // skip invalid keys
+            if(!patterns.validate.test(this.name)) {
+                return;
+            }
+            var k,
+                keys = this.name.match(patterns.key),
+                merge = this.value,
+                reverse_key = this.name;
+            while((k = keys.pop()) !== undefined) {
+                // adjust reverse_key
+                reverse_key = reverse_key.replace(new RegExp("\\[" + k + "\\]$"), '');
+                // push
+                if(k.match(patterns.push)){
+                    merge = self.build([], self.push_counter(reverse_key), merge);
+                }
+                // fixed
+                else if(k.match(patterns.fixed)) {
+                    merge = self.build([], k, merge);
+                }
+                // named
+                else if(k.match(patterns.named)) {
+                    merge = self.build({}, k, merge);
+                }
+            }
+            json = $.extend(true, json, merge);
+        });
+        return json;
+    };
+
+});
+</script>

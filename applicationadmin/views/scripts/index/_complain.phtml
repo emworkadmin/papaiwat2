@@ -1,0 +1,63 @@
+<style>
+    #dashboard_complain .title {
+        color: #ffffff;
+        font-size: 18px;
+        padding: 10px 10px;
+        border-bottom: none;
+        font-weight: bold;
+        background: #3a8adc;        
+    }
+    #dashboard_complain td:first-child
+    {
+        width: 10%;
+        text-align: center;
+    }
+    #dashboard_complain th
+    {
+        white-space: nowrap;
+    }
+</style>
+
+<div id="dashboard_complain">
+    <div class="table">
+        <table id="tblData_complain" class="table table-bordered table-hover">
+            <caption>รายการเรื่องร้องเรียน
+            <a class="viewall" href="<?php echo $this->url(array("module" => "complain", "controller" => "index", "action" => "index")); ?>"><em class="fa fa-arrow-circle-o-right"></em></a>
+            </caption>
+            <thead>
+                <tr>
+                    <th>ลำดับ</th>
+                    <th>รายการเรื่องร้องเรียน</th>
+                    <th>วันที่</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                    foreach($this->complain as $k => $v) {
+                        echo '<tr>';
+                        echo '  <td>' . ($k+1) . '</td>';
+                        echo '  <td><a href="'.$this->url(array('module' => 'complain', 'controller' => 'index', 'action' => 'edit'), null, true).'/itemid/'.$v['ID'].'" target="_blank">' . $v['Topic'] . '</a></td>';
+                        echo '  <td><a href="'.$this->url(array('module' => 'complain', 'controller' => 'index', 'action' => 'edit'), null, true).'/itemid/'.$v['ID'].'" target="_blank">' . Emwork_Utility::notShowNull(Emwork_Utility_DateTime::MySqlToDateThai($v['DateComplain'], "DT")) . '</a></td>';
+                        echo '</tr>';
+                    }
+                ?>            
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery(function(){
+    	var tblData = $('#tblData_complain').DataTable({
+            paging: false,
+            searching: false,
+            info: false,
+            ordering: true,
+            order: [[ 0, "asc" ]],
+            scrollCollapse: true,
+			scrollX: true,
+    	    language : {
+				url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+    	    }
+        });
+    });
+</script>

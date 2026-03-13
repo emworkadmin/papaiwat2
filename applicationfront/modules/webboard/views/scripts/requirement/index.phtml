@@ -1,0 +1,27 @@
+<style>
+
+.requirementdetail {
+    font-size: 20px;
+    padding: 0px 10px 0px 10px;
+}
+
+.main{
+    background-color: #ddd;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+</style>
+<div class="main webboard">
+    <div class = "requirementdetail" style="font-size: 30px;font-weight:  bold; color: #00c0ef;padding-bottom: 10px;">
+        <span class="title"><?php echo nl2br($this->data->Title); ?></span>
+    </div>
+    
+    <div class = "requirementdetail" style="padding-bottom: 25px;">
+        <span class="modify"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'requirement_modified'); ?> : </span><span class="date"><?php echo nl2br($this->data->Modified->format("d/m/y H:i"));  ?></span>
+    </div>
+
+    <div class = "requirementdetail">
+        <?php echo nl2br($this->data->Detail); ?>
+    </div>
+</div>

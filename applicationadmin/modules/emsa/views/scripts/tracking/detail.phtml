@@ -1,0 +1,282 @@
+<!-- jQueryFiler -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("assets/emsa/js/jquery-filer/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("assets/emsa/js/jquery-filer/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("assets/emsa/js/jquery-filer/js/jquery.filer.js"); ?>'></script>
+<!-- lightgallery -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/emsa/js/lightgallery-master/css/lightgallery.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/emsa/js/lightgallery-master/js/lightgallery.min.js'); ?>"></script> 
+<!-- lightgallery Ext -->
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/emsa/js/lightgallery-master/js/lg-fullscreen.min.js'); ?>"></script> 
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/emsa/js/lightgallery-master/js/lg-thumbnail.min.js'); ?>"></script> 
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/emsa/js/lightgallery-master/js/lg-video.min.js'); ?>"></script> 
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/emsa/js/lightgallery-master/js/lg-autoplay.min.js'); ?>"></script> 
+<!-- lightbox -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/lightbox/css/lightbox.css"); ?>" />
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/emsa/js/lightbox/js/lightbox.js"'); ?>"></script>
+
+<style>
+.lg-backdrop.in { z-index: 1050; }
+.img-thumbnail { display: inline-block; width: 150px; height: 100px; object-fit: cover; }
+.lightgallery, .video { display: inline-block; }
+.videoPlayer { padding-left: 0px; }
+</style>
+
+<div class="emsa-title">
+	สถานะของเลขที่แจ้งรับ <span class="emsa-label-blue"><?php echo $this->data->CustomerCode; ?></span>
+</div>
+<div class="emsa-status-panel">
+	<?php if($this->data->StatusID == 1){ ?>
+	<span class="emsa-status-label bg-red"><?php echo $this->data->StatusName; ?></span>
+	<?php }else if($this->data->StatusID == 2){ ?>
+	<span class="emsa-status-label bg-blue"><?php echo $this->data->StatusName; ?></span>
+	<?php }else if($this->data->StatusID == 3){ ?>
+	<span class="emsa-status-label bg-yellow"><?php echo $this->data->StatusName; ?></span>
+	<?php }else if($this->data->StatusID == 4){ ?>
+	<span class="emsa-status-label bg-green"><?php echo $this->data->StatusName; ?></span>
+	<?php } ?>
+</div>
+
+<div class="emsa-tab">
+	<ul class="nav nav-tabs" role="tablist">
+		<li role="presentation" class="active"><a href="#emsa-tracking-tab-timeline" aria-controls="timeline" role="tab" data-toggle="tab">ประวัติการให้บริการ</a></li>
+		<li role="presentation"><a href="#emsa-tracking-tab-detail" aria-controls="detail" role="tab" data-toggle="tab">รายละเอียด</a></li>
+	</ul>
+	<div class="tab-content">
+		<div role="tabpanel" class="tab-pane active" id="emsa-tracking-tab-timeline">
+			<ul class="timeline">
+				<li>
+					<?php if($this->data->isStatus4) { ?>
+					<em class="fa fa-check bg-green"></em>
+					<?php }else{ ?>
+					<i class="fa bg-gray"></i>
+					<?php } ?>
+					<div class="timeline-item emsa-tracking-item">
+						<div class="emsa-tracking-item-title">
+							ดำเนินการเสร็จสิ้น
+						</div>
+						<div class="emsa-tracking-item-datetime">
+							<?php 
+							if($this->data->isStatus4) {
+								echo $this->data->isStatus4Date;
+							}else{
+								echo '-';
+							}
+							?>
+						</div>
+					</div>
+				</li>
+				<li>
+					<?php if($this->data->isStatus3) { ?>
+					<em class="fa fa-check bg-green"></em>
+					<?php }else if($this->data->StatusID > 3) { ?>
+					<em class="fa bg-green"></em>
+					<?php }else{ ?>
+					<i class="fa bg-gray"></i>
+					<?php } ?>
+					<div class="timeline-item emsa-tracking-item">
+						<div class="emsa-tracking-item-title">
+							เจ้าหน้าที่อยู่ระหว่างให้บริการ
+						</div>
+						<div class="emsa-tracking-item-datetime">
+							<?php 
+							if($this->data->isStatus3) {
+								echo $this->data->isStatus3Date;
+							}else{
+								echo '-';
+							}
+							?>
+						</div>
+					</div>
+				</li>
+				<li>
+					<?php if($this->data->isStatus2) { ?>
+					<em class="fa fa-check bg-green"></em>
+					<?php }else if($this->data->StatusID > 2) { ?>
+					<em class="fa bg-green"></em>
+					<?php }else{ ?>
+					<i class="fa bg-gray"></i>
+					<?php } ?>
+					<div class="timeline-item emsa-tracking-item">
+						<div class="emsa-tracking-item-title">
+							ตรวจสอบข้อมูลเบื้องต้น
+						</div>
+						<div class="emsa-tracking-item-datetime">
+							<?php 
+							if($this->data->isStatus2) {
+								echo $this->data->isStatus2Date;
+							}else{
+								echo '-';
+							}
+							?>
+						</div>
+					</div>
+				</li>
+				<li>
+					<?php if($this->data->isStatus1) { ?>
+					<em class="fa fa-check bg-green"></em>
+					<?php }else if($this->data->StatusID > 1) { ?>
+					<em class="fa bg-green"></em>
+					<?php }else{ ?>
+					<i class="fa bg-gray"></i>
+					<?php } ?>
+					<div class="timeline-item emsa-tracking-item">
+						<div class="emsa-tracking-item-title">
+							รับแจ้งปัญหา / สอบถามการใช้งาน
+						</div>
+						<div class="emsa-tracking-item-datetime">
+							<?php 
+							if($this->data->isStatus1) {
+								echo $this->data->isStatus1Date;
+							}else{
+								echo '-';
+							}
+							?>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="emsa-tracking-tab-detail">
+			<div class="emsa-tracking-detail">
+				<div class="emsa-tracking-detail-title">ข้อมูลจากเจ้าหน้าที่</div>
+				<?php 
+				if(count($this->data->dataResponse)>0){
+					$index = 1;
+					foreach ($this->data->dataResponse as $d){
+						if($index>1){ echo '<hr>'; }
+				?>
+				<div class="emsa-tracking-detail-datetime"><?php echo $d->CreatedStr; ?></div>
+				<div style="padding: 15px;">
+					<p style="margin-bottom: 20px;">
+						<?php echo $d->Description; ?>
+					</p>
+				 	<div class="timeline-body">
+				 	
+				 		<?php if(count($d->ResponseFile->File)>0){ ?>
+					 	<p style="font-size: 14px;font-weight: bold;text-decoration: underline;margin-top:10px;">ไฟล์เอกสาร</p>
+						<ul>
+							<?php foreach ($d->ResponseFile->File as $f){ ?>
+							<li>
+								<a href="<?php echo $f->url; ?>">
+									<?php echo $f->name; ?>
+								</a>
+							</li>
+							<?php } ?>
+						</ul>
+						<?php } ?>
+						
+						<?php if(count($d->ResponseFile->Image)>0){ ?>
+						<p style="font-size: 14px;font-weight: bold;text-decoration: underline;margin-top:10px;">รูปภาพประกอบ (คลิกที่รูปเพื่อขยาย)</p>
+						<div class="lightgallery">
+							<?php foreach ($d->ResponseFile->Image as $f){ ?>
+							<a class="margin" href="<?php echo $f->url; ?>" style="display: inline-block;">
+								<img class="img-thumbnail" src="<?php echo $f->url; ?>">
+							</a>
+							<?php } ?>
+						</div>
+						<?php } ?>
+						
+						<?php if(count($d->ResponseFile->Video)>0){ ?>
+						<p style="font-size: 14px;font-weight: bold;text-decoration: underline;margin-top:10px;">วีดิโอประกอบ (คลิกที่รูปชมวีดิโอ)</p>
+						<ul class="videoPlayer">
+							<?php foreach ($d->ResponseFile->Video as $f){ $uniqid = uniqid(); ?>
+						  	<li class="video" data-poster="<?php echo $this->baseUrl('/assets/emsa/images/upload/video.gif'); ?>" data-sub-html="Video Upload" data-html="#<?php echo $uniqid; ?>" >
+						      	<img class="img-thumbnail margin" src="<?php echo $this->baseUrl('/assets/emsa/images/upload/video.gif'); ?>" />
+						  	</li>
+						  	<div style="display:none;" id="<?php echo $uniqid; ?>">
+							    <video class="lg-video-object lg-html5" controls preload="none">
+							        <source src="<?php echo $f->url; ?>" type="video/mp4">
+							    </video>
+							</div>
+							<?php } ?>
+			            </ul>
+						<?php } ?>
+						
+					</div>
+				</div>
+				<?php 
+					$index++;
+					}
+				} 
+				?> 
+			</div>
+			<div class="emsa-tracking-detail">
+				<div class="emsa-tracking-detail-title">ข้อมูลจากลูกค้า</div>
+				<div class="emsa-tracking-detail-datetime"><?php echo empty($this->data->Created) ? '' : ('วันที่ '.$this->data->Created); ?></div>
+				<div class="emsa-tracking-detail-metadata">
+					<div class="row">
+						<div class="col-sm-6">
+							<strong>รหัสโครงการ : </strong> <?php echo empty($this->data->ProjectCode) ? '-' : $this->data->ProjectCode; ?>
+						</div>
+						<div class="col-sm-6">
+							<strong>รหัสลูกค้า : </strong> <?php echo empty($this->data->DepartmentCode) ? '-' : $this->data->DepartmentCode; ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<strong>รหัสหน้าจอ : </strong> <?php echo empty($this->data->ScreenCode) ? '-' : $this->data->ScreenCode; ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<strong>ผู้ใช้งาน : </strong> <?php echo empty($this->data->SenderName) ? '-' : $this->data->SenderName; ?>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-sm-12">
+							<strong>เรื่อง : </strong> <?php echo empty($this->data->Title) ? '-' : $this->data->Title; ?>
+						</div>
+					</div>
+				</div>
+				<label class="emsa-tracking-detail-detail" style="margin-bottom: 0;">รายละเอียด : </label>
+				<div class="emsa-tracking-detail-detail">
+					<?php echo empty($this->data->Description) ? '-' : nl2br($this->data->Description); ?>
+				</div>
+				<?php if($this->data->PathURL){ ?>
+				<hr>
+				<div class="emsa-tracking-detail-metadata">
+					<div class="row">
+						<div class="col-sm-12">
+							<strong>URL : </strong> <?php echo empty($this->data->PathURL) ? '-' : $this->data->PathURL; ?>
+						</div>
+					</div>
+				</div>
+				<?php } ?>
+				<?php if(count($this->data->ReportProblemFile)>0){ ?>
+				<hr>
+				<label class="emsa-tracking-detail-detail" style="margin-bottom: 0;">เอกสารแนบ : </label>
+				<div class="emsa-tracking-detail-detail">
+					<?php echo $this->EMSAUploadShowControl('ReportProblemFile', 'ReportProblemFile',  $this->data->ReportProblemFile , array('multi'=>true,'isimage'=>true,'showimage'=>true,'showlink'=>false,'readonly'=>true)) ; ?>
+				</div>
+				<?php } ?>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="emsa-footer-contact">
+	มีข้อสงสัย หรือติดปัญหาเกี่ยวกับการให้บริการโปรดติดต่อ <br />
+	สายด่วน EMWORK CARE โทร 0 2555 5555
+</div>
+
+<script type="text/javascript">
+jQuery(function(){
+	if (emsaDialog != null) {
+		emsaDialog.setTitle("<?php echo $this->title?>");
+		emsaDialog.setButtons(
+				[{
+                    label: 'ปิด',
+					action: function(dialog) {
+						dialog.close();
+					}
+                }]
+		);
+
+		$(".lightgallery").lightGallery();
+		$(".videoPlayer").lightGallery({
+            selector: '.videoPlayer li'
+        });
+	}
+});    
+</script>

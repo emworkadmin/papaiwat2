@@ -1,0 +1,42 @@
+<style>
+.warning-poll { padding: 30px 0px 50px; text-align: center; }
+.warning-poll h1 { font-family: 'ThaiSans Neue'; font-weight: bold; }
+.warning-poll h3 { font-family: 'ThaiSans Neue'; font-weight: bold; }
+.button-panel-zone { margin-bottom: 30px; }
+</style>
+
+<div class="info infopage poll-item-warning">
+
+ 	<div class="item-title title-panel">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+		<hr />
+	</div>
+
+	<div class="warning-poll">
+		<h1><u><?php echo Emwork_Translate::text($this->lang, 'poll', 'warning_title'); ?></u> <?php echo Emwork_Translate::text($this->lang, 'poll', 'warning_subtitle'); ?></h1>
+		<h3>
+			<?php echo Emwork_Translate::text($this->lang, 'poll', 'warning_detail_1'); ?> <?php echo Emwork_Utility_DateTime::MSSqlToDateThai($this->startDate, 'D'); ?> 
+			<?php echo Emwork_Translate::text($this->lang, 'poll', 'warning_time'); ?> <?php echo Emwork_Utility_DateTime::MSSqlToDateThai($this->startDate, 'H'); ?>:<?php echo Emwork_Utility_DateTime::MSSqlToDateThai($this->startDate, 'M'); ?> <?php echo Emwork_Translate::text($this->lang, 'poll', 'warning_time_end'); ?>
+		</h3>
+		<h3><?php echo Emwork_Translate::text($this->lang, 'poll', 'warning_thankyou'); ?></h3>
+	</div>
+
+	<div class="form-group text-center">
+		<div class="col-md-12 button-panel-zone">
+			<button type="button" class="btn btn-default" id="btnBack"><em class="fa fa-arrow-circle-left"></em> <?php echo Emwork_Translate::text($this->lang, 'poll', 'result_back'); ?></button>
+		</div>
+	</div>
+	
+</div>
+
+<script>
+jQuery(function(){
+
+	$('#btnBack').click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'home', 'controller' => 'index', 'action' => 'index'), null, true); ?>";
+	});
+
+});
+</script>

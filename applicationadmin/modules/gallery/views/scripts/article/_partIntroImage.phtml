@@ -1,0 +1,5 @@
+<?php if (!empty($this->dataInfo->IntroImageHashName)) : ?>
+<div class="article-introimage">
+	<img src="<?php echo $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "size" => "1500", "file" => $this->dataInfo->IntroImageHashName), null, true); ?>" />
+</div>
+<?php endif; ?>

@@ -1,0 +1,193 @@
+<style>
+	.fa-user:before {
+    	content: "\f007";
+	}
+
+	label.textname-news.col-md-2.control-label {
+    	text-align: left;
+	}
+
+	.fa-user:before {
+		content: "\f007";
+		margin-right: 10px;
+		color: #cdcdcd;
+	}
+
+	.sub-title {
+		font-family: Tahoma;
+	}
+
+	.fa-envelope:before {
+		content: "\f0e0";
+		margin-right: 10px;
+		color: #cdcdcd;
+	}
+
+	.fa-caret-right:before {
+		content: "\f0da";
+		margin-right: 10px;
+		color: #22449f ;
+	}
+
+	input#Name {
+		background: #f2f2f2;
+    	border-radius: 8px;
+	}
+
+	input#Email {
+		background: #f2f2f2;
+		border-radius: 8px;
+	}
+
+	.title-label-new {
+		color: #216c9d;
+		font-size: 20px;
+	}
+
+	div#d2ms-section-body-main {
+		font-family: "Mitr Light";
+		font-weight: normal;
+		font-size: 15px;
+	}
+
+	.btn-default.btn-on.active{
+		background-color: #0071bd;
+		color: white;
+	}
+
+	.btn-group-lg>.btn, .btn-lg {
+		font-size: 10px;
+	}
+
+	.btn-default {
+		color: #ccc;
+	}
+
+	.btn-default.btn-off.active{
+		background-color: #0071bd;
+		color: white;
+	}
+
+	.btn-primary {
+		border-color: #367fa9;
+		background: linear-gradient(to right, #036db7, #2a5297);
+		padding: 5px 20px 5px 25px;
+	}
+
+	.btn-news.col-md-12 {
+		text-align: center;
+	}
+
+	fieldset label.btn-off { margin-left: -10px !important; }
+	.newsletter-category-status, legend { display: none; }
+
+</style>
+
+<div class="panel-detail" id="Newsletter">
+
+	<div class="item-title title-panel">
+		<span class="title">
+			<span class="complain-hilight-new"><?php echo Emwork_Translate::text($this->lang, 'newsletter', 'title'); ?></span>
+		</span>
+	</div>
+	<br>
+	<div class="sub-title">
+		<?php echo Emwork_Translate::text($this->lang, 'newsletter', 'intro'); ?>
+	</div>
+	<br>
+
+	<div class="panel-body">
+		<form class="form-horizontal" id="formNewsletter" name="formNewsletter">
+
+			<div class="title-label-new"><?php echo Emwork_Translate::text($this->lang, 'newsletter', 'person_detail'); ?></div>		
+			<br>
+			<div class="form-group" >
+			<label class="textname-news col-md-2 control-label labelRequest" for="Name"><em class="fa fa-user"></em><?php echo Emwork_Translate::text($this->lang, 'newsletter', 'fullname'); ?></label>
+				<div class="textbox-news col-md-10 divControl">
+					<?php echo $this->formText("Name", null, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '250')); ?>
+				</div>
+			</div>
+			<div class="form-group" >
+				<label class="textbox-news textname-news col-md-2 control-label labelRequest" for="Email"><em class="fa fa-envelope"></em><?php echo Emwork_Translate::text($this->lang, 'newsletter', 'email'); ?></label>		
+				<div class="col-md-10 divControl">
+					<?php echo $this->formText("Email", null, array('class' => 'form-control required email', 'placeholder' => '', 'maxlength' => '250')); ?>
+				</div>
+			</div>
+			<br>
+			<hr />
+			<?php if(count($this->categoryOption)>0) : ?>
+				<br>
+				<div class="title-label-new"><?php echo Emwork_Translate::text($this->lang, 'newsletter', 'category_title'); ?></div>
+				<br>
+				<?php foreach($this->categoryOption as $key => $value) : ?>
+				<div class="form-group">
+				<label class=" textname-news col-md-2 control-label"><em class=" fa fa-caret-right "></em><?php echo $value; ?></label>
+					<div class="col-md-10 divControl">
+						<div class="btn-group" data-toggle="buttons">
+							<fieldset>
+								<legend><?php echo $value; ?></legend>
+								<label class="btn btn-default btn-on btn-lg active" for="Iscat-<?php echo $key ?>-N">
+								<input type="radio" class="newsletter-category-status" value="N" id="Iscat-<?php echo $key ?>-N" name="Iscat[<?php echo $key ?>]" checked="checked"><?php echo Emwork_Translate::text($this->lang, 'newsletter', 'option_no'); ?></label>
+								<label class="btn btn-default btn-off btn-lg" for="Iscat-<?php echo $key ?>-Y">
+								<input type="radio" class="newsletter-category-status" value="Y" id="Iscat-<?php echo $key ?>-Y" name="Iscat[<?php echo $key ?>]"><?php echo Emwork_Translate::text($this->lang, 'newsletter', 'option_yes'); ?></label>
+							</fieldset>
+						</div>
+					</div>
+				</div>
+			<?php
+				endforeach;
+			endif;
+			?>
+			<hr />
+			<div class="form-group">
+				<div class="btn-news col-md-12">
+					<button type="button" class="btn btn-primary" id="btnSaveNewsletter"> <?php echo Emwork_Translate::text($this->lang, 'newsletter', 'send'); ?> </button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+<script>
+
+$(function () {
+
+$('#formNewsletter').submit(function(){
+	alert($(this["options"]).val());
+    return false;
+});
+
+	
+	$("#formNewsletter").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+    
+	// $("#formNewsletter input[type=checkbox], #formNewsletter input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+    // Save
+	$("#btnSaveNewsletter").click(function(){
+		var valid = $("#formNewsletter").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'newsletter', 'controller' => 'index', 'action' => 'save'), null, true);?>", $("#formNewsletter").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						location.reload();
+					}, 500);
+				} else {
+					DialogWarning(data.message, '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_title'); ?>', '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_close'); ?>');
+				}
+			}, 'json');
+		}
+	});
+
+
+});
+</script>

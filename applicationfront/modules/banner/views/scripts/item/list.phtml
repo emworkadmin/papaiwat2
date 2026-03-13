@@ -1,0 +1,97 @@
+ <div class="info infopage">
+	<div class="hilight-panel">
+    	<img src="<?php echo $this->hilightImageUrl; ?>" />
+    	<div class="hilight-inner-top">
+    		<div class="container">
+	    		<div class="title">
+	    			<?php echo $this->fullSlogan; ?>
+	    		</div>
+    		</div>
+    	</div>
+    </div>
+    
+ 	<?php  echo $this->partial("index/_panelBreadcrumb.phtml", $this); ?>
+ 	
+ 	<div>
+    	<div class="container">
+    		<div class="item-title title-panel">
+				<span class="title">
+					<?php echo $this->pageTitle; ?>
+				</span>
+				<hr />
+			</div>
+    	</div>
+    </div>
+ 
+    <div class="result-list-panel">
+    	<div class="container">
+    		<div class="result-list" id="result-list"></div>
+    		<div class="result-paging" style="display: none;">
+    			<p class="paging text-right"></p>
+    		</div>
+    	</div>
+    </div>
+</div>
+<script>
+jQuery(function(){
+
+	reloadResultList(1);
+
+	function reloadResultList(pageIndex) {
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		$.post("<?php echo $this->url(array('module' => 'content', 'controller' => 'item', 'action' => 'getlist'), null, true); ?>", sendData, function(data){
+			
+			if (data.total > 0) {
+				$("#result-list").html(data.html);
+				$('.result-paging').css('display', '');
+				$('.paging').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+			        leaps: false,
+			        firstLastUse: true,
+			        first: '<<',
+			        last: '>>',
+			        next: '>',
+			        prev: '<',
+			        wrapClass: 'pagination',
+			        activeClass: 'active',
+			        disabledClass: 'disabled',
+			        nextClass: 'next',
+			        prevClass: 'prev',
+			        lastClass: 'last',
+			        firstClass: 'first'
+				});
+
+			} else {
+				var html = 'No Data';
+				
+				$('#result-paging').css('display', 'none');
+				$('.result-list').html(html);
+				$('.paging').bootpag({total : 0});
+			}
+		}, 'json');
+	}
+
+	$('.paging').bootpag({
+        total: 0,
+        maxVisible: 5,
+        leaps: false,
+        firstLastUse: true,
+        first: '<<',
+        last: '>>',
+        next: '>',
+        prev: '<',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+    	reloadResultList(num);
+    }); 
+});
+</script>

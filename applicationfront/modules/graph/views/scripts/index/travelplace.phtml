@@ -1,0 +1,547 @@
+<style>
+.head1{background-color:#7fceef;padding: 10px;}
+.head2{background-color:#9fc4d6;padding: 10px;}
+.head3{background-color:#6ea8c0;padding: 14px;}
+.HeadInbound{text-align:center;}
+.Graph-list{font-family:'Kanit Medium';}
+.top1{margin-top:1%;margin-right:-1%;}
+.lasttop{margin-bottom:5%;}
+.title{font-size:1.5rem;color:#737373;}
+.unit{font-size:1.5rem;color:#737373;}
+.unit3{font-size:4rem;}
+.placeNation{background-color:#d4effa;padding-bottom: 30px;}
+.placeLocal{background-color:#e9e3f1;padding-bottom: 30px;}
+.placeNation .head{padding:20px 10px 15px 10px;}
+.placeLocal .head{padding:20px 10px 15px 10px;}
+/* .chartD1{padding:10px;} */
+.in{background: #fff;padding: 20px 1px;}
+.inL{background: #fff;padding:20px 20px 17px 20px;}
+.detail{margin-top: 20px;}
+.headleft{float:right;}
+.headright{float:left;}
+.boxL{    margin-top: 20px;}
+.headL2{    
+	background-color: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    width: 70%;
+	margin-left: 50px;
+}
+.chart{
+	padding: 30px;
+    background: #fff;
+}
+.local{
+	margin-top: 50px;
+}
+.headL{    
+	background-color: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    width: 70%;
+}
+.under{
+	font-size:1.8rem;
+	padding-top: 10px;
+    padding-bottom: 30px;
+}
+.value{
+	font-size:4rem;
+	line-height: 55px;
+	color: #fff;
+}
+.valueL{
+	font-size:5rem;
+	line-height: 55px;
+	color: #000;
+}
+.headNation{
+	background: #fbb03b;
+    text-align: center;
+    padding: 5px;
+    font-size: 2rem;
+}
+.valueChart{
+	font-size: 2rem;
+    color: #31c7df;
+}
+.text{
+	font-size:1.5rem;
+	color: #fff;
+}
+.textL{
+	font-size:1.5rem;
+	color: #000;
+}
+#RangTime{
+    height: auto;
+    width: 45%;
+    border-radius: 5px;
+    background-color: #00000000;
+    border-color: #848484;
+	font-size: 1.5rem;
+	margin-right:5px
+} 
+#ExportNation{
+    height: auto;
+    width: 40%;
+    border-radius: 5px;
+    background-color: #00000000;
+    border-color: #848484;
+	font-size: 1.5rem;
+}
+#ExportLocal{
+    height: auto;
+    width: 40%;
+    border-radius: 5px;
+    background-color: #00000000;
+    border-color: #848484;
+	font-size: 1.5rem;
+}
+.button{
+	text-align:center;
+	margin-top:30px;
+	margin-bottom:70px;
+}
+#btview{
+	font-size: 1.5rem;
+    background: linear-gradient(#26a7e0,#0a7fc5);
+    border: 0px;
+    border-radius: 5px;
+	width:170px;
+	height:45px;
+}
+#btview a{
+	color:#fff;
+}
+@media only screen and (max-width:769px) {
+	.headL2{    
+		margin-left: 0px;
+		margin-right: 0px;
+		width:100%;
+		margin-top:10px;
+	}
+	.headL{width:100%;margin-top:10px;}
+	.headleft{float:none;margin-right: 0px;margin-top:10px;}
+	.headright{float:none;margin-right: 0px;margin-top:10px;}
+	#RangTime{width: 50%;margin-top: 5px;}
+	#ExportLocal{margin-top: 5px;width: 49%;}
+	#ExportNation{margin-top: 5px;width: 49%;}
+}
+@media only screen and (max-width:322px) {
+	#RangTime{width: 48%;}
+}
+</style>
+<div class="info infopage Graph-list">
+	<div class="Graph-title title-panel">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+		<div class="borderHead" style="background: linear-gradient(to right, #29a2db,#2e4f97);width:153px;height:5px">
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="col-md-4 top1">
+			<div class="col-md-12 head1">
+				<div class="HeadInbound row">
+					<div class="text">
+						<span>จำนวนแหล่งท่องเที่ยวในเขตพื้นที่อนุรักษ์</span>
+						<div class="value"><?php echo number_format(458);?>
+							<span class="unit">แหล่ง</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 top1">
+			<div class="col-md-12 head2">
+				<div class="HeadInbound">
+					<div class="text">
+						<span>จำนวนนักท่องเที่ยวที่เดินทางมาเที่ยวในพื้นที่อนุรักษ์</span>
+						<div class="value"><?php echo number_format(12186458);?>
+							<span class="unit">คน</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 top1 lasttop">
+			<div class="col-md-12 head3">
+				<div class="HeadInbound" style="text-align:center;">
+					<div class="text">
+						<span>ร้อยละความพึงพอใจของนักท่องเที่ยว</span>
+						<div class="value"><?php echo number_format(747071.65); ?>
+							<span class="unit unit3">%</span>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+	</div>
+	<div class="placeNation col-md-12">
+		<div class="row head">
+			<div class="col-md-9">
+				<span>ข้อมูลด้านการวางแผนด้านการท่องเที่ยวในพื้นที่เขตอนุรักษ์</span>
+			</div>
+			<div class="col-md-3">
+				<span><?php echo $this->formSelect('RangTime', null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => 'ช่วงเวลา'), $this->year); ?></span>
+				<span><?php echo $this->formSelect('ExportNation', null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => 'ช่วงเวลา'), $this->export); ?></span>
+			</div>
+		</div>
+		<div class="chartD1 col-md-5">
+			<div class="in col-md-12">
+				<canvas id="AmountTravelChart" style="background-color:#ffffff;"width="100%" height="50%"></canvas>
+				<div class="detail col-md-12">
+					<div class="row detail">
+						<div class="col-md-6" style="text-align: center;">	
+							<span class="title">ชาวต่างชาติ</span>
+							<span class="valueChart"><?php echo number_format(3661214); ?></span>
+							<span class="unit">คน</span>
+						</div>
+						<div class="col-md-6" style="text-align: center;">				
+							<span class="title">ชาวไทย</span>
+							<span class="valueChart"><?php echo number_format(3661214); ?></span>
+							<span class="unit">คน</span>		
+						</div>		
+					</div>		
+				</div>
+			</div>
+			<div class="under col-md-12" style="text-align:center;">
+				<span>จำนวนนักท่องเที่ยวที่เดินทางมาเที่ยวในเขตอนุรักษ์</span>
+			</div>
+		</div>
+		<div class="chartD1 col-md-7">
+			<div class="inL col-md-12">
+				<canvas id="StatTravelNation" style="background-color:#ffffff;"width="100%" height="50%"></canvas>
+			</div>
+			<div class="under col-md-12" style="text-align:center;">
+				<span>สถิติแนวโน้มของนักท่องเที่ยวที่เดินทางมาเที่ยวในเขตอนุรักษ์</span>
+			</div>
+		</div>
+		<div class="chartbarHo col-md-12">
+			<div class="row headNation">
+				<div class="col-md-12">
+					<span>เขตพื้นที่อนุรักษ์ที่มีนักท่องเที่ยวมาเยี่ยมเยือนมากที่สุด</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="chart col-md-12">
+					<div class="row">
+						<canvas id="PlaceNation" style="background-color:#ffffff;"width="100%" height="50%"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12 button">
+		<button id="btview" type="button"><a href="https://app.powerbi.com/view?r=eyJrIjoiNzA5NzdjMjktMWUyNi00MjlmLWI0OGEtMjMzNjZkNGNlODdhIiwidCI6IjE1MzI4OGE4LTc2MDYtNGM1OS05NDAwLTQwZmVmNmQ4N2JiNiIsImMiOjEwfQ%3D%3D" target="_blank">ดูข้อมูลสถิติทั้งหมด</a></button>
+	</div>
+	<div class="placeLocal col-md-12">
+		<div class="row head">
+			<div class="col-md-8">
+				<span>ข้อมูลด้านการวางแผนด้านการท่องเที่ยวในพื้นที่เขตชุมชน</span>
+			</div>
+			<div class="col-md-4">
+				<span><?php echo $this->formSelect('RangTime', null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => 'ช่วงเวลา'), $this->year); ?></span>
+				<span><?php echo $this->formSelect('ExportLocal', null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => 'ช่วงเวลา'), $this->export); ?></span>
+			</div>
+		</div>
+		<div class="col-md-12 boxL">
+			<div class="col-md-4 top2">
+				<div class="headL2 headleft">
+					<div class="HeadInbound">
+						<div class="textL">
+							<span>รายได้ก่อนดำเนินกิจกรรม</span>
+							<div class="valueL"><?php echo number_format(32125);?></div>
+						</div> 
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4 top2">
+				<div class="headL2">
+					<div class="HeadInbound">
+						<div class="textL">
+							<span>รายได้หลังดำเนินกิจกรรม</span>
+							<div class="valueL"><?php echo number_format(40418);?></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4 top2">
+				<div class="headL headright">
+					<div class="HeadInbound">
+						<div class="textL">
+							<span>อัตราการเติบโตของรายได้</span>
+							<div class="valueL"><?php echo number_format(25.81);?>%</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12 chart local">
+			<canvas id="TravelLocal" style="background-color:#ffffff;padding: 25px;"width="100%" height="50%"></canvas>
+		</div>
+	</div>
+	<div class="col-md-12 button">
+		<button id="btview" type="button"><a href="https://app.powerbi.com/view?r=eyJrIjoiMDA4NmVhZjktZmY4MS00YTRjLTlmYzEtNTVjNDc5OGY1YTExIiwidCI6IjE1MzI4OGE4LTc2MDYtNGM1OS05NDAwLTQwZmVmNmQ4N2JiNiIsImMiOjEwfQ%3D%3D" target="_blank">ดูข้อมูลสถิติทั้งหมด</a></button>
+	</div>
+	<div id="previewImage" style="display: none;"></div>
+	<a id="downloadImage" href="#In_Out" style="display: none;"></a>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/html2canvas/html2canvas.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/graph/jspdf/jspdf.min.js');?>"></script>
+<script>
+jQuery(function(){
+	var ctx = document.getElementById("AmountTravelChart").getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'doughnut',
+		data: {
+			labels: ['ชาวไทย','ชาวต่างชาติ'],
+			datasets: [{
+				label: 'จำนวนนักท่องเที่ยวที่เดินทางมาเที่ยวในเขตพื้นที่อนุรักษ์',
+				data: [70,30],
+				backgroundColor: ['#1063b1','#30c6de'
+				],
+				borderColor: [
+					'#3f94cd'
+				],
+				borderWidth: 1
+			}]
+		},
+		options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    },
+                    display: false
+                }],
+                xAxes: [{ 
+                    gridLines: { 
+                        display: false 
+                    },
+                    display: false
+                }]
+            },
+			legend: {
+				display: true
+			},
+			responsive: true,	
+		}
+	});
+	//StatTravelerComeToNation
+	var ctx = document.getElementById("StatTravelNation").getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'],
+			datasets: [{
+				lineTension : 0,
+				label: 'จำนวนนักท่องเที่ยว',
+				data: [65,59,70,85,97,67,50,80,90,67,94,70],
+				backgroundColor: [
+					<?php 
+						$loopmonthValue = 12;
+						for($i=0;$i<$loopmonthValue;$i++) {
+							echo '"#ff9869"';            
+							if($i != $loopmonthValue) {
+								echo ',';
+							}
+						}
+					?>
+				],
+				backgroundColor: [
+					'rgba(0,0,0,0)'
+				],
+				borderColor: [
+					'#ff9869'
+				],
+			}]
+		},
+		options: {
+			scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    },
+                }],
+			},
+			legend: {
+				display: true
+			}			
+		}
+	});
+	var Chart_2_2 = document.getElementById('PlaceNation').getContext('2d');
+    var myChart_2_2  = new Chart(Chart_2_2, {
+		type: 'horizontalBar',
+		data: {
+			labels: ['หาดนพรัตน์ธารา-หมู่เกาะพีพี','อ่าวพังงา','เขาใหญ่','น้ำตกพลิ้ว','เอราวัณ','ดอยอินทนนท์','น้ำตกเจ็ดสาวน้อย','ตาดโตน','หมู่เกาะสิมิลัน','เขาสก'],
+			datasets: [{
+				label: 'ข้อมูลรายได้นักท่องเที่ยวต่างชาติที่เดินทางมาประเทศไทยประจำเดือน',
+				data: [1.41,1.20,0.83,0.54,0.50,0.46,0.42,0.39,0.36,0.28],
+				backgroundColor: ["#ffa19f","#ffa19f","#ffa19f","#ffa19f","#ffa19f","#ffa19f","#ffa19f","#ffa19f","#ffa19f","#ffa19f"
+				],
+				borderWidth: 1
+			}]
+		},
+		options: {
+			hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                    
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            var x = -10;
+                            if(data < 0) {
+                                x = 10;
+                            }                                                
+                            ctx.fillText(data, bar._model.x + x, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+			tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+			scales: {
+                yAxes: [{
+					gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        beginAtZero:true,
+						fontSize:12
+                    	}
+                }],
+				xAxes: [{ 
+					ticks: {
+						fontSize:14,
+						max: 2,
+						min: 0,
+						stepSize: 0.2,
+						callback: function(value, index, values) {
+						return value.toFixed(1)+'M';
+						}
+					}
+                }]
+			},
+			legend: {
+				display: false,
+				
+			},
+			responsive: true		
+		}
+	});
+
+	var ctx = document.getElementById("TravelLocal").getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'bar',
+		data: {
+			labels: ['2008','2009','2010','2011','2012','2013','2014','2015'],
+			datasets: [{
+				label: 'อัตราการเติบโตของรายได้',
+				data: [47,58,61,72,70,80,90,91],
+				backgroundColor: [
+					<?php 
+						$loopyearValue = 10;
+						for($i=0;$i<$loopyearValue;$i++) {
+							echo '"#8bc43f"';            
+							if($i != $loopyearValue) {
+								echo ',';
+							}
+						}
+					?>	
+				],
+				borderWidth: 1
+			}]	
+		},
+		options: {
+			scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true,
+						fontSize:12,
+						max: 100,
+						min: 0,
+						stepSize: 25,
+						callback: function(value, index, values) {
+						return value+'%';
+						}
+                    }
+                }],
+				xAxes: [{ 
+					ticks: {
+						fontSize:14,
+						max: 2,
+						min: 0,
+						stepSize: 0.2
+					}
+                }]
+			},
+			legend: {
+				display: false,
+				
+			},
+			responsive: true		
+		}
+	});
+    function setCanvas_SituationExportZone(val) {
+        html2canvas(document.querySelector(".placeNation")).then(function(canvas) {
+            $("#previewImage").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage")[0].click();
+                $("#ExportNation").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#ExportNation").val('export');
+            }
+        });
+    }
+    $("#ExportNation").change(function() {
+        setCanvas_SituationExportZone($(this).val());
+    });
+    function setCanvas_SituationExportZone(val) {
+        html2canvas(document.querySelector(".placeLocal")).then(function(canvas) {
+            $("#previewImage").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage")[0].click();
+                $("#ExportLocal").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#ExportLocal").val('export');
+            }
+        });
+    }
+    $("#ExportLocal").change(function() {
+        setCanvas_SituationExportZone($(this).val());
+    });
+});
+</script>

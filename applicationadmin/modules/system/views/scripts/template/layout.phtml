@@ -1,0 +1,527 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/colorpicker/css/bootstrap-colorpicker.min.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/colorpicker/js/bootstrap-colorpicker.min.js"); ?>'></script>
+
+<!-- jQuery UI 1.11.4 -->
+<script src="<?php echo $this->baseUrl("plugins/jQueryUI/jquery-ui.min.js"); ?>"></script>
+	
+<style>
+.section {border: 1px solid #000; margin-top: 15px;}
+.section .section-header {background-color: #000; padding: 5px 10px; color: #fff;}
+.section .section-body {padding: 5px 10px;}
+
+.section-box {border: 1px solid #ccc; margin-top: 15px;}
+.section-box .section-box-header {background-color: #ccc; padding: 5px 10px; color: #fff;}
+.section-box .section-box-body {padding: 5px 10px;}
+
+.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; }
+</style>
+
+<div class="panel-detail">
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden('hdfID', $this->data->ID, null, null); ?>
+		<div class="title-label">ปรับโครงสร้าง</div>
+		
+		<div class="text-right">
+			<button type="button" class="btn btn-primary btn-add-section"  id="btnAddSection">
+				<em class="fa fa-plus"></em> เพิ่ม Section
+			</button>
+		</div>
+		
+		<div id="section-manage">
+		<?php 
+		$layoutParams = json_decode($this->data->LayoutParams, true);
+		if (count($layoutParams) > 0) :
+			foreach ($layoutParams as $sectionGuid => $layoutParam) : 
+		?>
+		<div class="section" >
+			<div class="section-header">
+				<em class="fa fa-bars handle"></em>
+				Section Part <span class="section-header-title">: <?php echo $layoutParam['name']; ?></span>
+				<span class="pull-right">
+					<em class="fa fa-trash remove"></em>
+				</span>
+			</div>
+			<div class="section-body">
+				<div class="form-group">
+					<label class="col-md-3 control-label ">Section Name</label>
+					<div class="col-md-9 divControl">
+						<?php echo $this->formText('section[' . $sectionGuid . '][name]', $layoutParam['name'], array('class' => 'form-control section-name-ctrl', "maxlength" => "250")); ?>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label ">Text Color</label>
+					<div class="col-md-3 divControl">
+						<div class="input-group colorpicker-group">
+							<?php echo $this->formText('section[' . $sectionGuid . '][textColor]', $layoutParam['textColor'], array('class' => 'form-control', "maxlength" => "250")); ?>
+							<div class="input-group-addon">
+								<i></i>
+							</div>
+						</div>
+					</div>
+					<label class="col-md-3 control-label ">Fluid Width</label>
+					<div class="col-md-3 divControl">
+						<div class="radio with-icheck">
+							<?php echo $this->formCheckbox('section[' . $sectionGuid . '][fluid]', $layoutParam['fluid'], array('class' => '', 'checked' => $layoutParam['fluid']), array('1','0')); ?> Yes
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label ">Link Color</label>
+					<div class="col-md-3 divControl">
+						<div class="input-group colorpicker-group">
+							<?php echo $this->formText('section[' . $sectionGuid . '][linkColor]', $layoutParam['linkColor'], array('class' => 'form-control', "maxlength" => "250")); ?>
+							<div class="input-group-addon">
+								<i></i>
+							</div>
+						</div>
+					</div>
+					<label class="col-md-3 control-label ">Link Hover Color</label>
+					<div class="col-md-3 divControl">
+						<div class="input-group colorpicker-group">
+							<?php echo $this->formText('section[' . $sectionGuid . '][linkHoverColor]', $layoutParam['linkHoverColor'], array('class' => 'form-control', "maxlength" => "250")); ?>
+							<div class="input-group-addon">
+								<i></i>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label ">Background Image</label>
+					<div class="col-md-3 divControl">
+						<input type="file" data-gid="<?php echo $sectionGuid;?>" data-value='<?php echo json_encode($layoutParam['bgImage']); ?>' name="section-<?php echo $sectionGuid; ?>-bgImage[]" id="section-<?php echo $sectionGuid; ?>-bgImage" multiple="multiple" />
+					</div>
+					<label class="col-md-3 control-label ">Background Color</label>
+					<div class="col-md-3 divControl">
+						<div class="input-group colorpicker-group">
+							<?php echo $this->formText('section[' . $sectionGuid . '][bgColor]', $layoutParam['bgColor'], array('class' => 'form-control', "maxlength" => "250")); ?>
+							<div class="input-group-addon">
+								<i></i>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label ">Background Repeat</label>
+					<div class="col-md-3 divControl">
+						<?php echo $this->formSelect('section[' . $sectionGuid . '][bgRepeat]', $layoutParam['bgRepeat'], array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgRepeatOption)); ?>
+					</div>
+					<label class="col-md-3 control-label ">Background Size</label>
+					<div class="col-md-3 divControl">
+						<?php echo $this->formSelect('section[' . $sectionGuid . '][bgSize]', $layoutParam['bgSize'], array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgSizeOption)); ?>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label ">Background Attachment</label>
+					<div class="col-md-3 divControl">
+						<?php echo $this->formSelect('section[' . $sectionGuid . '][bgAttachment]', $layoutParam['bgAttachment'], array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgAttachmentOption)); ?>
+					</div>
+					<label class="col-md-3 control-label ">Background Position</label>
+					<div class="col-md-3 divControl">
+						<?php echo $this->formSelect('section[' . $sectionGuid . '][bgPosition]', $layoutParam['bgPosition'], array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgPositionOption)); ?>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label ">Padding</label>
+					<div class="col-md-3 divControl">
+						<?php echo $this->formText('section[' . $sectionGuid . '][padding]', $layoutParam['padding'], array('class' => 'form-control', "maxlength" => "250")); ?>
+					</div>
+					<label class="col-md-3 control-label ">Margin</label>
+					<div class="col-md-3 divControl">
+						<?php echo $this->formText('section[' . $sectionGuid . '][margin]', $layoutParam['margin'], array('class' => 'form-control', "maxlength" => "250")); ?>
+					</div>
+				</div>
+				<hr />
+				<div class="section-box-part" data-gid="<?php echo $sectionGuid; ?>">
+					<div class="text-right">
+						<button type="button" class="btn btn-primary btn-add-box" >
+							<em class="fa fa-plus"></em> เพิ่มกล่อง
+						</button>
+					</div>
+					<div class="section-box-part-list">
+					<?php 
+					$boxParams = $layoutParam['box'];
+					if (count($boxParams) > 0) : 
+						foreach($boxParams as $sectionBoxGuid => $boxParam) : 
+					?>
+						<div class="section-box" >
+							<div class="section-box-header">
+								<em class="fa fa-bars handle-box"></em>
+								Section column		
+								<span class="pull-right">
+									<em class="fa fa-trash remove-box"></em>
+								</span>
+							</div>
+							<div class="section-box-body">
+								<div class="form-group">
+									<label class="col-md-3 control-label ">กำหนด</label>
+									<div class="col-md-3 divControl">
+										<div class="radio with-icheck">
+											<label>
+												<?php echo $this->formCheckbox('section[' . $sectionGuid . '][box][' . $sectionBoxGuid . '][ismain]', $boxParam['ismain'], array('class' => '', 'checked' => $boxParam['ismain']), array(1,0)); ?> เป็นพื้นที่หลัก
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label ">ตำแหน่ง</label>
+									<div class="col-md-3 divControl">
+										<?php echo $this->formSelect('section[' . $sectionGuid . '][box][' . $sectionBoxGuid . '][position]', $boxParam['position'], array('class' => 'form-control'), $this->layoutPositionOption); ?>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label ">ขนาดของกล่อง</label>
+									<div class="col-md-3 divControl">
+										<?php echo $this->formSelect('section[' . $sectionGuid . '][box][' . $sectionBoxGuid . '][size]', $boxParam['size'], array('class' => 'form-control'), $this->layoutBoxSizeOption); ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					<?php 
+						endforeach;
+					endif;
+					?>
+					</div>
+				</div>
+			</div>
+		</div>		
+		<?php 
+			endforeach;
+		endif;
+		?>
+		</div>
+		
+		<hr />
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3 button-panel-zone">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+				<?php endif ; ?>
+
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+	</form>
+</div>
+<div id="section-temp" style="display: none;" >
+	<div class="section-header">
+		<em class="fa fa-bars handle"></em>
+		Section Part <span class="section-header-title">: section title</span>
+		<span class="pull-right">
+			<em class="fa fa-trash remove"></em>
+		</span>
+	</div>
+	<div class="section-body">
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Section Name</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('section[guid][name]', 'section title', array('class' => 'form-control section-name-ctrl', "maxlength" => "250")); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Text Color</label>
+			<div class="col-md-3 divControl">
+				<div class="input-group colorpicker-group">
+					<?php echo $this->formText('section[guid][textColor]', null, array('class' => 'form-control', "maxlength" => "250")); ?>
+					<div class="input-group-addon">
+						<i></i>
+					</div>
+				</div>
+			</div>
+			<label class="col-md-3 control-label ">Fluid Width</label>
+			<div class="col-md-3 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formCheckbox('section[guid][fluid]', null, array('class' => '')); ?> Yes
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Link Color</label>
+			<div class="col-md-3 divControl">
+				<div class="input-group colorpicker-group">
+					<?php echo $this->formText('section[guid][linkColor]', null, array('class' => 'form-control', "maxlength" => "250")); ?>
+					<div class="input-group-addon">
+						<i></i>
+					</div>
+				</div>
+			</div>
+			<label class="col-md-3 control-label ">Link Hover Color</label>
+			<div class="col-md-3 divControl">
+				<div class="input-group colorpicker-group">
+					<?php echo $this->formText('section[guid][linkHoverColor]', null, array('class' => 'form-control', "maxlength" => "250")); ?>
+					<div class="input-group-addon">
+						<i></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Background Image</label>
+			<div class="col-md-3 divControl">
+				<input type="file" name="section-guid-bgImage[]" id="section-guid-bgImage" multiple="multiple" />
+			</div>
+			<label class="col-md-3 control-label ">Background Color</label>
+			<div class="col-md-3 divControl">
+				<div class="input-group colorpicker-group">
+					<?php echo $this->formText('section[guid][bgColor]', null, array('class' => 'form-control', "maxlength" => "250")); ?>
+					<div class="input-group-addon">
+						<i></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Background Repeat</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('section[guid][bgRepeat]', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgRepeatOption)); ?>
+			</div>
+			<label class="col-md-3 control-label ">Background Size</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('section[guid][bgSize]', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgSizeOption)); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Background Attachment</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('section[guid][bgAttachment]', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgAttachmentOption)); ?>
+			</div>
+			<label class="col-md-3 control-label ">Background Position</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('section[guid][bgPosition]', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgPositionOption)); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Padding</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formText('section[guid][padding]', null, array('class' => 'form-control', "maxlength" => "250")); ?>
+			</div>
+			<label class="col-md-3 control-label ">Margin</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formText('section[guid][margin]', null, array('class' => 'form-control', "maxlength" => "250")); ?>
+			</div>
+		</div>
+		<hr />
+		<div class="section-box-part" data-gid="guid">
+			<div class="text-right">
+				<button type="button" class="btn btn-primary btn-add-box" >
+					<em class="fa fa-plus"></em> เพิ่มกล่อง
+				</button>
+			</div>
+			<div class="section-box-part-list"></div>
+		</div>
+	</div>
+</div>
+<div id="section-box-temp" style="display: none;">
+	<div class="section-box-header">
+		<em class="fa fa-bars handle-box"></em>
+		Section column		
+		<span class="pull-right">
+			<em class="fa fa-trash remove-box"></em>
+		</span>
+	</div>
+	<div class="section-box-body">
+		<div class="form-group">
+			<label class="col-md-3 control-label ">กำหนด</label>
+			<div class="col-md-3 divControl">
+				<div class="radio with-icheck">
+					<label>
+						<?php echo $this->formCheckbox('section[mainguid][box][guid][ismain]', null, array('class' => '')); ?> เป็นพื้นที่หลัก
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label ">ตำแหน่ง</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('section[mainguid][box][guid][position]', null, array('class' => 'form-control'), $this->layoutPositionOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label ">ขนาดของกล่อง</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('section[mainguid][box][guid][size]', null, array('class' => 'form-control'), $this->layoutBoxSizeOption); ?>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+
+<script>
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });    
+	$('#formData .colorpicker-group').colorpicker({autoInputFallback: false, useAlpha: false, format: 'hex'});
+	
+	function buttonZoneDisabled() {
+		$(".button-panel-zone button").attr("disabled", "disabled");
+		$(".button-panel-zone").append('<em class="fa fa-refresh fa-spin"></em>');
+	}
+	function buttonZoneActive() {
+		$(".button-panel-zone button").removeAttr("disabled");
+		$(".button-panel-zone > em").remove();
+	}
+	
+    <?php if ($this->canEdit) : ?>
+	// Save
+	$("#btnSave").click(function(){
+		buttonZoneDisabled();
+		var valid = $("#formData").valid();
+		if (valid) {			
+			$.post("<?php echo $this->url(array('module' => 'system', 'controller' => 'template', 'action' => 'updatelayout'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'template', 'action' => 'layout', 'itemid' => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+				buttonZoneActive();
+			}, 'json');
+		} else {
+			buttonZoneActive();
+		}
+	});
+	<?php endif; ?>
+
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'template', 'action' => 'edit', 'itemid' => $this->data->ID), null, true); ?>";
+	});
+
+	$( "#section-manage" ).sortable({handle: '.handle',cursor: 'move', update: function ( event, ui ){ }, start: function ( event, ui ){ $("#section-manage .section-body").css("display", "none"); ui.item.css("height", $(".section-header", ui.item).height()); ui.placeholder.height(ui.item.height()); $("#section-manage").sortable( "refreshPositions" ); }, stop: function ( event, ui ){ $("#section-manage .section-body").css("display", "");  }}).disableSelection();
+	$( "#section-manage .section-box-part-list" ).sortable({handle: '.handle-box',cursor: 'move', update: function ( event, ui ){  }, start: function ( event, ui ){  }, start: function ( event, ui ){ $(ui.item).parents(".section-box-part-list").find(".section-box-body").css("display", "none"); ui.item.height($(".section-box-header", ui.item).height()); ui.placeholder.height(ui.item.height()); $(ui.item).parents(".section-box-part-list").sortable( "refreshPositions" ); }, stop: function ( event, ui ){ $(ui.item).parents(".section-box-part-list").find(".section-box-body").css("display", "");  }}).disableSelection();
+	$.each($("#formData").find('input[type=file]'), function(i, e) {
+		var gid = $(e).data('gid');
+		var val = $(e).data('value');
+		addBgImageUpload('section-' + gid + '-bgImage', 'section[' + gid + '][bgImage]', val);
+	});
+
+	$("#btnAddSection").click(function(){
+		var gid = uuidv4();
+		var html = $("#section-temp").html();
+		html = html.replace(/guid/g , gid);
+		var section = $("<div class='section'></div>").append(html);
+		section.find(".section-box-part-list").sortable({handle: '.handle-box',cursor: 'move', update: function ( event, ui ){ }, start: function ( event, ui ){ $("#section-manage .section-body").css("display", "none"); ui.item.css("height", $(".section-header", ui.item).height()); ui.placeholder.height(ui.item.height()); $("#section-manage").sortable( "refreshPositions" ); }, stop: function ( event, ui ){ $("#section-manage .section-body").css("display", "");  }}).disableSelection();
+		section.find('.colorpicker-group').colorpicker({autoInputFallback: false, useAlpha: false, format: 'hex'});
+		$("#section-manage").append(section);
+		$.each(section.find('input[type=file]'), function(i, e) {
+			addBgImageUpload('section-' + gid + '-bgImage', 'section[' + gid + '][bgImage]');
+		});
+	});
+
+	$("#section-manage")
+	.on("click", ".btn-add-box", function(){
+		var maingid = $(this).parents(".section-box-part").data('gid');
+		var gid = uuidv4();
+		var html = $("#section-box-temp").html();
+		html = html.replace(/mainguid/g , maingid);
+		html = html.replace(/guid/g , gid);
+		var sectionBox = $("<div class='section-box'></div>").append(html);
+		$(this).parents(".section-box-part").find(".section-box-part-list").append(sectionBox);
+	})
+	.on("click", ".remove", function(){
+		$(this).parents(".section").remove();
+	})
+	.on("click", ".remove-box", function(){
+		$(this).parents(".section-box").remove();
+	})
+	.on("change", ".section-name-ctrl", function(){
+		$(this).parents(".section").find(".section-header-title").text(": " + $(this).val());
+	})
+	;
+
+	function addBgImageUpload(controlID, controlName, controlFiles) {
+		var files = [];
+		if (controlFiles != null) {
+			files[0] = {};
+			files[0].name = controlFiles.fileName;
+			files[0].fid = controlFiles.fileHashName;
+			files[0].type = controlFiles.fileType;
+		}
+		$('#' + controlID).filer({
+			showThumbs: true,
+			limit: 1,
+			maxSize: 10,
+			extensions: ['png','jpg','gif'],
+			templates: {
+				box: '<div class="jFiler-items-list jFiler-items-grid"></div>',
+				item: '<div class="jFiler-items">\
+								<a  class="jFiler-item-title" style="color: #2c93c7;"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></a>\
+								<a class="icon-jfi-trash jFiler-item-trash-action"></a>\
+								<div class="jFiler-jProgressBar" style="width: 200px;"></div>\
+						</div>',
+				itemAppend: '<div class="jFiler-items">\
+								<a  class="jFiler-item-title" style="color: #2c93c7;"  href="<?php echo $this->url(array("module" => 'default', 'controller' => 'file', 'action' => 'get'), null, true); ?>/file/{{fi-fid}}"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></a>\
+								<a class="icon-jfi-trash jFiler-item-trash-action"></a>\
+								<input type="hidden" name="hdf' + controlName + '[]" value="{{fi-fid}}" />\
+						</div>',
+						
+				progressBar: '<div class="bar"></div>',
+				itemAppendToEnd: false,
+				removeConfirmation: true,
+				_selectors: {
+					list: '.jFiler-items-list',
+					item: '.jFiler-items',
+					progressBar: '.bar',
+					remove: '.jFiler-item-trash-action'
+				}
+			},
+			uploadFile: {
+				url: "<?php echo $this->url(array("module" => 'default', 'controller' => 'file', 'action' => 'upload'), null, true); ?>",
+				type: 'POST',
+				enctype: 'multipart/form-data',
+				beforeSend: function(){},
+				success: function(data, el){
+					var objData = data;
+					var name = objData['metas'][0]['old_name'];
+					var name_md5 = objData['metas'][0]['name'];
+					var parent = el.find(".jFiler-jProgressBar").parent();
+					el.find(".jFiler-jProgressBar").fadeOut("slow", function(){
+						$("<span class=\"jFiler-item-others text-success\" style='display: none;'><input type='hidden' name='hdf" + controlName + "[]' value='" + name_md5 + "' /><i class=\"icon-jfi-check-circle\"></i> Success</span>").hide().appendTo(parent).fadeIn("slow");    
+					});
+					el.find(".jFiler-item-title").attr('href', '<?php echo $this->url(array("module" => 'default', 'controller' => 'file', 'action' => 'get'), null, true); ?>/file/' + name_md5);
+				},
+				error: function(el){
+					var parent = el.find(".jFiler-jProgressBar").parent();
+					el.find(".jFiler-jProgressBar").fadeOut("slow", function(){
+						$("<span class=\"jFiler-item-others text-error\"><i class=\"icon-jfi-minus-circle\"></i> Error</span>").hide().appendTo(parent).fadeIn("slow");        
+					});
+				},
+				statusCode: null,
+				onProgress: null,
+				onComplete: null
+			},
+			onRemove: function(itemEl, file, id, listEl, boxEl, newInputEl, inputEl){
+				var folderName = '' + controlName + '';
+				var filename = file.name;
+				var fileName_md = $("input[name='hdf" + controlName + "[]']").val();
+			},
+			addMore: true,
+			files: files
+		});
+	}
+});
+
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'SYS-TMP-05'); ?>

@@ -1,0 +1,245 @@
+<!-- lightgallery dialog -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightgallery-master/css/lightgallery.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery-master/js/lightgallery.min.js'); ?>"></script>
+
+<!-- lightbox -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightbox/css/lightbox.min.css'); ?>">
+<script src="<?php echo $this->baseUrl('plugins/lightbox/js/lightbox.min.js'); ?>"></script>
+
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/story/css/story.css'); ?>">
+<style>
+#detail-zone ul { list-style: inherit; }
+
+@media print {
+    body * {
+	    visibility: hidden;
+	}
+    .d2ms-box-main, .d2ms-box-main  * {
+    	visibility: visible;
+    }
+    header, footer {display: none;}
+    .content-wrapper {margin-top: 0px;}
+}
+
+@media all {
+  .watermark {
+    display: none;
+  }
+}
+
+@media print {
+	section[id^=d2ms-section] {
+	display: none;	
+	}
+	section.d2ms-section-hasmainbox {
+		display: block;
+	}
+	section.d2ms-section-hasmainbox div[id^=d2ms-section-]{
+		display: none;
+	}
+	section.d2ms-section-hasmainbox div.d2ms-section-ismainbox {
+		display: block;
+	}
+	a[href]:after { content: none !important; }
+	img[src]:after { content: none !important; }
+  .watermark {
+    display: block; 
+    position: absolute;
+    top: 0; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+  	opacity: 0.3;
+  }
+  .watermark img {
+  	width: 100%;
+  }
+  .watermark p {
+  	text-align: center; 
+  	font-size: 2.4rem;
+  }
+}
+</style>
+
+<div class="watermark">
+	<?php 
+	$appLogoPath = $this->baseUrl('images/logos/logo.png');
+	if (!empty(System_Model_Setting::getValue("Logo", "Site"))) {
+		$logoFileInfoID = System_Model_Setting::getValue("Logo", "Site");
+		$fileModel = new System_Model_Fileinfo();
+		$fileData = $fileModel->item($logoFileInfoID);
+		if ($fileData->ID) {
+			$appLogoPath = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $fileData->HashName), null, true);
+		}
+	}
+	?>
+	<img alt="image" src="<?php echo $appLogoPath; ?>" />
+	<p>
+		<?php echo System_Model_Setting::getValue("SiteName", "Site"); ?>
+	</p>
+</div>
+
+<?php 
+	if(count($this->dataCover)>0){ 
+		echo $this->partial("page/_partKenburns.phtml", $this); 
+	}
+?>
+
+<?php 
+	switch ($this->dataInfo->TemplateType) : 
+	case "2" : 
+?>
+
+	<div class="infodetail infopage">
+		<div class="information-panel printable">
+			<div class="book-title title-panel">
+				<span class="title">
+					<?php echo $this->partial("page/_partTitle.phtml", $this); ?>
+				</span>
+				<hr />
+			</div>
+			<?php echo $this->partial("page/_partDate.phtml", $this); ?>
+		</div>
+	</div>
+
+	<div id="detail-zone">
+		<div class="">
+			<div class="detail-header">
+				<h2><?php echo $this->partial("page/_partTitle.phtml", $this); ?></h2>
+				<?php echo $this->partial("page/_partIntrotext.phtml", $this); ?>
+				<?php echo $this->partial("page/_partIntroimage.phtml", $this); ?>
+			</div>
+			<?php echo $this->partial("page/_partSocial.phtml", $this); ?>
+			<?php echo $this->partial("page/_partDetail.phtml", $this); ?>
+			<?php echo $this->partial("page/_partDocument.phtml", $this); ?>
+			<!-- Comment -->
+			<?php if($this->ArticleCanComment=='Y') { ?>
+			<div class="information-comment-panel printable">
+				<?php echo $this->partial("index/_partComment.phtml", $this); ?>
+			</div>
+			<?php } ?>
+		</div>
+	</div>
+	
+<?php 
+		break;
+	case "3" : 
+?>
+	
+	<div id="detail-zone">
+		<div class="">
+			<div class="detail-header">
+				<h2><?php echo $this->partial("page/_partTitle.phtml", $this); ?></h2>
+				<?php echo $this->partial("page/_partIntrotext.phtml", $this); ?>
+				<?php echo $this->partial("page/_partIntroimage.phtml", $this); ?>
+			</div>
+			<div class="infodetail infopage">
+				<div class="information-panel printable">
+					<div class="book-title title-panel">
+						<span class="title">
+							<?php echo $this->partial("page/_partTitle.phtml", $this); ?>
+						</span>
+						<hr />
+					</div>
+					<?php echo $this->partial("page/_partDate.phtml", $this); ?>
+				</div>
+			</div>			
+			<?php echo $this->partial("page/_partDetail.phtml", $this); ?>
+			<?php echo $this->partial("page/_partDocument.phtml", $this); ?>
+			<?php echo $this->partial("page/_partSocial.phtml", $this); ?>
+			<!-- Comment -->
+			<?php if($this->ArticleCanComment=='Y') { ?>
+			<div class="information-comment-panel printable">
+				<?php echo $this->partial("index/_partComment.phtml", $this); ?>
+			</div>
+			<?php } ?>
+		</div>
+	</div>
+
+<?php 
+		break;
+	case "4" : 
+?>
+
+	<div class="infodetail infopage">
+		<div class="information-panel printable">
+			<div class="book-title title-panel">
+				<span class="title">
+					<?php echo $this->partial("page/_partTitle.phtml", $this); ?>
+				</span>
+				<hr />
+			</div>
+			<?php echo $this->partial("page/_partDate.phtml", $this); ?>
+			<?php echo $this->partial("page/_partSocial.phtml", $this); ?>
+		</div>
+	</div>
+	<div id="detail-zone">
+		<div class="">
+			<div class="detail-header">
+				<h2><?php echo $this->partial("page/_partTitle.phtml", $this); ?></h2>
+				<?php echo $this->partial("page/_partIntrotext.phtml", $this); ?>
+				<?php echo $this->partial("page/_partIntroimage.phtml", $this); ?>
+			</div>
+			<?php echo $this->partial("page/_partDetail.phtml", $this); ?>
+			<?php echo $this->partial("page/_partDocument.phtml", $this); ?>
+			<!-- Comment -->
+			<?php if($this->ArticleCanComment=='Y') { ?>
+			<div class="information-comment-panel printable">
+				<?php echo $this->partial("index/_partComment.phtml", $this); ?>
+			</div>
+			<?php } ?>
+		</div>
+	</div>	
+	
+
+<?php 
+		break;
+	default :
+	case "1" : 
+		?>
+
+		<div class="infodetail infopage">
+			<div class="information-panel printable">
+				<div class="book-title title-panel">
+					<span class="title">
+						<?php echo $this->partial("page/_partTitle.phtml", $this); ?>
+					</span>
+					<hr />
+				</div>
+				<?php echo $this->partial("page/_partDate.phtml", $this); ?>
+			</div>
+		</div>
+		<div id="detail-zone">
+			<div class="">
+				<div class="detail-header">
+					<h2><?php echo $this->partial("page/_partTitle.phtml", $this); ?></h2>
+					<?php echo $this->partial("page/_partIntrotext.phtml", $this); ?>
+					<?php echo $this->partial("page/_partIntroimage.phtml", $this); ?>
+				</div>
+				<div class="col-md-10">
+				<?php echo $this->partial("page/_partDetail.phtml", $this); ?>
+				<?php echo $this->partial("page/_partDocument.phtml", $this); ?>
+				</div>
+				<div class="col-md-2">
+				<?php echo $this->partial("page/_partSocial.phtml", $this); ?>
+				</div>
+				<div style="clear:left;"></div>
+			</div>
+			<!-- Comment -->
+			<?php if($this->ArticleCanComment=='Y') { ?>
+			<div class="information-comment-panel printable">
+				<?php echo $this->partial("index/_partComment.phtml", $this); ?>
+			</div>
+			<?php } ?>	
+		</div>
+
+		<?php 
+	break;
+endswitch;
+?>
+
+<script>
+$(function() {
+	$(".lightgallery").lightGallery();
+});
+</script>

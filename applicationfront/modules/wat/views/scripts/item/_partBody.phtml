@@ -1,0 +1,72 @@
+			<div class="wat-detail-body">
+				<?php if (!empty(str_replace("\r", "", str_replace("\n", "", str_replace("&nbsp;", "", strip_tags($this->data->Detail)))))) : ?>
+				<div class="wat-detail-detail">
+					<?php echo $this->data->Detail; ?>
+				</div>
+				<?php endif; ?>
+				<?php if (!empty(str_replace("\r", "", str_replace("\n", "", str_replace("&nbsp;", "", strip_tags($this->data->BuddhaStatueDetail)))))) : ?>
+				<div class="wat-detail-detail">
+					<div class="title"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_main_title_buddhastatue"); ?></div>
+					<?php echo $this->data->BuddhaStatueDetail; ?>
+				</div>
+				<?php endif; ?>
+				<?php if (($this->data->HasHistoricSite == "Y") && !empty(str_replace("\r", "", str_replace("\n", "", str_replace("&nbsp;", "", strip_tags($this->data->HistoricSiteDetail)))))) : ?>
+				<div class="wat-detail-detail">
+					<div class="title"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_main_title_historicsite"); ?></div>
+					<?php echo $this->data->HistoricSiteDetail; ?>
+				</div>
+				<?php endif; ?>
+				<?php if (count($this->dataWatActivityList) > 0) : ?>
+				<div class="wat-detail-detail">
+					<div class="title"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_main_title_activity"); ?></div>
+					<div class="datalist">
+						<ul>
+							<?php foreach($this->dataWatActivityList as $dataWatActivity) : ?>
+							<li>
+								<div class="topic"><?php echo $dataWatActivity["ActivityName"]; ?></div>
+								<div><?php echo nl2br($dataWatActivity["Detail"]); ?></div>
+							</li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+				</div>
+				<?php endif; ?>
+				<?php if (count($this->dataWatRescueList) > 0) : ?>
+				<div class="wat-detail-detail">
+					<div class="title"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_main_title_rescue"); ?></div>
+					<div class="datalist">
+						<ul>
+							<?php foreach($this->dataWatRescueList as $dataWatRescue) : ?>
+							<li>
+								<div class="topic"><?php echo $dataWatRescue["RescueName"]; ?></div>
+								<div><?php echo nl2br($dataWatRescue["Detail"]); ?></div>
+							</li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+				</div>
+				<?php endif; ?>
+				
+				<?php
+				$facebookUrl = $this->data->FacebookUrl == "-" ? "" : $this->data->FacebookUrl;
+				$facebookUrlLink = '';				
+				if (!empty($facebookUrl)) :
+					$facebookUrlLink = $facebookUrl;
+					if (strpos($facebookUrlLink, "facebook.com") !== false) {
+						if (strpos($facebookUrlLink, "http") === 0) {
+							// Do nothing
+						} else {
+							$facebookUrlLink = "https://" . $facebookUrlLink;
+						}
+					} else {
+						$facebookUrlLink = "https://www.facebook.com/" . $facebookUrlLink;
+					}
+				endif;
+				if (!empty($this->facebookAppID) && !empty($facebookUrlLink)) :?>
+				<div class="wat-detail-facebookpage">
+					<div class="fb-page" data-href="<?php echo $facebookUrlLink; ?>" data-tabs="timeline" data-small-header="true" data-width="500"  data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="<?php echo $facebookUrlLink; ?>" class="fb-xfbml-parse-ignore"><a href="<?php echo $facebookUrlLink; ?>"><?php echo $this->data->Title; ?></a></blockquote></div>
+					<div class="fb-page" data-href="<?php echo $facebookUrlLink; ?>" data-tabs="events" data-small-header="true" data-width="500"  data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="<?php echo $facebookUrlLink; ?>" class="fb-xfbml-parse-ignore"><a href="<?php echo $facebookUrlLink; ?>"><?php echo $this->data->Title; ?></a></blockquote></div>
+				</div>
+				<?php endif; ?>	
+				
+			</div>

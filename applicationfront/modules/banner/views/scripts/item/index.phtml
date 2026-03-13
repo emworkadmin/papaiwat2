@@ -1,0 +1,57 @@
+ <?php 
+ if($this->setting->ItemCustomCss){
+	echo '<style>'.$this->setting->ItemCustomCss.'</style>';
+ } else {
+	echo '<style>.banner-box { display: inline-block; padding: 15px; }</style>';
+ }
+ ?>
+ 
+ <div class="info infopage">
+ 	<div class="item-title title-panel">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+		<hr />
+	</div>
+ 
+    <div class="result-list-panel">
+		<?php 
+		if(count($this->dataList)>0) {
+			$imgWidth = empty($this->setting->ItemBannerSizeWidth) ? 150 : $this->setting->ItemBannerSizeWidth;
+			$imgHeight = empty($this->setting->ItemBannerSizeHeight) ? 80 : $this->setting->ItemBannerSizeHeight;
+			foreach($this->dataList as $k=>$v) {
+				$imgPath = $this->url(array('module' => 'default', 'controller' => 'file', 'action' => 'get', 'file' => $v["IntroImageHashName"]), null, true);
+
+				echo "<div class='banner-box' id=".$v['ID'].">";
+				echo "	<a href='".$v['Url']."' target='".$v['LinkTarget']."'>"; 
+				echo "		<img alt='image' alt='image' src='".$imgPath."' width='".$imgWidth."' height='".$imgHeight."'>"; 
+				echo "	</a>"; 
+				if($this->setting->ItemShowTitle == 'Y'){
+					echo "	<div class='banner-title'>";
+					echo "		<a href='".$v['Url']."' target='".$v['LinkTarget']."'>";
+					echo "			".$v['Title'];
+					echo "		</a>";
+					echo "	</div>";
+				}
+				if($this->setting->ItemShowIntroText == 'Y'){
+					echo "	<div class='banner-intro-text'>";
+					echo "		<a href='".$v['Url']."' target='".$v['LinkTarget']."'>";
+					echo "			".nl2br($v['IntroText']);
+					echo "		</a>";
+					echo "	</div>";
+				}
+				echo "</div>";
+				?>
+								
+				<script>
+					$("div#<?=$v['ID']?>").click(function() {
+						$.post("<?php echo $this->url(array('module' => 'banner', 'controller' => 'item', 'action' => 'click'), null, true);?>", {id:<?php echo $v['ID']?>}, function(data) {
+						});
+					});
+				</script>
+				<?php
+			}
+		}
+		?>
+    </div>
+</div>

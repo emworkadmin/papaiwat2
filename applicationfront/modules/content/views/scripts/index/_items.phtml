@@ -1,0 +1,169 @@
+<style>
+ .imgStd-elephant { float: right; height: 25px; margin-top: -3px; }
+.imgStd-verified { float: right; height: 20px; margin-left: 10px; margin-right: 10px; }
+ .imgStd-official { float: right; height: 12px; margin-top: 3px; }
+ .detail {padding-left:0px; }
+ .fa.fa-map-marker {color:#00acd6;}
+  .txtRating { font-size: 12px; }
+ .imgRating { height: 16px; } 
+ .type,  .category  {white-space: nowrap;width: 100%;overflow: hidden;text-overflow: ellipsis;}
+ .type .text-kinds{color:#00acd6;}
+ a {cursor: pointer;}
+</style>
+<?php 
+if (count($this->items) > 0) :
+	foreach ($this->items as $item) :
+		$imageUrl = $this->baseUrl("images/icons/no-image.jpg");
+		if ($item["HasIntroImage"] == "Y" && !empty($item["IntroImageHashName"])) {
+			$imageUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "file" => $item["IntroImageHashName"]), null, true);
+		}
+?>
+
+
+<div class="result-list-item">
+	<div class="row">
+		<div class="col-md-4">
+			<div class="result-list-img">
+				<a href="<?php echo $this->url(array("module" => "info", "controller" => "detail", "action" => "index", "itemid" => $item["ID"]), null, true); ?>">
+					<img alt="image" src="<?php echo $imageUrl; ?>" />
+				</a>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="">
+				<h3><a href="<?php echo $this->url(array("module" => "info", "controller" => "detail", "action" => "index", "itemid" => $item["ID"]), null, true); ?>" title="<?php echo $item["Name"]?>"> <?php echo $item["Name"]?></a></h3>
+				<div class="info">
+				
+					<?php if(false): ?>
+					<div class="province" style="width: 50%;float: left;">
+						<em class="fa fa-map-marker" style="color: #1aa3d1;font-size: 20px;margin-right: 5px;"></em>
+						<strong><?php echo Emwork_Translate::text($this->lang, 'info', 'list_item_province_label'); ?>: </strong> <span><?php echo $item["ProvinceName"]; ?></span>
+					</div>
+					<?php endif; ?>
+						
+						
+					<div class="col-md-12 detail">
+						<em class="fa fa-map-marker"></em>
+							<label><?php echo Emwork_Translate::text($this->lang, "info", "list_item_province_label"); ?> :</label>&nbsp;<?php echo $item['ProvinceName']; ?>
+							<?php if ($item['MainTypeCode'] != '002') : ?>
+							<?php if($item['isStandard']) : ?>
+								<img alt="image" class="imgStd-elephant" src="/images/icons/standard/elephant1.png">
+							<?php else : ?>
+							<img alt="image" class="imgStd-elephant" src="/images/icons/standard/elephant2.png">
+							<?php endif; ?>
+							<?php endif;?>
+							<?php if($item['isVerified']){ ?>
+							<img alt="image" class="imgStd-verified" src="/images/icons/standard/verified1.png">
+							<?php }else{ ?>
+							<img alt="image" class="imgStd-verified" src="/images/icons/standard/verified2.png">
+							<?php } ?>
+							<?php if($item['isOfficial']){ ?>
+							<img alt="image" class="imgStd-official" src="/images/icons/standard/official1.png">
+							<?php }else{ ?>
+							<img alt="image" class="imgStd-official" src="/images/icons/standard/official2.png">
+							<?php } ?>
+						</div>
+			
+					<?php if(false) :?>
+					<div class="category" style="width: 50%;float: left;">
+						<strong>หมวดหมู่: </strong> <span><?php echo $item["MainTypeName"]; ?></span>
+					</div>
+					<?php endif; ?>
+					
+					<div class="type">
+						<em class="fa fa-map-marker" style="opacity:0;"></em>
+						<?php if($item['MainTypeCode']=='004'):?>
+						<strong><?php echo Emwork_Translate::text($this->lang, "info", "list_item_category_label"); ?> : </strong> 
+						<a data-type="<?php echo $item['TypeID'];?>" data-maintypecode="<?php  echo $item['MainTypeID'];?>"><?php echo $item["TypeName"]; ?></a>
+						<?php else : ?>						
+						<strong><?php echo Emwork_Translate::text($this->lang, "info", "list_item_type_label"); ?> : </strong>
+						<?php
+						$loop = count($item['Kinds']);
+						$index = 1;
+						foreach ($item['Kinds'] as $kind) :
+							?>
+						<a data-kind="<?php echo $kind['KindID'];?>" data-maintypecode="<?php  echo $item['MainTypeID'];?>"><?php echo $kind["KindName"]; if($index != $loop):echo',';endif;?></a>
+						<?php 
+						$index ++;
+						endforeach;
+						endif;
+						?>
+					</div>
+					
+					<div class="line3">
+						<div class="rating">
+							<div>
+							<em class="fa fa-map-marker" style="opacity:0;"></em>
+							<?php 
+							$rating = empty($item["TotalReview"]) ? 0 : ($item["TotalRating"] / $item["TotalReview"]);
+							for ($i = 1; $i <= 5; $i ++) :
+								$diff = $rating - $i + 1;
+								$starSrc = $this->baseUrl("images/icons/star-02.png");
+								if ($diff >= 1) :
+									$starSrc = $this->baseUrl("images/icons/star-01.png");
+								elseif ($diff > 0) :
+								$starSrc = $this->baseUrl("images/icons/star-03.png");
+								endif;
+								echo '<img alt="image" class="imgRating" src="' . $starSrc . '" />';
+							endfor;
+							?>		
+								<span class="txtRating">(<?php echo empty($d['ReviewAmount']) ? 0 : $d['ReviewAmount']; ?> <?php echo Emwork_Translate::text($this->lang, "info", "list_item_review_label"); ?>)</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<?php if (false) : ?>
+				<div class="info">
+					<div >
+						<strong>จังหวัด: </strong> <span><?php echo $item["ProvinceName"]; ?></span>
+					</div>
+					<div >
+						<strong>หมวดหมู่: </strong> <span><?php echo $item["MainTypeName"]; ?></span>
+					</div>
+					<div >
+						<strong>ประเภท: </strong> <span><?php echo $item["TypeName"]; ?></span>
+					</div>
+
+				</div>
+				<div class="rating">
+					<div>
+						<?php 
+						$rating = 0; // $item["Rating"];
+						for ($i = 1; $i <= 5; $i ++) :
+							$diff = $rating - $i + 1;
+							$starSrc = $this->baseUrl("images/icons/star-02.png");
+							if ($diff >= 1) :
+								$starSrc = $this->baseUrl("images/icons/star-01.png");
+							elseif ($diff > 0) :
+							$starSrc = $this->baseUrl("images/icons/star-03.png");
+							endif;
+							echo '<img alt="image" src="' . $starSrc . '" />';
+						endfor;
+						?>
+					</div>
+				</div>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+</div>
+<?php 
+	endforeach;
+endif;
+?>
+
+<script>
+
+	$("a").click(function() {
+		var Kind = $(this).data("kind");
+		var Type  = $(this).data("type");
+		var MainTypeCode = $(this).data("maintypecode");
+		if(Kind) {
+			window.location = "<?php echo $this->url(array('module' => 'info', 'controller' => 'index', 'action' => 'search'), null, true); ?>" + "/maintype/" + MainTypeCode + "/type/K" + Kind;
+		} else if (Type) {
+			window.location = "<?php echo $this->url(array('module' => 'info', 'controller' => 'index', 'action' => 'search'), null, true); ?>" + "/maintype/" + MainTypeCode + "/type/" + Type;
+		}
+	})
+	
+</script>

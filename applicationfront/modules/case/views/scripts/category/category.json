@@ -1,0 +1,6 @@
+{
+	"name" : "case",
+	"controller" : "category",
+	"description" : "แสดงรายการตารางนัดพิจารณาคดี"
+
+}

@@ -1,0 +1,95 @@
+
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+<!-- fixedColumns -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datatables/fixedColumns.bootstrap.min.css'); ?>">
+
+<style>
+th, td { white-space: nowrap; }
+</style>
+
+<table id="tblData" class="table table-bordered table-hover">
+	<caption>รายการแบบสำรวจ</caption>
+	<thead>
+		<tr>
+			<th>ลำดับ</th>
+			<th>วันที่ตอบแบบสำรวจ</th>
+			<th>IP Address</th>
+			<th>ประเภท</th>
+			<?php
+			if(count($this->dataQuestion)>0){
+				foreach($this->dataQuestion as $d){
+					echo '<th>'.$d['Question'].'</th>';
+				}
+			}
+			?>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<!-- fixedColumns -->
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/datatables/dataTables.fixedColumns.min.js'); ?>"></script>
+
+<script type="text/javascript">
+    jQuery(function(){
+
+    	// --------------- Begin: Table & Search Zone --------------------------    	
+    	function renderColumn ( data, type, row, meta ) {
+    		return data;
+    	}
+    	var rows_selected = [];
+    	
+    	var tblData = $('#tblData').DataTable({
+			scrollX: true,
+			fixedColumns: { leftColumns: 4 },
+    		processing: true,
+    		serverSide: true,
+    		responsive: true,
+    		<?php
+			if ($this->InfoSearch->tblPage) {
+				echo 'displayStart: ' . $this->InfoSearch->tblPage . ',';
+			}
+			if ($this->InfoSearch->tblRow) {
+				echo 'pageLength: ' . $this->InfoSearch->tblRow . ',';
+			}
+			if ($this->InfoSearch->tblOrderCol && $this->InfoSearch->tblOrderDir) {
+				echo 'order: [[ ' . $this->InfoSearch->tblOrderCol . ', "' . $this->InfoSearch->tblOrderDir . '" ]],';
+			} else {
+				echo 'order: [[ 1, "desc" ]],';
+			}
+			?>
+    		ajax: {
+    	        url: '<?php echo $this->url(array('module' => 'poll', 'controller' => 'item', 'action' => 'getsubmissionlist'), null, true); ?>',
+    	        type: 'POST',
+    	        data: function(d) {
+					d.id = '<?php echo $this->data->ID; ?>';
+    	        }
+    	    },
+    	    language : {
+				url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+    	    },
+    		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+    		"columns": [
+    		            { "width": "40px", 'orderable': false, 'data' : 'NO', "class" : "text-center"},
+    		            { "width": "160px", 'data' : 'ActionDate' , 'render' : renderColumn, "class" : "ratio"},
+    		            { "width": "120px", 'data' : 'RemoteIP' , 'render' : renderColumn, "class" : "ratio"},
+    		            { "width": "120px", 'data' : 'AnswerType' , 'render' : renderColumn, "class" : "ratio"},
+						<?php
+						if(count($this->dataQuestion)>0){
+							foreach($this->dataQuestion as $d){
+						?>
+    		            { 'orderable': false, 'data' : '<?php echo $d["ID"]; ?>' , 'render' : renderColumn, "class" : "ratio"},
+						<?php
+							}
+						}
+						?>
+    		          ]
+        });
+
+    });
+    
+</script>

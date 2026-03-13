@@ -1,0 +1,12 @@
+{
+	"name" : "Custom HTML",
+	"fields" : [
+		{
+			"name" : "message",
+			"type" : "texteditor",
+			"label" : "เนื้อหา",
+			"description" : "กรอกข้อความที่ต้องการแสดง",
+			"required" : false
+		}	
+	]
+}

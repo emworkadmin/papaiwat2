@@ -1,0 +1,45 @@
+<?php if(count($this->dataBankAccountList)>0){ ?>
+
+<div class="section-wat-bank">
+
+	<div class="title-label">
+		<?php echo Emwork_Translate::text($this->lang, "wat", "detail_bankaccount_title"); ?>
+	</div>
+
+	<?php foreach($this->dataBankAccountList as $d){ ?>
+
+	<div class="row wat-bank-list">
+		<div class="col-md-2 wat-bank-bank-logo">
+			<img class="img-bank-logo" alt="Bank Logo" src="/th/file/get/type/thumbnail/size/100/file/<?php echo $d['BankLogoHashName']; ?>">
+		</div>
+		<div class="col-md-3 wat-bank-bank-name" style="color: <?php echo $d['BankColor']; ?>">
+			<?php echo Emwork_Translate::text($this->lang, "wat", "detail_bankaccount_bank_name"); ?> : <?php echo $d['BankName']; ?>
+		</div>
+		<div class="col-md-3 wat-bank-account-no" style="color: <?php echo $d['BankColor']; ?>">
+			<?php echo Emwork_Translate::text($this->lang, "wat", "detail_bankaccount_account_no"); ?> : <?php echo $d['AccountNo']; ?>
+		</div>
+		<div class="col-md-3 wat-bank-account-name" style="color: <?php echo $d['BankColor']; ?>">
+			<?php echo Emwork_Translate::text($this->lang, "wat", "detail_bankaccount_account_name"); ?> : <?php echo $d['AccountName']; ?>
+		</div>
+		<div class="col-md-1 wat-bank-qr-code">
+			<?php if($d['QRCodeImageHashName']){ ?>
+				<div class="Bank-lightGallery">
+					<img class="img-qr-code" alt="QR Code" data-src="/th/file/get/file/<?php echo $d['QRCodeImageHashName']; ?>" src="/th/file/get/type/thumbnail/size/100/file/<?php echo $d['QRCodeImageHashName']; ?>">
+				</div>
+			<?php }else{ ?>
+				&nbsp;
+			<?php } ?>
+		</div>
+	</div>
+
+	<?php } ?>
+
+</div>
+
+<script>
+jQuery(function(){
+	$(".Bank-lightGallery").lightGallery();	
+});
+</script>
+
+<?php } ?>

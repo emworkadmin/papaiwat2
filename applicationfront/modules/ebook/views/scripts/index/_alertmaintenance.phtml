@@ -1,0 +1,15 @@
+<div class="alert-zone">
+	<div class="container">
+		<div class="row mb-15">
+			<div class="col-md-12">
+				<div class="well well-lg">
+					<?php 
+					$message = Emwork_Translate::text($this->lang, "general", "alert_maintenance_message");
+					$message = str_replace("{homeUrl}", $this->url(array("module" => "default", "controller" => "home", "action" => "index"), null, true), $message);
+					$message = str_replace("{infoListUrl}", $this->url(array("module" => "info", "controller" => "index", "action" => "index"), null, true), $message);
+					echo $message; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

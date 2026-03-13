@@ -1,0 +1,35 @@
+<table id="tblData">
+    <caption>รายการประวัติการเข้าใช้งาน</caption>
+    <thead>
+        <tr>
+            <th>ลำดับ</th>
+            <th>วันที่/เวลา</th>
+            <th>กิจกรรม</th>
+            <th>ผลลัพธ์</th>
+            <th>Username</th>
+            <th>ชือ - นามสกุล</th>
+            <th>IP Address</th>
+        </tr>
+    </thead>
+    <?php if (count($this->data) > 0) : ?>
+    <tbody>
+    	<?php 
+    	$i = 0;
+    	foreach ($this->data as $item) :
+    		$i ++;
+    	?>
+    	<tr>
+    		<td><?php echo $i; ?></td>
+    		<td><?php echo ($item["ActionDate"] != null ? $item["ActionDate"]->format("Y-m-d H:i:s") : ""); ?></td>
+    		<td><?php echo $this->logTypeOption[$item["LogType"]]; ?></td>
+    		<td><?php echo $this->resultOption[$item["Result"]]; ?></td>
+    		<td><?php echo $item["Username"]; ?></td>
+    		<td><?php echo $item["FullName"]; ?></td>
+    		<td><?php echo $item["RemoteIP"]; ?></td>
+    	</tr>
+    	<?php 
+    	endforeach;
+    	?>
+    </tbody>
+    <?php endif; ?>
+</table>

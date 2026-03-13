@@ -1,0 +1,259 @@
+<style>
+.In_Out { font-family: 'Mitr Light'; margin-bottom: 15px;  text-align: center; margin-bottom: 15px; display: inline-block; width: 100%; }
+.In_Out .export { display: inline-block; width: 100%;  }
+.In_Out .export div { padding-right: 0; }
+.In_Out .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+.In_Out .export #InOut_Year { margin-right: 2%; }
+.In_Out .content-box { padding: 0px; }
+.In_Out .content-box.in { padding-right: 5px; }
+.In_Out .content-box.out { padding-left: 5px; }
+
+.In_Out .intro-box { padding: 0px 0px 0px 10px; color: white; font-family: 'Mitr Light'; }
+.In_Out .intro-box .title-detail.in { background: #F3CA10; }
+.In_Out .intro-box .title-detail.out { background: #8555A1; }
+.In_Out .intro-box .content-detail { background: white; }
+.In_Out .intro-box .content-detail.in { border: 15px solid #F9EA9E; padding: 10px; }
+.In_Out .intro-box .content-detail.out { border: 15px solid #E1D5E9; padding: 10px; }
+
+.In_Out .bg-text { background: #2BA9E3; margin-bottom: 5px; }
+.In_Out .bg-text div { padding: 5px; }
+.In_Out .Garph-text-nunber { font-size: 3rem; }
+.In_Out_seeAll { display: inline-block; font-family: 'Mitr Light'; font-size: 17px; padding: 12px 30px 12px; margin-bottom: 15px; color: white; background: linear-gradient(to top, #3388BE, #27A8E2); border-radius: 7px; border: 1px solid white; }
+.In_Out_seeAll a {color: white;}
+</style>
+
+
+<div class="In_Out">
+
+    <div class="export">
+        <div class="col-md-3 col-md-offset-9">
+            <?php echo $this->formSelect("InOut_Year", $this->inOutYear, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?>
+            <?php echo $this->formSelect("InOut_Export", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+
+    <div id="InOutExportZone" style="display: inline-block; width: 100%;">
+        <div class="col-md-6 content-box in">
+
+            <div class="intro-box">
+                <div class="bg-text">
+                    <div>จำนวนผู้เดินทางเข้าประเทศไทย</div>
+                    <div><span class="Garph-text-nunber"><?php echo number_format($this->InboundArrivals,0); ?></span> คน</div>
+                </div>
+            </div>
+
+            <div class="intro-box">
+                <div class="title-detail in">จำนวนผู้เดินทางเข้าจำแนกตามสัญชาติ</div>
+                <div class="content-detail in">
+                    <canvas id="travelers_nationality"></canvas>
+                </div>
+            </div>            
+
+        </div>
+
+        <div class="col-md-6 content-box out">
+
+            <div class="intro-box">
+                <div class="bg-text">
+                    <div>จำนวนผู้เดินทางออกประเทศไทย</div>
+                    <div><span class="Garph-text-nunber"><?php echo number_format($this->OutboundArrivals,0); ?></span> คน</div>
+                </div>
+            </div>
+
+            <div class="intro-box">
+                <div class="title-detail out">จำนวนผู้เดินทางออกจำแนกตามสัญชาติ</div>
+                <div class="content-detail out">
+                    <canvas id="leaving_nationality"></canvas>
+                </div>
+            </div>         
+
+        </div>
+    </div>
+
+</div>
+
+<div id="previewImage_InOut" style="display: none;"></div>
+<a id="downloadImage_InOut" href="#In_Out" style="display: none;"></a>
+
+<div class="col-md-12" style="text-align: center;">
+    <a href="<?php echo $this->url(array("module"=>"graph", "controller"=>"travelstatistics", "action"=>"inout"), null, true);?>" target="_blank">
+        <div class="In_Out_seeAll">ดูข้อมูลสถิติทั้งหมด</div>
+    </a>
+</div>
+
+<script>
+
+    var travelers_nationality = document.getElementById("travelers_nationality");
+    travelers_nationality.height = 150;
+    var myChart_travelers_nationality = new Chart(travelers_nationality, {
+        type: 'doughnut',
+        data: {
+            // labels: ["ชาวต่างประเทศ", "ชาวไทย"],
+            labels: [
+                <?php
+                if(count($this->InboundArrivalsNationality)>0){
+                    $index = 1;
+                    $loop = count($this->InboundArrivalsNationality);
+                    foreach($this->InboundArrivalsNationality as $v){
+                        echo "'".$v['TravelerNationalityTypeNameTH']."'";
+                        if($index != $loop){
+                            echo ",";
+                        }
+                        $index ++;
+                    }
+                }
+                ?>
+            ],
+            datasets: [{
+                // data: [2642873, 516260],
+                data: [
+                    <?php
+                    if(count($this->InboundArrivalsNationality)>0){
+                        $index = 1;
+                        $loop = count($this->InboundArrivalsNationality);
+                        foreach($this->InboundArrivalsNationality as $v){
+                            echo "'".$v['Amount']."'";
+                            if($index != $loop){
+                                echo ",";
+                            }
+                            $index ++;
+                        }
+                    }
+                    ?>
+                ],
+                backgroundColor: [
+                    '#00BAAB',
+                    '#445656',
+                ],
+                borderColor: [
+                    '#00BAAB',
+                    '#445656',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            showTooltips: {
+                showLabel: true,
+                showValue: true,
+                // typeValue: " ล้านบาท",
+                // fontSize: 13
+            },
+            // pieceLabel: {
+            //     render: function (txt) {
+            //         return txt.label + ' ' + txt.value;
+            //     },
+            //     fontColor: '#000',
+            //     position: 'outside'
+            // },
+            // responsive: true,
+            // legend : {
+            //     display: false
+            // }
+            responsive: true,
+            legend : {
+                display: false
+            }
+        }
+    });
+
+    var leaving_nationality = document.getElementById("leaving_nationality");
+    leaving_nationality.height = 150;
+    var myChart_leaving_nationality = new Chart(leaving_nationality, {
+        type: 'doughnut',
+        data: {
+            // labels: ["ชาวต่างประเทศ", "ชาวไทย"],
+            labels: [
+                <?php
+                if(count($this->OutboundArrivalsNationality)>0){
+                    $index = 1;
+                    $loop = count($this->OutboundArrivalsNationality);
+                    foreach($this->OutboundArrivalsNationality as $v){
+                        echo "'".$v['TravelerNationalityTypeNameTH']."'";
+                        if($index != $loop){
+                            echo ",";
+                        }
+                        $index ++;
+                    }
+                }
+                ?>
+            ],
+            datasets: [{
+                // data: [2381951, 546161],
+                data: [
+                    <?php
+                    if(count($this->OutboundArrivalsNationality)>0){
+                        $index = 1;
+                        $loop = count($this->OutboundArrivalsNationality);
+                        foreach($this->OutboundArrivalsNationality as $v){
+                            echo "'".$v['Amount']."'";
+                            if($index != $loop){
+                                echo ",";
+                            }
+                            $index ++;
+                        }
+                    }
+                    ?>
+                ],
+                backgroundColor: [
+                    '#00BAAB',
+                    '#445656',
+                ],
+                borderColor: [
+                    '#00BAAB',
+                    '#445656',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            showTooltips: {
+                showLabel: true,
+                showValue: true,
+                // typeValue: " ล้านบาท",
+                // fontSize: 13
+            },
+            // pieceLabel: {
+            //     render: function (txt) {
+            //         return txt.label + ' ' + txt.value;
+            //     },
+            //     fontColor: '#000',
+            //     position: 'outside'
+            // },
+            // responsive: true,
+            legend : {
+                display: false
+            }
+        }
+    });
+    function setCanvas_InOutExportZone(val) {
+        html2canvas(document.querySelector("#InOutExportZone")).then(function(canvas) {
+            $("#previewImage_InOut").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_InOut").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage_InOut")[0].click();
+                $("#InOut_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_InOut canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#InOut_Export").val('export');
+            }
+        });
+    }
+
+    $("#InOut_Export").change(function() {
+        setCanvas_InOutExportZone($(this).val());
+    });
+
+    $("#InOut_Year").change(function() {
+        var checkPointYear = $('#CheckPoint_Year').val();
+        var inOutYear = $('#InOut_Year').val();
+        var numberTouristsYear = $('#NumberTourists_Year').val();
+        window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'travelstatistics', 'action' => 'search'), null, true); ?>/checkPointYear/"+checkPointYear+"/inOutYear/"+inOutYear+"/numberTouristsYear/"+numberTouristsYear;
+    });
+</script>

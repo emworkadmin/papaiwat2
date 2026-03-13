@@ -1,0 +1,117 @@
+<style>
+
+    .mice .export { display: inline-block; width: 100%; font-family: 'Kanit Medium';    margin-bottom: 15px; }
+    .mice .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+    .mice .export #miceYear { margin-right: 4%; }
+
+    .mice-head-right {background: #a3d166;color: white;text-align: center;font-size: 15px;}
+    .mice-head-left {background: #f4c80f;color: white;text-align: center;font-size: 15px;}
+    .mice-no {background: white;text-align: center;font-size: 50px;}
+    .myChartGuidemiceBar {background: white;min-height: 282px;}
+    .chart-mice {background: white;margin-bottom: 15px;}
+    .text-button {text-align: center;color: #00c0ef;}
+
+    .mydoughnut {background: white;}
+    .mice {margin-top: 30px; background: #cae4f1; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+
+    .Situation_seeAll_mice { margin-bottom: 15px; margin-top: 15px; color: white; background: linear-gradient(to right, #85c542, #3fb74a); padding: 7px 30px 2px; border-radius: 7px; border: 1px solid white; }
+    .Situation_seeAll_mice a {color: white;}
+    .mice-box {background: white;border: 1px solid;    padding: 10px 10px 10px 10px;}
+
+    .text-mice {margin-top: 10px;margin-bottom: 10px;text-align: center;color: #00c0ef;}
+    .text-mice-head {margin-top: 10px;margin-bottom: 10px;}
+
+    canvas#myChartGuidemice { margin-top: 43px;}
+
+
+
+</style>
+
+<div class="mice col-md-12" id="MiceExportZone" >
+
+    <div class="export">
+        <div class="col-md-9">สถานการณ์การท่องเที่ยวอุตสาหกรรมไมซ์ (MICE Industry)</div>
+        <div class="col-md-3">
+                <?php echo $this->formSelect("miceYear", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?>
+                <?php echo $this->formSelect("miceExport", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+    
+    <div class="col-md-12">
+        <div class="col-md-6">
+            <div class="mice-head-right col-md-12" >
+                   รายได้ (ล้านบาท)
+            </div>
+            <div class="chart-mice col-md-12" >
+                <canvas id="myLindMice1"></canvas>
+            </div>
+            <div class="chart-mice col-md-12" >
+                <canvas id="myBarMice1"></canvas>
+                <div class="text-button">
+                    รายได้ แบ่งเป็นรายกิจกรรม (ล้านบาท)
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="mice-head-left col-md-12" >
+                   จำนวนนักเดินทาง (คน)
+            </div>
+             <div class="chart-mice col-md-12" >
+                <canvas id="myLindMice2"></canvas>
+            </div>
+            <div class="chart-mice col-md-12" >
+                <canvas id="myBarMice2"></canvas>
+                <div class="text-button">
+                    จำนวนนักเดินทาง แบ่งตามรายกิจกรรม
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="col-md-12" style="text-align: center;">
+    <button class="Situation_seeAll_mice"><a href="https://app.powerbi.com/view?r=eyJrIjoiMjk0ZTM2Y2EtYzRmOS00NjQ5LTg5MzctMjFlMjI4NjQ2ZjQwIiwidCI6IjdhNTlkMDM0LTEzNGYtNDI1Ny1hNmJiLTllYWZkNzg5NjA2ZCIsImMiOjEwfQ%3D%3D" target="_blank">ดูข้อมูลสถิติทั้งหมด</a></button>
+</div>
+
+
+
+<div id="previewImage_mice" style="display: none;"></div>
+<a id="downloadImage_mice" href="#In_Out" style="display: none;"></a>
+
+
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/html2canvas/html2canvas.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/chartjs/Chart.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/graph/jspdf/jspdf.min.js');?>"></script>
+<script>
+
+jQuery(function(){
+
+        function setCanvas_MiceExportZone(val) {
+        html2canvas(document.querySelector("#MiceExportZone")).then(function(canvas) {
+            $("#previewImage_mice").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_mice").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage_mice")[0].click();
+                $("#mix_chart_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_mice canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#mix_chart_Export").val('export');
+            }
+        });
+    }
+
+    $("#miceExport").change(function() {
+        setCanvas_MiceExportZone($(this).val());
+    });
+});
+
+</script>

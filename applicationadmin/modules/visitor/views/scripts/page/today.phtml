@@ -1,0 +1,90 @@
+<div class="row">
+	<div class="col-md-12">
+		<table class="table">
+		<tr>
+			<td><canvas id="myChart"></canvas></td>
+		</tr>
+		</table>
+	</div>
+</div>
+
+	<div class="title-label" style="margin-bottom:0px">สถิติหน้าเพจยอดนิยม</div>		
+
+<table id="tblData" class="table table-bordered table-hover visitorpage">
+	<thead class="head">
+		<tr>
+			<th>ลำดับ</th>
+			<th>หน้าเว็บ</th>
+			<th style="text-align:center;">จำนวน</th>		
+		</tr>
+	</thead>
+	<tbody>
+	<?php
+		$i=1;
+		if(count($this->data)>0){
+			foreach($this->data as $item){?>
+			
+			<tr>
+				<td style="text-align: center;"> <?php echo $i;?> </td>
+				<td><div class="long"> <?php echo $item['Page'];?> </div></td>
+				<td style="text-align: center;"> <?php echo $item['CountPage'];?> </td>
+			</tr>
+			<?php $i++; }
+		}else{?>
+			<tr>
+				<td colspan="3" style="font-size: 1.5rem;">ไม่มีข้อมูล</td>
+			</tr>
+<?php	}
+	?>
+	</tbody>
+</table>
+<script type="text/javascript">
+jQuery(function() {
+
+	var ctx = document.getElementById("myChart");
+	var myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: [<?php 
+							$date = count($this->datatoday);
+							$indexdate = 0;
+							foreach($this->datatoday as $itemDate) {
+								$indexdate++;
+								echo '"';
+								echo $itemDate['Rang'];            
+								if($indexdate != $date) {
+									echo '",';
+								}
+							}
+							echo '"';
+						?>],
+			datasets: [{
+				label: 'ข้อมูลผู้ใช้รายวัน',
+				data: [	<?php 
+							$amount = count($this->datatoday);
+							$indexcount = 0;
+							foreach($this->datatoday as $itemValue) {
+								$indexcount++;
+								echo empty($itemValue['Amount']) ? 0:$itemValue['Amount'];            
+								if($indexcount != $amount) {
+									echo ',';
+								}
+							}
+						?>	],
+				backgroundColor: 
+					'rgba(60, 179, 113, 0.2)'
+				,
+				borderColor: 
+					'rgba(60, 179, 113)'
+				,
+				borderWidth: 1
+			}]
+		},
+		options: {
+			legend: {
+                display: false
+            }
+		}
+	});
+});
+</script> 

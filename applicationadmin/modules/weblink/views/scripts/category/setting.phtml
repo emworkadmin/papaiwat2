@@ -1,0 +1,182 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+		<?php echo $this->formHidden("hdfID", $this->dataInfo->ID); ?>
+				
+		<div class="title-label">ตั้งค่าการแสดงผลหน้ารายการ</div>		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่ารูปแบบการแสดงผล</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowTypeSetting', empty($this->data["ItemShowTypeSetting"]) ? "D" : $this->data["ItemShowTypeSetting"], array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemShowType">รูปแบบการแสดงผล</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ItemShowType', empty($this->data["ItemShowType"]) ? empty($this->dataDefault->itemShowType) ? 'created' : $this->dataDefault->itemShowType : $this->data["ItemShowType"], array('class' => 'form-control', 'placeholder' => ''), $this->showTypeOption); ?>
+			</div>
+		</div>
+		<hr />			
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าเงื่อนไขการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemSortSetting', empty($this->data["ItemSortSetting"]) ? "D" : $this->data["ItemSortSetting"], array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemSortType">เงื่อนไขการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ItemSortType', empty($this->data["ItemSortType"]) ? empty($this->dataDefault->itemSortType) ? 'created' : $this->dataDefault->itemSortType : $this->data["ItemSortType"], array('class' => 'form-control', 'placeholder' => ''), $this->sortTypeOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemSortDirection">รูปแบบการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ItemSortDirection', empty($this->data["ItemSortDirection"]) ? empty($this->dataDefault->itemSortDirection) ? 'desc' : $this->dataDefault->itemSortDirection : $this->data["ItemSortDirection"], array('class' => 'form-control', 'placeholder' => ''), $this->sortDirectionOption); ?>
+			</div>
+		</div>
+		<hr />		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าการแสดงผลเว็บลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemWeblinkSizeSetting', empty($this->data["ItemWeblinkSizeSetting"]) ? "D" : $this->data["ItemWeblinkSizeSetting"], array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemWeblinkSizeWidth">ความกว้าง (พิกเซล)</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formText('ItemWeblinkSizeWidth', empty($this->data["ItemWeblinkSizeWidth"]) ? empty($this->dataDefault->ItemWeblinkSizeWidth) ? 150 : $this->dataDefault->ItemWeblinkSizeWidth : $this->data["ItemWeblinkSizeWidth"], array('class' => 'form-control number', 'placeholder' => '')); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemWeblinkSizeHeight">ความสูง (พิกเซล)</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formText('ItemWeblinkSizeHeight', empty($this->data["ItemWeblinkSizeHeight"]) ? empty($this->dataDefault->ItemWeblinkSizeHeight) ? 80 : $this->dataDefault->ItemWeblinkSizeHeight : $this->data["ItemWeblinkSizeHeight"], array('class' => 'form-control number', 'placeholder' => '')); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงชื่อเว็บลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowTitleSetting', empty($this->data["ItemShowTitleSetting"]) ?  "D" : $this->data["ItemShowTitleSetting"], array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemShowTitle">แสดงชื่อเว็บลิงค์เป็นลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowTitle', empty($this->data["ItemShowTitle"]) ? empty($this->dataDefault->ItemShowTitle) ? 'Y' : $this->dataDefault->ItemShowTitle : $this->data["ItemShowTitle"], array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowIntroTextSetting', empty($this->data["ItemShowIntroTextSetting"]) ? "D" : $this->data["ItemShowIntroTextSetting"], array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemShowIntroText">แสดงข้อความเกริ่นนำเป็นลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowIntroText', empty($this->data["ItemShowIntroText"]) ? empty($this->dataDefault->itemShowIntroText) ? 'Y' : $this->dataDefault->itemShowIntroText : $this->data["ItemShowIntroText"], array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงปุ่ม</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowButtonSetting', empty($this->data["ItemShowButtonSetting"]) ? 'D' : $this->data["ItemShowButtonSetting"], array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemShowButton">แสดงปุ่มลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemShowButton', empty($this->data["ItemShowButton"]) ? empty($this->dataDefault->itemShowButton) ? 'Y' : $this->dataDefault->itemShowButton : $this->data["ItemShowButton"], array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่า CSS</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ItemCustomCssSetting', (isset($this->data["ItemCustomCssSetting"]) ? $this->data["ItemCustomCssSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemCustomCss">CSS</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formTextarea('ItemCustomCss', (isset($this->data["ItemCustomCss"]) ? $this->data["ItemCustomCss"] : $this->dataDefault->itemCustomCss), array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+				</div>
+			</div>
+		</div>
+		
+		<?php if($this->canAdd): ?>
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			</div>
+		</div>
+		<?php endif; ?>
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formEdit").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formEdit input[type=checkbox], #formEdit input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+<?php if($this->canAdd) : ?>
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formEdit").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'weblink', 'controller' => 'category', 'action' => 'settingsave'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'weblink', 'controller' => 'category', 'action' => 'setting', "itemid" => $this->dataInfo->ID), null, true); ?>" ;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+<?php endif; ?>
+});
+</script>

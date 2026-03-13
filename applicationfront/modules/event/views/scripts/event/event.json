@@ -1,0 +1,20 @@
+{
+	"name" : "รายการกิจกรรม",
+	"controller" : "event",
+	"description" : "แสดงรายการกิจกรรมที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "event",
+			"type" : "select",
+			"size" : "",
+			"label" : "หมวดหมู่",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Event_Service_Event",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

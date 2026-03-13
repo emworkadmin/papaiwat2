@@ -1,0 +1,171 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<style>
+/* ------------------ Review Rate Style ----------------- */
+.meter { 
+	height: 5px;
+	position: relative;
+	background: #EFEFEF;
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 25px;
+	border-radius: 25px;
+	padding: 5px;
+	box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
+	margin-bottom: 15px;
+}
+.meter > span {
+	display: block;
+	height: 100%;
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+	border-top-left-radius: 20px;
+	border-bottom-left-radius: 20px;
+	background-color: rgb(43,194,83);
+	background-image: linear-gradient(
+		center bottom,
+		rgb(43,194,83) 37%,
+		rgb(84,240,84) 69%
+	);
+	box-shadow: 
+		inset 0 2px 9px  rgba(255,255,255,0.3),
+		inset 0 -2px 6px rgba(0,0,0,0.4);
+	position: relative;
+	overflow: hidden;
+}
+.blue > span {
+	position: absolute;
+	top: 0;
+	left: 0;
+	border-radius: 20px;
+	background-color: #33b5e6;
+	background-image: linear-gradient(to bottom, #33b5e6, #33b5e6);
+}
+.head { 
+	background: linear-gradient(#E6E6E6, #FFFFFF);
+    background-image: linear-gradient(rgb(230, 230, 230), rgb(255, 255, 255));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial; 
+	font-size: 15px;
+	 }
+	.table-bordered>thead>tr>th, .table-bordered>thead>tr>td {
+    border-bottom-width: 5px;
+}
+.fa-calendar {margin-right: 15px;}
+.rateBarTitle { margin-bottom: 10px; }
+.rateBarTitle .rate { width: 65px; display: inline-block; font-size: 1.4rem; color: #9E9E9E; text-align: right; }
+.rateBarTitle .rate span { color: #535259; margin-right: 5px; }
+.rateBarTitle .bar { width: calc(100% - 65px); display: inline-block; float: left; margin-top: 10px; }
+</style>
+<form class="form-horizontal" id="formData" name="formData">
+<div class="form-group">
+	<label class="col-md-1 control-label" for="StartDate">เริ่ม</label>
+	<div class="col-md-5 divControl">
+		<?php echo $this->formText('txtStartDate',$this->startdate, array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+		<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+	</div>
+	<label class="col-md-1 control-label" for="EndDate">สิ้นสุด</label>
+	<div class="col-md-5 divControl">
+		<?php echo $this->formText('txtEndDate',$this->enddate, array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+		<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+	</div>
+</div> 
+
+<div class="form-group">
+	<div class="col-md-11 col-md-offset-1">
+		<button type="button" class="btn btn-primary" id="btcalculate"><em class="fa fa-calculator"></em> คำนวณ</button>
+		<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+	</div>
+</div>
+
+<div class="title-label" style="margin-bottom:0px">สถิติ Banner ยอดนิยม</div>		
+<table id="tblData" class="table table-bordered table-hover">
+	<colgroup>
+    <col style="width:50px;">
+	<col>
+	<col style="width:70px;">
+	<col style="width:300px;">
+  	</colgroup>
+	<thead class="head">
+		<tr>
+			<th>ลำดับ</th>
+			<th>Banner</th>
+			<th>จำนวน</th>
+			<th>เปอร์เซ็นต์ที่มีการคลิก</th>		
+		</tr>
+	</thead>
+	<tbody>
+	<?php
+		$i=1;
+		if(count($this->data)>0){
+			foreach($this->data as $item){
+			$percent=number_format(($item['CountClick']*100)/$this->datasum->CountClick,2);?>
+			<tr>
+			<td style="text-align: center;"> <?php echo $i;?> </td>
+			<td> <?php echo $item['Title'];?> </td>
+			<td style="text-align: center;"> <?php echo $item['CountClick'];?> </td>
+			<td style="text-align: center;">
+			<?php ?>
+				<div class="rateBarTitle">
+					<div class="meter blue bar">
+						<span style="width :<?php echo $percent; ?>%;" title ="<?php echo $percent; ?>%"></span>
+					</div>
+					<div class="rate">
+                        <span><?php echo $percent; ?>%</span>
+                    </div>
+				</div>
+			</td>
+			</tr>
+			<?php
+			 $i++; 
+			}
+		}else { 
+				 ?>
+			<tr>
+			<td colspan="4">ไม่มีข้อมูล</td>
+			</tr>
+		<?php } ?>
+	</tbody>
+</table>
+</form>
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script type="text/javascript">
+jQuery(function(){
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$('#txtStartDate').datepicker({autoclose: true, format: 'dd/mm/yyyy',endDate: '+1d',datesDisabled: '+1d'});
+	$('#txtEndDate').datepicker({autoclose: true, format: 'dd/mm/yyyy',endDate: '+1d',datesDisabled: '+1d'});
+
+	$('#btcalculate').click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			var startdate=$('#txtStartDate').val();
+			var enddate=$('#txtEndDate').val();
+			window.location = "<?php echo $this->url(array('module' => 'banner', 'controller' => 'stat', 'action' => 'index', 'type' => 'search'), null, true); ?>/startdate/"+btoa(startdate) + "/enddate/"+btoa(enddate);
+		}else{
+			DialogWarning("กรุณากรอกวันที่");
+		}
+	});
+	$('#btnCancel').click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			window.location = "<?php echo $this->url(array('module' => 'banner', 'controller' => 'stat', 'action' => 'index'), null, true); ?>";
+		}else{
+			DialogWarning("กรุณากรอกวันที่");
+		}
+	});
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'STAT-02'); ?>

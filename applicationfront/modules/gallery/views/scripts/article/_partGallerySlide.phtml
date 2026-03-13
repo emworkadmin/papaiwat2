@@ -1,0 +1,91 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/slick/slick.css'); ?>">
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/slick/slick-theme.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/slick/slick.min.js'); ?>"></script>
+
+<style>
+.article-gallery { position: relative; overflow: hidden; }
+#galleryNext { position: absolute; top: 42%; right: 0px; font-size: 60px; cursor: pointer; color: #FFF; background: rgba(0,0,0,0.8); padding: 0px 5px 0px 10px; }
+#galleryPrev { position: absolute; top: 42%; left: 0px; font-size: 60px; cursor: pointer; color: #FFF; background: rgba(0,0,0,0.8); padding: 0px 10px 0px 5px; }
+</style>
+
+<?php
+// <!---------------------------------------- รูปภาพแกลอรี่ ----------------------------------------------->
+if (count ( $this->dataFileImages ) > 0) :
+?>
+
+<div class="article-gallery">
+
+	<hr />
+
+	<div class="row" id="lightGallery">
+	
+		<?php 
+		foreach ( $this->dataFileImages as $img ) :
+			$imgUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $img["hash_name"]), "default", true);
+			$imgThumbnailUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "file" => $img["hash_name"]), "default", true);
+		?>
+			<div class="col-md-3" data-src="<?php echo $imgUrl; ?>" onclick="window.location='<?php echo $this->url(array("module" => "gallery", "controller" => $this->controller, "action" => "viewimage", "id"=> $this->id, "cid" => $this->cid, "iid" => $this->iid), null, true); ?>/img/<?php echo $img['file_id']; ?>'">
+				<div class="img-container">
+					<div class="img-inner">
+						<img alt="image" src="<?php echo $imgThumbnailUrl; ?>" />
+					</div>
+				</div>
+			</div>
+    	<?php
+		endforeach;
+		?>
+
+	</div>
+
+	<em id="galleryNext" class="fa fa-angle-right"></em>
+	<em id="galleryPrev" class="fa fa-angle-left"></em>
+
+</div>
+
+<script>
+jQuery(function(){
+	// $("#lightGallery").lightGallery();	
+	$("#lightGallery").slick({
+		dots: false,
+		arrows: true,
+		nextArrow: $('#galleryNext'),
+		prevArrow: $('#galleryPrev'),
+		speed: 300,
+		slidesToShow: <?php 
+		 				if($this->data->ImagePerPage){
+							echo $this->data->ImagePerPage;
+						 }else{
+							echo 4;
+						 }
+		  			?>,
+		slidesToScroll: 2,
+		responsive: [
+			{
+				breakpoint: 1200,
+				settings: {
+					slidesToShow: 1,
+					slidesToScroll: 1,
+				}
+			},
+			{
+				breakpoint: 991,
+				settings: {
+					slidesToShow: 1,
+					slidesToScroll: 1,
+				}
+			},
+			{
+				breakpoint: 768,
+				settings: {
+					slidesToShow: 1,
+					slidesToScroll: 1,
+				}
+			}
+		]
+	});
+});
+</script>
+
+<?php 
+endif;
+?>

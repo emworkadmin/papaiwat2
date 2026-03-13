@@ -1,0 +1,146 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/jQueryLoading/jquery.loading.css'); ?>">
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/select2/select2.min.css'); ?>">
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/wat/css/wat.css'); ?>">
+<script src="<?php echo $this->baseUrl('plugins/jQueryLoading/jquery.loading.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/select2/select2.min.js'); ?>"></script>
+<style >
+.loading-overlay.loading-theme-light { background-color: #efefef; color: #245AA3; z-index: 100 !important; }
+.loading-overlay-content { font-size: 2.2rem; }
+</style>
+
+ <div class="info infopage wat-list <?php echo empty($this->cssClass) ? "" : $this->cssClass ?>">
+	 <div>
+    	<div class="article-title title-panel">
+			<span class="title">
+				<?php echo empty($this->pageTitle) ? Emwork_Translate::text($this->lang, "wat", "search_title") : $this->pageTitle; ?>
+			</span>
+			<hr />
+		</div>
+    </div>
+    
+    <div class="wat-search-panel">
+    	<form class="form-horizontal" method="get" action="<?php echo $this->url(array("module" => "wat", "controller" => "search", "action" => "index"), null, true); ?>">
+    		<div class="form-group">
+    			<div class="col-md-4 search-text">
+    				<?php echo $this->formText("q", $this->searchParams["q"], array("class" => "form-control", "placeholder" => Emwork_Translate::text($this->lang, "wat", "search_text_placeholder"))); ?>
+    			</div>
+    			<div class="col-md-2 search-region">
+    				<?php echo $this->formSelect("region", $this->searchParams["region"], array("class" => "form-control"), Emwork_Utility::addEmptyOption($this->regionOption, Emwork_Translate::text($this->lang, "wat", "search_filter_region_select")));?>
+    			</div>
+    			<div class="col-md-2 search-province">
+    				<?php echo $this->formSelect("province", $this->searchParams["province"], array("class" => "form-control"), Emwork_Utility::addEmptyOption($this->provinceOption, Emwork_Translate::text($this->lang, "wat", "search_filter_province_select")));?>
+    			</div>
+    			<div class="col-md-2 search-type">
+    				<?php echo $this->formSelect("type", $this->searchParams["type"], array("class" => "form-control"), Emwork_Utility::addEmptyOption($this->watTypeOption, Emwork_Translate::text($this->lang, "wat", "search_filter_type_select")));?>
+    			</div>
+    			<div class="col-md-2 search-button">
+    				<button type="submit" class="btn btn-block" id="btnSearch"><em class="fa fa-search"></em> <?php echo Emwork_Translate::text($this->lang, "wat", "search_button_text"); ?></button>
+    			</div>
+    		</div>
+    	</form>
+    	<div class="wat-search-result"><div class="wat-search-result-text"></div></div>
+    </div>
+
+	<div class="result-list-panel">
+    	<div class="result-list wat-result-list" id="result-list-art"></div>
+    	<div class="result-paging-art" style="display: none;">
+    		<p class="paging text-right"></p>
+    	</div>
+	</div>
+
+</div>
+<script>
+jQuery(function(){
+	// Select
+	$(".wat-search-panel select#region").select2({ minimumResultsForSearch: -1});
+	$(".wat-search-panel select#type").select2({ minimumResultsForSearch: -1});
+	$(".wat-search-panel select#province").select2();
+	//$(".wat-search-panel select")
+	//.on("select2:open", function () {
+	//    $(".select2-results__options").slimScroll();
+	//});
+
+	$(".wat-search-panel select#region").change(function(){
+		var selectValue = $(this).val();
+		if(selectValue == ''){selectValue = '-1';}
+		getData("<?php echo $this->url(array("module" => "wat", "controller" => "search", "action" => "getprovinces"), null, true); ?>" + "?id=" + selectValue, ".wat-search-panel select#province", "<?php echo Emwork_Translate::text($this->lang, "wat", "search_filter_province_select"); ?>", "name", "id", ""); 
+	});
+
+	reloadResultList(1, 'init');
+
+	function reloadResultList(pageIndex, state) {
+		
+		$('body').loading({message: "<?php echo Emwork_Translate::text($this->lang, 'wat', 'loading_message')?>"});
+
+		if (state != 'init') { 
+			$('html, body').animate({
+	            scrollTop: $("#result-list-art").offset().top
+	        }, 500);
+		}
+		
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		sendData.q = "<?php echo $this->searchParams["q"]; ?>";
+		sendData.region = "<?php echo $this->searchParams["region"]; ?>";
+		sendData.province = "<?php echo $this->searchParams["province"]; ?>";
+		sendData.type = "<?php echo $this->searchParams["type"]; ?>";
+		$.post("<?php echo $this->url(array('module' => 'wat', 'controller' => 'search', 'action' => 'getwats'), null, true); ?>", sendData, function(data){
+
+			$('body').loading('stop');
+			
+			if (data.total > 0) {
+				$("#result-list-art").html(data.html);
+				$('.result-paging-art').css('display', '');
+				$('.paging').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+			        leaps: false,
+			        firstLastUse: true,
+			        first: '<<',
+			        last: '>>',
+			        next: '>',
+			        prev: '<',
+			        wrapClass: 'pagination',
+			        activeClass: 'active',
+			        disabledClass: 'disabled',	
+			        nextClass: 'next',
+			        prevClass: 'prev',
+			        lastClass: 'last',
+			        firstClass: 'first'
+				});
+			} else {
+				var html = '';
+				html += '<div class="wat-result-empty">' + '\n';
+				html += '<div><em class="fa fa-search"></em> <?php echo Emwork_Translate::text($this->lang, 'wat', 'alert_notfound_message')?></div>' + '\n';
+				html += '</div>' + '\n';
+				$('.result-list').html(html);
+				
+				$('.result-paging-art').css('display', 'none');
+				$('.paging').bootpag({total : 0});
+			}
+			
+		}, 'json');
+	}
+
+	$('.paging').bootpag({
+        total: 0,
+        maxVisible: 5,
+        leaps: false,
+        firstLastUse: true,
+        first: '<<',
+        last: '>>',
+        next: '>',
+        prev: '<',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+    	reloadResultList(num);
+    }); 	
+});
+</script>

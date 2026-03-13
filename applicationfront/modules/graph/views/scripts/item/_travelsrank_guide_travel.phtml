@@ -1,0 +1,269 @@
+<style>
+
+    .travel .export { display: inline-block; width: 100%; font-family: 'Kanit Medium';    margin-bottom: 15px; }
+    .travel .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+    .travel .export #travelYear { margin-right: 4%; }
+
+    .travel-head {background: #a3d166;color: white;text-align: center;font-size: 15px;}
+    .travel-no {background: white;text-align: center;font-size: 50px;}
+    .myChartGuideTravelBar {background: white;min-height: 282px;}
+
+
+    .mydoughnut {background: white;}
+    .travel {margin-top: 30px; background: #e7f4da; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+
+    .Situation_seeAll_travel { margin-bottom: 15px; margin-top: 15px; color: white; background: linear-gradient(to top, #0d84c8, #22a0da); padding: 7px 30px 2px; border-radius: 7px; border: 1px solid white; }
+    .Situation_seeAll_travel a {color: white;}
+    .travel-box {background: white;border: 1px solid;    padding: 10px 10px 10px 10px;}
+
+    .text-travel {margin-top: 10px;margin-bottom: 10px;text-align: center;color: #00c0ef;}
+    .text-travel-head {margin-top: 10px;margin-bottom: 10px;}
+
+    canvas#myChartGuideTravel { margin-top: 43px;}
+
+
+
+</style>
+
+<div class="travel col-md-12" id="TravelExportZone">
+
+    <div class="export">
+        <div class="col-md-9">สัดส่วนมัคคุเทศก์ต่อจำนวนนักท่องเที่ยว</div>
+        <div class="col-md-3">
+                <?php echo $this->formSelect("travelYear", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?>
+                <?php echo $this->formSelect("travelExport", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+    
+    <div class="col-md-12" style="">
+        <div class="top col-md-12" >
+
+            <div class="col-md-12">
+                <div class="charttop col-md-4">
+                  <div class=" col-md-12" style="">
+                       <div class="travel-head col-md-12" >
+                             จำนวนมัคคุเทศก์
+                        </div>
+                        <div class="travel-no col-md-12" >
+                            63.1K
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charttop col-md-4">
+                <div class=" col-md-12" style="">
+                        <div class="travel-head  col-md-12" > 
+                            สัดส่วนมัคคุเทศก์ต่อจำนวนนักท่องเที่ยว
+                        </div>
+                        <div class="travel-no col-md-12" >
+                            1 : 1.5K
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charttop col-md-4">
+                <div class=" col-md-12" style="">
+                        <div class="travel-head  col-md-12" > 
+                             จำนวนนักท่องเที่ยว
+                        </div>
+                        <div class="travel-no col-md-12" >
+                            90.4 M
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="text-travel-head col-md-12" >
+             ข้อมูลมัคคุเทศก์ แบ่งตามประเภทการให้บริการแก่นักท่องเที่ยว
+        </div>
+        
+        <div class="col-md-12" style="">
+
+            <div class="col-md-5" style="">
+                <div class="myChartGuideTravelBar col-md-12" >
+                    <canvas id="myChartGuideTravel"></canvas>
+                </div>
+
+                <div class="text-travel col-md-12" >
+                     แบ่งตามรายละเอียดประเภทการใช้งาน
+                </div>
+            </div>
+
+            <div class="col-md-7" style="">
+                <div class="myChartGuideTravelBar col-md-12">
+                    <canvas id="myChartGuideTravelBar"></canvas>
+                </div>
+
+                <div class="text-travel col-md-12" >
+                     แบ่งตามภาษาที่ใช้
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="col-md-12" style="text-align: center;">
+    <button class="Situation_seeAll_travel"><a href="https://app.powerbi.com/groups/me/reports/f957ee2b-1d4e-4586-a217-d009c357ab9a/ReportSection7d5437c3a064b4b285c7" target="_blank">ดูข้อมูลสถิติทั้งหมด</a></button>
+</div>
+
+
+
+<div id="previewImage_travel" style="display: none;"></div>
+<a id="downloadImage_travel" href="#In_Out" style="display: none;"></a>
+
+
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/html2canvas/html2canvas.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/chartjs/Chart.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/graph/jspdf/jspdf.min.js');?>"></script>
+<script>
+
+jQuery(function(){
+
+        
+
+        function setCanvas_TravelExportZone(val) {
+        html2canvas(document.querySelector("#TravelExportZone")).then(function(canvas) {
+            $("#previewImage_travel").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_travel").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage_travel")[0].click();
+                $("#mix_chart_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_travel canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#mix_chart_Export").val('export');
+            }
+        });
+    }
+
+    $("#travelExport").change(function() {
+        setCanvas_TravelExportZone($(this).val());
+    });
+
+
+    var ctxfood = document.getElementById('myChartGuideTravelBar').getContext('2d');
+var myBarChart  = new Chart(ctxfood, {
+    // The type of chart we want to create
+    type: 'horizontalBar',
+
+    // The data for our dataset
+    data: {
+        labels: ["จีน","ญี่ปุ่น","ฝรั่งเศส","เยอรมัน","เกาหลี"],
+        datasets: [{
+            backgroundColor: ['#8cc63e','#2188b3','#2188b3','#8cc63e','#8cc63e'],
+            borderColor: ['#8cc63e','#2188b3','#2188b3','#8cc63e','#8cc63e'],
+            data: [500000 , 300000, 450000, 200000, 320000  ],
+        }]
+    },
+    
+
+    // Configuration options go here
+    options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                    
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            var x = -20;
+                            if(data < 0) {
+                                x = +20;
+                            }                                                
+                            ctx.fillText(data, bar._model.x + x, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+                legend: {
+                display: false
+            },
+            // showTooltips: {
+            //     // showValue: false,
+            // },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        // display: false,
+                        beginAtZero:true
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            responsive: true
+        }
+
+});
+
+
+
+
+var ctxGuideTravel = document.getElementById('myChartGuideTravel').getContext('2d');
+var myBarChart  = new Chart(ctxGuideTravel, {
+    // The type of chart we want to create
+    type: 'doughnut',
+
+    // The data for our dataset
+    data: {
+        labels: ["ทั่วไป","พิเศษ","ทางการ","เร่งด่วน","บุคคลพิเศษ",],
+        datasets: [{
+            label: "My First dataset",
+            backgroundColor: ['#45af11','#181a1b','#ff615e','#0ab3aa','#f2c510'],
+            borderColor:['#45af11','#181a1b','#ff615e','#0ab3aa','#f2c510'],
+            data: [300,500,200,50,150],
+        }]
+    },
+
+    // Configuration options go here
+    options: {
+            showTooltips: {
+                showLabel: true,
+                showValue: true,
+            },
+            responsive: true,
+            legend : {
+                display: false
+            }
+        }
+
+});
+
+});
+
+</script>

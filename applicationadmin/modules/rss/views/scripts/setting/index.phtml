@@ -1,0 +1,87 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+				
+		<div class="title-label">ค่าพื้นฐานระบบ RSS</div>			
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemPerPage">จำนวนข้อมูลที่แสดงต่อหน้า</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('ItemPerPage', $this->data->itemPerPage, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemSortType">เงื่อนไขการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ItemSortType', $this->data->itemSortType, array('class' => 'form-control required', 'placeholder' => ''), $this->sortTypeOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="ItemSortDirection">รูปแบบการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ItemSortDirection', $this->data->itemSortDirection, array('class' => 'form-control required', 'placeholder' => ''), $this->sortDirectionOption); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemHtmlClass">Html Class</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('ItemHtmlClass', $this->data->itemHtmlClass, array('class' => 'form-control', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="ItemCustomCSS">CSS</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formTextarea('ItemCustomCSS', $this->data->itemCustomCSS, array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+			</div>
+		</div>
+		<hr />
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formEdit").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formEdit input[type=checkbox], #formEdit input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formEdit").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'rss', 'controller' => 'setting', 'action' => 'save'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'rss', 'controller' => 'setting', 'action' => 'index'), null, true); ?>" ;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'RSS-0099'); ?>

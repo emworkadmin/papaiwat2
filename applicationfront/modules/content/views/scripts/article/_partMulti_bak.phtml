@@ -1,0 +1,93 @@
+<?php
+//<!---------------------------------------- ไฟล์มัลติมีเดีย ----------------------------------------------->
+if (count ( $this->dataFileMultiMedias ) > 0) :
+?>
+<!-- slick -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/slick/slick-theme.css'); ?>">
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/slick/slick-theme.css'); ?>">
+<script src="<?php echo $this->baseUrl('plugins/slick/slick.min.js'); ?>"></script>
+
+<style>
+.article-multi { position: relative; overflow: hidden; }
+#multiNext { position: absolute; top: 55%; right: 0px; font-size: 60px; cursor: pointer; color: #FFF; background: rgba(0,0,0,0.8); padding: 0px 5px 0px 10px; }
+#multiPrev { position: absolute; top: 55%; left: 0px; font-size: 60px; cursor: pointer; color: #FFF; background: rgba(0,0,0,0.8); padding: 0px 10px 0px 5px; }
+.img-thumbnail { display: inline-block;  object-fit: cover; }
+.video { display: inline-block; }
+#videoPlayer { padding-left: 0px; margin-left: 0px !important; }
+</style>
+
+<div class="article-multi">
+
+	<hr />
+
+	<div class="title-label">
+		<img alt="image" src="<?php echo $this->baseUrl("images/icons/icon_youtube.png"); ?>" /> วิดีโอ
+	</div>
+
+	<ul class="row" id="videoPlayer">
+		<?php
+		foreach ( $this->dataFileMultiMedias as $media ) :
+			$mediaUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $media["hash_name"]), null, true);
+			$uid = uniqid();
+		?>
+		<li class="video col-md-3" style="padding-left: 0;" data-poster="<?php echo $this->baseUrl('images/icons/video.gif'); ?>" data-sub-html="Video Upload" data-html="#<?php echo $uid; ?>" >
+			<img alt="image" class="img-thumbnail" src="<?php echo $this->baseUrl('images/icons/video.gif'); ?>" />
+		</li>
+		<div style="display:none;" id="<?php echo $uid; ?>">
+			<video class="lg-video-object lg-html5" controls preload="none">
+				<source src="<?php echo $mediaUrl; ?>" type="video/mp4">
+			</video>
+		</div>
+		<?php
+			endforeach;
+		?>
+	</ul>
+
+	<!-- <em id="multiNext" class="fa fa-angle-right"></em> -->
+	<!-- <em id="multiPrev" class="fa fa-angle-left"></em> -->
+
+</div>
+
+<script>
+jQuery(function(){
+	$("#videoPlayer").lightGallery({
+		selector: '#videoPlayer li'
+	});
+	$("#videoPlayer").slick({
+		dots: false,
+		arrows: false,
+		// nextArrow: $('#multiNext'),
+		// prevArrow: $('#multiPrev'),
+		speed: 300,
+		slidesToShow: 4,
+		slidesToScroll: 4,
+		responsive: [
+			{
+				breakpoint: 1200,
+				settings: {
+					slidesToShow: 4,
+					slidesToScroll: 4,
+				}
+			},
+			{
+				breakpoint: 992,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 2,
+				}
+			},
+			{
+				breakpoint: 768,
+				settings: {
+					slidesToShow: 1,
+					slidesToScroll: 1,
+				}
+			}
+		]
+	});
+});
+</script>
+
+<?php 
+endif;
+?>

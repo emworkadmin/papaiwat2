@@ -1,0 +1,63 @@
+<style>
+.info-box { border: solid 2px #3A8ADC; border-radius: 10px; padding: 15px 25px; }
+.info-box .row div { word-break: break-word };
+</style>
+
+<!-- <div class="article-detail2">
+	<div class="info-box">
+		<div class="row" >
+			<div class="col-md-4"><b>วันที่เริ่มต้น</b></div>
+			<div class="col-md-8"><?php echo Emwork_Utility_DateTime::MSSqlToDateThai($this->data->StartDate, 'DT_Nd'); ?></div>
+		</div>
+		<div class="row" >
+			<div class="col-md-4"><b>วันที่สิ้นสุด</b></div>
+			<div class="col-md-8"><?php echo Emwork_Utility_DateTime::MSSqlToDateThai($this->data->EndDate, 'DT_Nd'); ?></div>
+		</div>
+		<div class="row" >
+			<div class="col-md-4"><b>สถานที่</b></div>
+			<div class="col-md-8"><?php echo nl2br($this->data->Place); ?></div>
+		</div>
+		<div class="row" >
+			<div class="col-md-4"><b>ประกาศโดย</b></div>
+			<div class="col-md-8"><?php echo $this->data->LastModifiedBy; ?></div>
+		</div>
+		<div class="row" >
+			<div class="col-md-4"><b>วันที่ประกาศ</b></div>
+			<div class="col-md-8"><?php echo Emwork_Utility_DateTime::MSSqlToDateThai($this->data->PublishDate, 'DT_Nd'); ?></div>
+		</div>
+	</div>
+</div> -->
+
+<!-- For TIC -->
+<div class="article-detail2">
+	<div class="info-box">
+		<div class="row" >
+			<div class="col-md-4"><b><?php echo Emwork_Translate::text($this->lang, 'calendar', 'date'); ?></b></div>
+			<div class="col-md-8"><?php echo str_replace('วันที่ ','',Emwork_Utility_DateTime::MSSqlToDateThai($this->data->StartDate, 'DT_Nd')); ?></div>
+		</div>
+		<div class="row" >
+			<div class="col-md-4"><b><?php echo Emwork_Translate::text($this->lang, 'calendar', 'time'); ?></b></div>
+			<div class="col-md-8"><?php echo $this->data->EndDate->format('H:i') . ' ' . Emwork_Translate::text($this->lang, 'calendar', 'endtime'); ?></div>
+		</div>
+		<div class="row" >
+			<div class="col-md-4"><b><?php echo Emwork_Translate::text($this->lang, 'calendar', 'contact_information'); ?></b></div>
+			<div class="col-md-8"><?php echo empty($this->data->Contact) ? '-' : $this->data->Contact; ?></div>
+		</div>
+		<div class="row" >
+			<div class="col-md-4"><b><?php Emwork_Translate::text($this->lang, 'calendar', 'telephone_number'); ?></b></div>
+			<div class="col-md-8"><?php echo empty($this->data->Telephone) ? '-' : $this->data->Telephone; ?></div>
+		</div>
+		<div class="row" >
+			<div class="col-md-4"><b><?php echo Emwork_Translate::text($this->lang, 'calendar', 'department'); ?></b></div>
+			<div class="col-md-8"><?php echo empty($this->data->EventOrganizer) ? '-' : $this->data->EventOrganizer; ?></div>
+		</div>
+		<div class="row" >
+			<div class="col-md-4"><b><?php echo Emwork_Translate::text($this->lang, 'calendar', 'type'); ?></b></div>
+			<div class="col-md-8"><?php echo empty($this->data->CategoryName) ? '-' : $this->data->CategoryName; ?></div>
+		</div>
+		<div class="row" >
+			<div class="col-md-4"><b><?php echo Emwork_Translate::text($this->lang, 'calendar', 'link_event'); ?></b></div>
+			<div class="col-md-8"><?php echo empty($this->data->EventLink) ? '-' : $this->data->EventLink; ?></div>
+		</div>
+	</div>
+</div>

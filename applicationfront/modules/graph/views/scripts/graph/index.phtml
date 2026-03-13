@@ -1,0 +1,797 @@
+<?php echo $this->partial("index/_pluginChartjs.phtml", $this); ?>
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/graph/css/graph.css'); ?>">
+<script src="<?php echo $this->baseUrl('assets/graph/amcharts/amcharts.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/graph/amcharts/serial.js'); ?>"></script>
+
+<style>
+.graph-box.with-color.chart01 {background-color: #d4effa;}
+.graph-box.with-color.chart02 {background-color: #e7f4da;}
+.graph-box.with-color.chart03 {background-color: #FEDFB3;}
+.graph-box.with-color.chart04 {background-color: #F0DBE2;}
+.graph-box.with-color.chart05 {background-color: #CAE4F1;}
+.graph-box.with-color.chart06 {background-color: #E6E6E6;}
+.graph-box.with-color.chart07 {background-color: #FF9EB3;}
+.graph-box.with-color.chart07 #gBar3d a {display: none !important; }
+</style>
+
+<div class="Graph-list Graph-Guide-Info">
+	<div class="Graph-title">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+	</div>
+    <div class="Graph-subtitle">
+		<div class="borderHead"></div>
+    </div>
+    
+    <div class="row">
+    	<div class="col-md-6">
+    		<div class="graph-box with-color chart01" id="chart1">
+				<div class="graph-box-title">
+					<div class="row">
+						<div class="col-md-12">
+							<span>Bar Chart</span>
+						</div>
+					</div>
+				</div>
+				<div class="graph-box-body">
+					<canvas id="gBar" style="background-color:#ffffff;" width="100%" height="50%"></canvas>
+				</div>
+			</div>
+    	</div>
+    	
+    	<div class="col-md-6">
+    		<div class="graph-box with-color chart02" id="chart2">
+				<div class="graph-box-title">
+					<div class="row">
+						<div class="col-md-12">
+							<span>Line Chart</span>
+						</div>
+					</div>
+				</div>
+				<div class="graph-box-body">
+					<canvas id="gLine" style="background-color:#ffffff;" width="100%" height="50%"></canvas>
+				</div>
+			</div>
+    	</div>
+    	
+    	<div class="col-md-6">
+    		<div class="graph-box with-color chart03" id="chart3">
+				<div class="graph-box-title">
+					<div class="row">
+						<div class="col-md-12">
+							<span>Pie Chart</span>
+						</div>
+					</div>
+				</div>
+				<div class="graph-box-body">
+					<canvas id="gPie" style="background-color:#ffffff;" width="100%" height="50%"></canvas>
+				</div>
+			</div>
+    	</div>
+    	
+    	<div class="col-md-6">
+    		<div class="graph-box with-color chart04" id="chart4">
+				<div class="graph-box-title">
+					<div class="row">
+						<div class="col-md-12">
+							<span>Half Donut Chart</span>
+						</div>
+					</div>
+				</div>
+				<div class="graph-box-body">
+					<canvas id="gHalfDonut" style="background-color:#ffffff;" width="100%" height="50%"></canvas>
+				</div>
+			</div>
+    	</div>
+    	
+    	<div class="col-md-6">
+    		<div class="graph-box with-color chart05" id="chart5">
+				<div class="graph-box-title">
+					<div class="row">
+						<div class="col-md-12">
+							<span>Scatter</span>
+						</div>
+					</div>
+				</div>
+				<div class="graph-box-body">
+					<canvas id="gScatter" style="background-color:#ffffff;" width="100%" height="50%"></canvas>
+				</div>
+			</div>
+    	</div>
+    	
+    	<div class="col-md-6">
+    		<div class="graph-box with-color chart06" id="chart6">
+				<div class="graph-box-title">
+					<div class="row">
+						<div class="col-md-12">
+							<span>Bubble Chart</span>
+						</div>
+					</div>
+				</div>
+				<div class="graph-box-body">
+					<canvas id="gBubble" style="background-color:#ffffff;" width="100%" height="50%"></canvas>
+				</div>
+			</div>
+    	</div>
+    	
+    	<div class="col-md-12">
+    		<div class="graph-box with-color chart07" id="chart7">
+				<div class="graph-box-title">
+					<div class="row">
+						<div class="col-md-12">
+							<span>Bar Chart 3d</span>
+						</div>
+					</div>
+				</div>
+				<div class="graph-box-body">
+					<div id="gBar3d" style="width: 100%; height: 250px;"></div>
+				</div>
+			</div>
+    	</div>
+    	
+    </div>
+
+</div>
+
+<script>
+
+(function(global) {
+	var Months = [
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December'
+	];
+
+	var COLORS = [
+		'#4dc9f6',
+		'#f67019',
+		'#f53794',
+		'#537bc4',
+		'#acc236',
+		'#166a8f',
+		'#00a950',
+		'#58595b',
+		'#8549ba'
+	];
+
+	var Samples = global.Samples || (global.Samples = {});
+	var Color = global.Color;
+
+	Samples.utils = {
+		// Adapted from http://indiegamr.com/generate-repeatable-random-numbers-in-js/
+		srand: function(seed) {
+			this._seed = seed;
+		},
+
+		rand: function(min, max) {
+			var seed = this._seed;
+			min = min === undefined ? 0 : min;
+			max = max === undefined ? 1 : max;
+			this._seed = (seed * 9301 + 49297) % 233280;
+			return min + (this._seed / 233280) * (max - min);
+		},
+
+		numbers: function(config) {
+			var cfg = config || {};
+			var min = cfg.min || 0;
+			var max = cfg.max || 1;
+			var from = cfg.from || [];
+			var count = cfg.count || 8;
+			var decimals = cfg.decimals || 8;
+			var continuity = cfg.continuity || 1;
+			var dfactor = Math.pow(10, decimals) || 0;
+			var data = [];
+			var i, value;
+
+			for (i = 0; i < count; ++i) {
+				value = (from[i] || 0) + this.rand(min, max);
+				if (this.rand() <= continuity) {
+					data.push(Math.round(dfactor * value) / dfactor);
+				} else {
+					data.push(null);
+				}
+			}
+
+			return data;
+		},
+
+		labels: function(config) {
+			var cfg = config || {};
+			var min = cfg.min || 0;
+			var max = cfg.max || 100;
+			var count = cfg.count || 8;
+			var step = (max - min) / count;
+			var decimals = cfg.decimals || 8;
+			var dfactor = Math.pow(10, decimals) || 0;
+			var prefix = cfg.prefix || '';
+			var values = [];
+			var i;
+
+			for (i = min; i < max; i += step) {
+				values.push(prefix + Math.round(dfactor * i) / dfactor);
+			}
+
+			return values;
+		},
+
+		months: function(config) {
+			var cfg = config || {};
+			var count = cfg.count || 12;
+			var section = cfg.section;
+			var values = [];
+			var i, value;
+
+			for (i = 0; i < count; ++i) {
+				value = Months[Math.ceil(i) % 12];
+				values.push(value.substring(0, section));
+			}
+
+			return values;
+		},
+
+		color: function(index) {
+			return COLORS[index % COLORS.length];
+		},
+
+		transparentize: function(color, opacity) {
+			var alpha = opacity === undefined ? 0.5 : 1 - opacity;
+			return Color(color).alpha(alpha).rgbString();
+		}
+	};
+
+	// INITIALIZATION
+
+	Samples.utils.srand(Date.now());
+
+}(this));
+
+function randomScalingFactor() {
+	return Math.round(Math.random() * 100);
+}
+window.chartColors = {
+		red: 'rgb(255, 99, 132)',
+		orange: 'rgb(255, 159, 64)',
+		yellow: 'rgb(255, 205, 86)',
+		green: 'rgb(75, 192, 192)',
+		blue: 'rgb(54, 162, 235)',
+		purple: 'rgb(153, 102, 255)',
+		grey: 'rgb(201, 203, 207)'
+	};
+
+
+jQuery(function(){
+	var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+	var color = Chart.helpers.color;
+
+	//  Bar
+	var barChartData = {
+		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+		datasets: [{
+			label: 'Dataset',
+			backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+			borderColor: window.chartColors.red,
+			borderWidth: 1,
+			data: [
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor(),
+				randomScalingFactor()
+			]
+		}]
+	};
+
+	var ctxBar = document.getElementById('gBar').getContext('2d');
+	var myBar = new Chart(ctxBar, {
+		type: 'bar',
+		data: barChartData,
+		options: {
+			responsive: true,
+			legend: {
+				position: 'top',
+			},
+			title: {
+				display: false,
+				text: ''
+			}
+		}
+	});
+
+
+	// Line
+	var lineConfig = {
+		type: 'line',
+		data: {
+			labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+			datasets: [{
+				label: 'First dataset',
+				backgroundColor: window.chartColors.red,
+				borderColor: window.chartColors.red,
+				data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+				],
+				fill: false,
+			}, {
+				label: 'Second dataset',
+				fill: false,
+				backgroundColor: window.chartColors.blue,
+				borderColor: window.chartColors.blue,
+				data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+				],
+			}]
+		},
+		options: {
+			responsive: true,
+			title: {
+				display: false,
+				text: ''
+			},
+			tooltips: {
+				mode: 'index',
+				intersect: false,
+			},
+			hover: {
+				mode: 'nearest',
+				intersect: true
+			},
+			scales: {
+				xAxes: [{
+					display: true,
+					scaleLabel: {
+						display: false,
+						labelString: ''
+					}
+				}],
+				yAxes: [{
+					display: true,
+					scaleLabel: {
+						display: false,
+						labelString: ''
+					}
+				}]
+			}
+		}
+	};
+	var ctxLine = document.getElementById('gLine').getContext('2d');
+	var myLine = new Chart(ctxLine, lineConfig);
+
+	// Pie
+	var pieConfig = {
+			type: 'pie',
+			data: {
+				datasets: [{
+					data: [
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+					],
+					backgroundColor: [
+						window.chartColors.red,
+						window.chartColors.orange,
+						window.chartColors.yellow,
+						window.chartColors.green,
+						window.chartColors.blue,
+					],
+					label: 'Dataset 1'
+				}],
+				labels: [
+					'Red',
+					'Orange',
+					'Yellow',
+					'Green',
+					'Blue'
+				]
+			},
+			options: {
+				responsive: true
+			}
+		};
+	var ctxPie = document.getElementById('gPie').getContext('2d');
+	var myPie = new Chart(ctxPie, pieConfig);
+
+	// Half
+	Chart.defaults.doughnutLabels = Chart.helpers.clone(Chart.defaults.doughnut);
+
+	var helpers = Chart.helpers;
+	var defaults = Chart.defaults;
+
+	Chart.controllers.doughnutLabels = Chart.controllers.doughnut.extend({
+		updateElement: function(arc, index, reset) {
+	    var _this = this;
+	    var chart = _this.chart,
+	        chartArea = chart.chartArea,
+	        opts = chart.options,
+	        animationOpts = opts.animation,
+	        arcOpts = opts.elements.arc,
+	        centerX = (chartArea.left + chartArea.right) / 2,
+	        centerY = (chartArea.top + chartArea.bottom) / 2,
+	        startAngle = opts.rotation, // non reset case handled later
+	        endAngle = opts.rotation, // non reset case handled later
+	        dataset = _this.getDataset(),
+	        circumference = reset && animationOpts.animateRotate ? 0 : arc.hidden ? 0 : _this.calculateCircumference(dataset.data[index]) * (opts.circumference / (2.0 * Math.PI)),
+	        innerRadius = reset && animationOpts.animateScale ? 0 : _this.innerRadius,
+	        outerRadius = reset && animationOpts.animateScale ? 0 : _this.outerRadius,
+	        custom = arc.custom || {},
+	        valueAtIndexOrDefault = helpers.getValueAtIndexOrDefault;
+
+	    helpers.extend(arc, {
+	      // Utility
+	      _datasetIndex: _this.index,
+	      _index: index,
+
+	      // Desired view properties
+	      _model: {
+	        x: centerX + chart.offsetX,
+	        y: centerY + chart.offsetY,
+	        startAngle: startAngle,
+	        endAngle: endAngle,
+	        circumference: circumference,
+	        outerRadius: outerRadius,
+	        innerRadius: innerRadius,
+	        label: valueAtIndexOrDefault(dataset.label, index, chart.data.labels[index])
+	      },
+
+	      draw: function () {
+	      	var ctx = this._chart.ctx,
+							vm = this._view,
+							sA = vm.startAngle,
+							eA = vm.endAngle,
+							opts = this._chart.config.options;
+					
+						var labelPos = this.tooltipPosition();
+						var segmentLabel = vm.circumference / opts.circumference * 100;
+						
+						ctx.beginPath();
+						
+						ctx.arc(vm.x, vm.y, vm.outerRadius, sA, eA);
+						ctx.arc(vm.x, vm.y, vm.innerRadius, eA, sA, true);
+						
+						ctx.closePath();
+						ctx.strokeStyle = vm.borderColor;
+						ctx.lineWidth = vm.borderWidth;
+						
+						ctx.fillStyle = vm.backgroundColor;
+						
+						ctx.fill();
+						ctx.lineJoin = 'bevel';
+						
+						if (vm.borderWidth) {
+							ctx.stroke();
+						}
+						
+						if (vm.circumference > 0.0015) { // Trying to hide label when it doesn't fit in segment
+							ctx.beginPath();
+							ctx.font = helpers.fontString(opts.defaultFontSize, opts.defaultFontStyle, opts.defaultFontFamily);
+							ctx.fillStyle = "#190707";
+							ctx.textBaseline = "top";
+							ctx.textAlign = "center";
+	            
+	            // Round percentage in a way that it always adds up to 100%
+							ctx.fillText(segmentLabel.toFixed(2) + "%", labelPos.x, labelPos.y);
+						
+						//display in the center the total sum of all segments
+	          var total = dataset.data.reduce((sum, val) => sum + val, 0);
+	          ctx.fillText('Total = ' + total, vm.x, vm.y-20, 200);
+	          }
+	          
+	      }
+	    });
+
+	    var model = arc._model;
+	    model.backgroundColor = custom.backgroundColor ? custom.backgroundColor : valueAtIndexOrDefault(dataset.backgroundColor, index, arcOpts.backgroundColor);
+	    model.hoverBackgroundColor = custom.hoverBackgroundColor ? custom.hoverBackgroundColor : valueAtIndexOrDefault(dataset.hoverBackgroundColor, index, arcOpts.hoverBackgroundColor);
+	    model.borderWidth = custom.borderWidth ? custom.borderWidth : valueAtIndexOrDefault(dataset.borderWidth, index, arcOpts.borderWidth);
+	    model.borderColor = custom.borderColor ? custom.borderColor : valueAtIndexOrDefault(dataset.borderColor, index, arcOpts.borderColor);
+
+	    // Set correct angles if not resetting
+	    if (!reset || !animationOpts.animateRotate) {
+	      if (index === 0) {
+	        model.startAngle = opts.rotation;
+	      } else {
+	        model.startAngle = _this.getMeta().data[index - 1]._model.endAngle;
+	      }
+
+	      model.endAngle = model.startAngle + model.circumference;
+	    }
+
+	    arc.pivot();
+	  }
+	});
+
+	var halfConfig = {
+	  type: 'doughnutLabels',
+	  data: {
+	    datasets: [{
+	      data: [
+	        4,
+	        61,
+	        26,
+	      ],
+	      backgroundColor: [
+	        "#F7464A",
+	        "#46BFBD",
+	        "#FDB45C",
+	        "#949FB1",
+	        "#4D5360",
+	      ],
+	      label: 'Dataset 1'
+	    }],
+	    labels: [
+	      "Data 1 = 4",
+	      "Data 2 = 61",
+	      "Data 3 = 26"
+	    ]
+	  },
+	  options: {
+				circumference: Math.PI,
+				rotation: 1.0 * Math.PI,
+				responsive: true,
+				legend: { position: 'top',},
+				title: { display: false, text: '' },
+				animation: { animateScale: true, animateRotate: true }
+			}
+	};
+
+	var halfDonutCtx = document.getElementById("gHalfDonut").getContext("2d");
+	var myHalfDonut = new Chart(halfDonutCtx, halfConfig);
+
+	// scatter
+	var scatterChartData = {
+		datasets: [{
+			label: 'First dataset',
+			borderColor: window.chartColors.red,
+			backgroundColor: color(window.chartColors.red).alpha(0.2).rgbString(),
+			data: [{
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}, {
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}, {
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}, {
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}, {
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}, {
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}, {
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}]
+		}, {
+			label: 'Second dataset',
+			borderColor: window.chartColors.blue,
+			backgroundColor: color(window.chartColors.blue).alpha(0.2).rgbString(),
+			data: [{
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}, {
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}, {
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}, {
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}, {
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}, {
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}, {
+				x: randomScalingFactor(),
+				y: randomScalingFactor(),
+			}]
+		}]
+	};
+	var scatterCtx = document.getElementById('gScatter').getContext('2d');
+	var myScatter = Chart.Scatter(scatterCtx, {
+		data: scatterChartData,
+		options: {
+			title: {
+				display: false,
+				text: ''
+			},
+		}
+	});
+
+	// Bubble
+	var DATA_COUNT = 16;
+	var MIN_XY = -150;
+	var MAX_XY = 100;
+
+	var utils = Samples.utils;
+
+	utils.srand(110);
+
+	function colorize(opaque, context) {
+		var value = context.dataset.data[context.dataIndex];
+		var x = value.x / 100;
+		var y = value.y / 100;
+		var r = x < 0 && y < 0 ? 250 : x < 0 ? 150 : y < 0 ? 50 : 0;
+		var g = x < 0 && y < 0 ? 0 : x < 0 ? 50 : y < 0 ? 150 : 250;
+		var b = x < 0 && y < 0 ? 0 : x > 0 && y > 0 ? 250 : 150;
+		var a = opaque ? 1 : 0.5 * value.v / 1000;
+
+		return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+	}
+
+	function generateData() {
+		var data = [];
+		var i;
+
+		for (i = 0; i < DATA_COUNT; ++i) {
+			data.push({
+				x: utils.rand(MIN_XY, MAX_XY),
+				y: utils.rand(MIN_XY, MAX_XY),
+				v: utils.rand(0, 1000)
+			});
+		}
+
+		return data;
+	}
+
+	var data = {
+		datasets: [{
+			data: generateData()
+		}, {
+			data: generateData()
+		}]
+	};
+
+	var options = {
+		aspectRatio: 1,
+		legend: false,
+		tooltips: false,
+
+		elements: {
+			point: {
+				backgroundColor: colorize.bind(null, false),
+
+				borderColor: colorize.bind(null, true),
+
+				borderWidth: function(context) {
+					return Math.min(Math.max(1, context.datasetIndex + 1), 8);
+				},
+
+				hoverBackgroundColor: 'transparent',
+
+				hoverBorderColor: function(context) {
+					return utils.color(context.datasetIndex);
+				},
+
+				hoverBorderWidth: function(context) {
+					var value = context.dataset.data[context.dataIndex];
+					return Math.round(8 * value.v / 1000);
+				},
+
+				radius: function(context) {
+					var value = context.dataset.data[context.dataIndex];
+					var size = context.chart.width;
+					var base = Math.abs(value.v) / 1000;
+					return (size / 24) * base;
+				}
+			}
+		}
+	};
+
+	var bubbleChart = new Chart('gBubble', {
+		type: 'bubble',
+		data: data,
+		options: options
+	});
+
+
+	// 3d
+	var chartData = [
+        {
+            "month": "January",
+            "income": 23.5
+        },
+        {
+            "month": "February",
+            "income": 26.2
+        },
+        {
+            "month": "March",
+            "income": 30.1
+        },
+        {
+            "month": "April",
+            "income": 29.5
+        },
+        {
+            "month": "May",
+            "income": 24.6
+        },
+        {
+            "month": "June",
+            "income": 15.7
+        },
+        {
+            "month": "July",
+            "income": 13.2
+        }
+    ];
+
+
+    AmCharts.ready(function () {
+        // SERIAL CHART
+        chart = new AmCharts.AmSerialChart();
+        chart.dataProvider = chartData;
+        chart.categoryField = "month";
+        // this single line makes the chart a bar chart,
+        // try to set it to false - your bars will turn to columns
+        chart.rotate = false;
+        // the following two lines makes chart 3D
+        chart.depth3D = 20;
+        chart.angle = 30;
+
+        // AXES
+        // Category
+        var categoryAxis = chart.categoryAxis;
+        categoryAxis.gridPosition = "start";
+        categoryAxis.axisColor = "#DADADA";
+        categoryAxis.fillAlpha = 1;
+        categoryAxis.gridAlpha = 0;
+        categoryAxis.fillColor = "#FAFAFA";
+
+        // value
+        var valueAxis = new AmCharts.ValueAxis();
+        valueAxis.axisColor = "#DADADA";
+        //valueAxis.title = "Income in millions, USD";
+        valueAxis.gridAlpha = 0.1;
+        chart.addValueAxis(valueAxis);
+
+        // GRAPH
+        var graph = new AmCharts.AmGraph();
+        graph.title = "Income";
+        graph.valueField = "income";
+        graph.type = "column";
+        graph.balloonText = "[[category]]:[[value]]";
+        graph.lineAlpha = 0;
+        graph.fillColors = "#FF9EB3";
+        graph.fillAlphas = 1;
+        chart.addGraph(graph);
+
+        //chart.creditsPosition = "top-right";
+
+        // WRITE
+        chart.write("gBar3d");
+    });
+});
+</script>

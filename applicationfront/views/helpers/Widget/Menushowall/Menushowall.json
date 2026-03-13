@@ -1,0 +1,52 @@
+{
+	"name" : "Menushowall",
+	"fields" : [
+		{
+			"name" : "menugroup",
+			"type" : "select",
+			"size" : "",
+			"label" : "กลุ่มเมนู",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "System_Service_Menugroup",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		},
+		{
+			"name" : "deep",
+			"type" : "select",
+			"size" : "",
+			"label" : "ระดับความลึก",
+			"optiontype" : "static",
+			"options" : [
+				{"name" : "ไม่จำกัด" , "value" : "-1"},
+				{"name" : "1" , "value" : "1"},
+				{"name" : "2" , "value" : "2"},
+				{"name" : "3" , "value" : "3"},
+				{"name" : "4" , "value" : "4"},
+				{"name" : "5" , "value" : "5"}
+
+			],
+			"description" : "",
+			"required" : true
+		},
+		{
+			"name" : "HtmlClass",
+			"type" : "text",
+			"size" : "",
+			"label" : "Html Class",
+			"description" : "",
+			"required" : false
+		},
+		{
+			"name" : "CustomCSS",
+			"type" : "textarea",
+			"size" : "",
+			"label" : "CSS",
+			"description" : "",
+			"required" : false
+		}
+	]
+}

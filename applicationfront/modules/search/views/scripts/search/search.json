@@ -1,0 +1,5 @@
+{
+	"name" : "ค้นหา",
+	"controller" : "search",
+	"description" : "ค้นหาข้อมูลในเว็บไซต์"
+}

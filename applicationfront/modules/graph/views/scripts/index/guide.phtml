@@ -1,0 +1,39 @@
+<style>
+
+    .Graph-subtitle { position: relative; display: inline-block; width: 100%; }
+    .Graph-subtitle .borderHead { float: left; background: linear-gradient(to right, #29a2db,#2e4f97); width: 153px; height: 5px; position: absolute; top: 50%; }
+    .title-panel .title {font-family: 'ThaiSans Neue';font-size: 3.1rem;font-weight: bold;}
+    .Graph-list{font-family: 'Kanit Medium';}
+    .maintop.col-md-12 {background-color: #e7f4da;padding: 20px 20px 20px 20px;margin-bottom: 20px;margin-top: 40px;}
+
+    @media (max-width: 1200px) {
+        .lawtop.col-md-8 {font-size: 15px;}
+        .charttop.col-md-4{font-size: 15px !important; }
+        .static { font-size: 30px !important;}
+        img {min-width: 70px;width: 100%;}
+        .number {font-size: 20px !important;}
+     }
+
+    @media (max-width: 500px) {
+        .static { font-size: 20px !important;}
+    }
+
+</style>
+
+<div class="Graph-list">
+
+    <div class="Graph-title title-panel">
+        <span class="title">
+            ข้อมูลการบริหาร ตำรวจ อาสาสมัครท่องเที่ยวและการตรวจจับมัคคุเทศก์ที่ผิดกฎหมาย			
+        </span>
+    </div>
+
+    <div class="Graph-subtitle">
+        <div class="borderHead"></div>
+    </div>
+
+    <?php echo $this->partial("item/_guide_police.phtml", $this); ?>
+    <?php echo $this->partial("item/_guide_law.phtml", $this); ?>
+
+</div>
+

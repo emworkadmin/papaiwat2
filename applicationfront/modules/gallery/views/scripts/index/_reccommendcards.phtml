@@ -1,0 +1,68 @@
+<div class="">
+	<div class="row recommendCard">
+        <?php 
+        $col = "col-md-4 col-sm-6 col-xs-12";
+        if ($this->gallerySettingArticleAmountColumn == 2) : 
+        	$col = "col-md-6 col-sm-6 col-xs-12";
+        elseif ($this->gallerySettingArticleAmountColumn == 3) :
+        	$col = "col-md-4 col-sm-6 col-xs-12";
+        else :
+        	$col = "col-md-3 col-sm-6 col-xs-12";
+        endif;
+        
+        
+        if (count($this->items) > 0) :
+	        foreach ($this->items as $item) :
+	        
+	        $id = $item["ID"];
+	        $title = $item["Title"];
+	        $introText = $item["IntroText"];
+	        $imageUrl = $this->defaultImageUrl;
+	        if (!empty($item["IntroImageHashName"])) :
+	        	$imageUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "file" => $item["IntroImageHashName"]), null, true);
+				endif;
+				
+				if($this->lang == 'th') {
+					$date = $item["Created"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateThai($item["Created"]);
+				} else {
+					$date = $item["Created"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateEng($item["Created"]);
+				}
+				
+	        $viewAmount = number_format($item["ViewAmount"]);
+	        $url = $this->url(array("module" => "gallery", "controller" => "article", "action" => "detail", "id" => $this->id, "iid" => $id), null, true);
+        ?>
+		<div class="<?php echo $col; ?>">
+			<div class="infocard">
+				<?php if ($this->gallerySettingArticleShowImage) : ?>
+				<div class="image">
+					<div class="image-inner">
+						<a href="<?php echo $url; ?>">
+							<img alt="image" src="<?php echo $imageUrl; ?>" />
+						</a>
+					</div>
+				</div>
+				<?php endif; ?>
+				<div class="detail">
+					<div class="detail-title">
+						<a href="<?php echo $url; ?>"><?php echo $title; ?></a>
+					</div>				
+					<?php if ($this->gallerySettingArticleShowIntroText) : ?>
+					<div class="detail-intro" >
+						<?php echo nl2br($introText); ?>
+					</div>
+					<?php endif; ?>
+					<div class="detail-date">
+						<a href="<?php echo $url; ?>" class="btn btn-info"><?php echo Emwork_Translate::text($this->lang, 'gallery', 'list_detail'); ?></a>  
+						<em class="fa fa-calendar"></em> <?php echo $date; ?>
+						|
+						<em class="fa fa-eye"></em> <?php echo $viewAmount; ?>
+					</div>
+				</div>
+			</div>
+		</div>
+        <?php 
+        	endforeach;
+        endif;
+        ?>
+	</div>
+</div>

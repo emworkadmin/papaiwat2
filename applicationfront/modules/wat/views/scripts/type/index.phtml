@@ -1,0 +1,102 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/jQueryLoading/jquery.loading.css'); ?>">
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/wat/css/wat.css'); ?>">
+<script src="<?php echo $this->baseUrl('plugins/jQueryLoading/jquery.loading.min.js'); ?>"></script>
+<style >
+.loading-overlay.loading-theme-light { background-color: #efefef; color: #245AA3; z-index: 100 !important; }
+.loading-overlay-content { font-size: 2.2rem; }
+</style>
+
+ <div class="info infopage wat-list <?php echo empty($this->cssClass) ? "" : $this->cssClass ?>">
+	 <div>
+    	<div class="article-title title-panel">
+			<span class="title">
+				<?php echo empty($this->pageTitle) ? Emwork_Translate::text($this->lang, "wat", "type_all_title") : $this->pageTitle; ?>
+			</span>
+			<hr />
+		</div>
+    </div>
+
+	<div class="result-list-panel">
+    	<div class="result-list wat-result-list" id="result-list-art"></div>
+    	<div class="result-paging-art" style="display: none;">
+    		<p class="paging text-right"></p>
+    	</div>
+	</div>
+
+</div>
+<script>
+jQuery(function(){
+
+	reloadResultList(1, 'init');
+
+	function reloadResultList(pageIndex, state) {
+
+		$('body').loading({message: "<?php echo Emwork_Translate::text($this->lang, 'wat', 'loading_message')?>"});
+
+		if (state != 'init') { 
+			$('html, body').animate({
+	            scrollTop: $("#result-list-art").offset().top
+	        }, 500);
+		}
+		
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		$.post("<?php echo $this->url(array('module' => 'wat', 'controller' => 'type', 'action' => 'getwats', 'id' => (empty($this->id) ? null : $this->id)), null, true); ?>", sendData, function(data){
+
+			$('body').loading('stop');
+			
+			if (data.total > 0) {
+				$("#result-list-art").html(data.html);
+				$('.result-paging-art').css('display', '');
+				$('.paging').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+			        leaps: false,
+			        firstLastUse: true,
+			        first: '<<',
+			        last: '>>',
+			        next: '>',
+			        prev: '<',
+			        wrapClass: 'pagination',
+			        activeClass: 'active',
+			        disabledClass: 'disabled',	
+			        nextClass: 'next',
+			        prevClass: 'prev',
+			        lastClass: 'last',
+			        firstClass: 'first'
+				});
+			} else {
+				var html = '';
+				html += '<div class="wat-result-empty">' + '\n';
+				html += '<div><em class="fa fa-search"></em> <?php echo Emwork_Translate::text($this->lang, 'wat', 'alert_notfound_message')?></div>' + '\n';
+				html += '</div>' + '\n';
+				$('.result-list').html(html);
+				
+				$('.result-paging-art').css('display', 'none');
+				$('.paging').bootpag({total : 0});
+			}
+		}, 'json');
+	}
+
+	$('.paging').bootpag({
+        total: 0,
+        maxVisible: 5,
+        leaps: false,
+        firstLastUse: true,
+        first: '<<',
+        last: '>>',
+        next: '>',
+        prev: '<',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+    	reloadResultList(num);
+    }); 	
+});
+</script>

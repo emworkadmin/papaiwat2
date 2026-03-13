@@ -1,0 +1,7 @@
+{
+	"name" : "เข้าสู่ระบบ",
+	"controller" : "auth",
+	"description" : "",
+	"fields" : [
+	]
+}

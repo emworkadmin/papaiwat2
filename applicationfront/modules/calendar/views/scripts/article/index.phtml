@@ -1,0 +1,81 @@
+ <div class="info infopage calendar-calendar-article calendar-calendar-article-<?php echo $this->id; ?>">
+
+	<?php if($this->pageTitle){ ?>
+ 	<div class="article-title title-panel">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+		<hr />
+	</div>
+	<?php } ?>
+ 
+    <div class="result-list-panel">
+    	<div class="result-list" id="result-list"></div>
+    	<div class="result-paging" style="display: none;">
+    		<p class="paging text-right"></p>
+    	</div>
+    </div>
+</div>
+<script>
+jQuery(function(){
+
+	reloadResultList(1);
+
+	function reloadResultList(pageIndex) {
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		sendData.type = '<?php echo $this->type; ?>';
+		sendData.filter = '<?php echo $this->filter; ?>';
+		$.post("<?php echo $this->url(array('module' => 'calendar', 'controller' => 'article', 'action' => 'getlist', "id" => $this->id), null, true); ?>", sendData, function(data){
+			
+			if (data.total > 0) {
+				$("#result-list").html(data.html);
+				$('.result-paging').css('display', '');
+				$('.paging').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+			        leaps: false,
+			        firstLastUse: true,
+			        first: '<<',
+			        last: '>>',
+			        next: '>',
+			        prev: '<',
+			        wrapClass: 'pagination',
+			        activeClass: 'active',
+			        disabledClass: 'disabled',
+			        nextClass: 'next',
+			        prevClass: 'prev',
+			        lastClass: 'last',
+			        firstClass: 'first'
+				});
+
+			} else {
+				
+				$('#result-paging').css('display', 'none');
+				$('.paging').bootpag({total : 0});
+			}
+		}, 'json');
+	}
+
+	$('.paging').bootpag({
+        total: 0,
+        maxVisible: 5,
+        leaps: false,
+        firstLastUse: true,
+        first: '<<',
+        last: '>>',
+        next: '>',
+        prev: '<',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+    	reloadResultList(num);
+    }); 
+});
+</script>

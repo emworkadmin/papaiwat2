@@ -1,0 +1,511 @@
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+		<?php echo $this->formHidden("hdfWidgetType", $this->data->WidgetType, null, null); ?>
+        <?php echo $this->formHidden("hdfUpdateType", 'D', null, null); ?>
+
+		<!-- ---------------------------------------------------------------------------------------------------------- -->
+		<?php if(false){ ?>
+
+		<?php
+		$settingAnimation = empty($this->dataDisplay->settingAnimation) ? "" : $this->dataDisplay->settingAnimation;
+		$settingShowImage = $this->dataDisplay->settingShowImage == 'Y' ? true : false;
+		$settingImageAlign = empty($this->dataDisplay->settingImageAlign) ? "left" : $this->dataDisplay->settingImageAlign;
+		$settingShowTitle = $this->dataDisplay->settingShowTitle == 'Y' ? true : false;
+		$settingTitleAlign = empty($this->dataDisplay->settingTitleAlign) ? "left" : $this->dataDisplay->settingTitleAlign;
+		$settingShowIntroText = $this->dataDisplay->settingShowIntroText == 'Y' ? true : false;
+		$settingIntroTextAlign = empty($this->dataDisplay->settingIntroTextAlign) ? "left" : $this->dataDisplay->settingIntroTextAlign;
+		$settingShowLink = $this->dataDisplay->settingShowLink == 'Y' ? true : false;
+		$settingLinkTitle = empty($this->dataDisplay->settingLinkTitle) ? "Read More" : $this->dataDisplay->settingLinkTitle;
+		$settingLinkAlign = empty($this->dataDisplay->settingLinkAlign) ? "left" : $this->dataDisplay->settingLinkAlign;
+		$settingLinkTarget = empty($this->dataDisplay->settingLinkTarget) ? "_blank" : $this->dataDisplay->settingLinkTarget;
+		$settingHtmlClass = empty($this->dataDisplay->settingHtmlClass) ? "" : $this->dataDisplay->settingHtmlClass;
+		$settingCustomCSS = empty($this->dataDisplay->settingCustomCSS) ? "" : $this->dataDisplay->settingCustomCSS;
+		?>
+		
+		<link rel="stylesheet" type="text/css" href="/admin/assets/widgetmanage/css/responsive-bootstrap-tabs.css" />
+		<link rel="stylesheet" type="text/css" href="/admin/assets/widgetmanage/css/animate.css" />
+		<link rel="stylesheet" type="text/css" href="/admin/assets/widgetmanage/css/style.css" />
+
+		<?php 
+		if($settingTitleAlign){
+			echo '<style>.wg-tab-title { text-align: '.$settingTitleAlign.'; }</style>';
+		}
+		if($settingIntroTextAlign){
+			echo '<style>.wg-tab-content { text-align: '.$settingIntroTextAlign.'; }</style>';
+		}
+		if($settingLinkAlign){
+			echo '<style>.wg-tab-link { text-align: '.$settingLinkAlign.'; }</style>';
+		}
+		if($settingCustomCSS){
+			echo '<style>'.$settingCustomCSS.'</style>';
+		}
+		?>
+				
+		<div class="responsive-bootstrap-tabs <?php echo $settingHtmlClass; ?>" role="tabpanel" data-example-id="togglable-tabs">
+			<ul class="nav nav-tabs nav-tabs-responsive" role="tablist">
+				<?php 
+				$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+				$randstring = '';
+				for ($j = 0; $j < 10; $j++) {
+					$randstring .= $characters[rand(0, strlen($characters))];
+				}
+
+				$keyList = array();
+				if(count($this->dataContent)>0){
+					foreach($this->dataContent as $k=>$v){
+						$key = $randstring;
+						$key .= '-'.$k;
+						$keyList[] = $key;
+				?>
+				<li role='presentation' class='next'>
+					<a href='#<?php echo $key; ?>' id='<?php echo $key; ?>-tab' role='tab' data-toggle='tab' aria-controls='<?php echo $key; ?>' >
+						<span class='text'><?php echo $v->Title; ?></span>
+					</a>
+				</li>
+				<?php 
+					}
+				}
+				?>
+			</ul>
+			<div class='tab-content'>
+				<?php
+				if(count($this->dataContent)>0){
+					foreach($this->dataContent as $k=>$v){
+						$key = $randstring;
+						$key .= '-'.$k;
+						$imageUrl = $v->ImageUrl;
+				?>
+				<div role='tabpanel' class='tab-pane fade' id='<?php echo $key; ?>' aria-labelledby='<?php echo $key; ?>-tab'>
+
+					<?php if($settingImageAlign=='left'){ ?>
+					<div class='template1 row'>
+
+						<?php if($settingShowImage){ ?>
+						<div class='col-md-6'>
+							<img class='wg-tab-image' src='<?php echo $imageUrl; ?>'>
+						</div>
+						<?php } ?>
+
+						<?php if($settingShowImage && ($settingShowTitle || $settingShowIntroText || $settingShowLink)){ ?>
+						<div class='col-md-6'>
+
+							<?php if($settingShowTitle){ ?>
+							<div class='wg-tab-title'>
+								<?php echo $v->Title; ?>
+							</div>
+							<?php } ?>
+
+							<?php if($settingShowIntroText && $v->DataType=='text'){ ?>
+							<div class='wg-tab-content'>
+								<?php echo nl2br($v->IntroText); ?>
+							</div>
+							<?php } ?>
+
+							<?php if($settingShowLink){ ?>
+							<div class='wg-tab-link'>
+								<a class='btn btn-primary' href='<?php echo $v->Url; ?>' target='<?php echo $settingLinkTarget; ?>'><?php echo $settingLinkTitle; ?></a>
+							</div>
+							<?php } ?>
+
+						</div>
+						<?php } ?>
+
+						<?php if(!$settingShowImage && ($settingShowTitle || $settingShowIntroText || $settingShowLink)){ ?>
+						<div class='col-md-12'>
+
+							<?php if($settingShowTitle){ ?>
+							<div class='wg-tab-title'>
+								<?php echo $v->Title; ?>
+							</div>
+							<?php } ?>
+
+							<?php if($settingShowIntroText && $v->DataType=='text'){ ?>
+							<div class='wg-tab-content'>
+								<?php echo nl2br($v->IntroText); ?>
+							</div>
+							<?php } ?>
+
+							<?php if($settingShowLink){ ?>
+							<div class='wg-tab-link'>
+								<a class='btn btn-primary' href='<?php echo $v->Url; ?>' target='<?php echo $settingLinkTarget; ?>'><?php echo $settingLinkTitle; ?></a>
+							</div>
+							<?php } ?>
+
+						</div>
+						<?php } ?>
+
+					</div>
+					<?php } ?>
+
+					<?php if($settingImageAlign=='top'){ ?>
+					<div class='template2 row'>
+						<div class='col-md-12'>
+
+							<?php if($settingShowImage){ ?>
+							<img class='wg-tab-image' src='<?php echo $imageUrl; ?>'>
+							<?php } ?>
+
+							<?php if($settingShowTitle){ ?>
+							<div class='wg-tab-title'>
+								<?php echo $v->Title; ?>
+							</div>
+							<?php } ?>
+
+							<?php if($settingShowIntroText && $v->DataType=='text'){ ?>
+							<div class='wg-tab-content'>
+								<?php echo nl2br($v->IntroText); ?>
+							</div>
+							<?php } ?>
+
+							<?php if($settingShowLink){ ?>
+							<div class='wg-tab-link'>
+								<a class='btn btn-primary' href='<?php echo $v->Url; ?>' target='<?php echo $settingLinkTarget; ?>'><?php echo $settingLinkTitle; ?></a>
+							</div>
+							<?php } ?>
+							
+						</div>
+					</div>
+					<?php } ?>
+
+				</div>
+
+			<?php
+				}
+			}
+			?>
+			</div>
+		</div>
+
+		<script>
+			'use strict';
+
+			<?php if($settingAnimation){ ?>
+			function tabAnimated(tab){
+				// Animated : https://daneden.github.io/animate.css/
+				$(tab).addClass('animated <?php echo $settingAnimation ?>');
+			}
+			<?php } ?>
+
+			$(document).on('show.bs.tab', '.nav-tabs-responsive [data-toggle="tab"]', function(e) {
+				var $target = $(e.target);
+				var $tabs = $target.closest('.nav-tabs-responsive');
+				var $current = $target.closest('li');
+				var $parent = $current.closest('li.dropdown');
+					$current = $parent.length > 0 ? $parent : $current;
+				var $next = $current.next();
+				var $prev = $current.prev();
+
+				var updateDropdownMenu = function($el, position){
+					$el
+					.find('.dropdown-menu')
+					.removeClass('pull-xs-left pull-xs-center pull-xs-right')
+					.addClass( 'pull-xs-' + position );
+				};
+
+				$tabs.find('>li').removeClass('next prev');
+				$prev.addClass('prev');
+				$next.addClass('next');
+				
+				updateDropdownMenu( $prev, 'left' );
+				updateDropdownMenu( $current, 'center' );
+				updateDropdownMenu( $next, 'right' );
+
+				<?php if($settingAnimation){ ?>
+				tabAnimated($(this).attr('href'));
+				<?php } ?>
+			});
+
+			<?php if(count($keyList)>0){ ?>
+			$('#<?php echo $keyList[0].'-tab'; ?>').click();
+			<?php } ?>
+
+		</script>
+
+		<?php } ?>
+
+		<!-- ------------------------------------------------------------------------------------------------ -->
+
+		<div class="title-label">ตั้งค่าการแสดงผล</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingAnimation">Animation</label> 
+			<div class="col-md-9 divControl">
+				<select name="settingAnimation" id="settingAnimation" class="form-control" placeholder="">
+
+					<option value="">-- โปรดเลือก --</option>
+
+					<optgroup label="Attention Seekers">
+						<option value="bounce" <?php if($this->dataDisplay->settingAnimation == 'bounce'){ echo 'selected'; } ?>>bounce</option>
+						<option value="flash" <?php if($this->dataDisplay->settingAnimation == 'flash'){ echo 'selected'; } ?>>flash</option>
+						<option value="pulse" <?php if($this->dataDisplay->settingAnimation == 'pulse'){ echo 'selected'; } ?>>pulse</option>
+						<option value="rubberBand" <?php if($this->dataDisplay->settingAnimation == 'rubberBand'){ echo 'selected'; } ?>>rubberBand</option>
+						<option value="shake" <?php if($this->dataDisplay->settingAnimation == 'shake'){ echo 'selected'; } ?>>shake</option>
+						<option value="swing" <?php if($this->dataDisplay->settingAnimation == 'swing'){ echo 'selected'; } ?>>swing</option>
+						<option value="tada" <?php if($this->dataDisplay->settingAnimation == 'tada'){ echo 'selected'; } ?>>tada</option>
+						<option value="wobble" <?php if($this->dataDisplay->settingAnimation == 'wobble'){ echo 'selected'; } ?>>wobble</option>
+						<option value="jello" <?php if($this->dataDisplay->settingAnimation == 'jello'){ echo 'selected'; } ?>>jello</option>
+					</optgroup>
+
+					<optgroup label="Bouncing Entrances">
+						<option value="bounceIn" <?php if($this->dataDisplay->settingAnimation == 'bounceIn'){ echo 'selected'; } ?>>bounceIn</option>
+						<option value="bounceInDown" <?php if($this->dataDisplay->settingAnimation == 'bounceInDown'){ echo 'selected'; } ?>>bounceInDown</option>
+						<option value="bounceInLeft" <?php if($this->dataDisplay->settingAnimation == 'bounceInLeft'){ echo 'selected'; } ?>>bounceInLeft</option>
+						<option value="bounceInRight" <?php if($this->dataDisplay->settingAnimation == 'bounceInRight'){ echo 'selected'; } ?>>bounceInRight</option>
+						<option value="bounceInUp" <?php if($this->dataDisplay->settingAnimation == 'bounceInUp'){ echo 'selected'; } ?>>bounceInUp</option>
+					</optgroup>
+
+					<?php if(false){ ?>
+					<optgroup label="Bouncing Exits">
+						<option value="bounceOut" <?php if($this->dataDisplay->settingAnimation == 'bounceOut'){ echo 'selected'; } ?>>bounceOut</option>
+						<option value="bounceOutDown" <?php if($this->dataDisplay->settingAnimation == 'bounceOutDown'){ echo 'selected'; } ?>>bounceOutDown</option>
+						<option value="bounceOutLeft" <?php if($this->dataDisplay->settingAnimation == 'bounceOutLeft'){ echo 'selected'; } ?>>bounceOutLeft</option>
+						<option value="bounceOutRight" <?php if($this->dataDisplay->settingAnimation == 'bounceOutRight'){ echo 'selected'; } ?>>bounceOutRight</option>
+						<option value="bounceOutUp" <?php if($this->dataDisplay->settingAnimation == 'bounceOutUp'){ echo 'selected'; } ?>>bounceOutUp</option>
+					</optgroup>
+					<?php } ?>
+
+					<optgroup label="Fading Entrances">
+						<option value="fadeIn" <?php if($this->dataDisplay->settingAnimation == 'fadeIn'){ echo 'selected'; } ?>>fadeIn</option>
+						<option value="fadeInDown" <?php if($this->dataDisplay->settingAnimation == 'fadeInDown'){ echo 'selected'; } ?>>fadeInDown</option>
+						<option value="fadeInDownBig" <?php if($this->dataDisplay->settingAnimation == 'fadeInDownBig'){ echo 'selected'; } ?>>fadeInDownBig</option>
+						<option value="fadeInLeft" <?php if($this->dataDisplay->settingAnimation == 'fadeInLeft'){ echo 'selected'; } ?>>fadeInLeft</option>
+						<option value="fadeInLeftBig" <?php if($this->dataDisplay->settingAnimation == 'fadeInLeftBig'){ echo 'selected'; } ?>>fadeInLeftBig</option>
+						<option value="fadeInRight" <?php if($this->dataDisplay->settingAnimation == 'fadeInRight'){ echo 'selected'; } ?>>fadeInRight</option>
+						<option value="fadeInRightBig" <?php if($this->dataDisplay->settingAnimation == 'fadeInRightBig'){ echo 'selected'; } ?>>fadeInRightBig</option>
+						<option value="fadeInUp" <?php if($this->dataDisplay->settingAnimation == 'fadeInUp'){ echo 'selected'; } ?>>fadeInUp</option>
+						<option value="fadeInUpBig" <?php if($this->dataDisplay->settingAnimation == 'fadeInUpBig'){ echo 'selected'; } ?>>fadeInUpBig</option>
+					</optgroup>
+
+					<?php if(false){ ?>
+					<optgroup label="Fading Exits">
+						<option value="fadeOut" <?php if($this->dataDisplay->settingAnimation == 'fadeOut'){ echo 'selected'; } ?>>fadeOut</option>
+						<option value="fadeOutDown" <?php if($this->dataDisplay->settingAnimation == 'fadeOutDown'){ echo 'selected'; } ?>>fadeOutDown</option>
+						<option value="fadeOutDownBig" <?php if($this->dataDisplay->settingAnimation == 'fadeOutDownBig'){ echo 'selected'; } ?>>fadeOutDownBig</option>
+						<option value="fadeOutLeft" <?php if($this->dataDisplay->settingAnimation == 'fadeOutLeft'){ echo 'selected'; } ?>>fadeOutLeft</option>
+						<option value="fadeOutLeftBig" <?php if($this->dataDisplay->settingAnimation == 'fadeOutLeftBig'){ echo 'selected'; } ?>>fadeOutLeftBig</option>
+						<option value="fadeOutRight" <?php if($this->dataDisplay->settingAnimation == 'fadeOutRight'){ echo 'selected'; } ?>>fadeOutRight</option>
+						<option value="fadeOutRightBig" <?php if($this->dataDisplay->settingAnimation == 'fadeOutRightBig'){ echo 'selected'; } ?>>fadeOutRightBig</option>
+						<option value="fadeOutUp" <?php if($this->dataDisplay->settingAnimation == 'fadeOutUp'){ echo 'selected'; } ?>>fadeOutUp</option>
+						<option value="fadeOutUpBig" <?php if($this->dataDisplay->settingAnimation == 'fadeOutUpBig'){ echo 'selected'; } ?>>fadeOutUpBig</option>
+					</optgroup>
+					<?php } ?>
+
+					<optgroup label="Flippers">
+						<option value="flip" <?php if($this->dataDisplay->settingAnimation == 'flip'){ echo 'selected'; } ?>>flip</option>
+						<option value="flipInX" <?php if($this->dataDisplay->settingAnimation == 'flipInX'){ echo 'selected'; } ?>>flipInX</option>
+						<option value="flipInY" <?php if($this->dataDisplay->settingAnimation == 'flipInY'){ echo 'selected'; } ?>>flipInY</option>
+						<option value="flipOutX" <?php if($this->dataDisplay->settingAnimation == 'flipOutX'){ echo 'selected'; } ?>>flipOutX</option>
+						<option value="flipOutY" <?php if($this->dataDisplay->settingAnimation == 'flipOutY'){ echo 'selected'; } ?>>flipOutY</option>
+					</optgroup>
+
+					<optgroup label="Lightspeed">
+						<option value="lightSpeedIn" <?php if($this->dataDisplay->settingAnimation == 'lightSpeedIn'){ echo 'selected'; } ?>>lightSpeedIn</option>
+						<option value="lightSpeedOut" <?php if($this->dataDisplay->settingAnimation == 'lightSpeedOut'){ echo 'selected'; } ?>>lightSpeedOut</option>
+					</optgroup>
+
+					<optgroup label="Rotating Entrances">
+						<option value="rotateIn" <?php if($this->dataDisplay->settingAnimation == 'rotateIn'){ echo 'selected'; } ?>>rotateIn</option>
+						<option value="rotateInDownLeft" <?php if($this->dataDisplay->settingAnimation == 'rotateInDownLeft'){ echo 'selected'; } ?>>rotateInDownLeft</option>
+						<option value="rotateInDownRight" <?php if($this->dataDisplay->settingAnimation == 'rotateInDownRight'){ echo 'selected'; } ?>>rotateInDownRight</option>
+						<option value="rotateInUpLeft" <?php if($this->dataDisplay->settingAnimation == 'rotateInUpLeft'){ echo 'selected'; } ?>>rotateInUpLeft</option>
+						<option value="rotateInUpRight" <?php if($this->dataDisplay->settingAnimation == 'rotateInUpRight'){ echo 'selected'; } ?>>rotateInUpRight</option>
+					</optgroup>
+					
+					<?php if(false){ ?>
+					<optgroup label="Rotating Exits">
+						<option value="rotateOut" <?php if($this->dataDisplay->settingAnimation == 'rotateOut'){ echo 'selected'; } ?>>rotateOut</option>
+						<option value="rotateOutDownLeft" <?php if($this->dataDisplay->settingAnimation == 'rotateOutDownLeft'){ echo 'selected'; } ?>>rotateOutDownLeft</option>
+						<option value="rotateOutDownRight" <?php if($this->dataDisplay->settingAnimation == 'rotateOutDownRight'){ echo 'selected'; } ?>>rotateOutDownRight</option>
+						<option value="rotateOutUpLeft" <?php if($this->dataDisplay->settingAnimation == 'rotateOutUpLeft'){ echo 'selected'; } ?>>rotateOutUpLeft</option>
+						<option value="rotateOutUpRight" <?php if($this->dataDisplay->settingAnimation == 'rotateOutUpRight'){ echo 'selected'; } ?>>rotateOutUpRight</option>
+					</optgroup>
+					<?php } ?>
+
+					<optgroup label="Sliding Entrances">
+						<option value="slideInUp" <?php if($this->dataDisplay->settingAnimation == 'slideInUp'){ echo 'selected'; } ?>>slideInUp</option>
+						<option value="slideInDown" <?php if($this->dataDisplay->settingAnimation == 'slideInDown'){ echo 'selected'; } ?>>slideInDown</option>
+						<option value="slideInLeft" <?php if($this->dataDisplay->settingAnimation == 'slideInLeft'){ echo 'selected'; } ?>>slideInLeft</option>
+						<option value="slideInRight" <?php if($this->dataDisplay->settingAnimation == 'slideInRight'){ echo 'selected'; } ?>>slideInRight</option>
+					</optgroup>
+					
+					<?php if(false){ ?>
+					<optgroup label="Sliding Exits">
+						<option value="slideOutUp" <?php if($this->dataDisplay->settingAnimation == 'slideOutUp'){ echo 'selected'; } ?>>slideOutUp</option>
+						<option value="slideOutDown" <?php if($this->dataDisplay->settingAnimation == 'slideOutDown'){ echo 'selected'; } ?>>slideOutDown</option>
+						<option value="slideOutLeft" <?php if($this->dataDisplay->settingAnimation == 'slideOutLeft'){ echo 'selected'; } ?>>slideOutLeft</option>
+						<option value="slideOutRight" <?php if($this->dataDisplay->settingAnimation == 'slideOutRight'){ echo 'selected'; } ?>>slideOutRight</option>
+					</optgroup>
+					<?php } ?>
+
+					<optgroup label="Zoom Entrances">
+						<option value="zoomIn" <?php if($this->dataDisplay->settingAnimation == 'zoomIn'){ echo 'selected'; } ?>>zoomIn</option>
+						<option value="zoomInDown" <?php if($this->dataDisplay->settingAnimation == 'zoomInDown'){ echo 'selected'; } ?>>zoomInDown</option>
+						<option value="zoomInLeft" <?php if($this->dataDisplay->settingAnimation == 'zoomInLeft'){ echo 'selected'; } ?>>zoomInLeft</option>
+						<option value="zoomInRight" <?php if($this->dataDisplay->settingAnimation == 'zoomInRight'){ echo 'selected'; } ?>>zoomInRight</option>
+						<option value="zoomInUp" <?php if($this->dataDisplay->settingAnimation == 'zoomInUp'){ echo 'selected'; } ?>>zoomInUp</option>
+					</optgroup>
+
+					<?php if(false){ ?>
+					<optgroup label="Zoom Exits">
+						<option value="zoomOut" <?php if($this->dataDisplay->settingAnimation == 'zoomOut'){ echo 'selected'; } ?>>zoomOut</option>
+						<option value="zoomOutDown" <?php if($this->dataDisplay->settingAnimation == 'zoomOutDown'){ echo 'selected'; } ?>>zoomOutDown</option>
+						<option value="zoomOutLeft" <?php if($this->dataDisplay->settingAnimation == 'zoomOutLeft'){ echo 'selected'; } ?>>zoomOutLeft</option>
+						<option value="zoomOutRight" <?php if($this->dataDisplay->settingAnimation == 'zoomOutRight'){ echo 'selected'; } ?>>zoomOutRight</option>
+						<option value="zoomOutUp" <?php if($this->dataDisplay->settingAnimation == 'zoomOutUp'){ echo 'selected'; } ?>>zoomOutUp</option>
+					</optgroup>
+					<?php } ?>
+
+					<optgroup label="Specials">
+						<option value="hinge" <?php if($this->dataDisplay->settingAnimation == 'hinge'){ echo 'selected'; } ?>>hinge</option>
+						<option value="jackInTheBox" <?php if($this->dataDisplay->settingAnimation == 'jackInTheBox'){ echo 'selected'; } ?>>jackInTheBox</option>
+						<option value="rollIn" <?php if($this->dataDisplay->settingAnimation == 'rollIn'){ echo 'selected'; } ?>>rollIn</option>
+						<option value="rollOut" <?php if($this->dataDisplay->settingAnimation == 'rollOut'){ echo 'selected'; } ?>>rollOut</option>
+					</optgroup>
+
+				</select>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingShowImage">แสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingShowImage', (empty($this->dataDisplay->settingShowImage) ? 'Y' : $this->dataDisplay->settingShowImage), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingImageAlign">ตำแหน่งรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+                <?php echo $this->formSelect('settingImageAlign', (empty($this->dataDisplay->settingImageAlign) ? 'left' : $this->dataDisplay->settingImageAlign), array('class' => 'form-control', 'placeholder' => ''), array('left'=>'left','top'=>'top')); ?>
+			</div>
+		</div>
+		<hr />
+		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingShowTitle">แสดงชื่อ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingShowTitle', (empty($this->dataDisplay->settingShowTitle) ? 'Y' : $this->dataDisplay->settingShowTitle), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingTitleAlign">ตำแหน่งชื่อ</label> 
+			<div class="col-md-9 divControl">
+                <?php echo $this->formSelect('settingTitleAlign', (empty($this->dataDisplay->settingTitleAlign) ? 'left' : $this->dataDisplay->settingTitleAlign), array('class' => 'form-control', 'placeholder' => ''), $this->textAlignOption); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingShowIntroText">แสดงข้อความ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingShowIntroText', (empty($this->dataDisplay->settingShowIntroText) ? 'Y' : $this->dataDisplay->settingShowIntroText), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingIntroTextAlign">ตำแหน่งข้อความ</label> 
+			<div class="col-md-9 divControl">
+                <?php echo $this->formSelect('settingIntroTextAlign', (empty($this->dataDisplay->settingIntroTextAlign) ? 'left' : $this->dataDisplay->settingIntroTextAlign), array('class' => 'form-control', 'placeholder' => ''), $this->textAlignOption); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingShowLink">แสดงลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingShowLink', (empty($this->dataDisplay->settingShowLink) ? 'Y' : $this->dataDisplay->settingShowLink), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingLinkTitle">ข้อความลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('settingLinkTitle', $this->dataDisplay->settingLinkTitle, array('class' => 'form-control')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingLinkAlign">ตำแหน่งลิงค์</label> 
+			<div class="col-md-9 divControl">
+                <?php echo $this->formSelect('settingLinkAlign', (empty($this->dataDisplay->settingLinkAlign) ? 'left' : $this->dataDisplay->settingLinkAlign), array('class' => 'form-control', 'placeholder' => ''), $this->textAlignOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingLinkTarget">ลิงค์ Target</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('settingLinkTarget', $this->dataDisplay->settingLinkTarget, array('class' => 'form-control', 'placeholder' => ''), $this->targetOption); ?>
+			</div>
+		</div>
+        <hr />
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingHtmlClass">Html Class</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('settingHtmlClass', $this->dataDisplay->settingHtmlClass, array('class' => 'form-control', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingCustomCSS">CSS</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formTextarea('settingCustomCSS', $this->dataDisplay->settingCustomCSS, array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<?php endif ; ?>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+    
+	$("#formData input[type=checkbox], #formData input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	<?php if ($this->canEdit) : ?> 
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'update'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'displaysetting', "itemid" => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif ; ?>
+
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'WDG-MGT-17'); ?>

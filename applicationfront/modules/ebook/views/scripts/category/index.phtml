@@ -1,0 +1,106 @@
+ <div class="info infopage">
+ 	
+	<div class="book-title title-panel" id="category-book">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+		<hr />
+	</div>
+ 
+    <div class="result-list-panel" id="category-book-data">
+    	<div class="result-list" id="result-list"></div>
+    </div>
+
+	
+	<div class="book-title title-panel" id="book">
+		 <span class="title">
+			 <?php echo Emwork_Translate::text($this->lang, 'ebook', 'book_list'); ?>
+		 </span>
+	</div>
+
+	<div class="result-list1-panel" id="book-data">
+    	<div class="result-list" id="result-list-art"></div>
+    	<div class="result-paging-art" style="display: none;">
+    		<p class="paging text-right"></p>
+    	</div>
+    </div>
+	
+</div>
+
+<script>
+jQuery(function(){
+
+	reloadResultList(1);
+	reloadResultListCategory(1);
+
+	function reloadResultListCategory(pageIndex) {
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		$.post("<?php echo $this->url(array('module' => 'ebook', 'controller' => 'category', 'action' => 'getlist', 'id' => $this->id), null, true); ?>", sendData, function(data){
+			if (data.total > 0) {
+				$("#result-list").html(data.html);
+			} else {
+				$('#result-list').html('');
+				$("#result-list").parent().css("display", "none");
+			}
+		}, 'json');
+	}
+
+	function reloadResultList(pageIndex) {
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		$.post("<?php echo $this->url(array('module' => 'ebook', 'controller' => 'book', 'action' => 'getlist', "id" => $this->id), null, true); ?>", sendData, function(data){
+			
+			if (data.total > 0) {
+				$("#result-list-art").html(data.html);
+				$('.result-paging-art').css('display', '');
+				$('.paging').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+			        leaps: false,
+			        firstLastUse: true,
+			        first: '<<',
+			        last: '>>',
+			        next: '>',
+			        prev: '<',
+			        wrapClass: 'pagination',
+			        activeClass: 'active',
+			        disabledClass: 'disabled',
+			        nextClass: 'next',
+			        prevClass: 'prev',
+			        lastClass: 'last',
+			        firstClass: 'first'
+				});
+
+			} else {
+				$('.result-paging-art').css('display', 'none');
+				$('.paging').bootpag({total : 0});
+			}
+		}, 'json');
+	}
+
+	$('.paging').bootpag({
+		total: 0,
+        maxVisible: 5,
+        leaps: false,
+        firstLastUse: true,
+        first: '<<',
+        last: '>>',
+        next: '>',
+        prev: '<',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+    	reloadResultList1(num);
+	}); 
+	
+});
+
+
+</script>

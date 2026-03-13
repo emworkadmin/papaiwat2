@@ -1,0 +1,71 @@
+<!-- jQueryFiler -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+<!-- lightGallery -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightgallery/css/lightgallery.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery/js/lightgallery.min.js'); ?>"></script>
+
+<style type="text/css">
+.remark { font-size: 12px; margin-top: 15px;}
+.form-control-static { padding-top: 5px; }
+.form-control-static a { font-weight: bold; }
+</style>
+
+<?php if($this->isiOS) : ?>
+<style>
+.jFiler.jFiler-theme-default { 
+	position: relative !important;
+}
+input[type="file"]{
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 900000 !important;
+    width: 100% !important;
+    max-width: 300px !important;
+    height: 35px !important;
+    opacity: 0 !important;
+}
+</style>
+<?php endif; ?>
+
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formDialogImportFile" name="formDialogImportFile">
+
+		<div class="form-group">
+			<label class="col-md-4 control-label" for="ImportFile">ไฟล์ข้อมูล :</label>
+			<div class="col-md-8">
+				<?php echo $this->UploadHtmlControl("ImportFile", "ImportFile", null, array('multi' => false, 'exts' => array('xlsx'))); ?>
+				<div class="help-block">ขนาดไฟล์ไม่เกิน 10 MB<br>เฉพาะไฟล์นามสกุล: .xlsx</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-md-4 control-label" for="Template">Template :</label>
+			<div class="col-md-8">
+				<p class="form-control-static">
+					<a href="/assets/calendar/template/template.xlsx" download="Excel_Template.xlsx">ดาวน์โหลด Excel Template ที่นี่ !</a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="remark">* กรณีที่ท่านไม่ได้ใช้ไฟล์ Excel Template ที่ดาวน์โหลดจากระบบจะไม่สามารถอัพโหลดข้อมูลเข้าสู่ระบบได้</div>
+
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script type="text/javascript">
+$(function () {
+	$("#formDialogImportFile").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+});
+</script>

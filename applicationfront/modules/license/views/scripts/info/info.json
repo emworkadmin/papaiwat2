@@ -1,0 +1,6 @@
+{
+	"name" : "รายการหมวดหมู่",
+	"controller" : "info",
+	"description" : "แสดงรายการหมวดหมู่และ License",
+	"fields" : []
+}

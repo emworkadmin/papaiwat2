@@ -1,0 +1,168 @@
+<style>
+.Exchange { font-family: 'Mitr Light'; margin-bottom: 15px; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+.Exchange.bg { background: #F9FAFC; }
+.Exchange .export { display: inline-block; width: 100%; color: #2B83AF; }
+.Exchange .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+.Exchange .export #Exchange_Year { margin-right: 4%; }
+.Exchange_seeAll { display: inline-block; font-family: 'Mitr Light'; font-size: 17px; padding: 12px 30px 12px; margin-bottom: 15px; color: white; background: linear-gradient(to top, #43B74A, #90C34A); border-radius: 7px; border: 1px solid white; }
+.Exchange_seeAll a {color: white;}
+
+.Exchange .intro-box { padding: 10px 0px 0px; color: white; }
+.Exchange .intro-box .title-detail { background: #F3CA10; }
+.Exchange .intro-box .content-detail {  padding: 10px; background: white; height: 250px; }
+
+.Exchange_table { font-family: 'Mitr Light'; margin-top: 15px; box-shadow: 0px 0px 1px 0px grey; overflow-x: auto; padding: 0px 25px; }
+.Exchange_table, .Exchange_table table { font-size: 15px; width: 100%; }
+.Exchange_table th { border: 1px solid white; text-align: center; padding: 7px 10px; background: #FEDA00; }
+.Exchange_table tr { border: 1px solid white; text-align: center; padding: 3px; background: #F6F6F6; }
+.Exchange_table td { padding: 3px; }
+.Exchange_table td:first-child { padding-left: 15px; text-align:left; }
+.Exchange_table tr:nth-child(2n+1) { background: #F9F9F9; }
+</style>
+
+
+<div class="graph-box ExchangeExportZone" id="ExchangeExportZone">
+	<div class="graph-box-title">
+		<div class="row">
+			<div class="col-md-9">
+				<span>อัตราแลกเปลี่ยนเงินตราต่างประเทศ</span>
+			</div>
+			<div class="export col-md-3 col-sm-12 col-xs-12">
+				<div class="row">
+					<div class="col-sm-6">
+						<?php echo $this->formSelect("Exchange_Year", $this->exchangeYear, array('class' => 'form-control', 'placeholder' => ''), $this->exchangeYears); ?>
+					</div>
+					<div class="col-sm-6">
+						<?php echo $this->formSelect("Exchange_Export", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+					</div>
+				</div>
+			</div>	
+		</div>
+	</div>
+		
+	<div class="Exchange_table">
+
+        <?php if(true){ ?>
+        <table>
+            <thead class="head">
+                <tr>
+                    <th colspan="2">FOREIGN CURRENCIES</th>
+                    <th rowspan="2">Exchange Rate</th>
+                </tr>
+                <tr>
+                    <th>COUNTRY</th>
+                    <th>CURRENCY</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if(count($this->ExchangeRates)>0){
+                    $index = 1;
+                    $loop = count($this->ExchangeRates);
+                    foreach($this->ExchangeRates as $v){
+                ?>
+                <tr>
+                    <td><img alt="image" src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/".strtolower(str_replace(" ","_",$v['CountryNameEN'])).".png"); ?>" style="width: 20px; margin-right: 5px;"><?php echo $v['CountryNameEN']; ?></td>
+                    <td><?php echo $v['Currency']; ?></td>
+                    <td><?php echo number_format($v['Amount'],4); ?></td>
+                </tr>
+                <?php
+                    }
+                }
+                ?>
+            </tbody>
+        </table>
+        <?php } ?>
+
+        <?php if(false){ ?>
+        <table>
+            <thead class="head">
+                <tr>
+                    <th colspan="2">FOREIGN CURRENCIES</th>
+                    <th rowspan="2">DENOM</th>
+                    <th colspan="2">NOTES</th>
+                    <th colspan="2">BUY</th>		
+                    <th rowspan="2">Sell</th>		
+                </tr>
+                <tr>
+                    <th>COUNTRY</th>
+                    <th>CURRENCY</th>
+                    <th>BUY</th>
+                    <th>SELL</th>
+                    <th>SIGHT</th>
+                    <th>T/T</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if(count($this->ExchangeRates)>0){
+                    $index = 1;
+                    $loop = count($this->ExchangeRates);
+                    foreach($this->ExchangeRates as $v){
+                ?>
+                <tr>
+                    <td><img alt="image" src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/".strtolower(str_replace(" ","_",$v['CountryNameEN'])).".png"); ?>" style="width: 20px; margin-right: 5px;"><?php echo $v['CountryNameEN']; ?></td>
+                    <td><?php echo $v['Currency']; ?></td>
+                    <td>1</td>
+                    <td><?php echo number_format($v['Amount']); ?></td>
+                    <td><?php echo number_format($v['Amount']); ?></td>
+                    <td><?php echo number_format($v['Amount']); ?></td>
+                    <td><?php echo number_format($v['Amount']); ?></td>
+                    <td><?php echo number_format($v['Amount']); ?></td>
+                </tr>
+                <?php
+                    }
+                }
+                ?>
+            </tbody>
+        </table>
+        <?php } ?>
+
+    </div>
+    
+	<div class="GUIDE_EXCHANGE TIC-footer">ที่มา : ธนาคารแห่งประเทศไทย</div>
+    <?php if (!empty($this->exchangeLatestYear)) : ?><div class="GUIDE_EXCHANGE TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->exchangeLatestYear + 543; ?></div><?php endif; ?>
+		
+</div>
+
+<div id="previewImage_Exchange" style="display: none;"></div>
+<a id="downloadImage_Exchange" href="#In_Out" style="display: none;"></a>
+
+<div class="graph-button-zone">
+	<a href="<?php echo $this->url(array("module"=>"graph", "controller" => "investment", "action" => "exchange"), null, true);?>" target="_blank" >
+		ดูข้อมูลสถิติทั้งหมด
+	</a>
+</div>
+
+
+<script>
+
+    function setCanvas_ExchangeExportZone(val) {
+        html2canvas(document.querySelector("#ExchangeExportZone")).then(function(canvas) {
+            $("#previewImage_Exchange").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_Exchange").attr("download", "อัตราแลกเปลี่ยนเงินตราต่างประเทศ.png").attr("href", newData);
+                $("#downloadImage_Exchange")[0].click();
+                $("#Exchange_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_Exchange canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("อัตราแลกเปลี่ยนเงินตราต่างประเทศ.pdf");
+                $("#Exchange_Export").val('export');
+            }
+        });
+    }
+    $("#Exchange_Export").change(function() {
+        setCanvas_ExchangeExportZone($(this).val());
+    });
+
+    $("#Exchange_Year").change(function() {
+        var situationYear = $('#Situation_Year').val();
+        var exchangeYear = $('#Exchange_Year').val();
+        window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'investment', 'action' => 'search'), null, true); ?>/situationYear/"+situationYear+"/exchangeYear/"+exchangeYear;
+    });
+</script>

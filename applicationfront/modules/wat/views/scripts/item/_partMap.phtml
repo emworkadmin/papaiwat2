@@ -1,0 +1,6 @@
+		<?php 
+		// Google Map
+		if (!empty($this->googleMapApiKey) && ($this->data->Latitude != null) && ($this->data->Longitude != null)) :
+		?>
+		<iframe id="mapEmbed" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=<?php echo $this->data->Latitude; ?>,<?php echo $this->data->Longitude;?>&amp;language=th&amp;key=<?php echo $this->googleMapApiKey?>" allowfullscreen="" width="100%" height="350" frameborder="0"></iframe>
+		<?php endif;  ?>

@@ -1,0 +1,772 @@
+<!-- jQueryFiler -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+
+<!-- bootstrap dialog -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/bootstrap-dialog/bootstrap-dialog.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/bootstrap-dialog/bootstrap-dialog.min.js'); ?>"></script>
+
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/jQuerySerializeObject/jquery.serialize-object.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/jQueryUI/jquery-ui.min.js'); ?>"></script>
+
+<!-- recaptcha  -->
+<script src='https://www.google.com/recaptcha/api.js?hl=<?php echo $this->lang; ?>'></script>
+
+<?php if($this->isiOS) :  ?>
+<style>
+.jFiler.jFiler-theme-default {
+	position: relative !important;
+}
+input[type="file"]{
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 900000 !important;
+    width: 100% !important;
+    max-width: 300px !important;
+    height: 35px !important;
+    opacity: 0 !important;
+}
+</style>
+<?php endif; ?>
+
+<style>
+.eformdialog .modal-dialog { width: 80% !important; }
+.line { background-color: white; padding: 5px 15px; margin-bottom: 10px; border-bottom: 1px solid lightgrey; }
+.line .handle {cursor: move; float: left; margin-right: 5px; }
+.line .remove {cursor: pointer; float: left; margin-right: 5px; }
+.line .edit {cursor: pointer; float: left; }
+.line .icon {display: inline-block; vertical-align: top; }
+.line .num {display: inline-block; width: 30px; text-align: center; vertical-align: top;}
+.line .title {display: inline-block; }
+.line .title .name {font-weight: bold;}
+
+label.form-inline { margin-right: 5px;}
+</style>
+
+<div class="panel-detail">
+	<form class="form-horizontal" id="formData" name="formData">
+    <?php echo $this->formHidden("hdfID", $this->ID); ?>
+
+		<div class="title-label">
+			จัดการแบบฟอร์ม<a href="javascript:void(0);" id="ControlAdd" ><em class="fa fa-plus-circle"></em></a>
+		</div>
+        
+    	<div id='ControlParams'>
+        <?php 
+		if (count($this->dataType) > 0) :
+			$i = 0;
+			foreach ($this->dataType as $item) :
+                $i ++;
+
+                $dataObj = new stdClass();
+				$dataObj->ID = $item['ID'];
+				
+                $dataObj->EformControlTypeID = $item['EformControlTypeID'];
+                $dataObj->NAME = $item['NAME_'];
+                $dataObj->LABEL = $item['LABEL_'];
+				$dataObj->PLACEHOLDER = $item['PLACEHOLDER_'];
+				$dataObj->DESCRIPTION = $item['DESCRIPTION_'];
+				$dataObj->REQUIRED = $item['REQUIRED_'];
+				$dataObj->VALIDATIONRULE = $item['VALIDATIONRULE_'];
+				$dataObj->SIZE = $item['SIZE_'];
+				$dataObj->MAXLENGTH = $item['MAXLENGTH_'];
+				$dataObj->VALIDATE = $item['VALIDATE_'];
+				$dataObj->COLS = $item['COLS_'];
+				$dataObj->ROWS = $item['ROWS_'];
+				$dataObj->DROPDOWN = json_decode($item['DROPDOWN_']);
+				$dataObj->OPTION = json_decode($item['OPTION_']);
+				$dataObj->FLOW = $item['FLOW_'];
+				$dataObj->FILESIZE = $item['FILESIZE_'];
+				$dataObj->FILETYPE = $item['FILETYPE_'];
+                $dataObj->MULTIPLE = $item['MULTIPLE_'];
+				$dataObj->RESETBUTTON = $item['RESETBUTTON_'];
+				$dataObj->RESETLABEL = $item['RESETLABEL_'];
+				$dataObj->MESSAGE = $item['MESSAGE_'];
+
+                
+                $labelClassRequired = '';
+                if ($item['REQUIRED_'] == 'Y') {
+                    $labelClassRequired = ' labelRequest'; 
+                }
+
+                $dataStr = json_encode($dataObj);
+		?>
+                <div class="line" data-id="<?php echo $i; ?>">
+                    <div class="icon">
+                        <em class="fa fa-bars handle"></em>
+                        <em class="fa fa-trash remove" id="<?php echo $dataObj->NAME; ?>"></em>
+                        <em class="fa fa-cog edit"></em>
+                        <?php echo $this->formHidden("params[ControlParams][" . $i . "]", $dataStr , array("data-name" => $item['Name'])); ?>
+                    </div>
+                    <div class="num" style="display: none;">
+                        <span alt="dataIndex"><?php echo $i; ?></span>
+                    </div>
+
+					<?php if($dataObj->EformControlTypeID == 8) { ?>
+						<div class="form-group has-feedback">
+					<?php } else { ?>
+						<div class="form-group">
+					<?php } ?>
+
+					<?php if($dataObj->EformControlTypeID == 11 || $dataObj->EformControlTypeID == 9) { ?>
+						<label class="col-md-3 control-label"></label>
+						<div class="col-md-9 divControl">
+					<?php } else { ?>
+						<label class="col-md-3 control-label <?php echo $labelClassRequired; ?>"><?php echo $dataObj->LABEL; ?></label>
+						<div class="col-md-9 divControl">
+					<?php } ?>
+
+                            <?php 
+                            if($dataObj->EformControlTypeID == '1') {
+
+								echo '<input type="text" name="' . $dataObj->NAME . '" id="' . $dataObj->NAME . '" class="form-control ' . $dataObj->VALIDATIONRULE . '" placeholder="' . $dataObj->PLACEHOLDER . '" size="' . $dataObj->SIZE . '" maxlength="' . $dataObj->MAXLENGTH . '"> ';
+								if($dataObj->DESCRIPTION) {
+									echo "<div class=\"help-block\">" . $dataObj->DESCRIPTION . "</div>";
+								}
+
+                            } else if($dataObj->EformControlTypeID == '2') {
+
+								echo $this->formTextarea($dataObj->NAME, null, array("class" => "form-control", "rows" => "4", "col" => "50", "placeholder" => $dataObj->PLACEHOLDER));
+								
+								if($dataObj->DESCRIPTION) {
+									echo "<div class=\"help-block\">" . $dataObj->DESCRIPTION . "</div>";
+								}								
+
+                            } else if($dataObj->EformControlTypeID == '3') {
+								
+								if($dataObj->MULTIPLE == 'Y') {
+									echo '<select name="' . $dataObj->NAME . '" id="' . $dataObj->NAME . '" class="form-control" size="'.$dataObj->SIZE.'" Multiple>';
+								} else {
+									echo '<select name="' . $dataObj->NAME . '" id="' . $dataObj->NAME . '" class="form-control" size="'.$dataObj->SIZE.'" >';
+								}
+					
+								$loop_3 = 0;
+								$loop_3_length = count($dataObj->DROPDOWN);
+								foreach($dataObj->DROPDOWN as $e) {
+									if($dataObj->MULTIPLE == 'Y') {
+										if($e->check) {
+										echo '<option value="' . $e->value . '" Selected>' . $e->value . '</option>';
+										} else {
+										echo '<option value="' . $e->value . '">' . $e->value . '</option>';
+										}
+									} else {
+										$loop_3++;
+										if($e->check && $loop_3_length == $loop_3) {
+											echo '<option value="' . $e->value . '" Selected>' . $e->value . '</option>';
+										} else {
+											echo '<option value="' . $e->value . '">' . $e->value . '</option>';
+										}
+									}
+								}
+								echo '</select>';
+
+								if($dataObj->DESCRIPTION) {
+									echo "<div class=\"help-block\">" . $dataObj->DESCRIPTION . "</div>";
+								}								
+
+                            } else if($dataObj->EformControlTypeID == '4') {
+								
+								if($dataObj->FLOW == 'H') {
+									echo '<div class="checkbox with-icheck">';
+								}
+								foreach($dataObj->OPTION as $e) {
+									
+									if($dataObj->FLOW == 'V') {
+										echo '<div class="checkbox with-icheck">';
+									}
+									echo '<label class="form-inline" for="">';
+									if($e->check) {
+										echo '<input type="checkbox" checked value="' . $e->value . '" id="' . $dataObj->NAME . '-' . $e->value . '" name="' . $dataObj->NAME . '-' . $e->value . '">' . $e->value;
+									} else {
+										echo '<input type="checkbox" value="' . $e->value . '" id="' . $dataObj->NAME . '-' . $e->value . '" name="' . $dataObj->NAME . '-' . $e->value . '">' . $e->value;
+									}
+									echo '</label>';
+									if($dataObj->FLOW == 'V') {
+										echo '</div>';
+									}
+								}
+								if($dataObj->FLOW == 'H') {
+									echo '</div>';
+								}
+								if($dataObj->DESCRIPTION) {
+									echo "<div class=\"help-block\">" . $dataObj->DESCRIPTION . "</div>";
+								}								
+
+                            } else if($dataObj->EformControlTypeID == '5') {
+
+								if($dataObj->FLOW == 'H') {
+									echo '<div class="radio with-icheck">';
+								}
+								foreach($dataObj->OPTION as $e) {
+									
+									if($dataObj->FLOW == 'V') {
+										echo '<div class="radio with-icheck">';
+									}
+									echo '<label class="form-inline" for="">';
+									if($e->check) {
+										echo '<input type="radio" checked value="' . $e->value . '" id="' . $dataObj->NAME . '-' . $e->value . '" name="' . $dataObj->NAME . '-' . $e->value . '">' . $e->value;
+									} else {
+										echo '<input type="radio" value="' . $e->value . '" id="' . $dataObj->NAME . '-' . $e->value . '" name="' . $dataObj->NAME . '-' . $e->value . '">' . $e->value;
+									}
+									echo '</label>';
+									if($dataObj->FLOW == 'V') {
+										echo '</div>';
+									}
+								}
+								if($dataObj->FLOW == 'H') {
+									echo '</div>';
+								}
+								if($dataObj->DESCRIPTION) {
+									echo "<div class=\"help-block\">" . $dataObj->DESCRIPTION . "</div>";
+								}	
+                                                            
+                            } else if($dataObj->EformControlTypeID == '6') {
+
+								echo '<input type="password" name="' . $dataObj->NAME . '" id="' . $dataObj->NAME . '" class="form-control" placeholder="' . $dataObj->PLACEHOLDER . '" size="' . $dataObj->SIZE . '" maxlength="' . $dataObj->MAXLENGTH . '" autocomplete="off"> ';
+								if($dataObj->DESCRIPTION) {
+									echo "<div class=\"help-block\">" . $dataObj->DESCRIPTION . "</div>";
+								}								
+
+                            } else if($dataObj->EformControlTypeID == '7') {
+
+								if($dataObj->FILETYPE == 'I') {
+									$extsfile = array('png','jpg','gif','jpeg');
+								} elseif ($dataObj->FILETYPE == 'V') {
+									$extsfile = array('mp4');
+								} else {
+									$extsfile = array('pdf');
+								}
+								//echo $this->UploadHtmlControl($dataObj->NAME, $dataObj->NAME, null, array('multi' => $multiple, 'exts' => $extsfile, 'maxsize' => $dataObj->FILESIZE));
+								//echo $this->UploadHtmlControl($dataObj->NAME, $dataObj->NAME, null, array('multi' => false, 'exts' => array('png', 'jpg', 'gif')));
+								//echo $this->UploadHtmlControl($dataObj->NAME, "IntroImage", null, array('multi' => false, 'exts' => array('png', 'jpg', 'gif')));
+								//echo $this->UploadHtmlControl("IntroImagexx", "IntroImage", null, array('multi' => false, 'exts' => array('png', 'jpg', 'gif'))); 
+								echo '<div class="jFiler jFiler-theme-default"><div class="jFiler-input"><div class="jFiler-input-caption"><span>Choose files To Upload</span></div><div class="jFiler-input-button">Choose Files</div></div></div>';
+								
+								if($dataObj->DESCRIPTION) {
+									echo "<div class=\"help-block\">" . $dataObj->DESCRIPTION . "</div>";
+								}
+
+                            } else if($dataObj->EformControlTypeID == '8') {
+
+                                echo '<input type="text" name="' . $dataObj->NAME . '" id="' . $dataObj->NAME . '" placeholder="' . $dataObj->PLACEHOLDER . '" value="" class="form-control" data-date-language="th-th" readonly="readonly" aria-required="true">';
+								echo '<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>';
+								echo '<span id="' . $dataObj->NAME . '-Close" class="fa fa-times-circle" style="right: 50px; top: 10px; position: absolute; cursor: pointer; display: none;"></span>';
+								
+								if($dataObj->DESCRIPTION) {
+									echo "<div class=\"help-block\">" . $dataObj->DESCRIPTION . "</div>";
+								}
+                            ?>
+                                <script>
+                                    $('#<?php echo $dataObj->NAME ?>').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+									$("#<?php echo $dataObj->NAME ?>").change(function() {
+										if ($(this).val() != "") {
+											$("#<?php echo $dataObj->NAME ?>-Close").css("display", "block");
+										}
+									});
+									$("#<?php echo $dataObj->NAME ?>-Close").click(function(){
+										$("#<?php echo $dataObj->NAME ?>").val('');
+										$("#<?php echo $dataObj->NAME ?>-Close").css("display", "none");
+									});
+                                </script>
+
+                            <?php
+                            } else if($dataObj->EformControlTypeID == '9') {
+
+								echo '<button type="button" class="btn btn-primary submit" id="' . $dataObj->NAME . '"><em class="fa fa-save"></em> ' . $dataObj->LABEL . '</button> ';
+								if($dataObj->RESETBUTTON == 'Y') {
+									echo '<button type="reset" class="btn btn-default" id="' . $dataObj->RESETLABEL . '"><em class="fa fa-refresh"></em> ' . $dataObj->RESETLABEL . '</button>';
+								}
+								if($dataObj->DESCRIPTION) {
+									echo "<div class=\"help-block\">" . $dataObj->DESCRIPTION . "</div>";
+								}								
+
+                            } else if($dataObj->EformControlTypeID == '10') {
+
+								echo '<div id="' . $dataObj->NAME . '" class="g-recaptcha text-center" data-sitekey="' . $this->dataCaptcha['ReCaptchaSiteKey'] . '"></div>';
+								
+								if($dataObj->DESCRIPTION) {
+									echo "<div class=\"help-block\">" . $dataObj->DESCRIPTION . "</div>";
+								}
+
+                            } else if($dataObj->EformControlTypeID == '11') {
+
+								echo '<p class="form-control-static">' . $dataObj->MESSAGE . '</p>';
+
+                            }
+
+                            ?>
+                        </div>
+                    </div>
+
+                </div>
+        <?php
+            endforeach;
+        endif;
+        ?>
+        </div>
+
+		<div class="title-label">บันทึกแบบฟอร์ม</div>
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3 button-panel-zone">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave-form-manageform"><em class="fa fa-save"></em> บันทึก</button>
+				<?php endif ; ?>
+			</div>
+		</div>
+
+    </form>
+</div>
+
+
+<script type="text/javascript">
+var dialogParamsList;
+var tmp_array = [];
+var alphabetcheck = true;
+$(function () {
+	
+	<?php
+	if (count($this->dataType) > 0) {
+		foreach ($this->dataType as $key => $item) {
+	?>
+			tmp_array[<?php echo $key + 1; ?>] = "<?php echo $item['NAME_']; ?>";
+	<?php
+		}
+	}
+	?>
+
+    $( "#ControlParams" ).sortable({
+        handle: '.handle',
+        cursor: 'move',
+        update: function( event, ui ){
+            reindex();
+        }
+    }).disableSelection();
+
+    $("#ControlAdd").click(function() {
+        dialogParamsList = BootstrapDialog.show({
+            title: 'รายการแบบกรอก',
+            message: $('<div id="dialogParamsList"></div>').load("<?php echo $this->url(array('module' => 'eform', 'controller' => 'controltype', 'action' => 'dialog'), null, true); ?>/itemid/" + <?php echo $this->ID; ?>),
+            closable: true,
+            closeByBackdrop: false,
+            closeByKeyboard: false,
+            autodestroy: true,
+			cssClass: "eformdialoglist",
+            buttons : [{
+                label: ' ปิด',
+                icon: 'fa fa-times',
+                action: function(dialog) {
+                    dialogParamsList.close();
+                }
+            }]
+        });       
+        dialogParamsList.open();
+    });
+
+
+	$("#ControlParams").bind('click', function(e) {
+		var target = $(e.target);		
+
+        if (target.hasClass("edit")) {
+            var data = target.parent("div").find('input[type=hidden]').val();
+            var name = target.parent("div").find('input[type=hidden]').attr('data-name');
+            var obj = JSON.parse(data);
+            var id = obj.EformControlTypeID;
+            var dataId = target.parent('div').parent('div').attr('data-id');
+
+            var dialogParamsForm = BootstrapDialog.show({
+            title: name,
+            message: $('<div id="dialogParamsForm"></div>').load("<?php echo $this->url(array('module' => 'eform', 'controller' => 'controltype', 'action' => 'dialogform'), null, true); ?>", {"id" : id, "data" : data}),
+            closable: true,
+            closeByBackdrop: false,
+            closeByKeyboard: false,
+            autodestroy: true,
+			cssClass: "eformdialog",
+            buttons : [
+                {
+                    label: 'บันทึก',
+                    icon: 'fa fa-save',
+                    cssClass: 'btn-primary',
+                    action: function(dialog) {
+                        var isValid = $("#dialogParamsForm form").valid();
+                        if (isValid && alphabetcheck) {
+							var dataObj = $("#dialogParamsForm form").serializeObject();
+							if(tmp_array[dataId] != dataObj.Name) {
+								if(tmp_array.includes(dataObj.Name)) {
+									DialogWarning('โปรดใส่ชื่อคีย์ที่ไม่ซ้ำกัน !','แจ้งเตือน');
+									return;
+								}
+							}
+							saveParams(dataId, dataObj);
+							reindex();
+							dialog.close();							
+                        }                            
+                    }
+                },
+                {
+                    label: 'ปิด',
+                    icon: 'fa fa-times',
+                    action: function(dialog) {
+                        dialog.close();
+                    }
+                }]
+            });
+        }
+
+		if (target.hasClass("remove")) {
+			DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+				target.parent("div").parent("div").fadeOut('fast', function() {
+					$(this).remove();
+					reindex();
+					tmp_array = $.grep(tmp_array, function(value) {
+						return value != target[0].id;
+					});				
+				});
+			});            
+        }
+    });    
+
+	function saveParams(dataId, dataObj) {
+			
+        var obj = {};
+
+        obj.EformControlTypeID = dataObj.hdfFormID;
+        obj.NAME = dataObj.Name;
+        obj.LABEL = dataObj.Label;
+        obj.PLACEHOLDER = dataObj.Placeholder;
+        obj.DESCRIPTION = dataObj.Description;
+        obj.REQUIRED = dataObj.Required;
+        obj.VALIDATIONRULE = dataObj.Validationrule;
+        obj.SIZE = dataObj.Size;
+        obj.MAXLENGTH = dataObj.Maxlength;
+        obj.VALIDATE = dataObj.Validate
+        obj.COLS = dataObj.Cols;
+        obj.ROWS = dataObj.Rows;
+        obj.DROPDOWN = dataObj.Dropdown;
+        obj.OPTION = dataObj.Option;
+        obj.FLOW = dataObj.Flow;
+        obj.FILESIZE = dataObj.Filesize;
+        obj.FILETYPE = dataObj.Filetype;
+        obj.MULTIPLE = dataObj.Multiple;
+        obj.RESETBUTTON = dataObj.Resetbutton;
+        obj.RESETLABEL = dataObj.Resetlabel;
+        obj.MESSAGE = dataObj.Message;
+        
+        var labelClassRequired = '';
+        if(dataObj.Required == 'Y') {
+            labelClassRequired = ' labelRequest'; 
+        }
+
+        var dataStr = JSON.stringify(obj);
+
+        var tempId = (new Date()).getTime();
+
+        var html = '';
+        html += '<div class="line" data-id="' + (dataId == "" ? tempId : dataId) + '">';
+        html +=     '<div class="icon">';
+        html +=         '<em class="fa fa-bars handle"></em>';
+        html +=         '<em class="fa fa-trash remove" id="' + obj.NAME + '"></em>';
+        html +=         '<em class="fa fa-cog edit"></em>';
+        html +=         '<input type="hidden" id="params[ControlParams][' + (dataId == "" ? tempId : dataId) + ']" name="params[ControlParams][' + (dataId == "" ? tempId : dataId) + ']" value="' + '' + '">';        
+        html +=     '</div>';
+        html +=     '<div class="num" style="display: none;">';
+        html +=         '<span alt="dataIndex"></span>';
+        html +=     '</div>';
+
+        if(obj.EformControlTypeID == 8) {
+            html +=     '<div class="form-group has-feedback">';
+        } else {
+            html +=     '<div class="form-group">';
+        }
+
+        if(obj.EformControlTypeID == 11 || obj.EformControlTypeID == 9) {
+            html +=         '<label class="col-md-3 control-label"></label>';
+            html +=         '<div class="col-md-9 divControl">';
+        } else {
+            html +=         '<label class="col-md-3 control-label ' + labelClassRequired + '">' + obj.LABEL +'</label>';
+            html +=         '<div class="col-md-9 divControl">';
+        }
+        
+        if(obj.EformControlTypeID == 1) {
+
+            html += '<input type="text" name="' + obj.NAME + '" id="' + obj.NAME + '" class="form-control ' + obj.VALIDATIONRULE + '" placeholder="' + obj.PLACEHOLDER + '" size="' + obj.SIZE + '" maxlength="' + obj.MAXLENGTH + '"> ';
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+
+        } else if(obj.EformControlTypeID == 2) {
+
+            html += '<textarea name="' + obj.NAME + '" id="' + obj.NAME + '" placeholder="' + obj.PLACEHOLDER + '" class="form-control ' + obj.VALIDATIONRULE + '" style="max-width:100%;" rows="' + obj.ROWS + '" cols="' + obj.COLS + '" maxlength="1000"></textarea>';
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+
+        } else if(obj.EformControlTypeID == 3) {
+
+            if(obj.MULTIPLE == 'Y') {
+                html += '<select name="' + obj.NAME + '" id="' + obj.NAME + '" class="form-control" size="' + obj.SIZE + '" Multiple>';
+            } else {
+                html += '<select name="' + obj.NAME + '" id="' + obj.NAME + '" class="form-control" size="' + obj.SIZE + '" >';
+            }
+
+            var loop_3 = 0;
+            var loop_3_length = obj.DROPDOWN.length;
+            $.each(obj.DROPDOWN, function (i, e) {
+                if(obj.MULTIPLE == 'Y') {
+					if(e.check) {
+                    html += '<option value="' + e.value + '" Selected>' + e.value + '</option>';
+					} else {
+					html += '<option value="' + e.value + '">' + e.value + '</option>';
+					}
+                } else {
+                    loop_3++;
+                    if(e.check && loop_3_length == loop_3) {
+                        html += '<option value="' + e.value + '" Selected>' + e.value + '</option>';
+                    } else {
+                        html += '<option value="' + e.value + '">' + e.value + '</option>';
+                    }
+                }
+            });
+            
+            html += '</select>';
+
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }           
+
+        } else if(obj.EformControlTypeID == 4) {
+
+            if(obj.FLOW == 'H') {
+                html += '<div class="checkbox with-icheck">';
+            }
+            $.each(obj.OPTION, function (i, e) {
+                if(obj.FLOW == 'V') {
+                    html += '<div class="checkbox with-icheck">';
+                }
+                html += '<label class="form-inline" for="">';
+                if(e.check) {
+                    html += '<input type="checkbox" checked value="' + e.value + '" id="' + obj.NAME + '-' + e.value + '" name="' + obj.NAME + '-' + e.value + '">' + e.value;
+                } else {
+                    html += '<input type="checkbox" value="' + e.value + '" id="' + obj.NAME + '-' + e.value + '" name="' + obj.NAME + '-' + e.value + '">' + e.value;
+                }
+                html += '</label>';
+                if(obj.FLOW == 'V') {
+                    html += '</div>';
+                }
+            });
+            if(obj.FLOW == 'H') {
+                html += '</div>';
+            }
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+            
+        } else if(obj.EformControlTypeID == 5) {
+
+            if(obj.FLOW == 'H') {
+                html += '<div class="checkbox with-icheck">';
+            }
+            $.each(obj.OPTION, function (i, e) {
+                if(obj.FLOW == 'V') {
+                    html += '<div class="checkbox with-icheck">';
+                }
+                html += '<label class="form-inline" for="">';
+                if(e.check) {
+                    html += '<input type="radio" checked value="' + e.value + '" id="' + obj.NAME + '-' + e.value + '" name="' + obj.NAME + '">' + e.value;
+                } else {
+                    html += '<input type="radio" value="' + e.value + '" id="' + obj.NAME + '-' + e.value + '" name="' + obj.NAME + '">' + e.value;
+                }
+                html += '</label>';
+                if(obj.FLOW == 'V') {
+                    html += '</div>';
+                }
+            });
+            if(obj.FLOW == 'H') {
+                html += '</div>';
+            }
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div></div>";      
+            }
+            
+        } else if(obj.EformControlTypeID == 6) {
+
+            html += '<input type="password" name="' + obj.NAME + '" id="' + obj.NAME + '" class="form-control" placeholder="' + obj.PLACEHOLDER + '" size="' + obj.SIZE + '" maxlength="' + obj.MAXLENGTH + '" autocomplete="off">';
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+
+        } else if(obj.EformControlTypeID == 7) {
+
+            html += '<div class="jFiler jFiler-theme-default"><div class="jFiler-input"><div class="jFiler-input-caption"><span>Choose files To Upload</span></div><div class="jFiler-input-button">Choose Files</div></div></div>';
+
+            <?php if (false) : ?>
+            html += '<div class="jFiler jFiler-theme-default">';
+            html +=     '<input type="file" name="' + obj.NAME + '[]" id="' + obj.NAME + '" multiple="multiple" style="position: absolute; left: -9999px; top: -9999px; z-index: -9999;">';
+            html += '</div>';
+
+            html += "<script>" + "\n";
+    		html += "$(function () {\n";
+            html += "	$('#" + obj.NAME + "').filer({" + "\n";
+            html += "		showThumbs: true," + "\n";
+
+            if(dataObj.Multiple == 'N') {
+            html += "       limit: 1," + "\n";
+            }
+
+            if(obj.FILESIZE) {
+            html += "		maxSize: " + obj.FILESIZE + "," + "\n";
+            } else {
+            html += "		maxSize: 10," + "\n";
+            }
+
+            if(dataObj.FILETYPE  == 'I') {
+            html += "		extensions: ['png','jpg','gif']," + "\n";
+            } else if (dataObj.FILETYPE  == 'V') {
+            html += "       extensions: ['mp4']," + "\n";
+            } else {
+            html += "       extensions: ['pdf']," + "\n";
+            }
+
+            html += "		templates: {" + "\n";
+            html += "			box: '<div class=\"jFiler-items-list jFiler-items-grid\"></div>'," + "\n";
+            html += "			item: '<div class=\"jFiler-items\"><a  class=\"jFiler-item-title\" style=\"color: #2c93c7;\"><b title=\"{{fi-name}}\">{{fi-name | limitTo: 25}}</b></a><a class=\"icon-jfi-trash jFiler-item-trash-action\"></a><div class=\"jFiler-jProgressBar\" style=\"width: 200px;\"></div></div>'," + "\n";
+            html += "			itemAppend: '<div class=\"jFiler-items\"><a  class=\"jFiler-item-title\" style=\"color: #2c93c7;\"  href=\"/admin/file/get/file/{{fi-fid}}\"><b title=\"{{fi-name}}\">{{fi-name | limitTo: 25}}</b></a><a class=\"icon-jfi-trash jFiler-item-trash-action\"></a><input type=\"hidden\" name=\"hdf" + obj.NAME + "[]\" value=\"{{fi-fid}}\" /></div>'," + "\n";
+            html += "			progressBar: '<div class=\"bar\"></div>'," + "\n";
+            html += "			itemAppendToEnd: false," + "\n";
+            html += "			removeConfirmation: true," + "\n";
+            html += "			_selectors: {" + "\n";
+            html += "				list: '.jFiler-items-list'," + "\n";
+            html += "				item: '.jFiler-items'," + "\n";
+            html += "				progressBar: '.bar'," + "\n";
+            html += "				remove: '.jFiler-item-trash-action'" + "\n";
+            html += "			}" + "\n";
+            html += "		}," + "\n";
+            html += "		uploadFile: {" + "\n";
+            html += "			url: \"/admin/file/upload\"," + "\n";
+            html += "			type: 'POST'," + "\n";
+            html += "			enctype: 'multipart/form-data'," + "\n";
+            html += "			beforeSend: function(){}," + "\n";
+            html += "			success: function(data, el){" + "\n";
+            html += "				var objData = data;" + "\n";
+            html += "				var name = objData['metas'][0]['old_name'];" + "\n";
+            html += "				var name_md5 = objData['metas'][0]['name'];" + "\n";
+            html += "				var parent = el.find(\".jFiler-jProgressBar\").parent();" + "\n";
+            html += "				el.find('.jFiler-jProgressBar').fadeOut('slow', function(){" + "\n";            
+            html += "					$('<span class=\"jFiler-item-others text-success\" style=\"display: none;\"><input type=\"hidden\" name=\"hdf" + obj.NAME + "[]\" value=\"' + name_md5 + '\" /><i class=\"icon-jfi-check-circle\"></i> Success</span>').hide().appendTo(parent).fadeIn('slow');" + "\n";            
+            html += "				});" + "\n";
+            html += "				el.find(\".jFiler-item-title\").attr('href', '/admin/file/get/file/' + name_md5);" + "\n";
+            html += "			}," + "\n";
+            html += "			error: function(el){" + "\n";
+            html += "				var parent = el.find(\".jFiler-jProgressBar\").parent();" + "\n";
+            html += "				el.find(\".jFiler-jProgressBar\").fadeOut(\"slow\", function(){" + "\n";
+            html += "					$('<span class=\"jFiler-item-others text-error\"><i class=\"icon-jfi-minus-circle\"></i> Error</span>').hide().appendTo(parent).fadeIn(\"slow\");" + "\n";
+            html += "				});" + "\n";
+            html += "			}," + "\n";
+            html += "			statusCode: null," + "\n";
+            html += "			onProgress: null," + "\n";
+            html += "			onComplete: null" + "\n";
+            html += "		}," + "\n";
+            html += "		onRemove: function(itemEl, file, id, listEl, boxEl, newInputEl, inputEl){" + "\n";
+            html += "			var folderName = '" + obj.NAME + "';" + "\n";
+            html += "			var filename = file.name;" + "\n";
+            html += "			var fileName_md = $(\"input[name='hdf" + obj.NAME + "[]']\").val();" + "\n";
+            html += "		}," + "\n";
+            html += "		addMore: true," + "\n";
+            html += "		files: [" + "\n";
+            html += "				]" + "\n";
+            html += "	});" + "\n";
+            html += "});" + "\n";
+            html += "<\/script>" + "\n";
+            html += "<div id=\"div" + obj.NAME + "\"></div>";
+            <?php endif; ?>
+
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+
+        } else if(obj.EformControlTypeID == 8) {
+
+            html += '<input type="text" name="' + obj.NAME + '" id="' + obj.NAME + '" placeholder="' + obj.PLACEHOLDER + '" value="" class="form-control" data-date-language="th-th" readonly="readonly">';
+            html += '<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>';
+            html += '<span id="' + obj.NAME + '-Close" class="fa fa-times-circle" style="right: 50px; top: 10px; position: absolute; cursor: pointer; display: none;"></span>';
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+
+        } else if(obj.EformControlTypeID == 9) {
+
+            html += '<button type="button" class="btn btn-primary submit" id="' + obj.NAME + '"><em class="fa fa-save"></em> ' + obj.LABEL + '</button> ';
+            
+            if(obj.RESETBUTTON == 'Y') {
+                html += '<button type="reset" class="btn btn-default" id="' + obj.RESETLABEL + '"><em class="fa fa-refresh"></em> ' + obj.RESETLABEL + '</button>';
+            }
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+
+        } else if(obj.EformControlTypeID == 10) {
+
+            html += '<div id="' + obj.NAME + '" class="g-recaptcha text-center" data-sitekey="<?php echo $this->dataCaptcha['ReCaptchaSiteKey'];?>"><div style="width: 304px; height: 78px;"><div><iframe src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=<?php echo $this->dataCaptcha['ReCaptchaSiteKey'];?>&amp;co=aHR0cDovLzE5Mi4xNjguMS4xMzc6Mzk3MDE.&amp;hl=en&amp;v=v1528855115741&amp;size=normal&amp;cb=9pt4nxj4lelb" width="304" height="78" role="presentation" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid #c1c1c1; margin: 10px 25px; padding: 0px; resize: none;  display: none; "></textarea></div></div>';
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }            
+            
+        } else if(obj.EformControlTypeID == 11) {
+            html += '<p class="form-control-static">' + obj.MESSAGE + '</p>';
+        }
+
+        html +=         '</div>'
+
+        html +=     '</div>';
+        html += '</div>';
+        
+        if(dataId == "") {
+			dataId = tempId;
+			$("#ControlParams").append(html); 
+        } else {
+            $("#ControlParams div[data-id=" + dataId + "]").replaceWith(html); 
+        }
+        $("#ControlParams div[data-id=" + dataId + "] input[type=hidden]").val(dataStr);
+        
+        if(obj.EformControlTypeID == 8) {
+            $("#" + obj.NAME).datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+
+            $("#" + obj.NAME).change(function() {
+                if ($(this).val() != "") {
+                    $("#" + obj.NAME + "-Close").css("display", "block");
+                }
+            });
+            $("#" + obj.NAME + "-Close").click(function(){
+                $("#" + obj.NAME).val('');
+                $("#" + obj.NAME + "-Close").css("display", "none");
+            });
+        }
+
+		tmp_array[dataId] = dataObj.Name;
+		$("#formData input[type=checkbox], #formData input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+	}
+
+	function reindex() {
+		var idx = 0;
+		$("#ControlParams").each(function(i, e) { 
+			idx ++;
+			$(e).find('span[alt=dataIndex]').text(idx);
+		});  
+	}
+
+    $("#btnSave-form-manageform").click(function() {
+        $.post("<?php echo $this->url(array('module' => 'eform', 'controller' => 'controltype', 'action' => 'save'), null, true);?>", $("#formData").serializeArray(), function(data){
+            if (data.result) {
+                DialogComplete();
+                setTimeout(function(){
+                    window.location = "<?php echo $this->url(array('module' => 'eform', 'controller' => 'item', 'action' => 'editform', "itemid" => $this->ID), null, true); ?>";
+                }, 500);
+            } else {
+                DialogWarning(data.message);
+            }
+        }, 'json');
+    });
+
+    $("#formData input[type=checkbox], #formData input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+});
+</script>

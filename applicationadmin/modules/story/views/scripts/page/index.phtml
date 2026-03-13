@@ -1,0 +1,155 @@
+
+<meta charset="UTF-8">
+<link rel="stylesheet"
+	href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+<div>
+	<div class="searchPanel form-horizontal" id="formSearch">
+		<div class="form-group">
+			<div class="col-md-12">
+				<p class="form-control-static">
+						ค้นหาเรื่องราว
+						<?php if($this->canAdd) : ?>
+						<a class="btn btn-primary pull-right" title="เพิ่ม"
+						href="<?php echo $this->url(array('module' => 'story', 'controller' => 'page', 'action' => 'add'), null, false); ?>">
+						<em class="fa fa-plus"></em> <span class="hidden-xs">เพิ่ม</span>
+					</a>
+						<?php endif; ?>
+					</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-12">
+				<div class="input-group">
+						<?php echo $this->formText('textsearch', $this->InfoSearch->textsearch, array('class' => 'form-control', 'placeholder' => 'ค้นหาจากชื่อเรื่องราว'));?>
+						<span class="input-group-btn">
+						<button type="button" class="btn btn-primary" id="btnSearch">
+							<em class="fa fa-search"></em> <span class="hidden-xs">ค้นหา</span>
+						</button>
+						<button type="button" class="btn btn-warning" id="btnReset">
+							<em class="fa fa-refresh"></em> <span class="hidden-xs">เริ่มใหม่</span>
+						</button>
+						<button type="button" class="btn btn-default" id="btnAdvance">
+							<em class="fa fa-minus-circle"></em> <span class="hidden-xs">ลดเงื่อนไขการค้นหา</span>
+						</button>
+					</span>
+				</div>
+
+			</div>
+		</div>
+		<div id="AdvanceSearch">
+				<?php echo $this->formHidden('hdfAdvanceSearch', 'S', null, null); ?>
+				<div class="form-group">
+				<label for="status" class="control-label col-md-2">หมวดหมู่ : </label>
+				<div class="col-md-4">
+						<?php echo $this->formSelect('lsCat', $this->InfoSearch->category, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->storyStorycategoryOption)); ?>
+					</div>
+				<label for="status" class="control-label col-md-2">สถานะ : </label>
+				<div class="col-md-4">
+						<?php echo $this->formSelect('lstStatus', $this->InfoSearch->isenable, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->statusOption)); ?>
+					</div>
+			</div>
+
+
+		</div>
+	</div>
+</div>
+<table id="tblData" class="table table-bordered table-hover">
+	<caption>รายการเรื่องราว</caption>
+	<thead>
+		<tr>
+			<th>ลำดับ</th>
+			<th>ชื่อเรื่องราว</th>
+			<th>ผู้ชม</th>
+			<th>หมวดหมู่</th>
+			<th>วันที่สร้าง</th>
+			<th>สถานะ</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+
+<!-- DataTables -->
+<script
+	src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script
+	src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script type="text/javascript">
+    jQuery(function(){
+
+    	// --------------- Begin: Table & Search Zone --------------------------    	
+    	function renderColumn ( data, type, row, meta ) {
+    		return data;
+    	}
+    	function renderColumnLink ( data, type, row, meta ) {
+    		return '<a href="<?php echo $this->url(array('module' => 'story', 'controller' => 'page', 'action' => 'edit'), null, true);?>/itemid/' + row.DT_RowId + '">' + data + '</a>';
+    	}
+    	var rows_selected = [];
+    	
+    	var tblData = $('#tblData').DataTable({
+    		processing: true,
+    		serverSide: true,
+    		responsive: true,
+    		<?php
+			if ($this->InfoSearch->tblPage) {
+				echo 'displayStart: ' . $this->InfoSearch->tblPage . ',';
+			}
+			if ($this->InfoSearch->tblRow) {
+				echo 'pageLength: ' . $this->InfoSearch->tblRow . ',';
+			}
+			if ($this->InfoSearch->tblOrderCol && $this->InfoSearch->tblOrderDir) {
+				echo 'order: [[ ' . $this->InfoSearch->tblOrderCol . ', "' . $this->InfoSearch->tblOrderDir . '" ]],';
+			} else {
+				echo 'order: [[ 2, "asc" ]],';
+			}
+			?>
+    		ajax: {
+    	        url: '<?php echo $this->url(array('module' => 'story', 'controller' => 'page', 'action' => 'getlist'), null, true); ?>',
+    	        type: 'POST',
+    	        data: function(d) {
+        	        d.textstr = $("#formSearch #textsearch").val();
+        	        d.isEnable = $("#formSearch #lstStatus").val();
+        	        d.isCat = $("#formSearch #lsCat").val();
+    	        }
+    	    },
+    	    language : {
+				url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+    	    },
+    		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+    		"columns": [
+    		            { "width": "40px", 'orderable': false, 'data' : 'NO', "class" : "text-center"},
+    		            { 'data' : 'Name' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "20%", 'data' : 'ViewAmount' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "15%", 'data' : 'CatName' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "20%", 'data' : 'Created' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "10%", 'data' : 'IsEnable' , 'render' : renderColumnLink, "class" : "ratio"},
+    		          ]
+        });
+
+		$('#btnSearch').click(function(){
+			tblData.ajax.reload();
+		});
+
+		$('#btnReset').click(function(){
+			$(".searchPanel input[type=text]").val('');
+			$(".searchPanel select").val('');
+			tblData.ajax.reload();
+		});
+    	        
+		
+		// --------------- Toogle Advance Search ---------------
+		$("#btnAdvance").click(function(e) {
+			var val = $('#hdfAdvanceSearch').val();
+			if(val == 'H'){
+				$("#AdvanceSearch").slideDown(600, "swing");
+				$("#hdfAdvanceSearch").val('S');
+			}else{
+				$("#AdvanceSearch").slideUp(600, "swing");
+				$("#hdfAdvanceSearch").val('H');
+			}
+		});
+    	
+    });
+    
+</script>

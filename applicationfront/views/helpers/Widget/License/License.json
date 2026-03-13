@@ -1,0 +1,115 @@
+{
+	"name" : "License",
+	"fields" : [
+		{
+			"name" : "datatype",
+			"label" : "ประเภทข้อมูล",
+			"type" : "radio",
+			"size" : "",
+			"optiontype" : "static",
+			"options" : [
+				{"name" : "License" , "value" : "L"},
+				{"name" : "Procedure" , "value" : "P"}
+			],
+			"default" : "L",
+			"description" : "",
+			"required" : true
+		}, 
+		{
+			"name" : "category",
+			"label" : "หมวดหมู่",
+			"type" : "select",
+			"size" : "",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "License_Service_Category",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : false
+		},
+		{
+			"name" : "license",
+			"label" : "License",
+			"type" : "cascading",
+			"size" : "",
+			"parent" : "category",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "License_Service_Item",
+				"method" : "getOptionByCategory"
+			},
+			"description" : "หากเลือกประเภทข้อมูลเป็น Procedure",
+			"required" : false
+		},
+		{
+			"name" : "sorttype",
+			"type" : "select",
+			"size" : "",
+			"label" : "การเรียงลำดับ",
+			"optiontype" : "static",
+			"options" : [
+				{"name" : "ชื่อ" , "value" : "title"},
+				{"name" : "วันที่สร้าง" , "value" : "created"},
+				{"name" : "วันที่ปรับปรุง" , "value" : "modified"},
+				{"name" : "วันที่เผยแพร่" , "value" : "publishdate"},
+				{"name" : "วันที่เปิดรับฟังความคิดเห็น" , "value" : "startdate"},
+				{"name" : "วันที่สิ้นสุดรับฟังความคิดเห็น" , "value" : "enddate"}
+			],
+			"default" : "title",
+			"description" : "วันที่เปิดรับฟังความคิดเห็น และ วันที่สิ้นสุดรับฟังความคิดเห็น ใช้งานได้เฉพาะประเภทข้อมูลเป็น Procedure",
+			"required" : true
+		}	,
+		{
+			"name" : "sortdirection",
+			"type" : "select",
+			"size" : "",
+			"label" : "รูปแบบการเรียง",
+			"optiontype" : "static",
+			"options" : [
+				{"name" : "น้อยไปมาก" , "value" : "asc"},
+				{"name" : "มากไปน้อย" , "value" : "desc"}
+			],
+			"default" : "asc",
+			"description" : "",
+			"required" : true
+		},
+		{
+			"name" : "linkTarget",
+			"type" : "select",
+			"size" : "",
+			"label" : "ลิงค์ Target",
+			"optiontype" : "static",
+			"options" : [
+				{"name" : "เปิดหน้าใหม่" , "value" : "_blank"},
+				{"name" : "เปิดหน้าเดิม" , "value" : "_self"}
+			],
+			"default" : "_blank",
+			"description" : "",
+			"required" : true
+		},
+		{
+			"name" : "showEndDate",
+			"type" : "radio",
+			"size" : "",
+			"label" : "แสดงวันที่สิ้นสุด",
+			"optiontype" : "static",
+			"options" : [
+				{"name" : "แสดง" , "value" : "Y"},
+				{"name" : "ไม่แสดง" , "value" : "N"}
+			],
+			"default" : "Y",
+			"description" : "หากเลือกประเภทข้อมูลเป็น License จะไม่แสดงวันที่สิ้นสุด",
+			"required" : true
+		},
+		{
+			"name" : "amount",
+			"type" : "text",
+			"size" : "",
+			"label" : "จำนวนที่แสดง",
+			"default" : "5",
+			"description" : "กรอกเป็นตัวเลข",
+			"required" : true
+		}	
+	]
+}

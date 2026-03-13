@@ -1,0 +1,52 @@
+<?php 
+	if (count($this->itemData) > 0) :
+		foreach ($this->itemData as $item) :
+			$id = $item["ID"];
+			$name = $item["FirstName"]." ".$item["LastName"];
+			$detail = $item["Detail"];
+			$date = Emwork_Utility_DateTime::MSSqlToDateThai($item['Created'], 'DT_Nd').' '.$item['Created']->format("H:i");
+			if($this->filter) :
+				foreach ($this->filter as $item) :
+					$detail = str_replace($item['Detail'],'<s>'.$item['Replace'].'</s>', $detail);
+				endforeach;
+			endif;
+	?>
+				<div class="inforowData">
+
+					<div class="detail">
+
+						<div class="detail-intro" >
+							<span class = 'text'>
+								<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_comment_order'); ?>
+							</span>
+							<?php echo $id; ?>
+						</div>
+
+						<div class=" detail-title">
+							<?php echo $detail; ?>
+						</div>			
+
+						<div class=" detail-by" style="float:  left;margin-right: 15px;font-weight: bold;" >
+							<span class = 'text'>
+								<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_by'); ?> : 
+							</span>
+							<?php echo $name; ?>
+						</div>		
+                        
+						<div class=" detaildate" style="font-weight: bold;">
+							<?php echo $date; ?>
+						</div>		
+
+
+					</div>
+					<div class="clearfix"></div>
+				</div>
+
+	<?php 
+
+
+		endforeach;
+	endif;
+	?>
+
+

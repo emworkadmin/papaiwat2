@@ -1,0 +1,7 @@
+<?php
+if($this->canVote){
+	echo $this->partial("category/_vote.phtml", $this);
+}else{
+	echo $this->partial("item/_warning.phtml", $this);
+}
+?>

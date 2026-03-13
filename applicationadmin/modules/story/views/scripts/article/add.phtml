@@ -1,0 +1,1353 @@
+<?php 
+$defaultDataDetail = null;
+?>
+<!-- jQueryFiler -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+<!-- lightGallery -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightgallery/css/lightgallery.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery/js/lightgallery.min.js'); ?>"></script>
+<!-- select2 -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/select2/select2.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/select2/select2.min.js'); ?>"></script>
+<!-- wickedpicker -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/wickedpicker/wickedpicker.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/wickedpicker/wickedpicker.min.js'); ?>"></script>
+<!-- jQuery UI 1.11.4
+<script src="<?php echo $this->baseUrl("plugins/jQueryUI/jquery-ui.min.js"); ?>"></script> -->
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/story/js/jquery-ui-sortable.js'); ?>"></script>
+<!-- validate -->
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<!-- ckeditor -->
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+<!-- serialize-object -->
+<script src="<?php echo $this->baseUrl('assets/story/js/jquery.serialize-object.min'); ?>"></script>
+<style>
+.bootstrap-dialog .modal-header {border-top-left-radius: 0px; border-top-right-radius: 0px;}
+#tblCoverImage img {width: 120px;}
+
+</style>
+
+<style>
+.tt-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+
+.tt-selector input:active +.template-type {opacity: .9;}
+.tt-selector input:checked +.template-type {
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+.template-type {
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:100px;height:70px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: grayscale(1) opacity(.7);
+       -moz-filter: grayscale(1) opacity(.7);
+            filter:  grayscale(1) opacity(.7);
+}
+.template-type:hover{
+    -webkit-filter: grayscale(.5) opacity(.9);
+       -moz-filter: grayscale(.5) opacity(.9);
+            filter: grayscale(.5) opacity(.9);
+}
+</style>
+
+<?php if($this->isiOS) :  ?>
+<style>
+.jFiler.jFiler-theme-default { 
+	position: relative !important;
+}
+input[type="file"]{
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 900000 !important;
+    width: 100% !important;
+    max-width: 300px !important;
+    height: 35px !important;
+    opacity: 0 !important;
+}
+</style>
+<?php endif; ?>
+
+
+<style>
+.divContentManagement .panel { margin-top: 15px; }
+.divContentManagement .panel-detail .panel-body { padding: 15px; }
+
+.divContentManagement .radio.with-icheck label { padding-left: 0px; }
+.divContentManagement .radio.with-icheck div[class*=iradio] { margin-right: 5px; }
+.divContentManagement .radio-inline { padding-top: 0 !important; }
+.divContentManagement .vdoType { margin-bottom: 25px; }
+.divContentManagement .showVideo { text-align: center; }
+
+.divContentManagement .box-header { padding: 10px 0px; }
+.divContentManagement .box-header .handle,
+.divContentManagement .box-header .remove { cursor: pointer; }
+.divContentManagement .box-header-title { font-size: 16px; }
+
+
+/* Custom Style Bootstrap */
+.divContentManagement .form-group { margin:0; }
+
+/* Custom Style jQuery UI */
+.divContentManagement .ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; }
+
+/* Custom Style ckEditor */
+/* .divContentManagement .ui-helper-hidden-accessible { opacity: 0 !important; } */
+.ui-tooltip-content { opacity: 0 !important; }
+
+/* Custom Style jQuery Filer */
+.divContentManagement .jFiler-items { display: inline-block; margin: 5px 0px; }
+.divContentManagement .jFiler-item-thumb-image {
+    width: 180px;
+    height: 120px;
+    background-color: #e4e4e4;
+    border-radius: 10px;
+    position: relative;
+    display: block;
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    box-shadow: 1px 1px 1px #999;
+	overflow: hidden;
+}
+.divContentManagement .jFiler-item-thumb-image img { width: 100%; height: 100%; object-fit: cover;}
+.divContentManagement .jFiler-item-others { display: none !important; }
+
+@media screen and (max-width: 767px) {
+	.divContentManagement .panel { margin: 15px; }
+}
+@media screen and (max-width: 576px) {
+	.divContentManagement .panel-detail .btn { display: block; width: 100%; margin-bottom: 5px; }
+	.divContentManagement .panel-detail .div-upload-youtube input { width: 100% !important; }
+	.divContentManagement .panel-detail .div-upload-youtube button { margin-top: 10px !important; margin-left: 0px !important; }
+	.divContentManagement .jFiler-input { width: 100% !important; }
+	.divContentManagement .radio-inline { display: block; margin: 0px !important; }
+}
+</style>
+
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<div class="nav-tabs-custom">		
+			<ul class="nav nav-tabs">
+				<?php 
+				if (count($this->languages) > 0) :
+					$i = 0;
+					foreach ($this->languages as $lang) :
+						$i ++;
+				?>
+				<li class="<?php echo $i == 1 ? 'active' : ''; ?> switchLanguagesBar-<?php echo $lang["Code"]; ?>" data-tab-lang="<?php echo $lang["Code"]; ?>">
+					<a data-toggle="tab" href="#detail-<?php echo $lang['Code']; ?>" title="<?php echo $lang['Name']; ?>">
+						<?php echo $lang['NameLocal']; ?>
+						<em class="fa fa-warning text-danger warning"></em>
+					</a>
+				</li>
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</ul>
+			<div class="tab-content">
+				<?php 
+				if (count($this->languages) > 0) :
+					$i = 0;
+					foreach ($this->languages as $lang) :
+						$langCode = $lang['Code'];
+						$isRequired = $lang["IsRequired"] == "Y";
+						$isDefault = $lang["IsDefault"] == "Y";
+						$i ++;
+						$sugguestMessage = "";
+		
+						// Setting Validate
+						$labelClassRequired = '';
+						$controlClassRequired = '';
+						if ($isDefault || $isRequired) {
+							$labelClassRequired = ' labelRequest'; 
+							$controlClassRequired = ' required';
+						}
+				?>
+				<div id="detail-<?php echo $lang['Code']; ?>" class="tab-pane fade <?php echo $i == 1 ? 'in active' : ''; ?>">
+					<?php 
+						if (true) :
+					
+							$dataDetail = $this->dataDetails[$langCode];
+							if ($isDefault) : 
+								$defaultDataDetail = $dataDetail;
+							else :
+								$sugguestMessage = "<<โปรดจัดการข้อมูลที่ " . $this->defaultLanguageName . ">>";
+							endif;
+					?>
+
+
+					<div class="title-label">หัวข้อ<?php echo $this->componentTitle; ?></div>							
+					<div class="form-group">
+						<label class="col-md-3 control-label<?php echo $labelClassRequired; ?>" >ชื่อ</label>
+						<div class="col-md-9 divControl">
+							<?php echo $this->formText("params[{$langCode}][Title]", '', array('class' => 'form-control' . $controlClassRequired, 'placeholder' => '', 'maxlength' => '500')); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label<?php echo $isDefault ? $labelClassRequired : ''; ?>" >หมวดหมู่</label>
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->formSelect("CategoryIds[]", $this->dataCategoryIds, array('class' => 'form-control' . $controlClassRequired, 'placeholder' => '', 'multiple'=>"multiple"), ($this->storyCategoryOption)); ?>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="">รูปภาพหน้าปก</label>
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->UploadHtmlControl("IntroImage", "IntroImage", null, array('multi' => false, 'exts' => array('png', 'jpg', 'gif'))); ?>
+							<div class="help-block">ขนาดไฟล์ไม่เกิน 10 MB<br>เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png</div>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="params-<?php echo $langCode; ?>-IntroText">ข้อความเกริ่นนำ</label> 
+						<div class="col-md-9 divControl">
+							<?php echo $this->formTextarea("params[{$langCode}][IntroText]", null, array('class' => 'form-control', 'style' => 'max-width:100%;', 'rows' => '3', 'cols' => '50', 'maxlength' => '1000')); ?>
+						</div>
+					</div>
+					
+					<div class="title-label">ภาพ Cover</div>	
+					<div class="form-group" >
+						<?php if ($isDefault) : ?>
+						<div class="col-md-12 ">
+							<table class="table table-bordered table-hover" id="tblCoverImage">
+								<col width="80" />
+								<col width="150" />
+								<col width="250" />
+								<col  />
+								<col width="120" />
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>รูปภาพ</th>
+										<th>ชื่อ</th>
+										<th>ข้อความ</th>
+										<th>จัดการ</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+							<div>
+								<button type="button" class="btn btn-primary" id="btnCoverAdd">เพิ่มข้อมูล</button>
+							</div>
+						</div>
+						<?php else : ?>
+						<div class="col-md-9 col-md-offset-3 ">
+							<p class="form-control-static">
+								<?php echo $sugguestMessage; ?>
+							</p>
+						</div>
+						<?php endif; ?>
+					</div>	
+					
+					<hr />
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="">รูปแบบการแสดงผล</label> 
+						<div class="col-md-9 divControl tt-selector">
+							<?php if ($isDefault) : ?>
+							<input id="TemplateType-1" type="radio" name="TemplateType" value="1" checked="checked" />
+					        <label class="template-type" for="TemplateType-1" style="background-image:url(<?php echo $this->baseUrl("assets/content/layouts/layout1.png"); ?>);"></label>
+					        <input id="TemplateType-2" type="radio" name="TemplateType" value="2" />
+					        <label class="template-type"for="TemplateType-2" style="background-image:url(<?php echo $this->baseUrl("assets/content/layouts/layout2.png"); ?>);"></label>
+					        <input id="TemplateType-3" type="radio" name="TemplateType" value="3" />
+					        <label class="template-type"for="TemplateType-3" style="background-image:url(<?php echo $this->baseUrl("assets/content/layouts/layout3.png"); ?>);"></label>
+					        <input id="TemplateType-4" type="radio" name="TemplateType" value="4" />
+					        <label class="template-type"for="TemplateType-4" style="background-image:url(<?php echo $this->baseUrl("assets/content/layouts/layout4.png"); ?>);"></label>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+
+					<hr />					
+					<div class="form-group content-hidden">
+						<div class="col-md-9 col-md-offset-3">
+							<button type="button" class="btn btn-primary" id="lnkAddDocument-<?php echo $langCode; ?>">
+								<em class="fa fa-file-text-o" aria-hidden="true"></em>&nbsp;&nbsp;เพิ่มเนื้อหา
+							</button>
+							<button type="button" class="btn btn-primary" id="lnkAddGallery-<?php echo $langCode; ?>">
+								<em class="fa fa-file-image-o" aria-hidden="true"></em>&nbsp;&nbsp;เพิ่มรูปภาพ
+							</button>
+							<button type="button" class="btn btn-primary" id="lnkAddMultimedia-<?php echo $langCode; ?>">
+								<em class="fa fa-file-video-o" aria-hidden="true"></em>&nbsp;&nbsp;เพิ่มวีดิโอ
+							</button>
+						</div>
+					</div>
+
+
+					<div class="title-label">
+						รายละเอียด
+						<button type="button" class="btn btn-warning pull-right" id="btnSortContent-<?php echo $langCode; ?>" style="position: relative; bottom: 5px; left: 5px;">
+							<em class="fa fa-sort pull-left" style="position: relative; bottom: 2px;" aria-hidden="true"></em>เรียงลำดับ
+						</button>
+					</div>
+					<div class="divContentManagement" id="divContentManagement-<?php echo $langCode; ?>">					
+					</div>
+
+					<div class="title-label">ไฟล์ประกอบ</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label" for=>ไฟล์เอกสาร</label>
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->UploadHtmlControl("FileDocuments", "FileDocuments", null, array('multi' => true, "maxsize" => "10", 'exts' =>  array('pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'rar'))); ?>
+							<div class="help-block">ขนาดไฟล์ไม่เกิน 10 MB<br>เฉพาะไฟล์นามสกุล: .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .zip, .rar</div>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+
+					<div class="title-label content-hidden">การเผยแพร่</div>
+					<?php if ($isDefault) : ?>
+					<div class="form-group content-hidden has-feedback">
+            			<label class="col-md-3 labelRequest control-label" for="PublishDate">วันที่ประกาศ</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][PublishDate]", Emwork_Utility_DateTime::MySQLToDateThai(date('Y-m-d')), array('class' => 'form-control required', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+        					<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+            			</div>
+            		</div>
+            		<div class="form-group content-hidden has-feedback">
+            			<label class="col-md-3 control-label" for="PublishDown">วันที่ปิดประกาศ</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][PublishDown]", null, array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+            				<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+            				<span id="<?php echo "params-{$langCode}-PublishDownClose"; ?>" class="fa fa-times-circle" style="right: -10px; top: 10px; position: absolute; cursor: pointer; display: none;"></span>
+            			</div>
+            		</div>
+					<?php else : ?>
+					<div class="form-group content-hidden">
+						<label class="col-md-3 control-label" >วันที่ประกาศ</label>
+						<div class="col-md-3 divControl">
+							<p class="form-control-static">
+									<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+						<label class="col-md-3 control-label" >วันที่ปิดประกาศ</label>
+						<div class="col-md-3 divControl">
+							<p class="form-control-static">
+									<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+					</div>
+					<?php endif; ?>
+					<?php if ($isDefault) : ?>
+					<div class="form-group content-hidden">
+						<label class="col-md-3 control-label labelRequest" >สถานะ</label>
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">
+								<?php echo $this->formRadio("params[{$langCode}][IsEnable]", 'Y', array('class' => 'required', 'label_class' => 'radio-inline'), $this->publishOption, " "); ?>
+							</div>						
+						</div>
+					</div>
+					<?php else : ?>
+					<div class="form-group content-hidden">
+						<label class="col-md-3 control-label" >สถานะ</label>
+						<div class="col-md-9 divControl">
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+					</div>
+					<?php endif; ?>
+					
+
+					<?php if (false) : ?>
+					<div class="title-label content-hidden">ความคิดเห็น</div>
+					<?php if ($isDefault) : ?>
+					<div class="form-group content-hidden">
+						<label class="col-md-3 control-label labelRequest" >อนุญาตให้แสดงความคิดเห็น</label>
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">
+								<?php echo $this->formRadio("params[{$langCode}][CanCommentType]", 'D', array('class' => 'required', 'label_class' => 'radio-inline', 'id' => 'canCommentType'), $this->canCommentTypeOption, " "); ?>
+							</div>
+							<div class="radio with-icheck" id="canComment" style="border: 1px solid #ccc; padding: 5px; margin-top: 15px; display: none; background-color: #eee;">
+								<?php echo $this->formRadio("params[{$langCode}][CanComment]", empty($this->defaultCanComment) ? "N" : $this->defaultCanComment, array('class' => 'required', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+							</div>
+						</div>
+					</div>
+					<?php else : ?>
+					<div class="form-group content-hidden">
+						<label class="col-md-3 control-label" >อนุญาตให้แสดงความคิดเห็น</label>
+						<div class="col-md-9 divControl">
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+					</div>
+					<?php endif; ?>
+					<?php endif; ?>
+
+
+					<?php if ($isDefault) : ?>
+					<div class="title-label content-hidden">ข้อมูลเฉพาะ</div>
+					<div class="form-group content-hidden">
+						<label class="col-md-3 control-label" for="params-<?php echo $langCode; ?>-MetaData">Meta Data</label> 
+						<div class="col-md-9 divControl">
+							<?php echo $this->formTextarea("params[{$langCode}][MetaData]", null, array('class' => 'form-control', 'rows' => '3', 'cols' => '50', 'maxlength' => '500')); ?>
+						</div>
+					</div>
+					<div class="form-group content-hidden">
+						<label class="col-md-3 control-label">แชร์ข้อมูล</label> 
+						<div class="col-md-9 divControl">
+							<div class="checkbox with-icheck">
+								<label for="">
+									<?php echo $this->formCheckbox("params[{$langCode}][SocialNetworkFacebook]", null, array('class' => 'form-control'), array('Y', 'N')); ?> 
+									Facebook
+								</label>
+							</div>
+							<div class="checkbox with-icheck">
+								<label for="">
+									<?php echo $this->formCheckbox("params[{$langCode}][SocialNetworkTwitter]", null, array('class' => 'form-control'), array('Y', 'N')); ?> 
+									Twitter
+								</label>
+							</div>
+							<div class="checkbox with-icheck">
+								<label for="">
+									<?php echo $this->formCheckbox("params[{$langCode}][SocialNetworkGooglePlus]", null, array('class' => 'form-control'), array('Y', 'N')); ?> 
+									Google+
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group content-hidden">
+						<label class="col-md-3 control-label labelRequest" >แสดง QR Code</label>
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">
+								<?php echo $this->formRadio("params[{$langCode}][ShowQrcode]", 'Y', array('class' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+							</div>
+						</div>
+					</div>
+					<div class="form-group content-hidden">
+						<label class="col-md-3 control-label labelRequest" >แสดงปุ่มพิมพ์</label>
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">
+								<?php echo $this->formRadio("params[{$langCode}][ShowPrint]", 'Y', array('class' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+							</div>
+						</div>
+					</div>		
+
+					<?php endif; ?>
+			
+					<?php endif;?>
+				</div>
+
+				<div id="storyFixtools-<?php echo $langCode; ?>" class="form-group fixtools" style="display: none; text-align: center;bottom: -30px;position: fixed;width: 100%;left: 15px;background: rgb(189, 189, 189);padding: 10px;z-index: 99; padding-left: 215px;">
+					<button type="button" class="btn btn-primary" id="lnkAddDocumentFix-<?php echo $langCode; ?>">
+						<em class="fa fa-file-text-o" aria-hidden="true"></em>&nbsp;&nbsp;เพิ่มเนื้อหา
+					</button>
+					<button type="button" class="btn btn-primary" id="lnkAddGalleryFix-<?php echo $langCode ?>">
+						<em class="fa fa-file-image-o" aria-hidden="true"></em>&nbsp;&nbsp;เพิ่มรูปภาพ
+					</button>
+					<button type="button" class="btn btn-primary" id="lnkAddMultimediaFix-<?php echo $langCode ?>">
+						<em class="fa fa-file-video-o" aria-hidden="true"></em>&nbsp;&nbsp;เพิ่มวีดิโอ
+					</button>
+					<button type="button" class="btn btn-warning" id="btnSortContentFix-<?php echo $langCode ?>">
+						<em class="fa fa-sort" aria-hidden="true"></em>&nbsp;&nbsp;เรียงลำดับ
+					</button>
+				</div>
+
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</div>
+		</div>	
+		
+		<div class="form-group content-hidden">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<button type="button" class="btn btn-success" id="btnPreview"><em class="fa fa-search"></em> ชมตัวอย่างข้อมูล</button>
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+
+<script>
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+
+	// Cover
+	$("#btnCoverAdd").click(function(){
+		var data = '';
+		var dialogCoverImage = BootstrapDialog.show({
+			title: 'ข้อมูลภาพ Cover',
+			message: $('<div id="dialogCoverImage"></div>').load("<?php echo $this->url(array('module' => 'story', 'controller' => 'article', 'action' => 'coverform'), null, true); ?>", {"data" : data}),
+			closable: true,
+            closeByBackdrop: false,
+            closeByKeyboard: false,
+            autodestroy: true,
+			buttons : [{
+				label: ' ยืนยัน',
+				icon: 'fa fa-check',
+				cssClass: 'btn-primary',
+				action: function(dialog) {
+					var isValid = $("#dialogCoverImage form").valid();
+					if (isValid) {
+						var saveResult = saveCoverImage("");
+						if (saveResult) {
+							reindexCoverImage();
+							dialog.close();
+						}
+					}
+				}
+			},{
+				label: ' ปิด',
+				icon: 'fa fa-times',
+				action: function(dialog) {
+					dialog.close();
+				}
+			}]
+		});
+		dialogCoverImage.open();
+	});
+	$("#tblCoverImage").bind('click', function(e) {
+		var target = $(e.target);		
+		// Edit
+		if (target.hasClass("edit")) {
+			var data = target.parent('td').find('input[type=hidden]').val();
+			var dataId = target.parent('td').parent('tr').attr('data-id');
+			if(dataId == undefined){
+				var data = target.parent('button').parent('td').find('input[type=hidden]').val();
+				var dataId = target.parent('button').parent('td').parent('tr').attr('data-id');
+			}
+			var dialogCoverImage = BootstrapDialog.show({
+				title: 'ข้อมูลรูปภาพ Cover',
+				message: $('<div id="dialogCoverImage"></div>').load("<?php echo $this->url(array('module' => 'story', 'controller' => 'article', 'action' => 'coverform'), null, true); ?>", {"data" : data }),
+				closable: true,
+	            closeByBackdrop: false,
+	            closeByKeyboard: false,
+	            autodestroy: true,
+				buttons : [{
+					label: ' ยืนยัน',
+					icon: 'fa fa-check',
+					cssClass: 'btn-primary',
+					action: function(dialog) {
+						var isValid = $("#dialogCoverImage form").valid();
+						if (isValid) {
+							var saveResult = saveCoverImage(dataId);
+							if (saveResult) {
+								reindexCoverImage();
+								dialog.close();
+							}
+						}
+					}
+				},{
+					label: ' ปิด',
+					icon: 'fa fa-times',
+					action: function(dialog) {
+						dialog.close();
+					}
+				}]
+			});
+			dialogCoverImage.open();
+		}
+		// Remove
+		if (target.hasClass("remove")) {
+			DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+				target.parent("td").parent("tr").fadeOut('fast', function(){
+					$(this).remove();
+					reindexCoverImage();
+				});
+			});
+		}
+	});
+	function saveCoverImage(dataId) {
+		var dataObj = $("#dialogCoverImage form").serializeObject();
+		
+		var title = '';
+		var introText = '';
+		var obj = {};
+		var coverImage = null;
+		obj.ID = dataObj.hdfDialogID;
+		obj.Lang = {};
+		$.each(dataObj.dialogParams, function(i, e) { 
+			obj.Lang[i] = {};
+			if(dataObj.hdfCoverImage) {
+				coverImage = dataObj.hdfCoverImage[0];
+			}
+			obj.Lang[i].Title = e.Title;
+			obj.Lang[i].IntroText = e.IntroText;
+			obj.CoverImage = coverImage;
+			if (i == dataObj.hdfDialogDefaultLanguage) {
+				title = e.Title;
+				introText = e.IntroText;
+			}
+		});
+
+		if (!coverImage) {
+			DialogWarning("กรุณากรอกภาพ Cover");
+			return false;
+		}
+
+		var tempId = uuidv4();
+		if (obj.ID == '') {
+			obj.ID = tempId;
+		}
+		
+		var dataStr = JSON.stringify(obj);
+
+		var html = '';
+		html += '<tr data-id="' + (dataId == "" ? tempId : dataId) + '">';
+		html += '<td class="">';
+		html += '	<em class="fa fa-bars handle"></em> &nbsp;&nbsp;';
+		html += '	<span alt="dataIndex" ></span>';
+		html += '</td>';
+		if(!coverImage) {
+			html += '<td class=""><img src="<?php echo $this->baseUrl('images/icons/no-image.jpg'); ?>">' + '</td>';
+		} else {
+			html += '<td class=""><img src="<?php echo $this->baseUrl('/file/get/file/'); ?>' + coverImage + '"></td>';
+		}
+		html += '<td class="">' + title + '</td>';
+		html += '<td class="">' + introText.replace(/(?:\r\n|\r|\n)/g, '<br />') + '</td>';
+		html += '<td class="">';
+		html += '	<button type="button" class="btn btn-primary edit"><em class="fa fa-pencil-square-o edit"></em></button>';
+		html += '	<button type="button" class="btn btn-danger remove"><em class="fa fa-trash remove"></em></button>';
+		html += '	<input type="hidden" id="params-<?php echo $this->defaultLanguage;?>-Cover-' + (dataId == "" ? tempId : dataId) + '" name="params[<?php echo $this->defaultLanguage;?>][Cover][' + (dataId == "" ? tempId : dataId) + ']" value="' + '' + '">';
+		html += '</td>';
+		html += '</tr>';
+
+		if (dataId == "") {
+			dataId = tempId;
+			$("#tblCoverImage tbody").append(html); 
+		} else {
+			$("#tblCoverImage tbody tr[data-id=" + dataId + "]").replaceWith(html); 
+		}
+		$("#tblCoverImage tbody tr[data-id=" + dataId + "] input[type=hidden]").val(dataStr);
+
+		return true;
+	}
+	function reindexCoverImage() {
+		var idx = 0;
+		$("#tblCoverImage tbody tr").each(function(i, e) {
+			idx ++;
+			$(e).find('span[alt=dataIndex]').text(idx);
+		});
+	}
+	$('#tblCoverImage tbody').sortable({
+		handle: '.handle',
+		cursor: 'move',
+		update: function ( event, ui ){ reindexCoverImage(); }, 
+		start: function ( event, ui ){ 
+		}, 
+		stop: function ( event, ui ){ 
+		}
+	}).disableSelection();
+    
+	<?php if($this->isiOS) : ?>
+	$("input[type=text][id$=PublishDate],input[type=text][id$=PublishDown]").removeAttr("readonly");
+	<?php endif; ?>
+	$("input[type=text][id$=PublishDateTime]").wickedpicker({twentyFour: true, title : 'เวลา', now : '<?php echo date('H:i');?>'});
+	$("input[type=text][id$=PublishDownTime]").wickedpicker({twentyFour: true, title : 'เวลา', now : '0:00'});
+
+	$('select[name^=CategoryIds]').select2();
+	$("#formData input[type=checkbox], #formData input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	function toggleCanComment(val) {
+		if (val == 'C') {
+			$("#canComment").css("display", "");
+		} else {
+			$("#canComment").css("display", "none");
+		}
+	}
+	$("input[id^=canCommentType]").on('ifChecked' , function(event){
+		toggleCanComment($(this).val());
+	});
+	
+	// Save
+	$("#btnSave").click(function(){
+		<?php foreach ($this->languages as $lang) :?>
+		$("li[data-tab-lang=<?php echo $lang["Code"]; ?>]").removeClass("warning");
+		<?php endforeach;?>
+		var valid = $("#formData").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'story', 'controller' => 'article', 'action' => 'save'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'story', 'controller' => 'article', 'action' => 'edit'), null, true); ?>" + "/itemid/" + data.id;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		} else {
+			<?php foreach ($this->languages as $lang) :?>
+			if ($("#detail-<?php echo $lang["Code"]; ?>").find("input.error,select.error,textarea.error").length > 0) {$("li[data-tab-lang=<?php echo $lang["Code"]; ?>]").addClass("warning");}
+			<?php endforeach;?>
+		}
+	});
+
+	// Preview
+	$("#btnPreview").click(function(){
+		<?php foreach ($this->languages as $lang) :?>
+		$("li[data-tab-lang=<?php echo $lang["Code"]; ?>]").removeClass("warning");
+		<?php endforeach;?>
+		var valid = $("#formData").valid();
+		if (valid) {
+			var dialogPreview = BootstrapDialog.show({
+				title: 'ตัวอย่างข้อมูล',
+				message: $('<div id="dialogdialogPreview"></div>').load("<?php echo $this->url(array('module' => 'story', 'controller' => 'article', 'action' => 'preview'), null, true); ?>", $("#formData").serializeArray()),
+				closable: true,
+	            closeByBackdrop: false,
+	            closeByKeyboard: false,
+	            autodestroy: true,
+	            size: BootstrapDialog.SIZE_WIDE,
+	            cssClass: "divPreview",
+				buttons : [{
+					label: ' ปิด',
+					icon: 'fa fa-times',
+					action: function(dialog) {
+						dialog.close();
+					}
+				}]
+			});
+			dialogPreview.open();
+		} else {
+			<?php foreach ($this->languages as $lang) :?>
+			if ($("#detail-<?php echo $lang["Code"]; ?>").find("input.error,select.error,textarea.error").length > 0) {$("li[data-tab-lang=<?php echo $lang["Code"]; ?>]").addClass("warning");}
+			<?php endforeach;?>
+		}
+	});
+	
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'story', 'controller' => 'article', 'action' => 'index'), null, true); ?>";
+	});
+
+	// --------------------------- divContentManagement -------------------------- //
+
+	$(window).bind('scroll', showFixtools);
+	function showFixtools(e){
+		var top = window.pageYOffset || document.documentElement.scrollTop;
+		<?php 
+		foreach ($this->languages as $lang){
+			echo "var tab_".$lang["Code"]." = $('.switchLanguagesBar-".$lang["Code"]."').hasClass('active');"."\n";
+			echo "console.log('tab_".$lang["Code"]." : ',tab_".$lang["Code"].");";
+		} 
+		?>
+		if(top>=700){
+			<?php 
+			foreach ($this->languages as $lang){
+				echo "if(tab_".$lang["Code"]."){";
+				echo "	$('#storyFixtools-".$lang["Code"]."').show();"."\n";
+				echo "}";
+			} 
+			?>
+		}else{
+			<?php 
+			foreach ($this->languages as $lang){
+				echo "if(tab_".$lang["Code"]."){";
+				echo "	$('#storyFixtools-".$lang["Code"]."').hide();"."\n";
+				echo "}";
+			} 
+			?>
+		}
+	}
+
+	<?php foreach ($this->languages as $lang){ ?>
+
+		$('#btnSortContent-<?php echo $lang["Code"]; ?>, #btnSortContentFix-<?php echo $lang["Code"]; ?>').click(function(){
+			openDialogSortContent('divContentManagement-<?php echo $lang["Code"]; ?>');
+		});
+
+		var ckeConfigs = [];
+		$('#divContentManagement-<?php echo $lang["Code"]; ?>').sortable({
+			handle: '.handle',
+			cursor: 'move',
+			update: function ( event, ui ){ }, 
+			start: function ( event, ui ){ 
+
+				$('#divContentManagement-<?php echo $lang["Code"]; ?>').css({'margin-top': '15px', 'margin-bottom': '15px'});
+				$('.panel').css({'margin-top': '5px', 'margin-bottom': '0px'});
+				$('.panel-body').css({'padding': '5px 15px 0px'});
+
+				$("#divContentManagement-<?php echo $lang["Code"]; ?> .section-body").css("display", "none"); 
+				$(".content-hidden").css("display", "none");
+
+				ui.item.css("height", 50); 
+				ui.placeholder.height(ui.item.height()); 
+				$("#divContentManagement-<?php echo $lang["Code"]; ?>").sortable( "refreshPositions" ); 
+
+				$('textarea', ui.item).each(function(){
+					var tagId = $(this).attr('id');
+					var ckeClone = $(this).next('.cke').clone().addClass('cloned');
+					ckeConfigs[tagId] = CKEDITOR.instances[tagId].config;
+					CKEDITOR.instances[tagId].destroy();
+					$(this).hide().after(ckeClone);
+				});
+
+				reloadPreviewHeader('divContentManagement-<?php echo $lang["Code"]; ?>');
+				
+				startMouseMove();
+			}, 
+			stop: function ( event, ui ){ 
+
+				$('#divContentManagement-<?php echo $lang["Code"]; ?>').css({'margin-top': '0px', 'margin-bottom': '0px'});
+				$('.panel').css({'margin-top': '15px', 'margin-bottom': '20px'});
+				$('.panel-body').css({'padding': '15px'});
+				
+				$("#divContentManagement-<?php echo $lang["Code"]; ?> .section-body").css("display", "");
+				$(".content-hidden").css("display", "");   
+				
+				$('textarea', ui.item).each(function(){
+					var tagId = $(this).attr('id');
+					CKEDITOR.replace(tagId, ckeConfigs[tagId]);
+					$(this).next('.cloned').remove();
+				});
+
+				$('.preview-desc').hide();
+
+				stopMouseMove();
+			}
+		}).disableSelection();
+
+		$('#lnkAddDocument-<?php echo $lang["Code"]; ?>,#lnkAddDocumentFix-<?php echo $lang["Code"]; ?>').click(function(){
+			var makeid = uuidv4();
+			
+			var html = '';
+			html += "<div class='panel panel-default' data-type='D' id='panel-content-" + makeid + "'>" + "\n";
+			html += "	<div class='panel-body'>" + "\n";
+			html += "		<div class='box-header'>" + "\n";
+			html += "			<em class='fa fa-bars handle'></em>" + "\n";
+			html += "			<b class='box-header-title'>เนื้อหา</b>" + "\n";
+			html += "			<span class='preview-desc'></span>" + "\n";
+			html += "			<em class='fa fa-trash remove remove-" + makeid + " pull-right section-body'></em>" + "\n";
+			html += "		</div>" + "\n";
+			html += "	 	<div class='form-group section-body'>" + "\n";
+			html += "	 	    <input type='hidden' name='Sortable[<?php echo $lang["Code"]; ?>][]' value='Document-" + makeid + "'>" + "\n";
+			html += "	 	    <input type='hidden' name='Document[]' value='Document-" + makeid + "'>" + "\n";
+			html += "	 		<textarea name='Document-" + makeid + "[IntroText]' id='IntroText-" + makeid + "' class='form-control MoreDetail' rows='3' ></textarea>" + "\n";
+			html += "	 	</div>" + "\n";
+			html += "	 </div>" + "\n";
+			html += "</div>" + "\n";
+			html += "<script type='text/javascript'>" + "\n";
+			html += "$('#IntroText-" + makeid + "').ckeditor({" + "\n";
+			html += "	language: 'th'," + "\n";
+			html += "	height: 300," + "\n";
+			html += "	toolbar: [" + "\n";
+			html += "	          {name : 'basicstyles', items : ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']}," + "\n";
+			html += "	          {name : 'colors', items: [ 'TextColor', 'BGColor' ] }," + "\n";
+			html += "	          {name : 'paragraph', items : ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']}," + "\n";
+			html += "	          {name : 'links', items : ['Link', 'Unlink', 'Anchor']}," + "\n";
+			html += "	          {name : 'inserts', items : ['Table', 'HorizontalRule']}," + "\n";
+			html += "	          {name : 'document', items: ['Source']}" + "\n";
+			html += "	]," + "\n";
+			html += "	extraPlugins : 'uploadimage,justify,video,font,panelbutton,colorbutton'," + "\n";
+			html += "	extraAllowedContent : 'video [*]{*}(*);source [*]{*}(*);iframe [*]{*}(*);'" + "\n";
+			html += "});" + "\n";
+			html += "$('.fa-trash.remove-" + makeid + "').click(function(){" + "\n";
+			html += "    var removeThis = $(this);" + "\n";
+			html += "	DialogConfirm(" + "\n";
+			html += "		'คุณต้องการลบข้อมูลใช่หรือไม่ ?', " + "\n";
+			html += "		'ยืนยันการลบข้อมูล', " + "\n";
+			html += "		function(){" + "\n";
+			html += "			$(removeThis).parents('.box-header').parents('.panel-body').parents('.panel').remove();" + "\n";
+			html += "		}," + "\n";
+			html += "		function(){" + "\n";
+			html += "			" + "\n";
+			html += "		}," + "\n";
+			html += "		'ยืนยัน'," + "\n";
+			html += "		'ยกเลิก'" + "\n";
+			html += "	);" + "\n";
+			html += "});" + "\n";
+			html += "<\/script>" + "\n";
+			
+			$("#divContentManagement-<?php echo $lang["Code"]; ?>").append(html);
+			$("#cke_IntroText-" + makeid + " .cke_wysiwyg_frame.cke_reset").attr("title","");
+		});
+		
+		$('#lnkAddMultimedia-<?php echo $lang["Code"]; ?>,#lnkAddMultimediaFix-<?php echo $lang["Code"]; ?>').click(function(){
+			var makeid = uuidv4();
+			
+			var html = '';
+			html += "<div class='panel panel-default' data-type='M' id='panel-content-" + makeid + "'>" + "\n";
+			html += "	<div class='panel-body'>" + "\n";
+			html += "		<div class='box-header'>" + "\n";
+			html += "			<em class='fa fa-bars handle'></em>" + "\n";
+			html += "			<b class='box-header-title'>วีดิโอ</b>" + "\n";
+			html += "			<span class='preview-desc'></span>" + "\n";
+			html += "			<em class='fa fa-trash remove remove-" + makeid + " pull-right section-body'></em>" + "\n";
+			html += "		</div>" + "\n";
+			html += "		<div class='form-group section-body'>" + "\n";
+			html += "			<div class='with-icheck' id='divVdoType-" + makeid + "'>" + "\n";
+			html += "				<div class='vdoType'>" + "\n";
+			html += "					<label class='control-label' for=''>ประเภทการ Multimedia</label>" + "\n";
+			html += "					<label class='radio-inline' for='vdoType-upload' >" + "\n";
+			html += "						<input type='radio' name='vdoType-" + makeid + "' id='vdoType-" + makeid + "-upload' value='U' class='required' >&nbsp;&nbsp;Upload" + "\n";
+			html += "					</label>" + "\n";
+			html += "					<label class='radio-inline' for='vdoType-youtube'>" + "\n";
+			html += "						<input type='radio' name='vdoType-" + makeid + "' id='vdoType-" + makeid + "-youtube' value='Y' class='required' >&nbsp;&nbsp;Youtube" + "\n";
+			html += "					</label>" + "\n";
+			html += "				</div>" + "\n";
+			html += "				<div style='margin: 5px 0px 0px 0px;' data-vdo-type='upload'>" + "\n";
+			html += "	 	    		<input type='hidden' name='Sortable[<?php echo $lang["Code"]; ?>][]' value='Multimedia-" + makeid + "'>" + "\n";
+			html += "	 	    		<input type='hidden' name='MultimediaType[]' value='vdoType-" + makeid + "'>" + "\n";
+			html += "			 	    <input type='hidden' name='Multimedia[]' value='Multimedia-" + makeid + "'>" + "\n";
+			html += "			 	  	<div class='jFiler jFiler-theme-default'>" + "\n";
+			html += "			 	  	  <input type='file' name='Multimedia-" + makeid + "[]' id='Multimedia-" + makeid + "' multiple='multiple' style='position: absolute; left: -9999px; top: -9999px; z-index: -9999;'>" + "\n";
+			html += "			 	  	</div>" + "\n";
+			html += "			 	  	<script type='text/javascript'>" + "\n";
+			html += "			 	  	$('#Multimedia-" + makeid + "').filer({" + "\n";
+			html += "			 	  		showThumbs: true," + "\n";
+			html += "			 	  		limit: 1," + "\n";
+			html += "			 	  		maxSize: 25," + "\n";
+			html += "			 	  		extensions: ['mp4']," + "\n";
+			html += "			 	  		templates: {" + "\n";
+			html += "			 	  			box: '<div class=\"jFiler-items-list jFiler-items-grid\"></div>'," + "\n";
+			html += "			 	  			item: '<div class=\"jFiler-items\"><a  class=\"jFiler-item-title\" style=\"color: #2c93c7;\"><b title=\"{{fi-name}}\">{{fi-name | limitTo: 25}}&nbsp;</b></a>  <a class=\"icon-jfi-trash jFiler-item-trash-action\"></a><div class=\"jFiler-jProgressBar\" style=\"width: 200px;\"></div></div>'," + "\n";
+			html += "							itemAppend: '<div class=\"jFiler-items\"><a class=\"jFiler-item-title\" style=\"color: #2c93c7;\"  href=\"/file/get/file/{{fi-fid}}\"><b title=\"{{fi-name}}\">{{fi-name | limitTo: 25}}&nbsp;</b></a>  <a class=\"icon-jfi-trash jFiler-item-trash-action\"></a><input type=\"hidden\" name=\"hdfMultimedia-" + makeid + "[]\" value=\"{{fi-fid}}\" /></div>'," + "\n";
+			html += "							progressBar: '<div class=\"bar\"></div>'," + "\n";
+			html += "							itemAppendToEnd: false," + "\n";
+			html += "							removeConfirmation: true," + "\n";
+			html += "							_selectors: {" + "\n";
+			html += "								list: '.jFiler-items-list'," + "\n";
+			html += "								item: '.jFiler-items'," + "\n";
+			html += "								progressBar: '.bar'," + "\n";
+			html += "								remove: '.jFiler-item-trash-action'" + "\n";
+			html += "							}" + "\n";
+			html += "						}," + "\n";
+			html += "						uploadFile: {" + "\n";
+			html += "							url: '/admin/file/upload'," + "\n";
+			html += "							type: 'POST'," + "\n";
+			html += "							enctype: 'multipart/form-data'," + "\n";
+			html += "							beforeSend: function(){}," + "\n";
+			html += "							success: function(data, el){" + "\n";
+			html += "								var objData = data;" + "\n";
+			html += "								var name = objData['metas'][0]['old_name'];" + "\n";
+			html += "								var name_md5 = objData['metas'][0]['name'];" + "\n";
+			html += "								var parent = el.find('.jFiler-jProgressBar').parent();" + "\n";
+			html += "								el.find('.jFiler-jProgressBar').fadeOut('slow', function(){" + "\n";
+			html += "									$('<span class=\"jFiler-item-others text-success\" style=\"display: none;\"><input type=\"hidden\" name=\"hdfMultimedia-" + makeid + "[]\" value=\"' + name_md5 + '\" /><i class=\"icon-jfi-check-circle\"></i> Success</span>').hide().appendTo(parent).fadeIn('slow');" + "\n";
+			html += "								});" + "\n";
+			html += "								el.find('.jFiler-item-title').attr('href', '/file/get/file/' + name_md5);" + "\n";
+			html += "								var html = '';" + "\n";
+			html += "								html += '<video style=\"width:720px; height:480px;\" controls>';" + "\n";
+			html += "								html += '  <source src=\"/file/get/file/' + name_md5 + '\" type=\"video/mp4\">';" + "\n";
+			html += "								html += '</video>';" + "\n";
+			html += "								$('#Multimedia-" + makeid + "-ShowVideoUpload').html(html);" + "\n";
+			html += "								adjustVideoRatio_" + makeid.replace(/-/g, '_') + "();" + "\n";
+			html += "							}," + "\n";
+			html += "							error: function(el){" + "\n";
+			html += "								var parent = el.find('.jFiler-jProgressBar').parent();" + "\n";
+			html += "								el.find('.jFiler-jProgressBar').fadeOut('slow', function(){" + "\n";
+			html += "									$('<span class=\"jFiler-item-others text-error\"><i class=\"icon-jfi-minus-circle\"></i> Error</span>').hide().appendTo(parent).fadeIn('slow');" + "\n";       
+			html += "								});" + "\n";
+			html += "							}," + "\n";
+			html += "							statusCode: null," + "\n";
+			html += "							onProgress: null," + "\n";
+			html += "							onComplete: null" + "\n";
+			html += "						}," + "\n";
+			html += "						onRemove: function(itemEl, file, id, listEl, boxEl, newInputEl, inputEl){" + "\n";
+			html += "							var html = '';" + "\n";
+			html += "							$('#Multimedia-" + makeid + "-ShowVideoUpload').html(html);" + "\n";
+			html += "						}," + "\n";
+			html += "						addMore: true," + "\n";
+			html += "						files: [ ]" + "\n";
+			html += "					});" + "\n";
+			html += "					<\/script>" + "\n";
+			html += "					<div class='help-block'>ขนาดไฟล์ไม่เกิน 25 MB และเฉพาะไฟล์นามสกุล: .mp4</div>" + "\n";
+			html += "					<div id='divMultimedia-" + makeid + "'></div>" + "\n";
+			html += "				</div>" + "\n";
+			html += "				<div class='div-upload-youtube' data-vdo-type='youtube'>" + "\n";
+			html += "					<input type='text' class='form-control url' name='txtYoutubeUrl-" + makeid + "' id='txtYoutubeUrl-" + makeid + "' maxlength='500' placeholder='https://www.youtube.com/embed/vIdeOpaRt' style='width: 300px; margin: 5px 0px 0px 0px; display: inline-block;'>" + "\n";
+			html += "					<button type='button' class='btn btn-primary' style='margin-top:-1px; margin-left:-5px; padding:5px 12px;' id='lnkUploadYoutube" + makeid + "'>อัพโหลด</button>" + "\n";
+			html += "					<script type='text/javascript'>" + "\n";
+			html += "					$('#lnkUploadYoutube" + makeid + "').click(function(){" + "\n";
+			html += "						var url = $('#txtYoutubeUrl-" + makeid + "').val();" + "\n";
+			html += "						var regExp = /^.*((youtu.be\\/)|(v\\/)|(\\/u\\/\w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#\\&\\?]*).*/;" + "\n";
+			html += "						var match = url.match(regExp);" + "\n";
+			html += "						if ( match && match[7].length == 11 ){" + "\n";
+			html += "							var html = '';" + "\n";
+			html += "							html = '<iframe class=\"youtube-preview\" style=\"width:720px; height:480px; margin-top: 30px;\" src=\"https://www.youtube.com/embed/' + match[7] + '\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen style=\"margin-top: 30px;\"></iframe>';" + "\n";
+			html += "							$('#Multimedia-" + makeid + "-ShowVideoYoutube').html(html);" + "\n";
+			html += "							adjustVideoRatio_" + makeid.replace(/-/g, '_') + "();" + "\n"
+			html += "						}else{" + "\n";
+			html += "							var html = '';" + "\n";
+			html += "							$('#Multimedia-" + makeid + "-ShowVideoYoutube').html(html);" + "\n";
+			html += "							alert('กรุณากรอก Url Youtube ให้ถูกต้อง');" + "\n";
+			html += "						}" + "\n";
+			html += "					});" + "\n";
+			html += "					<\/script>" + "\n";
+			html += "				</div>" + "\n";
+			html += "			</div>" + "\n";
+			html += "			<div class='showVideo' id='Multimedia-" + makeid + "-ShowVideoUpload'></div>" + "\n";
+			html += "			<div class='showVideo' id='Multimedia-" + makeid + "-ShowVideoYoutube'></div>" + "\n";
+			html += "		</div>" + "\n";
+			html += "		<script>" + "\n";
+			html += "		$(function () {" + "\n";
+			html += "			$('#formData').on('ifClicked', 'input[name=vdoType-" + makeid + "]', function(){" + "\n";
+			html += "				toggleVdoType($(this).val());" + "\n";
+			html += "			});" + "\n";
+			html += "			function toggleVdoType(val) {" + "\n";
+			html += "				$('#divVdoType-" + makeid + "').find('[data-vdo-type=upload],[data-vdo-type=youtube]').css('display', 'none');" + "\n";
+			html += "				$('#txtYoutubeUrl-" + makeid + "').removeClass('required');" + "\n";
+			html += "				$('#txtYoutubeUrl-" + makeid + "').prop('disabled', true);" + "\n";
+			html += "				if(val == 'U'){" + "\n";
+			html += "					$('#divVdoType-" + makeid + "').find('[data-vdo-type=upload]').css('display', '');" + "\n";
+			html += "					$('#txtYoutubeUrl-" + makeid + "').removeClass('required');" + "\n";
+			html += "					$('#txtYoutubeUrl-" + makeid + "').prop('disabled', true);" + "\n";
+			html += "					$('#Multimedia-" + makeid + "-ShowVideoUpload').show();" + "\n";
+			html += "					$('#Multimedia-" + makeid + "-ShowVideoYoutube').hide();" + "\n";
+			html += "				}else if(val == 'Y'){" + "\n";
+			html += "					$('#divVdoType-" + makeid + "').find('[data-vdo-type=youtube]').css('display', '');" + "\n";
+			html += "					$('#txtYoutubeUrl-" + makeid + "').addClass('required');" + "\n";
+			html += "					$('#txtYoutubeUrl-" + makeid + "').prop('disabled', false);" + "\n";
+			html += "					$('#Multimedia-" + makeid + "-ShowVideoYoutube').show();" + "\n";
+			html += "					$('#Multimedia-" + makeid + "-ShowVideoUpload').hide();" + "\n";
+			html += "				}" + "\n";
+			html += "			}" + "\n";
+			html += "			" + "\n";
+			html += "			$('#vdoType-" + makeid + "-upload').click();" + "\n";
+			html += "			toggleVdoType('U');" + "\n";
+			html += "			$('#formData input[type=checkbox], #formData input[type=radio]:not([name=TemplateType])').iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});" + "\n";
+			html += "		});" + "\n";
+			html += "		$('.fa-trash.remove-" + makeid + "').click(function(){" + "\n";
+			html += "			var removeThis = $(this);" + "\n";
+			html += "			DialogConfirm(" + "\n";
+			html += "				'คุณต้องการลบข้อมูลใช่หรือไม่ ?', " + "\n";
+			html += "				'ยืนยันการลบข้อมูล', " + "\n";
+			html += "				function(){" + "\n";
+			html += "					$(removeThis).parents('.box-header').parents('.panel-body').parents('.panel').remove();" + "\n";
+			html += "				}," + "\n";
+			html += "				function(){" + "\n";
+			html += "					" + "\n";
+			html += "				}," + "\n";
+			html += "				'ยืนยัน'," + "\n";
+			html += "				'ยกเลิก'" + "\n";
+			html += "			);" + "\n";
+			html += "		});" + "\n";
+			html += "		<\/script>" + "\n";
+			html += "	</div>" + "\n";
+			html += "</div>" + "\n";
+			html += "<script>" + "\n";
+			html += "function adjustVideoRatio_" + makeid.replace(/-/g, '_') + "() {" + "\n";
+			html += "	var uploadWidth = $('#Multimedia-" + makeid + "-ShowVideoUpload').width();" + "\n";
+			html += "	var youtubeWidth = $('#Multimedia-" + makeid + "-ShowVideoYoutube').width();" + "\n";
+			html += "	if(uploadWidth >= 720){" + "\n";
+			html += "		$('#Multimedia-" + makeid + "-ShowVideoUpload video').css({'width':'720px','height':'480px'});" + "\n";
+			html += "	}" + "\n";
+			html += "	if(uploadWidth < 720){" + "\n";
+			html += "		$('#Multimedia-" + makeid + "-ShowVideoUpload video').css({'width':'352px','height':'288px'});" + "\n";
+			html += "	}" + "\n";
+			html += "	if(uploadWidth < 375){" + "\n";
+			html += "		$('#Multimedia-" + makeid + "-ShowVideoUpload video').css({'width':'176px','height':'144px'});" + "\n";
+			html += "	}" + "\n";
+			html += "	if(youtubeWidth >= 720){" + "\n";
+			html += "		$('#Multimedia-" + makeid + "-ShowVideoYoutube .youtube-preview').css({'width':'720px','height':'480px'});" + "\n";
+			html += "	}" + "\n";
+			html += "	if(youtubeWidth < 720){" + "\n";
+			html += "		$('#Multimedia-" + makeid + "-ShowVideoYoutube .youtube-preview').css({'width':'352px','height':'288px'});" + "\n";
+			html += "	}" + "\n";
+			html += "	if(youtubeWidth < 375){" + "\n";
+			html += "		$('#Multimedia-" + makeid + "-ShowVideoYoutube .youtube-preview').css({'width':'176px','height':'144px'});" + "\n";
+			html += "	}" + "\n";
+			html += "}" + "\n";
+			html += "$(window).bind('resize', adjustVideoRatio_" + makeid.replace(/-/g, '_') + ");" + "\n";
+			html += "$(window).bind('orientationchange', adjustVideoRatio_" + makeid.replace(/-/g, '_') + ");" + "\n";
+			html += "<\/script>" + "\n";
+
+			$("#divContentManagement-<?php echo $lang["Code"]; ?>").append(html);
+		});
+		
+		$('#lnkAddGallery-<?php echo $lang["Code"]; ?>,#lnkAddGalleryFix-<?php echo $lang["Code"]; ?>').click(function(){
+			var makeid = uuidv4();
+			
+			var html = '';
+			html += "<div class='panel panel-default' data-type='G' id='panel-content-" + makeid + "'>" + "\n";
+			html += "	<div class='panel-body'>" + "\n";
+			html += "		<div class='box-header'>" + "\n";
+			html += "			<em class='fa fa-bars handle'></em>" + "\n";
+			html += "			<b class='box-header-title'>รูปภาพ</b>" + "\n";
+			html += "			<span class='preview-desc'></span>" + "\n";
+			html += "			<em class='fa fa-trash remove remove-" + makeid + " pull-right section-body'></em>" + "\n";
+			html += "		</div>" + "\n";
+			html += "	 	<div class='form-group section-body'>" + "\n";
+			html += "	 	    <input type='hidden' name='Sortable[<?php echo $lang["Code"]; ?>][]' value='Gallery-" + makeid + "'>" + "\n";
+			html += "	 	    <input type='hidden' name='Gallery[]' value='Gallery-" + makeid + "'>" + "\n";
+			html += "	 	  	<div class='jFiler jFiler-theme-default'>" + "\n";
+			html += "	 	  	  <input type='file' name='Gallery-" + makeid + "[]' id='Gallery-" + makeid + "' multiple='multiple' style='position: absolute; left: -9999px; top: -9999px; z-index: -9999;'>" + "\n";
+			html += "	 	  	</div>" + "\n";
+			html += "	 	  	<script type='text/javascript'>" + "\n";
+			html += "	 	  	$('#Gallery-" + makeid + "').filer({" + "\n";
+			html += "	 	  		showThumbs: true," + "\n";
+			html += "			 	limit: 10," + "\n";
+			html += "	 	  		maxSize: 10," + "\n";
+			html += "	 	  		extensions: ['jpg','jpeg','gif','png']," + "\n";
+			html += "	 	  		templates: {" + "\n";
+			html += "	 	  			box: '<div class=\"jFiler-items-list jFiler-items-grid\"></div>'," + "\n";
+			html += "	 	  			item: '<div class=\"jFiler-items\">{{fi-image}}<div class=\"jFiler-item-title uploadmainBox Box-5b211667a7975\"><b title=\"{{fi-name}}\" style=\"color: #2c93c7;\">{{fi-name | limitTo: 20}}&nbsp;</b><a class=\"icon-jfi-trash jFiler-item-trash-action\"></a></div><div class=\"jFiler-jProgressBar\" style=\"width: 200px;\"></div></div>'," + "\n";
+			html += "	 	  			itemAppend: '<div class=\"jFiler-items\">{{fi-image}}<div class=\"jFiler-item-title uploadmainBox Box-5b211667a7975\"><b title=\"{{fi-name}}\" style=\"color: #2c93c7;\">{{fi-name | limitTo: 20}}&nbsp;</b><a class=\"icon-jfi-trash jFiler-item-trash-action\"></a></div><input type=\"hidden\" name=\"hdfGallery-" + makeid + "[]\" value=\"{{fi-fid}}\" /></div>'," + "\n";
+			html += "	 	  			progressBar: '<div class=\"bar\"></div>'," + "\n";
+			html += "	 	  			itemAppendToEnd: false," + "\n";
+			html += "	 	  			removeConfirmation: true," + "\n";
+			html += "	 	  			_selectors: {" + "\n";
+			html += "	 	  				list: '.jFiler-items-list'," + "\n";
+			html += "	 	  				item: '.jFiler-items'," + "\n";
+			html += "	 	  				progressBar: '.bar'," + "\n";
+			html += "	 	  				remove: '.jFiler-item-trash-action'" + "\n";
+			html += "	 	  			}" + "\n";
+			html += "	 	  		}," + "\n";
+			html += "	 	  		uploadFile: {" + "\n";
+			html += "	 	  			url: '/admin/file/upload'," + "\n";
+			html += "	 	  			type: 'POST'," + "\n";
+			html += "	 	  			enctype: 'multipart/form-data'," + "\n";
+			html += "	 	  			beforeSend: function(){}," + "\n";
+			html += "	 	  			success: function(data, el){" + "\n";
+			html += "	 	  				var objData = data;" + "\n";
+			html += "	 	  				var name = objData['metas'][0]['old_name'];" + "\n";
+			html += "	 	  				var name_md5 = objData['metas'][0]['name'];" + "\n";
+			html += "	 	  				var parent = el.find('.jFiler-jProgressBar').parent();" + "\n";
+			html += "	 	  				el.find('.jFiler-jProgressBar').fadeOut('slow', function(){" + "\n";
+			html += "	 	  					$('<span class=\"jFiler-item-others text-success\" style=\"display: none;\"><input type=\"hidden\" name=\"hdfGallery-" + makeid + "[]\" value=\"' + name_md5 + '\" /><i class=\"icon-jfi-check-circle\"></i> Success</span>').hide().appendTo(parent).fadeIn('slow');" + "\n";   
+			html += "	 	  				});" + "\n";
+			html += "	 	  				el.find('.jFiler-item-title').attr('href', '/file/get/file/' + name_md5);" + "\n";
+			html += "	 	  			}," + "\n";
+			html += "	 	  			error: function(el){" + "\n";
+			html += "	 	  				var parent = el.find('.jFiler-jProgressBar').parent();" + "\n";
+			html += "	 	  				el.find('.jFiler-jProgressBar').fadeOut('slow', function(){" + "\n";
+			html += "	 	  					$('<span class=\"jFiler-item-others text-error\"><i class=\"icon-jfi-minus-circle\"></i> Error</span>').hide().appendTo(parent).fadeIn('slow');" + "\n";       
+			html += "	 	  				});" + "\n";
+			html += "	 	  			}," + "\n";
+			html += "	 	  			statusCode: null," + "\n";
+			html += "	 	  			onProgress: null," + "\n";
+			html += "	 	  			onComplete: null" + "\n";
+			html += "	 	  		}," + "\n";
+			html += "	 	  		onRemove: function(itemEl, file, id, listEl, boxEl, newInputEl, inputEl){" + "\n";
+			html += "	 	  		" + "\n";
+			html += "	 	  		}," + "\n";
+			html += "	 	  		addMore: true," + "\n";
+			html += "	 	  		files: [ ]" + "\n";
+			html += "	 	  	});" + "\n";
+			html += "			$('.fa-trash.remove-" + makeid + "').click(function(){" + "\n";
+			html += "			    var removeThis = $(this);" + "\n";
+			html += "				DialogConfirm(" + "\n";
+			html += "					'คุณต้องการลบข้อมูลใช่หรือไม่ ?', " + "\n";
+			html += "					'ยืนยันการลบข้อมูล', " + "\n";
+			html += "					function(){" + "\n";
+			html += "						$(removeThis).parents('.box-header').parents('.panel-body').parents('.panel').remove();" + "\n";
+			html += "					}," + "\n";
+			html += "					function(){" + "\n";
+			html += "						" + "\n";
+			html += "					}," + "\n";
+			html += "					'ยืนยัน'," + "\n";
+			html += "					'ยกเลิก'" + "\n";
+			html += "				);" + "\n";
+			html += "			});" + "\n";
+			html += "	 	  	<\/script>" + "\n";
+			html += "	 	  	<div class='help-block'>ขนาดไฟล์ไม่เกิน 10 MB และเฉพาะไฟล์นามสกุล: .jpg .jpeg .gif .png สูงสุดไม่เกิน 10 ภาพ</div>" + "\n";
+			html += "	 	  	<div id='divGallery-" + makeid + "'></div>" + "\n";
+			html += "	 	</div>" + "\n";
+			html += "	 </div>" + "\n";
+			html += "</div>" + "\n";
+			
+			$("#divContentManagement-<?php echo $lang["Code"]; ?>").append(html);
+		});
+
+	<?php } ?>
+
+	function startMouseMove() {
+		$(window).bind('mousemove', scrollWindow);
+	}
+	function stopMouseMove() {
+		$(window).unbind('mousemove', scrollWindow);
+	}
+	function scrollWindow(e) {
+		var screen = $(window).height();
+		var top = e.clientY;
+		if( e.clientY < 50 ){
+			$("html, body").stop().animate({scrollTop:top+200}, 2000);
+		}if( (e.clientY > ($(window).height()-50)) ){
+			$("html, body").stop().animate({scrollTop:top+screen}, 2000);
+		}
+	}
+
+	function reloadPreviewHeader(id){
+		var panelLists = $('#'+id+' .panel');
+		$('#'+id+' .preview-desc').show();
+		$.each( panelLists, function( i, e ) {
+			var inputId = $(e).attr('id');
+			var type = $(e).data('type');
+			var name = getContentAbbrName(inputId, type);
+			$(this).find('.preview-desc').html(name);
+		});
+	}
+
+	function getContentAbbrName(id, type){
+		var abbrName = '';
+		if(type=='D'){
+			var textVal = $('#'+id).find('textarea').val();
+			cleanText = textVal.replace(/<\/?[^>]+(>|$)/g, "");
+			if(cleanText.length>100){
+				cleanText = cleanText.substring(0, 100);
+				cleanText = cleanText + '...';
+			}
+			cleanText = ' : ' + cleanText;
+			abbrName = cleanText;
+		}
+		if(type=='G'){
+			var imgBoxLists = $('#'+id).find('.jFiler-item-title');
+			var textVal = '';
+			var index = 1;
+			$.each( imgBoxLists, function( i1, e1 ) {
+				if(index!=1){
+					textVal += ', '
+				}
+				textVal += $(e1).find('b').attr('title');
+				index++;
+			});
+			textVal = ' : ' + textVal;
+			if(textVal.length>100){
+				textVal = textVal.substring(0, 100);
+				textVal = textVal + '...';
+			}
+			abbrName = textVal;
+		}
+		if(type=='M'){
+			var uploadType = $('#'+id).find('input[type=radio]:checked').val();
+			if(uploadType=='U'){
+				var txtMultimedia = ' : ประเภท Upload ชื่อไฟล์ : ' + $('#'+id).find('.jFiler-item-title').find('b').attr('title');
+			}
+			if(uploadType=='Y'){
+				var txtMultimedia = ' : ประเภท Youtube Url : ' + $('#'+id).find('input[type=text]').val();
+			}
+			if(txtMultimedia.length>100){
+				txtMultimedia = txtMultimedia.substring(0, 100);
+				txtMultimedia = txtMultimedia + '...';
+			}
+			abbrName = txtMultimedia;
+		}
+		return abbrName;
+	}
+
+	function openDialogSortContent(id) {
+		var sendData = [];
+		var contentList = $('#'+id).find('.panel');
+		$.each(contentList, function( i, e ) {
+			var obj = {
+				id: $(e).attr('id'),
+				type: $(e).data('type'),
+				name: getContentAbbrName($(e).attr('id'),$(e).data('type'))
+			};
+			sendData.push(obj);
+		});
+		var dialogSortContent = BootstrapDialog.show({
+			title: 'เรียงลำดับเรื่องราว',
+			message: $('<div id="dialogSortContent"></div>').load("<?php echo $this->url(array('module' => 'story', 'controller' => 'article', 'action' => 'dialogsorting'), null, true); ?>", {"data" : sendData}),
+			closable: true,
+            closeByBackdrop: false,
+            closeByKeyboard: false,
+            autodestroy: true,
+			buttons : [{
+				label: ' ยืนยัน',
+				icon: 'fa fa-check',
+				cssClass: 'btn-primary',
+				action: function(dialog) {
+					var newSortable = $('#dialogSortContent input[name="newSortable[]"]');
+					$.each(newSortable, function( i, e ) {
+						var newsortid = $(e).val();
+						var type = $('#'+newsortid).data('type');
+						if(type=='D'){
+							var el = $('#'+newsortid).find('textarea');
+
+							var tagId = $(el).attr('id');
+							var ckeClone = $(el).next('.cke').clone().addClass('cloned');
+							ckeConfigs[tagId] = CKEDITOR.instances[tagId].config;
+							CKEDITOR.instances[tagId].destroy();
+							$(el).hide().after(ckeClone);
+
+							$('#'+newsortid).appendTo($('#'+id));
+
+							CKEDITOR.replace(tagId, ckeConfigs[tagId]);
+							$(el).next('.cloned').remove();
+						}else{
+							$('#'+newsortid).appendTo($('#'+id));
+						}
+					});
+					dialog.close();
+				}
+			},{
+				label: ' ปิด',
+				icon: 'fa fa-times',
+				action: function(dialog) {
+					dialog.close();
+				}
+			}]
+		});
+		dialogSortContent.open();
+	}
+
+});
+
+// --------------------------- Date picker -------------------------- //
+<?php 
+if (count($this->languages) > 0) :
+$i = 0;
+foreach ($this->languages as $lang) :
+$langCode = $lang['Code'];
+?>
+	$('#<?php echo  "params-{$langCode}-PublishDate" ?>').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	$('#<?php echo  "params-{$langCode}-PublishDown" ?>').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	$('#<?php echo  "params-{$langCode}-PublishDown" ?>').change(function(){
+		if ($(this).val() != "") {
+			$("#<?php  echo "params-{$langCode}-PublishDownClose"; ?>").css("display", "block");
+		}
+	});
+	$("#<?php  echo "params-{$langCode}-PublishDownClose"; ?>").click(function(){
+		$('#<?php echo  "params-{$langCode}-PublishDown" ?>').val('');
+		$("#<?php  echo "params-{$langCode}-PublishDownClose"; ?>").css("display", "none");
+	});
+<?php 
+	endforeach;
+endif;
+?>
+
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'ATR2-0012'); ?>

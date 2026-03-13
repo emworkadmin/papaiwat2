@@ -1,0 +1,99 @@
+<div class="">
+	<div class="row">
+        <?php 
+        if (count($this->items) > 0) :
+	        foreach ($this->items as $item) :
+	        
+	        $id = $item["ID"];
+	        $title = $item["Title"];
+	        $procedures = $item["Procedures"];
+        ?>
+		<div class="col-md-12">
+			<div class="license-box">
+				<div class="license-title">
+					<?php echo $title;?>
+					<div class="icon-toggle">
+						<em class="fa fa-chevron-down"></em>
+						<em class="fa fa-chevron-up" style="display: none;"></em>
+					</div>
+				</div>
+				<div class="license-body" >
+					<table>
+						<thead>
+							<tr>
+								<th class="topic"><?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_topic"); ?></th>
+								<th class="period hidden-xs"><?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_period"); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php 
+							if (count($procedures)) :
+								foreach ($procedures as $procedure) :
+								$procedureTitle = $procedure['Title'];
+								$procedureUrl = $procedure['Url'];
+								$procedureStartDate = $procedure['StartDate'];
+								$procedureEndDate = $procedure['EndDate'];
+								$procedureDate = '';
+								if ($procedureStartDate != null && $procedureEndDate != null) {
+									if ($procedureStartDate->format('Y') == $procedureEndDate->format('Y')) {
+										if ($procedureStartDate->format('m') == $procedureEndDate->format('m')) {
+											if ($procedureStartDate->format('d') == $procedureEndDate->format('d')) { 
+												$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_same_all");
+											} else {
+												$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_diff_day");
+											}
+										} else {
+											$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_diff_month");
+										}
+									} else {
+										$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_diff_all");
+									}
+									
+									$procedureDate = str_replace("{syear}", $procedureStartDate->format('Y') + ($this->lang == 'th' ? 543 : 0), $procedureDate);
+									$procedureDate = str_replace("{smonth}", Emwork_Translate::text($this->lang, "license", "date_month_short_" . $procedureStartDate->format('m')), $procedureDate);
+									$procedureDate = str_replace("{sday}", $procedureStartDate->format('j'), $procedureDate);
+									$procedureDate = str_replace("{eyear}", $procedureEndDate->format('Y') + ($this->lang == 'th' ? 543 : 0), $procedureDate);
+									$procedureDate = str_replace("{emonth}", Emwork_Translate::text($this->lang, "license", "date_month_short_" . $procedureEndDate->format('m')), $procedureDate);
+									$procedureDate = str_replace("{eday}", $procedureEndDate->format('j'), $procedureDate);
+								} elseif ($procedureStartDate != null) {
+									$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_same_all");
+									$procedureDate = str_replace("{eyear}", $procedureStartDate->format('Y') + ($this->lang == 'th' ? 543 : 0), $procedureDate);
+									$procedureDate = str_replace("{emonth}", Emwork_Translate::text($this->lang, "license", "date_month_short_" . $procedureStartDate->format('m')), $procedureDate);
+									$procedureDate = str_replace("{eday}", $procedureStartDate->format('j'), $procedureDate);
+								} elseif ($procedureEndDate != null) {
+									$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_same_all");
+									$procedureDate = str_replace("{eyear}", $procedureEndDate->format('Y') + ($this->lang == 'th' ? 543 : 0), $procedureDate);
+									$procedureDate = str_replace("{emonth}", Emwork_Translate::text($this->lang, "license", "date_month_short_" . $procedureEndDate->format('m')), $procedureDate);
+									$procedureDate = str_replace("{eday}", $procedureEndDate->format('j'), $procedureDate);
+								} else {
+									$procedureDate = "-";
+								}
+							?>
+							<tr>
+								<td class="topic">
+									<?php if (!empty($procedureUrl)) : ?>
+									<a href="<?php echo $procedureUrl; ?>" target="_blank"><?php echo $procedureTitle; ?></a>
+									<?php else : ?>
+									<span ><?php echo $procedureTitle; ?></span>
+									<?php endif; ?>
+									<span class="visible-xs"><?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_period"); ?> : <?php echo $procedureDate; ?></span>
+								</td>
+								<td class="period hidden-xs">
+									<?php echo $procedureDate; ?>
+								</td>
+							</tr>
+							<?php 
+								endforeach;
+							endif;
+							?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+        <?php 
+        	endforeach;
+        endif;
+        ?>
+	</div>
+</div>

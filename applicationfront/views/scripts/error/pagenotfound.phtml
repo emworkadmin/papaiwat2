@@ -1,0 +1,25 @@
+<?php 
+/**
+ * SMART D2MS
+ *
+ * @copyright  Copyright (c) 2018 EMWORK Group
+ * @license	EMWORK Group
+ * @version	1.0.0 applicationfront/views/scripts/error/pagenotfound.phtml 2018-02-20
+ * @author	EMWORK Group
+ */
+?>
+      <div class="error-page">
+        <h2 class="headline text-yellow"> 404</h2>
+
+        <div class="error-content">
+          <h3><span class="fa fa-warning text-yellow"></span> ไม่พบเพจที่ต้องการ</h3>
+
+          <p>
+          	ระบบไม่พบเพจที่ท่านต้องการเข้าใช้งาน<br />
+            ขอแนะนำให้ย้อนกลับไปที่หน้าแรก โดย <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index')); ?>">คลิกที่นี่</a>
+          </p>
+          
+        </div>
+        <!-- /.error-content -->
+      </div>
+      <!-- /.error-page -->

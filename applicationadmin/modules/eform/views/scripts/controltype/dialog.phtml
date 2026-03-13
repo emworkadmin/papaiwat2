@@ -1,0 +1,469 @@
+<style>
+    div.params-list {
+        text-align: left;
+        font-weight: bold;
+    }
+    div.params-list a {
+        width: 100%;
+        display: block;
+        padding: 7px;
+        margin-bottom: 7px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+    }
+    .eformdialog .modal-dialog { width: 80% !important; }
+</style>
+
+<div class="params-list">
+    <?php 
+    if(count($this->data)>0) :
+        foreach($this->data as $data) :
+                echo '<a data-id="' . $data['ID'] . '" data-name="' . $data['Name'] . '">' . $data['Name'] . '</a>';
+        endforeach;
+    endif;
+    ?>
+</div>
+
+
+<script type="text/javascript">
+$(function() {
+
+    $(".params-list a").click(function() {
+
+        var name = $(this).data("name");
+        var id = $(this).data("id");
+
+        if(name == 'RecaptchaV2') {
+            if($("#formData").find('.line').find('.g-recaptcha').length>0) {
+                DialogWarning('You can not insert more than RecaptchaV2 !','Waring');
+                return;
+            }
+        }
+
+        if(name == 'Submit') {
+            if($("#formData").find('.line').find('.submit').length>0) {
+                DialogWarning('You can not insert more than Submit !','Waring');
+                return;
+            }
+        }
+
+        var dialogParamsForm = BootstrapDialog.show({
+            title: name,
+            message: $('<div id="dialogParamsForm"></div>').load("<?php echo $this->url(array('module' => 'eform', 'controller' => 'controltype', 'action' => 'dialogform'), null, true); ?>", {"id" : id, "data" : null}),
+            closable: true,
+            closeByBackdrop: false,
+            closeByKeyboard: false,
+            autodestroy: true,
+			cssClass: "eformdialog",
+            buttons : [
+                {
+                    label: 'บันทึก',
+                    icon: 'fa fa-save',
+                    cssClass: 'btn-primary',
+                    action: function(dialog) {
+                        var isValid = $("#dialogParamsForm form").valid();
+                        if (isValid && alphabetcheck) {
+                            var dataObj = $("#dialogParamsForm form").serializeObject();
+                            if(tmp_array.includes(dataObj.Name)) {
+                                DialogWarning('โปรดใส่ชื่อคีย์ที่ไม่ซ้ำกัน !','แจ้งเตือน');
+                                return;                                   
+                            }
+                            saveParams("", dataObj);
+                            reindex();
+                            dialog.close();                            
+                        }                            
+                    }
+                },
+                {
+                    label: 'กลับ',
+                    icon: 'fa fa-times',
+                    action: function(dialog) {
+                        dialog.close();
+                        $("#ControlAdd").click();
+                    }
+                }
+            ]
+        });
+        dialogParamsList.close();
+        dialogParamsForm.open();
+    });
+
+	function saveParams(dataId, dataObj) {
+
+        var obj = {};
+
+        obj.EformControlTypeID = dataObj.hdfFormID;
+        obj.NAME = dataObj.Name;
+        obj.LABEL = dataObj.Label;
+        obj.PLACEHOLDER = dataObj.Placeholder;
+        obj.DESCRIPTION = dataObj.Description;
+        obj.REQUIRED = dataObj.Required;
+        obj.VALIDATIONRULE = dataObj.Validationrule;
+        obj.SIZE = dataObj.Size;
+        obj.MAXLENGTH = dataObj.Maxlength;
+        obj.VALIDATE = dataObj.Validate
+        obj.COLS = dataObj.Cols;
+        obj.ROWS = dataObj.Rows;
+        obj.DROPDOWN = dataObj.Dropdown;
+        obj.OPTION = dataObj.Option;
+        obj.FLOW = dataObj.Flow;
+        obj.FILESIZE = dataObj.Filesize;
+        obj.FILETYPE = dataObj.Filetype;
+        obj.MULTIPLE = dataObj.Multiple;
+        obj.RESETBUTTON = dataObj.Resetbutton;
+        obj.RESETLABEL = dataObj.Resetlabel;
+        obj.MESSAGE = dataObj.Message;
+        
+        var labelClassRequired = '';
+        if(dataObj.Required == 'Y') {
+            labelClassRequired = ' labelRequest'; 
+        }
+
+        var dataStr = JSON.stringify(obj);
+
+        var tempId = (new Date()).getTime();
+
+        var html = '';
+        html += '<div class="line" data-id="' + (dataId == "" ? tempId : dataId) + '">';
+        html +=     '<div class="icon">';
+        html +=         '<em class="fa fa-bars handle"></em>';
+        html +=         '<em class="fa fa-trash remove"></em>';
+        html +=         '<em class="fa fa-cog edit"></em>';
+        html +=         '<input type="hidden" id="params[ControlParams][' + (dataId == "" ? tempId : dataId) + ']" name="params[ControlParams][' + (dataId == "" ? tempId : dataId) + ']" value="' + '' + '">';        
+        html +=     '</div>';
+        html +=     '<div class="num" style="display: none;">';
+        html +=         '<span alt="dataIndex"></span>';
+        html +=     '</div>';
+
+        if(obj.EformControlTypeID == 8) {
+            html +=     '<div class="form-group has-feedback">';
+        } else {
+            html +=     '<div class="form-group">';
+        }
+
+        if(obj.EformControlTypeID == 11 || obj.EformControlTypeID == 9) {
+            html +=         '<label class="col-md-3 control-label"></label>';
+            html +=         '<div class="col-md-9 divControl">';
+        } else {
+            html +=         '<label class="col-md-3 control-label ' + labelClassRequired + '">' + obj.LABEL +'</label>';
+            html +=         '<div class="col-md-9 divControl">';
+        }
+        
+        if(obj.EformControlTypeID == 1) {
+
+            html += '<input type="text" name="' + obj.NAME + '" id="' + obj.NAME + '" class="form-control ' + obj.VALIDATIONRULE + '" placeholder="' + obj.PLACEHOLDER + '" size="' + obj.SIZE + '" maxlength="' + obj.MAXLENGTH + '"> ';
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+
+        } else if(obj.EformControlTypeID == 2) {
+
+            html += '<textarea name="' + obj.NAME + '" id="' + obj.NAME + '" placeholder="' + obj.PLACEHOLDER + '" class="form-control ' + obj.VALIDATIONRULE + '" style="max-width:100%;" rows="' + obj.ROWS + '" cols="' + obj.COLS + '" maxlength="1000"></textarea>';
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+
+        } else if(obj.EformControlTypeID == 3) {
+
+            if(obj.MULTIPLE == 'Y') {
+                html += '<select name="' + obj.NAME + '" id="' + obj.NAME + '" class="form-control"  size="' + obj.SIZE + '" Multiple>';
+            } else {
+                html += '<select name="' + obj.NAME + '" id="' + obj.NAME + '" class="form-control" size="' + obj.SIZE + '">';
+            }
+
+            var loop_3 = 0;
+            var loop_3_length = obj.DROPDOWN.length;
+            $.each(obj.DROPDOWN, function (i, e) {
+                if(obj.MULTIPLE == 'Y') {
+					if(e.check) {
+                    html += '<option value="' + e.value + '" Selected>' + e.value + '</option>';
+					} else {
+					html += '<option value="' + e.value + '">' + e.value + '</option>';
+					}
+                } else {
+                    loop_3++;
+                    if(e.check && loop_3_length == loop_3) {
+                        html += '<option value="' + e.value + '" Selected>' + e.value + '</option>';
+                    } else {
+                        html += '<option value="' + e.value + '">' + e.value + '</option>';
+                    }
+                }
+            });
+            
+            html += '</select>';
+
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }            
+
+        } else if(obj.EformControlTypeID == 4) {
+
+            if(obj.FLOW == 'H') {
+                html += '<div class="checkbox with-icheck">';
+            }
+            $.each(obj.OPTION, function (i, e) {
+                if(obj.FLOW == 'V') {
+                    html += '<div class="checkbox with-icheck">';
+                }
+                html += '<label class="form-inline" for="">';
+                if(e.check) {
+                    html += '<input type="checkbox" checked value="' + e.value + '" id="' + obj.NAME + '-' + e.value + '" name="' + obj.NAME + '-' + e.value + '">' + e.value;
+                } else {
+                    html += '<input type="checkbox" value="' + e.value + '" id="' + obj.NAME + '-' + e.value + '" name="' + obj.NAME + '-' + e.value + '">' + e.value;
+                }
+                html += '</label>';
+                if(obj.FLOW == 'V') {
+                    html += '</div>';
+                }
+            });
+            if(obj.FLOW == 'H') {
+                html += '</div>';
+            }
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+            
+        } else if(obj.EformControlTypeID == 5) {
+
+            if(obj.FLOW == 'H') {
+                html += '<div class="checkbox with-icheck">';
+            }
+            $.each(obj.OPTION, function (i, e) {
+                if(obj.FLOW == 'V') {
+                    html += '<div class="checkbox with-icheck">';
+                }
+                html += '<label class="form-inline" for="">';
+                if(e.check) {
+                    html += '<input type="radio" checked value="' + e.value + '" id="' + obj.NAME + '-' + e.value + '" name="' + obj.NAME + '">' + e.value;
+                } else {
+                    html += '<input type="radio" value="' + e.value + '" id="' + obj.NAME + '-' + e.value + '" name="' + obj.NAME + '">' + e.value;
+                }
+                html += '</label>';
+                if(obj.FLOW == 'V') {
+                    html += '</div>';
+                }
+            });
+            if(obj.FLOW == 'H') {
+                html += '</div>';
+            }
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div></div>";            
+            }
+            
+        } else if(obj.EformControlTypeID == 6) {
+
+            html += '<input type="password" name="' + obj.NAME + '" id="' + obj.NAME + '" class="form-control" placeholder="' + obj.PLACEHOLDER + '" size="' + obj.SIZE + '" maxlength="' + obj.MAXLENGTH + '" autocomplete="off">';
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+
+        } else if(obj.EformControlTypeID == 7) {
+
+            html += '<div class="jFiler jFiler-theme-default">';
+            html +=     '<input type="file" name="' + obj.NAME + '[]" id="' + obj.NAME + '" multiple="multiple" style="position: absolute; left: -9999px; top: -9999px; z-index: -9999;">';
+            html += '</div>';
+
+            html += "<script type=\"text/javascript\">" + "\n";
+            html += "	$('#" + obj.NAME + "').filer({" + "\n";
+            html += "		showThumbs: true," + "\n";
+
+            if(dataObj.Multiple == 'N') {
+            html += "       limit: 1," + "\n";
+            }
+
+            if(obj.FILESIZE) {
+            html += "		maxSize: " + obj.FILESIZE + "," + "\n";
+            } else {
+            html += "		maxSize: 10," + "\n";
+            }
+
+            if(dataObj.FILETYPE  == 'I') {
+            html += "		extensions: ['png','jpg','gif']," + "\n";
+            } else if (dataObj.FILETYPE  == 'V') {
+            html += "       extensions: ['mp4']," + "\n";
+            } else {
+            html += "       extensions: ['pdf']," + "\n";
+            }
+
+            html += "		templates: {" + "\n";
+            html += "			box: '<div class=\"jFiler-items-list jFiler-items-grid\"></div>'," + "\n";
+            html += "			item: '<div class=\"jFiler-items\"><a  class=\"jFiler-item-title\" style=\"color: #2c93c7;\"><b title=\"{{fi-name}}\">{{fi-name | limitTo: 25}}</b></a><a class=\"icon-jfi-trash jFiler-item-trash-action\"></a><div class=\"jFiler-jProgressBar\" style=\"width: 200px;\"></div></div>'," + "\n";
+            html += "			itemAppend: '<div class=\"jFiler-items\"><a  class=\"jFiler-item-title\" style=\"color: #2c93c7;\"  href=\"/admin/file/get/file/{{fi-fid}}\"><b title=\"{{fi-name}}\">{{fi-name | limitTo: 25}}</b></a><a class=\"icon-jfi-trash jFiler-item-trash-action\"></a><input type=\"hidden\" name=\"hdf" + obj.NAME + "[]\" value=\"{{fi-fid}}\" /></div>'," + "\n";
+            html += "			progressBar: '<div class=\"bar\"></div>'," + "\n";
+            html += "			itemAppendToEnd: false," + "\n";
+            html += "			removeConfirmation: true," + "\n";
+            html += "			_selectors: {" + "\n";
+            html += "				list: '.jFiler-items-list'," + "\n";
+            html += "				item: '.jFiler-items'," + "\n";
+            html += "				progressBar: '.bar'," + "\n";
+            html += "				remove: '.jFiler-item-trash-action'" + "\n";
+            html += "			}" + "\n";
+            html += "		}," + "\n";
+            html += "		uploadFile: {" + "\n";
+            html += "			url: \"/admin/file/upload\"," + "\n";
+            html += "			type: 'POST'," + "\n";
+            html += "			enctype: 'multipart/form-data'," + "\n";
+            html += "			beforeSend: function(){}," + "\n";
+            html += "			success: function(data, el){" + "\n";
+            html += "				var objData = data;" + "\n";
+            html += "				var name = objData['metas'][0]['old_name'];" + "\n";
+            html += "				var name_md5 = objData['metas'][0]['name'];" + "\n";
+            html += "				var parent = el.find(\".jFiler-jProgressBar\").parent();" + "\n";
+            html += "				el.find('.jFiler-jProgressBar').fadeOut('slow', function(){" + "\n";            
+            html += "					$('<span class=\"jFiler-item-others text-success\" style=\"display: none;\"><input type=\"hidden\" name=\"hdf-" + obj.NAME + "[]\" value=\"' + name_md5 + '\" /><i class=\"icon-jfi-check-circle\"></i> Success</span>').hide().appendTo(parent).fadeIn('slow');" + "\n";            
+            html += "				});" + "\n";
+            html += "				el.find(\".jFiler-item-title\").attr('href', '/admin/file/get/file/' + name_md5);" + "\n";
+            html += "			}," + "\n";
+            html += "			error: function(el){" + "\n";
+            html += "				var parent = el.find(\".jFiler-jProgressBar\").parent();" + "\n";
+            html += "				el.find(\".jFiler-jProgressBar\").fadeOut(\"slow\", function(){" + "\n";
+            html += "					$('<span class=\"jFiler-item-others text-error\"><i class=\"icon-jfi-minus-circle\"></i> Error</span>').hide().appendTo(parent).fadeIn(\"slow\");" + "\n";
+            html += "				});" + "\n";
+            html += "			}," + "\n";
+            html += "			statusCode: null," + "\n";
+            html += "			onProgress: null," + "\n";
+            html += "			onComplete: null" + "\n";
+            html += "		}," + "\n";
+            html += "		onRemove: function(itemEl, file, id, listEl, boxEl, newInputEl, inputEl){" + "\n";
+            html += "			var folderName = '" + obj.NAME + "';" + "\n";
+            html += "			var filename = file.name;" + "\n";
+            html += "			var fileName_md = $(\"input[name='hdf" + obj.NAME + "[]']\").val();" + "\n";
+            html += "		}," + "\n";
+            html += "		addMore: true," + "\n";
+            html += "		files: [" + "\n";
+            html += "				]" + "\n";
+            html += "	});" + "\n";
+            html += "<\/script>" + "\n";
+
+            html += "<div id=\"div" + obj.NAME + "\"></div>";
+
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+
+        } else if(obj.EformControlTypeID == 8) {
+
+            html += '<input type="text" name="' + obj.NAME + '" id="' + obj.NAME + '" placeholder="' + obj.PLACEHOLDER + '" value="" class="form-control" data-date-language="th-th" readonly="readonly">';
+            html += '<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>';
+            html += '<span id="' + obj.NAME + '-Close" class="fa fa-times-circle" style="right: 50px; top: 10px; position: absolute; cursor: pointer; display: none;"></span>';
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+
+        } else if(obj.EformControlTypeID == 9) {
+
+            html += '<button type="button" class="btn btn-primary submit" id="' + obj.NAME + '"><em class="fa fa-save"></em> ' + obj.LABEL + '</button> ';
+            
+            if(obj.RESETBUTTON == 'Y') {
+                html += '<button type="reset" class="btn btn-default" id="' + obj.RESETLABEL + '"><em class="fa fa-refresh"></em> ' + obj.RESETLABEL + '</button>';
+            }
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }
+
+        } else if(obj.EformControlTypeID == 10) {
+
+            html += '<div id="' + obj.NAME + '" class="g-recaptcha text-center" data-sitekey="<?php echo $this->dataCaptcha['ReCaptchaSiteKey'];?>"><div style="width: 304px; height: 78px;"><div><iframe src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=<?php echo $this->dataCaptcha['ReCaptchaSiteKey'];?>&amp;co=aHR0cDovLzE5Mi4xNjguMS4xMzc6Mzk3MDE.&amp;hl=en&amp;v=v1528855115741&amp;size=normal&amp;cb=9pt4nxj4lelb" width="304" height="78" role="presentation" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe></div><textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 40px; border: 1px solid #c1c1c1; margin: 10px 25px; padding: 0px; resize: none;  display: none; "></textarea></div></div>';
+            if(obj.DESCRIPTION) {
+                html += "<div class=\"help-block\">" + obj.DESCRIPTION + "</div>";
+            }            
+            
+        } else if(obj.EformControlTypeID == 11) {
+            html += '<p class="form-control-static">' + obj.MESSAGE + '</p>';
+        }
+
+        html +=         '</div>'
+
+        html +=     '</div>';
+        html += '</div>';
+        
+        if(dataId == "") {
+			dataId = tempId;
+			$("#ControlParams").append(html); 
+        } else {
+            $("#ControlParams div[data-id=" + dataId + "]").replaceWith(html); 
+        }
+        $("#ControlParams div[data-id=" + dataId + "] input[type=hidden]").val(dataStr);
+
+        if(obj.EformControlTypeID == 8) {
+            $("#" + obj.NAME).datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+
+            $("#" + obj.NAME).change(function() {
+                if ($(this).val() != "") {
+                    $("#" + obj.NAME + "-Close").css("display", "block");
+                }
+            });
+            $("#" + obj.NAME + "-Close").click(function(){
+                $("#" + obj.NAME).val('');
+                $("#" + obj.NAME + "-Close").css("display", "none");
+            });
+        }
+        
+        tmp_array[dataId] = dataObj.Name;
+        $("#formData input[type=checkbox], #formData input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+	}
+
+	function reindex() {
+		var idx = 0;
+		$("#ControlParams").each(function(i, e) { 
+			idx ++;
+			$(e).find('span[alt=dataIndex]').text(idx);
+		});  
+	}
+
+    /******************************************** SERIALIZE OBJECT *******************************************/
+
+    $.fn.serializeObject = function() {
+        var self = this,
+            json = {},
+            push_counters = {},
+            patterns = {
+                "validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
+                "key":      /[a-zA-Z0-9_]+|(?=\[\])/g,
+                "push":     /^$/,
+                "fixed":    /^\d+$/,
+                "named":    /^[a-zA-Z0-9_]+$/
+            };
+        this.build = function(base, key, value){
+            base[key] = value;
+            return base;
+        };
+        this.push_counter = function(key){
+            if(push_counters[key] === undefined){
+                push_counters[key] = 0;
+            }
+            return push_counters[key]++;
+        };
+        $.each($(this).serializeArray(), function(){
+            // skip invalid keys
+            if(!patterns.validate.test(this.name)){
+                return;
+            }
+            var k,
+                keys = this.name.match(patterns.key),
+                merge = this.value,
+                reverse_key = this.name;
+            while((k = keys.pop()) !== undefined){
+                // adjust reverse_key
+                reverse_key = reverse_key.replace(new RegExp("\\[" + k + "\\]$"), '');
+                // push
+                if(k.match(patterns.push)){
+                    merge = self.build([], self.push_counter(reverse_key), merge);
+                }
+                // fixed
+                else if(k.match(patterns.fixed)){
+                    merge = self.build([], k, merge);
+                }
+                // named
+                else if(k.match(patterns.named)){
+                    merge = self.build({}, k, merge);
+                }
+            }
+            json = $.extend(true, json, merge);
+        });
+        return json;
+    };
+
+});
+</script>
+

@@ -1,0 +1,94 @@
+<?php echo $this->partial("index/_pluginChartjs.phtml", $this); ?>
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/graph/css/graph.css'); ?>">
+
+<style>
+
+    .TIC-footer {
+        font-size: 12px;
+        padding-top: 15px;
+    }
+
+    @media (max-width: 1199px) {
+        .mixchart-box {
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .mixchart-box {
+            font-size: 14px;
+        }
+    }
+
+</style>
+
+<div class="Graph-list Graph-Travelrank-Info">
+    <div class="Graph-title">
+        <span class="title">
+            <?php echo $this->pageTitle; ?>
+        </span>
+    </div>
+    <div class="Graph-subtitle">
+        <div class="borderHead"></div>
+    </div>
+    
+    <?php echo $this->partial("travelrank/_travelrank_mixchart.phtml", $this); ?>
+    <?php echo $this->partial("travelrank/_travelrank_food.phtml", $this); ?>
+    <?php echo $this->partial("travelrank/_travelrank_mice.phtml", $this); ?>
+    <?php echo $this->partial("travelrank/_travelrank_business.phtml", $this); ?>
+    <?php echo $this->partial("travelrank/_travelrank_guide_travel.phtml", $this); ?>
+</div>
+
+<script>
+
+$("#MixchartYear").change(function() {
+    var Year = {};
+    Year.MixchartYear = $('#MixchartYear').val();
+    Year.foodYear = $('#foodYear').val();
+    Year.miceYear = $('#miceYear').val();
+    Year.businessYear = $('#businessYear').val();
+    Year.travelYear = $('#travelYear').val();
+    window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'travelrank', 'action' => 'search'), null, true); ?>/Year/" + JSON.stringify(Year);
+});
+
+$("#foodYear").change(function() {
+    var Year = {};
+    Year.MixchartYear = $('#MixchartYear').val();
+    Year.foodYear = $('#foodYear').val();
+    Year.miceYear = $('#miceYear').val();
+    Year.businessYear = $('#businessYear').val();
+    Year.travelYear = $('#travelYear').val();
+    window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'travelrank', 'action' => 'search'), null, true); ?>/Year/" + JSON.stringify(Year);
+});
+
+$("#miceYear").change(function() {
+    var Year = {};
+    Year.MixchartYear = $('#MixchartYear').val();
+    Year.foodYear = $('#foodYear').val();
+    Year.miceYear = $('#miceYear').val();
+    Year.businessYear = $('#businessYear').val();
+    Year.travelYear = $('#travelYear').val();
+    window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'travelrank', 'action' => 'search'), null, true); ?>/Year/" + JSON.stringify(Year);
+});
+
+$("#businessYear").change(function() {
+    var Year = {};
+    Year.MixchartYear = $('#MixchartYear').val();
+    Year.foodYear = $('#foodYear').val();
+    Year.miceYear = $('#miceYear').val();
+    Year.businessYear = $('#businessYear').val();
+    Year.travelYear = $('#travelYear').val();
+    window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'travelrank', 'action' => 'search'), null, true); ?>/Year/" + JSON.stringify(Year);
+});
+
+$("#travelYear").change(function() {
+    var Year = {};
+    Year.MixchartYear = $('#MixchartYear').val();
+    Year.foodYear = $('#foodYear').val();
+    Year.miceYear = $('#miceYear').val();
+    Year.businessYear = $('#businessYear').val();
+    Year.travelYear = $('#travelYear').val();
+    window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'travelrank', 'action' => 'search'), null, true); ?>/Year/" + JSON.stringify(Year);
+});
+
+</script>

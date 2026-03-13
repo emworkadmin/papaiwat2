@@ -1,0 +1,278 @@
+<style>
+.NumberTourists { font-family: 'Mitr Light'; margin-bottom: 15px; background: #E7F4DA; padding: 30px 5px 20px; display: inline-block; width: 100%;     font-size: 1.5rem;}
+.NumberTourists .export { display: inline-block; width: 100%; }
+.NumberTourists .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+.NumberTourists .export #NumberTourists_Year { margin-right: 4%; }
+.NumberTourists .bg-item { font-size: 12px; float: left; width: 100%; background: #E6E6E6; font-weight: bold;}
+.NumberTourists .item-list { white-space: nowrap; padding-bottom: 5px; display: inline-block; background: #D8D8D8; width: 49.5%; float: left; }
+.NumberTourists .item-list:nth-child(2n+1) { margin-right: 1%; }
+.NumberTourists .item-list.header { text-align:center; padding-bottom: 15px; }
+.NumberTourists .item-list .item-list-item { display: inline-block; width: 100%; padding: 0 15px 5px 0; }
+.NumberTourists .item-list .col-xs-4 { padding: 0 5px; overflow: hidden; text-overflow: ellipsis; }
+
+.NumberTourists #chart_NumberTourists { float: left; background: #E6E6E6; }
+.NumberTourists #chart_NumberTourists .icon { width: 50%; float: left; text-align: center; margin-right: 5px;}
+.NumberTourists #chart_NumberTourists .percent-text { width: calc(50% - 5px); float: left; line-height: 2.5; }
+.NumberTourists #chart_NumberTourists .icon .icon_national { width: 40px; border-radius: 50%; box-shadow: 1px 2px 2px 0px grey; }
+.NumberTourists #chart_NumberTourists .chart-data { position: relative; background: #ECECEC; padding: 5px; position: relative;}
+.NumberTourists #chart_NumberTourists .chart-data span { color: #3c963c; font-size: 18px; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+.NumberTourists_seeAll { display: inline-block; font-family: 'Mitr Light'; font-size: 17px; padding: 12px 30px 12px; margin-bottom: 15px; color: white; background: linear-gradient(to top, #43B74A, #90C34A); border-radius: 7px; border: 1px solid white; }
+.NumberTourists_seeAll a {color :white; }
+#NumberTouristsExportZone .export .head{font-size: 2.2rem;}
+@media screen and (max-width: 768px) {
+    .NumberTourists .export { margin-bottom: 15px; }
+    .NumberTourists .item-list { width: 100%;}
+    .NumberTourists .item-list:nth-child(2n+1) { margin-right: 0%; }
+    .NumberTourists #chart_NumberTourists .icon .icon_national { width: 25px; }
+    .NumberTourists #chart_NumberTourists .icon, .NumberTourists #chart_NumberTourists .percent-text { font-size: 16px; }
+    .NumberTourists .item-list.header.hidden-768 { display: none; }
+}
+
+@media screen and (max-width: 425px) {
+    .NumberTourists #chart_NumberTourists .icon, .NumberTourists #chart_NumberTourists .percent-text { font-size: 10px; }
+}
+
+</style>
+
+<div class="NumberTourists bg" id="NumberTouristsExportZone">
+
+    <div class="export">
+        <div class="col-md-9 head">จำนวนนักท่องเที่ยวชาวต่างชาติ รายสัญชาติ</div>
+        <div class="col-md-3">
+            <?php echo $this->formSelect("NumberTourists_Year", $this->numberTouristsYear, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?>
+            <?php echo $this->formSelect("NumberTourists_Export", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+
+    <?php
+        $tourists = array(1,2,3,4,5,6,7,8);
+
+        $tourists_data[0] = array(0.5,5,2);
+        $tourists_data[2] = array(0.5,2.5,5);
+        $tourists_data[4] = array(0.5,2.5,5);
+        $tourists_data[6] = array(0.5,2.5,5);
+        $tourists_data[8] = array(4,5,0.5);
+
+        $tourists_data[1] = array(0.5,5,2);
+        $tourists_data[3] = array(0.5,4.5,5);
+        $tourists_data[5] = array(0.5,4.5,5);
+        $tourists_data[7] = array(0.5,4.5,5);
+        $tourists_data[9] = array(0.5,2.5,5);
+    ?>
+
+    <div class="col-md-12">
+        <div class="bg-item">
+            <div class="item-list header">
+                <div class="col-md-4 col-sm-4 col-xs-4">Share of Tourists</div>
+                <div class="col-md-4 col-sm-4 col-xs-4">TouristNumber</div>
+                <div class="col-md-4 col-sm-4 col-xs-4">Trend</div>
+            </div>
+            <div class="item-list header hidden-768">
+                <div class="col-md-4 col-sm-4 col-xs-4">Share of Tourists</div>
+                <div class="col-md-4 col-sm-4 col-xs-4">TouristNumber</div>
+                <div class="col-md-4 col-sm-4 col-xs-4">Trend</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div id="chart_NumberTourists"></div>
+    </div>
+
+</div>
+
+<div id="previewImage_NumberTourists" style="display: none;"></div>
+<a id="downloadImage_NumberTourists" href="#NumberTourists" style="display: none;"></a>
+
+<div class="col-md-12" style="text-align: center;">
+    <a href="<?php echo $this->url(array("module"=>"graph", "controller"=>"travelstatistics", "action"=>"numbertourists"), null, true);?>" target="_blank">
+        <div class="NumberTourists_seeAll">ดูข้อมูลสถิติทั้งหมด</div>
+    </a>
+</div>
+
+<script>
+
+
+    <?php 
+    $nt_data = array(
+        2650076,
+        542541,
+        531307,
+        506325,
+        421565,
+        388968,
+        343944,
+        300351,
+        95854
+    );
+
+    $nt_data_txt = array(
+        "จีน",
+        "ญี่ปุ่น",
+        "เกาหลีใต้",
+        "สหรัฐอเมริกา",
+        "อินเดีย",
+        "รัสเซีย",
+        "สหราชอาณาจักร",
+        "เยอรมนี",
+        "อิตาลี"
+    );
+    $nt_data_icon = array(
+        "china",
+        "japan",
+        "south_korea",
+        "america",
+        "india",
+        "russia",
+        "united-kingdom",
+        "germany",
+        "italy",
+    );
+
+    $nt_data_percent = array(
+        number_format((2.7*100)/5.7,2),
+        number_format((0.5*100)/5.7,2),
+        number_format((0.5*100)/5.7,2),
+        number_format((0.5*100)/5.7,2),
+        number_format((0.4*100)/5.7,2),
+        number_format((0.4*100)/5.7,2),
+        number_format((0.3*100)/5.7,2),
+        number_format((0.3*100)/5.7,2),
+        number_format((0.1*100)/5.7,2),
+    );
+    
+    foreach($tourists as $k => $v) : 
+    ?>
+    var html = '';
+    html += '   <div class="item-list">';
+    html += '       <div class="item-list-item">';
+    html += '           <div class="col-md-4 col-sm-4 col-xs-4">';
+    html += '               <div class="icon">';
+    html += '                   <img alt="image" class="icon_national" src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/{$nt_data_icon[$k]}.png");?>">';
+    html += '                   <div><?=$nt_data_txt[$k];?></div>';
+    html += '               </div>';
+    html += '               <div class="percent-text">';
+    html += '                   <?=number_format($nt_data_percent[$k],1);?>%';
+    html += '               </div>';
+    html += '           </div>';
+    html += '           <div class="col-md-4 col-sm-4 col-xs-4 chart-data">';
+    html += '               <canvas id="NumberTourists_1_<?=$k;?>"></canvas>';
+    html += '                <span><?=number_format($nt_data[$k],0);?></span>'
+    html += '           </div>';
+    html += '           <div class="col-md-4 col-sm-4 col-xs-4 chart-data">';
+    html += '               <canvas id="NumberTourists_2_<?=$k;?>"></canvas>';
+    html += '           </div>';
+    html += '       </div>';
+    html += '   </div>';
+    $("#chart_NumberTourists").append(html);
+
+    var NumberTourists_1_<?=$k;?> = $("#NumberTourists_1_<?=$k;?>");
+    var myChart_NumberTourists_1_<?=$k;?> = new Chart(NumberTourists_1_<?=$k;?>, {
+        type: 'line',
+        data: {
+            labels: ["1", "2", "3"],
+            datasets: [
+                {
+                    label: '2558',
+                    data: [<?php echo $tourists_data[$k][0] . ','. $tourists_data[$k][1] . ',' . $tourists_data[$k][2] ; ?>],
+                    backgroundColor: '#CAE1CF',
+                    lineTension : 0,
+                    radius: 0,
+                    borderWidth: 1,
+                    borderColor: '#CAE1CF'
+                }
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    },
+                    display: false
+                }],
+                xAxes: [{ 
+                    gridLines: { 
+                        display: false 
+                    },
+                    display: false
+                }]
+            },
+            legend: {
+                display: false,
+            },
+            responsive: true,
+        }
+    });
+
+    var NumberTourists_2_<?=$k;?> = $("#NumberTourists_2_<?=$k;?>");
+    var myChart_NumberTourists_2_<?=$k;?> = new Chart(NumberTourists_2_<?=$k;?>, {
+        type: 'line',
+        data: {
+            labels: ["1", "2", "3", "4", "5"],
+            datasets: [
+                {
+                    label: '2558',
+                    data: [<?php echo $tourists_data[$k][0]+2 . ','. $tourists_data[$k][1] . ',' . $tourists_data[$k][2] . ',' . $tourists_data[$k][1] . ',' . $tourists_data[$k][0]; ?>],
+                    backgroundColor: 'rgba(92, 110, 110, 0.2)',
+                    lineTension : 0,
+                    radius: 0,
+                    fill: false,
+                }
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    },
+                    display: false
+                }],
+                xAxes: [{ 
+                    gridLines: { 
+                        display: false 
+                    },
+                    display: false
+                }]
+            },
+            legend: {
+                display: false,
+            },
+            responsive: true
+        }
+    });
+
+    
+    <?php endforeach; ?>
+
+    function setCanvas_NumberTouristsExportZone(val) {
+        html2canvas(document.querySelector("#NumberTouristsExportZone")).then(function(canvas) {
+            $("#previewImage_NumberTourists").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_NumberTourists").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage_NumberTourists")[0].click();
+                $("#NumberTourists_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_NumberTourists canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#NumberTourists_Export").val('export');
+            }
+        });
+    }
+    $("#NumberTourists_Export").change(function() {
+        setCanvas_NumberTouristsExportZone($(this).val());
+    });    
+
+    $("#NumberTourists_Year").change(function() {
+        var checkPointYear = $('#CheckPoint_Year').val();
+        var inOutYear = $('#InOut_Year').val();
+        var numberTouristsYear = $('#NumberTourists_Year').val();
+        window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'travelstatistics', 'action' => 'search'), null, true); ?>/checkPointYear/"+checkPointYear+"/inOutYear/"+inOutYear+"/numberTouristsYear/"+numberTouristsYear;
+    });
+</script>

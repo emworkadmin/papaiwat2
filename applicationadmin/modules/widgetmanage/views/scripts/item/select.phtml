@@ -1,0 +1,88 @@
+<style type="text/css">
+.radio.with-icheck { padding-top: 2px; }
+.radio.with-icheck label { display: table-row; line-height: 2; }
+</style>
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formSelect" name="formSelect">
+
+		<div class="title-label">เลือกประเภท</div>							
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" >ประเภท Widget</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio("rdlWidgetType", 'content', array('class' => 'required', 'label_class' => 'radio-inline'), $this->widgetTypeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group" id="divDataType">
+			<label class="col-md-3 control-label labelRequest" >ประเภทข้อมูล</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio("rdlDataType", 'grid', array('class' => 'required', 'label_class' => 'radio-inline'), $this->dataTypeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnAdd"><em class="fa fa-save"></em> ยืนยัน</button>
+				<button type="button" class="btn btn-default" id="btnCancel">กลับ</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formSelect").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+    
+	$("#formSelect input[type=checkbox], #formSelect input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	// Add
+	$("#btnAdd").click(function(){
+		var valid = $("#formSelect").valid();
+		if (valid) {
+			var wt = $('input[name=rdlWidgetType]:checked', '#formSelect').val();
+			var dt = $('input[name=rdlDataType]:checked', '#formSelect').val();
+			if(wt=='tab' || wt=='collapse'){ dt = 'custom'; }
+			if(wt=='calendar'){ dt = 'calendar'; }
+			window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'add'), null, true); ?>/wt/" + wt + "/dt/" + dt;
+		}
+	});
+
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'index'), null, true); ?>";
+	});
+
+	// Manage
+	function toggleDataType(val) {
+		if (val == 'tab' || val == 'collapse' || val == 'calendar') {
+			$('#divDataType').css('display','none');
+			$('input[name="rdlDataType"]').attr("disabled", true);
+		} else {
+			$('#divDataType').css('display','');
+			$('input[name="rdlDataType"]').attr("disabled", false);
+		}
+	}
+	$("#formSelect").on('ifClicked', 'input[name="rdlWidgetType"]', function(){
+		toggleDataType($(this).val());
+	});
+
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'WDG-MGT-02'); ?>

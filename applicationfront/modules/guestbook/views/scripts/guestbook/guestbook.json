@@ -1,0 +1,20 @@
+{
+	"name" : "รายการสมุดเยี่ยม",
+	"controller" : "guestbook",
+	"description" : "แสดงรายการตามสมุดเยี่ยมที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "guestbook",
+			"type" : "select",
+			"size" : "",
+			"label" : "สมุดเยี่ยม",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Guestbook_Service_Guestbook",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

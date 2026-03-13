@@ -1,0 +1,439 @@
+<!-- jQuery UI 1.11.4 -->
+<script src="<?php echo $this->baseUrl("plugins/jQueryUI/jquery-ui.min.js"); ?>"></script>
+
+<style>
+.section {border: 1px solid #000; margin-top: 15px;}
+.section .section-header {background-color: #000; padding: 5px 10px; color: #fff;}
+.section .section-header em.handle {cursor: move;}
+.section .section-header .pull-right em {cursor: pointer;}
+.section .section-body {padding: 5px 10px;}
+
+.section-box {border: 1px solid #ccc; margin-top: 15px;}
+.section-box .section-box-header {background-color: #666; padding: 5px 10px; color: #fff;}
+.section-box .section-box-header .pull-right em{cursor: pointer;}
+.section-box .section-box-body {padding: 5px 10px;}
+
+.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; }
+
+.section-dialog {display: none;}
+.divRowSetting .section-dialog {display: block;}
+
+.section-box-dialog {display: none;}
+.divColSetting .section-box-dialog {display: block;}
+
+.title-overflow {display: inline-block; width: calc(100% - 50px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+</style>
+
+
+<div class="panel-detail">
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden('hdfID', $this->data->ID, null, null); ?>
+		
+		<div class="title-label">หัวข้อคำถาม</div>		
+		<?php // Button Add Row ?>
+		<div class="text-right">
+			<button type="button" class="btn btn-primary btn-add-section"  id="btnAddSection">
+				<em class="fa fa-plus"></em> เพิ่มคำถาม
+			</button>
+		</div>
+		
+		<div id="section-manage">
+			<?php 
+			if (count($this->questionList) > 0) {
+				foreach ($this->questionList as $rowGuid => $rowOption) {
+			?>
+			<div class="section" >
+				<div class="section-header">
+					<div class="title-overflow">
+						<em class="fa fa-bars handle"></em>
+						คำถาม : <span class="section-header-title" id="question-<?php echo $rowGuid; ?>-title"><?php echo $rowOption['Lang'][$this->defaultLanguage]['Question']; ?></span>
+					</div>
+					<span class="pull-right">
+						<em class="fa fa-gear setting" data-rguid="<?php echo $rowGuid; ?>"></em>
+						<em class="fa fa-trash remove" data-rguid="<?php echo $rowGuid; ?>"></em>
+					</span>
+				</div>
+				<div class="section-body">
+					<?php echo $this->formHidden('row[' . $rowGuid . '][setting]', ($rowOption['setting'])); ?>
+				
+					<div class="section-box-part" data-rguid="<?php echo $rowGuid; ?>">
+						<div class="text-right">
+							<button type="button" class="btn btn-primary btn-add-box" >
+								<em class="fa fa-plus"></em> เพิ่มตัวเลือกคำตอบ
+							</button>
+						</div>
+						<div class="section-box-part-list">						
+							<?php 
+							if (count($rowOption['OptionList']) > 0) {
+								foreach($rowOption['OptionList'] as $colGuid => $colOption) { 
+							?>
+							<div class="section-box" >
+								<div class="section-box-header">
+									<div class="title-overflow">
+										<em class="fa fa-bars handle-box"></em>
+										คำตอบ : <span class="section-header-title" id="option-<?php echo $colGuid; ?>-title"><?php echo $colOption['Lang'][$this->defaultLanguage]['Name']; ?></span>		
+									</div>
+									<span class="pull-right">
+										<em class="fa fa-gear setting-box" data-cguid="<?php echo $colGuid; ?>" data-rguid="<?php echo $rowGuid; ?>"></em>
+										<em class="fa fa-trash remove-box" data-cguid="<?php echo $colGuid; ?>" data-rguid="<?php echo $rowGuid; ?>"></em>
+									</span>
+									<?php echo $this->formHidden('row[' . $rowGuid . '][cols][' . $colGuid . '][setting]', ($colOption['setting'])); ?>
+								</div>
+							</div>
+							<?php 
+								}
+							}
+							?>
+						</div>
+					</div>		
+				</div>
+			</div>
+			<?php 
+				}
+			}
+			?>		
+		</div>
+		
+		<hr />
+		
+		<?php // Button Zone ?>
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canAdd) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+				<?php endif ; ?>
+
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<div id="section-temp" style="display: none;" >
+	<div class="section-header">
+		<div class="title-overflow">
+			<em class="fa fa-bars handle"></em>
+			คำถาม : <span class="section-header-title" id="question-row_guid-title"></span>
+		</div>
+		<span class="pull-right">
+			<em class="fa fa-gear setting" data-rguid="row_guid"></em>
+			<em class="fa fa-trash remove" data-rguid="row_guid"></em>
+		</span>
+		<?php echo $this->formHidden('row[row_guid][setting]', '{"th":{},"en":{},"zh":{}}'); ?>
+	</div>
+	<div class="section-body">
+		<div class="section-box-part" data-rguid="row_guid">
+			<div class="text-right">
+				<button type="button" class="btn btn-primary btn-add-box" >
+					<em class="fa fa-plus"></em>
+					เพิ่มตัวเลือกคำตอบ
+				</button>
+			</div>
+			<div class="section-box-part-list"></div>
+		</div>		
+	</div>
+</div>
+
+<div id="section-box-temp" style="display: none;">
+	<div class="section-box-header">
+		<div class="title-overflow">
+			<em class="fa fa-bars handle-box"></em>
+			คำตอบ : <span class="section-header-title" id="option-col_guid-title"></span>	
+		</div>	
+		<span class="pull-right">
+			<em class="fa fa-gear setting-box" data-cguid="col_guid" data-rguid="row_guid"></em>
+			<em class="fa fa-trash remove-box" data-cguid="col_guid" data-rguid="row_guid"></em>
+		</span>
+		<?php echo $this->formHidden('row[row_guid][cols][col_guid][setting]', '{"th":{},"en":{},"zh":{}}'); ?>
+	</div>
+</div>
+
+<div id="section-dialog" class="section-dialog">
+	<form class="form-horizontal" id="formSectionDialog" name="formSectionDialog">
+		<div class="nav-tabs-custom">		
+			<ul class="nav nav-tabs">
+				<?php 
+				if (count($this->languages) > 0) {
+					$i = 0;
+					foreach ($this->languages as $lang) {
+						$i ++;
+				?>
+				<li class="<?php echo $i == 1 ? 'active' : ''; ?>" data-tab-lang="<?php echo $lang["Code"]; ?>">
+					<a data-toggle="tab" href=".detail-<?php echo $lang['Code']; ?>" title="<?php echo $lang['Name']; ?>">
+						<?php echo $lang['NameLocal']; ?>
+						<em class="fa fa-warning text-danger warning"></em>
+					</a>
+				</li>
+				<?php 
+					}
+				}
+				?>
+			</ul>
+			<div class="tab-content">
+				<?php 
+				if (count($this->languages) > 0) {
+					$i = 0;
+					foreach ($this->languages as $lang) {
+						$langCode = $lang['Code'];
+						$i ++;
+				?>
+				<div class="tab-pane fade <?php echo $i == 1 ? 'in active' : ''; ?> detail-<?php echo $lang['Code']; ?>">
+					<div class="title-label">คำถาม</div>							
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="params-<?php echo $langCode; ?>-Question">ชื่อ</label>
+						<div class="col-md-9 divControl">
+							<?php echo $this->formText("params[{$langCode}][Question]", null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '250')); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="params-<?php echo $langCode; ?>-Description">รายละเอียด</label> 
+						<div class="col-md-9 divControl">
+							<?php echo $this->formTextarea("params[{$langCode}][Description]", null, array('class' => 'form-control', 'rows' => '3', 'maxlength' => '980')); ?>
+						</div>
+					</div>
+				</div>
+				<?php 
+					}
+				}
+				?>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div id="section-box-dialog" class="section-box-dialog">
+	<form class="form-horizontal" id="formSectionBoxDialog" name="formSectionBoxDialog">
+		<div class="nav-tabs-custom">		
+			<ul class="nav nav-tabs">
+				<?php 
+				if (count($this->languages) > 0) {
+					$i = 0;
+					foreach ($this->languages as $lang) {
+						$i ++;
+				?>
+				<li class="<?php echo $i == 1 ? 'active' : ''; ?>" data-tab-lang="<?php echo $lang["Code"]; ?>">
+					<a data-toggle="tab" href=".detail-<?php echo $lang['Code']; ?>" title="<?php echo $lang['Name']; ?>">
+						<?php echo $lang['NameLocal']; ?>
+						<em class="fa fa-warning text-danger warning"></em>
+					</a>
+				</li>
+				<?php 
+					}
+				}
+				?>
+			</ul>
+			<div class="tab-content">
+				<?php 
+				if (count($this->languages) > 0) {
+					$i = 0;
+					foreach ($this->languages as $lang) {
+						$langCode = $lang['Code'];
+						$i ++;
+				?>
+				<div class="tab-pane fade <?php echo $i == 1 ? 'in active' : ''; ?> detail-<?php echo $lang['Code']; ?>">
+					<div class="title-label">ตัวเลือกคำตอบ</div>							
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="params-<?php echo $langCode; ?>-Name">คำตอบ</label>
+						<div class="col-md-9 divControl">
+							<?php echo $this->formText("params[{$langCode}][Name]", null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '250')); ?>
+						</div>
+					</div>
+				</div>
+				<?php 
+					}
+				}
+				?>
+			</div>
+		</div>
+	</form>
+</div>
+
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+
+<script>
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });    
+
+	$( "#section-manage" ).sortable({handle: '.handle',cursor: 'move', update: function ( event, ui ){ }, start: function ( event, ui ){ $("#section-manage .section-body").css("display", "none"); ui.item.css("height", $(".section-header", ui.item).height()); ui.placeholder.height(ui.item.height()); $("#section-manage").sortable( "refreshPositions" ); }, stop: function ( event, ui ){ $("#section-manage .section-body").css("display", "");  }}).disableSelection();
+	$( "#section-manage .section-box-part-list" ).sortable({handle: '.handle-box',cursor: 'move', update: function ( event, ui ){  }, start: function ( event, ui ){  }, start: function ( event, ui ){ $(ui.item).parents(".section-box-part-list").find(".section-box-body").css("display", "none"); ui.item.height($(".section-box-header", ui.item).height()); ui.placeholder.height(ui.item.height()); $(ui.item).parents(".section-box-part-list").sortable( "refreshPositions" ); }, stop: function ( event, ui ){ $(ui.item).parents(".section-box-part-list").find(".section-box-body").css("display", "");  }}).disableSelection();
+	
+	$("#btnAddSection").click(function(){
+		var rguid = uuidv4();
+		var html = $("#section-temp").html();
+		html = html.replace(/row_guid/g , rguid);
+		var section = $("<div class='section'></div>").append(html);
+		section.find(".section-box-part-list").sortable({handle: '.handle-box',cursor: 'move', update: function ( event, ui ){ }, start: function ( event, ui ){ $("#section-manage .section-body").css("display", "none"); ui.item.css("height", $(".section-header", ui.item).height()); ui.placeholder.height(ui.item.height()); $("#section-manage").sortable( "refreshPositions" ); }, stop: function ( event, ui ){ $("#section-manage .section-body").css("display", "");  }}).disableSelection();
+		$("#section-manage").append(section);
+	});
+
+	$("#section-manage")
+	.on("click", ".btn-add-box", function(){
+		var rguid = $(this).parents(".section-box-part").data('rguid');
+		var cguid = uuidv4();
+		var html = $("#section-box-temp").html();
+		html = html.replace(/row_guid/g , rguid);
+		html = html.replace(/col_guid/g , cguid);
+		var sectionBox = $("<div class='section-box'></div>").append(html);
+		$(this).parents(".section-box-part").find(".section-box-part-list").append(sectionBox);
+	})
+	.on("click", ".setting", function(){
+		var rguid = $(this).data('rguid');
+		// parse json 
+		var data = $("#row-" + rguid + "-setting").val();
+		var dataObj = JSON.parse(data);
+		var form = $("#section-dialog").clone();
+		$("#params-th-Question", form).val(dataObj.th.Question);
+		$("#params-th-Description", form).val(dataObj.th.Description);
+		$("#params-en-Question", form).val(dataObj.en.Question);
+		$("#params-en-Description", form).val(dataObj.en.Description);
+		$("#params-zh-Question", form).val(dataObj.zh.Question);
+		$("#params-zh-Description", form).val(dataObj.zh.Description);
+		var dialogRowSetting = BootstrapDialog.show({
+			title: 'ตั้งค่าคำถาม',
+			message: form,
+			closable: true,
+            closeByBackdrop: false,
+            closeByKeyboard: false,
+            autodestroy: true,
+			onshown: resetNav(),
+            size: BootstrapDialog.SIZE_WIDE,
+            cssClass: "divRowSetting",
+			buttons : [{
+				label: ' บันทึก',
+				icon: 'fa fa-save',
+				cssClass: 'btn-primary',
+				action: function(dialog) {
+					var obj = {th:{},en:{},zh:{}};
+					obj.th.Question = $("#params-th-Question", ".divRowSetting").val();
+					obj.th.Description = $("#params-th-Description", ".divRowSetting").val();
+					obj.en.Question = $("#params-en-Question", ".divRowSetting").val();
+					obj.en.Description = $("#params-en-Description", ".divRowSetting").val();
+					obj.zh.Question = $("#params-zh-Question", ".divRowSetting").val();
+					obj.zh.Description = $("#params-zh-Description", ".divRowSetting").val();
+					$("#question-" + rguid + "-title").html(obj.th.Question);
+					$("#row-" + rguid + "-setting").val(JSON.stringify(obj));
+					resetNav();
+					dialog.close();
+				}
+			}, {
+				label: ' ปิด',
+				icon: 'fa fa-times',
+				action: function(dialog) {
+					resetNav();
+					dialog.close();
+				}
+			}]
+		});
+		dialogRowSetting.open();
+	})
+	.on("click", ".remove", function(){
+		$(this).parents(".section").remove();
+	})
+	.on("click", ".setting-box", function(){
+		var rguid = $(this).data('rguid');
+		var cguid = $(this).data('cguid');
+		// parse json 
+		var data = $("#row-" + rguid + "-cols-" + cguid + "-setting").val();
+		var dataObj = JSON.parse(data);
+		var form = $("#section-box-dialog").clone();
+		$("#params-th-Name", form).val(dataObj.th.Name);
+		$("#params-en-Name", form).val(dataObj.en.Name);
+		$("#params-zh-Name", form).val(dataObj.zh.Name);
+		var dialogColSetting = BootstrapDialog.show({
+			title: 'ตั้งค่าคำตอบ',
+			message: form,
+			closable: true,
+            closeByBackdrop: false,
+            closeByKeyboard: false,
+            autodestroy: true,
+			onshown: resetNav(),
+            size: BootstrapDialog.SIZE_WIDE,
+            cssClass: "divColSetting",
+			buttons : [{
+				label: ' บันทึก',
+				icon: 'fa fa-save',
+				cssClass: 'btn-primary',
+				action: function(dialog) {
+					var obj = {th:{},en:{},zh:{}};
+					obj.th.Name = $("#params-th-Name", ".divColSetting").val();
+					obj.en.Name = $("#params-en-Name", ".divColSetting").val();
+					obj.zh.Name = $("#params-zh-Name", ".divColSetting").val();
+					$("#option-" + cguid + "-title").html(obj.th.Name);
+					$("#row-" + rguid + "-cols-" + cguid + "-setting").val(JSON.stringify(obj));
+					resetNav();
+					dialog.close();
+				}
+			}, {
+				label: ' ปิด',
+				icon: 'fa fa-times',
+				action: function(dialog) {
+					resetNav();
+					dialog.close();
+				}
+			}]
+		});
+		dialogColSetting.open();
+	})
+	.on("click", ".remove-box", function(){
+		$(this).parents(".section-box").remove();
+	})
+	.on("change", ".section-name-ctrl", function(){
+		$(this).parents(".section").find(".section-header-title").text(": " + $(this).val());
+	})
+	;
+
+	function resetNav(){
+		$(".tab-pane").removeClass('in');
+		$(".tab-pane").removeClass('active');
+		$(".tab-pane.detail-th").addClass('in')
+		$(".tab-pane.detail-th").addClass('active');
+	}
+
+    <?php if ($this->canAdd) : ?>
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'poll', 'controller' => 'item', 'action' => 'savequestion'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'poll', 'controller' => 'item', 'action' => 'question', 'itemid' => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif; ?>
+
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'poll', 'controller' => 'item', 'action' => 'edit', 'itemid' => $this->data->ID), null, true); ?>";
+	});
+
+});
+
+</script>

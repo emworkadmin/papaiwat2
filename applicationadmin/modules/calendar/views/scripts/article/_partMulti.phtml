@@ -1,0 +1,51 @@
+<?php
+//<!---------------------------------------- ไฟล์มัลติมีเดีย ----------------------------------------------->
+if (count ( $this->dataFileMultiMedias ) > 0) :
+?>
+<div>
+	<hr />
+	<div class="title-label">
+		<img src="<?php echo substr($this->baseUrl("images/icons/icon_youtube.png"), $this->subStringAdminLen); ?>" /> วิดีโอ
+	</div>
+	<?php
+	foreach ( $this->dataFileMultiMedias as $media ) :
+		$mediaUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $media["hash_name"]), null, true);
+	?>
+  	<div style="display: none;" id="videoUpload">
+		<video class="lg-video-object lg-html5" controls preload="none">
+			<source src="<?php echo $mediaUrl; ?>" type="video/mp4">
+		</video>
+	</div>
+	<div class="">
+		<ul id="vedio" class="calendar-slider">
+			<li
+				data-poster="<?php echo substr($this->baseUrl('images/icons/video.gif'), $this->subStringAdminLen); ?>"
+				data-sub-html="Video Upload" data-html="#videoUpload"><img
+				src="<?php echo substr($this->baseUrl('images/icons/video.gif'), $this->subStringAdminLen); ?>"
+				class="img-thumbnail" /></li>
+		</ul>
+	</div>
+	<?php
+		endforeach;
+	?>
+</div>
+<script type="text/javascript">
+jQuery(function(){
+	$("#vedio").lightSlider({
+        loop:true,
+        keyPress:true,
+        item:3,
+        slideMargin:10,
+        enableDrag: true,
+        thumbnail:true,
+        onSliderLoad: function(el) {
+            el.lightGallery({
+                selector: '#vedio .lslide'
+            });
+        }
+	});
+});
+</script>
+<?php 
+endif;
+?>

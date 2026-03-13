@@ -1,0 +1,45 @@
+
+<div class="form-horizontal">
+	<div class="form-group">
+		<label for="status" class="control-label col-md-2">ปี</label>
+		<div class="col-md-4">
+			<?php echo $this->formSelect('emsaLstYear', '', array('class' => 'form-control'), $this->yearOption); ?>
+		</div>
+		<label for="status" class="control-label col-md-2">เดือน</label>
+		<div class="col-md-4">
+			<?php echo $this->formSelect('emsaLstMonth', '', array('class' => 'form-control'), $this->monthOption); ?>
+		</div>
+	</div>
+</div>
+<div style="" class="emsa-result ">
+	<div class="emsa-loading">
+		<em class="fa fa-refresh fa-spin"></em>
+	</div>
+</div>
+<div class="emsa-footer-contact">
+	มีข้อสงสัย หรือติดปัญหาเกี่ยวกับการให้บริการโปรดติดต่อ <br />
+	สายด่วน EMWORK CARE โทร 0 2555 5555
+</div>
+
+<script type="text/javascript">
+jQuery(function(){
+	if (emsaDialog != null) {
+		emsaDialog.setTitle("<?php echo $this->title; ?>");
+		//emsaDialog.setButtons([]);
+	}
+	function emsaGetList() {
+		$(".emsa-result").html('<div class="emsa-loading"><em class="fa fa-refresh fa-spin"></em></div>');
+		setTimeout(function(){ 
+			var year = $("#emsaLstYear").val();
+			var month = $("#emsaLstMonth").val();
+			$.post("<?php echo $this->url(array("module" => "emsa", "controller" => "report", "action" => "getlist"), null, true); ?>", {"year" : year, "month" : month}, function(data){
+				$(".emsa-result").html(data.html);
+			}, "json");
+		 }, 500);
+	}
+	emsaGetList();
+	$("#emsaLstYear, #emsaLstMonth").change(function(){
+		emsaGetList();
+	});
+});    
+</script>

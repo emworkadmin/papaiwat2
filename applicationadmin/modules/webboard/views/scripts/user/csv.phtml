@@ -1,0 +1,34 @@
+<?php echo "ลำดับ,ชื่อบัญชีผู้ใช้งาน,ชื่อผู้ใช้งาน,อีเมล์,รหัสประชาชน,เบอร์ติดต่อ,ที่อยุ่,เพศ,วันที่สมัคร,วันที่เข้าใช้ล่าสุด,สถานะ"; ?>
+<?php
+  $i = 1 ;
+  if(count($this->data)>0):
+    foreach ($this->data as $datatable) :
+      $id = $i;
+      $username = $datatable["Username"];
+      $fullName = $datatable["FullName"];
+      $email = $datatable["Email"];
+      $identityCardID = $datatable["IdentityCardID"];
+      $telephone = $datatable["Telephone"];
+      $address = $datatable["Address"];
+      $gender = $datatable["Gender"] =="M" ? "ชาย" : "หญิง" ;
+
+      if($datatable['Created']){
+        $created = $datatable['Created']->format("Y-m-d H:i");
+      }else{
+        $created = null;
+      }
+
+      if($datatable['LastLoginDate']){
+        $lastLoginDate = $datatable['LastLoginDate']->format("Y-m-d H:i");
+      }else{
+        $lastLoginDate = null;
+      }
+      
+      $status = $datatable['IsEnable'] =='Y' ? 'เป็นสมาชิก' : 'ยกเลิกการเป็นสมาชิก';
+
+      echo $id.',' .$username.','.$fullName.','.$email.','.$identityCardID.','.$telephone.','.$address.','.$gender.','.$created.','. $lastLoginDate.','.$status;
+      $i++;
+    endforeach;
+  endif;
+?>
+

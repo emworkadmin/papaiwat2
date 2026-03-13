@@ -1,0 +1,632 @@
+<style>
+
+.graph-box.with-color.MiceExportZone {background-color: #cae4f1;}
+.chart_3_1 .graph-box-subbox-title {background-color: #a3d166; font-size: 17px;}
+.chart_3_2 .graph-box-subbox-title {background-color: #f4c80f; font-size: 17px;}
+.chart_3_3 .graph-box-subtitle  {color: #0071bd; font-size: 17px; padding: 10px 0 0;}
+.chart_3_4 .graph-box-subtitle  {color: #0071bd; font-size: 17px; padding: 10px 0 0;}
+
+    .mice .export { display: inline-block; width: 100%; font-family: 'Kanit Medium';    margin-bottom: 15px; }
+    .mice .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+    .mice .export #miceYear { margin-right: 4%; }
+
+    .mice .mice-head-right {background: #a3d166;color: white;text-align: center;font-size: 15px;padding-top: 5px;padding-bottom: 5px;}
+    .mice .mice-head-left {background: #f4c80f;color: white;text-align: center;font-size: 15px;padding-top: 5px;padding-bottom: 5px;}
+    .mice .mice-no {background: white;text-align: center;font-size: 50px;}
+    .mice .chart-mice {background: white;margin-bottom: 15px;}
+    .mice .text-button { text-align: center; color: #00c0ef; font-size: 17px; }
+
+    .mice {margin-top: 30px; background: #cae4f1;      margin-bottom: 15px;   padding: 30px 10px 15px; display: inline-block; width: 100%; }
+
+    .Situation_seeAll_mice a {color: white;}
+    .Situation_seeAll_mice {display: inline-block;font-family: 'Mitr Light';font-size: 17px;padding: 12px 30px 12px;margin-bottom: 15px;color: white;background: linear-gradient(to right, #85c542, #3fb74a);border-radius: 7px;border: 1px solid white;}
+
+    .mice .mice-box {background: white;border: 1px solid;    padding: 10px 10px 10px 10px;}
+
+    .mice .text-mice {margin-top: 10px;margin-bottom: 10px;text-align: center;color: #00c0ef;}
+    .mice .text-mice-head {margin-top: 10px;margin-bottom: 10px;}
+
+    .mice canvas#myChartGuidemice { margin-top: 43px;}
+    .mice .left-mice-chart.col-md-6 { padding-left: 0px; }
+
+    .mice .right-mice-chart.col-md-6 {padding-right: 0px; }
+    .mice canvas#myBarMice1 { background: #fafafa; margin-bottom: 10px; padding-right: 10px; padding-left: 10px; }
+    .mice canvas#myBarMice2 { background: #fafafa; margin-bottom: 10px; padding-right: 10px; padding-left: 10px; }
+    .mice .chart-mice.col-md-12 { padding: 20px 0px 10px 0px; }
+    @media (max-width: 991px) {
+        .mice .left-mice-chart.col-md-6 { padding-left: 0px; padding-right: 0px; }
+        .mice .right-mice-chart.col-md-6 { padding-left: 0px; padding-right: 0px; }
+        .mice .food-box { margin-bottom: 10px; }
+        .mice .mixchart-box { margin-top: 15px; }
+    }
+</style>
+
+
+
+	<div class="graph-box with-color MiceExportZone" id="MiceExportZone">
+		<div class="graph-box-title">
+			<div class="row">
+				<div class="col-md-9">
+					<span>สถานการณ์การท่องเที่ยวอุตสาหกรรมไมซ์ (MICE Industry)</span>
+				</div>
+				<div class="export col-md-3 col-sm-12 col-xs-12">
+					<div class="row">
+						<div class="col-sm-6">
+                            <?php
+                            if(empty($this->TravelRankMiceDummy)){
+                                echo $this->formSelect("miceYear", $this->miceYear, array('class' => 'form-control', 'placeholder' => ''), $this->miceYears);
+                            }
+                            ?>
+						</div>
+						<div class="col-sm-6">
+							<?php echo $this->formSelect("miceExport", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-12">
+				<div class="graph-box-subbox chart_3_1" >
+					<div class="graph-box-subbox-title">
+						รายได้จากการท่องเที่ยวอุตสาหกรรมไมซ์ รายปี (ล้านบาท) 
+					</div>
+					<div class="graph-box-subbox-body">
+						<canvas id="myLindMice1"></canvas>
+					</div>
+				</div>
+            </div>
+        </div>
+        
+        <div class="mb-15"></div>
+        
+        <div class="row">
+			<div class="col-md-12">
+				<div class="graph-box-subbox chart_3_2" >
+					<div class="graph-box-subbox-title">
+						จำนวนนักเดินทางจากการท่องเที่ยวอุตสาหกรรมไมซ์ รายปี (คน)
+					</div>
+					<div class="graph-box-subbox-body">
+						<canvas id="myLindMice2"></canvas>
+					</div>
+				</div>			
+			</div>
+		</div>
+		
+		<div class="mb-15"></div>
+		
+		<div class="row">
+			<div class="col-md-6">
+				<div class="graph-box-subbox chart_3_3" >
+					<div class="graph-box-subbox-body">
+						<canvas id="myBarMice1"></canvas>
+						<div class="graph-box-subtitle">
+							รายได้จากการท่องเที่ยวอุตสาหกรรมไมซ์ รายกิจกรรม (ล้านบาท) 
+						</div>
+					</div>
+				</div>	
+			</div>
+			<div class="col-md-6">
+				<div class="graph-box-subbox chart_3_4" >
+					<div class="graph-box-subbox-body">
+						<canvas id="myBarMice2"></canvas>
+						<div class="graph-box-subtitle">
+							จำนวนนักเดินทางจากการท่องเที่ยวอุตสาหกรรมไมซ์ รายกิจกรรม (คน) 
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+        
+        <div class="GUIDE_MICE TIC-footer">ที่มา : สำนักงานส่งเสริมการจัดประชุมและนิทรรศการ</div>
+        <?php if (!empty($this->miceLatestYear)) : ?><div class="GUIDE_MICE TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->miceLatestYear + 543; ?></div><?php endif; ?>
+	</div>	
+	
+	<div class="graph-button-zone">
+		<a href="<?php echo $this->url(array("module"=>"graph", "controller" => "travelrank", "action" => "mice"), null, true);?>"  target="_blank" style="background: linear-gradient(to right, #85c542, #3fb74a) ;">
+			ดูข้อมูลสถิติทั้งหมด
+		</a>
+	</div>
+	
+<?php if (false) : ?>
+		
+//////////////////////////////
+
+<div class="mice col-md-12" id="MiceExportZone" >
+
+    <div class="export">
+        <div class="col-md-9">สถานการณ์การท่องเที่ยวอุตสาหกรรมไมซ์ (MICE Industry)</div>
+        <div class="col-md-3">
+                <?php 
+                if(false){
+                    echo $this->formSelect("miceYear", $this->miceYear, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->miceYears);
+                }
+                ?>
+                <?php echo $this->formSelect("miceExport", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6 col-md-offset-6 col-sm-offset-6 col-xs-offset-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+    
+    <div class="data-chart col-md-12">
+        <div class="left-mice-chart col-md-6">
+            <div class="mice-head-right col-md-12" >
+                   รายได้จากการท่องเที่ยวอุตสาหกรรมไมซ์ รายปี (ล้านบาท)
+            </div>
+            <div class="chart-mice col-md-12" >
+                
+            </div>
+            <div class="chart-mice col-md-12" >
+                
+                <div class="text-button">
+                    รายได้จากการท่องเที่ยวอุตสาหกรรมไมซ์ รายกิจกรรม (ล้านบาท)
+                </div>
+            </div>
+        </div>
+
+        <div class="right-mice-chart col-md-6">
+            <div class="mice-head-left col-md-12" >
+                   จำนวนนักเดินทางจากการท่องเที่ยวอุตสาหกรรมไมซ์ รายปี (คน)
+            </div>
+             <div class="chart-mice col-md-12" >
+                
+            </div>
+            <div class="chart-mice col-md-12" >
+                
+                <div class="text-button">
+                    จำนวนนักเดินทางจากการท่องเที่ยวอุตสาหกรรมไมซ์ รายกิจกรรม (คน)
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="GUIDE_MICE TIC-footer">ข้อมูลอัพเดตล่าสุด ณ เดือนเมษายน 2559</div>
+</div>
+
+
+<div class="col-md-12" style="text-align: center;">
+        <a href="<?php echo $this->url(array("module"=>"graph", "controller" => "travelrank", "action" => "mice"), null, true);?>" target="_blank">
+            <div class="Situation_seeAll_mice"> ดูข้อมูลสถิติทั้งหมด </div>
+        </a>
+</div>
+
+<?php endif; ?>
+
+<div id="previewImage_mice" style="display: none;"></div>
+<a id="downloadImage_mice" href="#In_Out" style="display: none;"></a>
+
+<script>
+jQuery(function() {
+
+    var ctxmice1 = document.getElementById('myLindMice1');
+    var myBarChart  = new Chart(ctxmice1, {
+        // The type of chart we want to create
+        type: 'bar',
+        data: {
+        datasets: [
+            <?php
+            if(count($this->MiceIndustry['Data']) > 0) {
+                foreach($this->MiceIndustry['Data'] as $dk => $dv) {
+                    ?>
+                    {
+                        label: "<?php echo $dk; ?>",
+                        data : [
+                            <?php
+                                if(count($this->MiceIndustry['Year']) >0) {
+                                    foreach($this->MiceIndustry['Year'] as $yk => $yv) {
+                                        echo empty($dv[$yv]['Amount']) ? 0 : $dv[$yv]['Amount'];
+                                        if($yk != count($this->MiceIndustry['Year'])-1) {
+                                            //echo empty($dv[$yv]['Amount']) ? null : ",";
+                                            echo ",";
+                                        }
+                                    }
+                                }                            
+                                ?>
+                        ],
+                        backgroundColor: '<?php echo $dv['Color']; ?>',
+                        lineTension : 0
+                    },
+                    <?php
+                }
+            } else {
+                ?>
+                {
+                    label: '-',
+                    data: [0],
+                    backgroundColor: 'rgba(2, 184, 171, 0.6)',
+                    lineTension : 0                
+                }
+                <?php
+            }
+            ?>
+        ],
+        labels: [
+            <?php
+            if(count($this->MiceIndustry['Year']) >0) {
+                foreach($this->MiceIndustry['Year'] as $yk => $yv) {
+                    echo "'". $yv . "'";
+                    if($yk != count($this->MiceIndustry['Year'])-1)
+                        echo ",";
+                }
+            } else {
+                echo "'-'";
+            }
+            ?>
+        ]
+        },
+        options : {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function() {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = "14px ",
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillStyle = '#404040';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function(dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            var data = dataset.data[index];
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x, bar._model.y);
+                        });
+                    });
+                }
+            },
+            // legend: {
+            //     display: false
+            // },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                xAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+	                ticks : {
+	                    fontSize : 14
+	                }
+                }],
+	            yAxes: [{
+	                ticks : {
+	                    fontSize : 14
+	                }
+	            }]
+            },
+            responsive: true
+        }
+    });    
+
+
+    var ctxmice2 = document.getElementById('myLindMice2');
+    var myBarChart  = new Chart(ctxmice2, {
+        type: 'bar',
+        data: {
+            datasets: [
+            <?php
+            if(count($this->MiceTraveler['Data']) > 0) {
+                foreach($this->MiceTraveler['Data'] as $dk => $dv) {
+                    ?>
+                    {
+                        label: "<?php echo $dk; ?>",
+                        data : [
+                            <?php
+                                if(count($this->MiceTraveler['Year']) >0) {
+                                    foreach($this->MiceTraveler['Year'] as $yk => $yv) {
+                                        echo empty($dv[$yv]['Amount']) ? 0 : $dv[$yv]['Amount'];
+                                        if($yk != count($this->MiceTraveler['Year'])-1) {
+                                            //echo empty($dv[$yv]['Amount']) ? null : ",";
+                                            echo ",";
+                                        }
+                                    }
+                                }                            
+                                ?>
+                        ],
+                        backgroundColor: '<?php echo $dv['Color']; ?>',
+                        lineTension : 0
+                    },
+                    <?php
+                }
+            } else {
+                ?>
+                {
+                    label: '-',
+                    data: [0],
+                    backgroundColor: 'rgba(2, 184, 171, 0.6)',
+                    lineTension : 0                
+                }
+                <?php
+            }
+            ?>
+            ],
+            labels: [
+                <?php
+                if(count($this->MiceTraveler['Year']) >0) {
+                    foreach($this->MiceTraveler['Year'] as $yk => $yv) {
+                        echo "'". $yv . "'";
+                        if($yk != count($this->MiceTraveler['Year'])-1)
+                            echo ",";
+                    }
+                } else {
+                    echo "'-'";
+                }
+                ?>
+            ]
+        },
+        options : {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function() {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = "14px ",
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillStyle = '#404040';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function(dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            var data = dataset.data[index];
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x, bar._model.y);
+                        });
+                    });
+                }
+            },
+            // legend: {
+            //     display: false
+            // },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                xAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks : {
+						fontSize : 14
+                    }
+                }],
+                yAxes: [{
+                    ticks : {
+						fontSize : 14
+                    }
+                }]
+            },
+            responsive: true
+        }
+    });
+
+    var ctxmicebar1 = document.getElementById('myBarMice1').getContext('2d');
+    var myBarChart  = new Chart(ctxmicebar1, {
+        type: 'horizontalBar',
+        data: {
+            labels: [
+                <?php
+                if(count($this->MiceIncomeActivity)>0) {
+                    foreach ($this->MiceIncomeActivity as $k => $v) {
+                        echo "'" . $v['MICETypeEN'] . "'";
+                        if($k != count($this->MiceIncomeActivity)-1)
+                            echo ",";
+                    }
+                } else {
+                    echo "'-'";
+                }
+                ?>
+            ],
+            datasets: [{
+                data: [
+                    <?php
+                    if(count($this->MiceIncomeActivity)>0) {
+                        foreach ($this->MiceIncomeActivity as $k => $v) {
+                            echo $v['Amount'];
+                            if($k != count($this->MiceIncomeActivity)-1)
+                                echo ",";
+                        }
+                    }
+                    ?>
+                ],
+                backgroundColor: ['#00b8aa','#456975','#9ca4a6','#66a0ae','#fe9566'],
+                borderColor: ['#00b8aa','#456975','#9ca4a6','#66a0ae','#fe9566'],
+            }]
+        },
+        options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x - data.length * 2 - 10, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        // display: false,
+                        beginAtZero:true,
+                        fontSize: 14
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        // display : false
+                    },
+                    ticks: {
+                        fontSize: 14,
+                        beginAtZero:true,
+                        callback: function(value, index, values) {
+                            return value;
+                        }
+                    }
+                }]
+            },
+            responsive: true
+        }
+    });    
+
+    var ctxmicebar2 = document.getElementById('myBarMice2').getContext('2d');
+    var myBarChart  = new Chart(ctxmicebar2, {
+        type: 'horizontalBar',
+        data: {
+            labels: [
+                <?php
+                if(count($this->MiceTravelerActivity)>0) {
+                    foreach ($this->MiceTravelerActivity as $k => $v) {
+                        echo "'" . $v['MICETypeEN'] . "'";
+                        if($k != count($this->MiceTravelerActivity)-1)
+                            echo ",";
+                    }
+                } else {
+                    echo "'-'";
+                }
+                ?>
+            ],
+            datasets: [{
+                data: [
+                    <?php
+                    if(count($this->MiceTravelerActivity)>0) {
+                        foreach ($this->MiceTravelerActivity as $k => $v) {
+                            echo $v['Amount'];
+                            if($k != count($this->MiceTravelerActivity)-1)
+                                echo ",";
+                        }
+                    }
+                    ?>
+                ],
+                backgroundColor: ['#00b8aa','#456975','#9ca4a6','#66a0ae','#fe9566'],
+                borderColor: ['#00b8aa','#456975','#9ca4a6','#66a0ae','#fe9566'],
+            }]
+        },
+        options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;               
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';     
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x - data.length * 2 -10, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+                legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        // display: false,
+                        fontSize: 14,
+                        beginAtZero:true
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        // display : false
+                    },
+                    ticks: {
+                        fontSize: 14,
+                        beginAtZero:true,
+                        beginAtZero:true,
+                        callback: function(value, index, values) {
+                            return value;
+                        }
+                    }
+                }]
+            },
+            responsive: true
+        }
+    });
+
+    function setCanvas_MiceExportZone(val) {
+        html2canvas(document.querySelector("#MiceExportZone")).then(function(canvas) {
+            $("#previewImage_mice").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_mice").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage_mice")[0].click();
+                $("#mix_chart_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_mice canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#mix_chart_Export").val('export');
+            }
+        });
+    }
+
+    $("#miceExport").change(function() {
+        setCanvas_MiceExportZone($(this).val());
+    });
+});
+
+</script>
+

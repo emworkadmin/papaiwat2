@@ -1,0 +1,122 @@
+<style>
+.calendar-event-list { }
+.inforow .header-title { font-size: 1.5em; font-weight: bold; }
+.inforow .header-title a { color: #4E4E4E; }
+.inforow .image { width: 350px; height: 235px; }
+.inforow .image a { position: unset; }
+.inforow .detail { margin-left: 365px; }
+.inforow .detail em { font-size: 0.8em; }
+.inforow .detail .detail-start-date { padding-bottom: 10px; color: #0081B9; font-size: 2rem; }
+.inforow .detail .detail-place { padding-bottom: 10px; color: #0081B9; font-size: 2rem; }
+.inforow .detail .detail-intro { margin-bottom: 15px; padding-bottom: 0px; height: 60px; overflow: hidden; }
+.inforow .detail .detail-more-detail { padding-bottom: 15px; }
+.inforow .detail .detail-more-detail a { font-size: 2.2rem; }
+.inforow .detail .detail-publish-date { color: #0081B9; font-size: 2rem; }
+.inforow .detail .detail-publish-date em { color: #CCCCCC; }
+.calendar-search-result { padding: 0px 15px 15px; color: #4E4E4E; }
+.calendar-search-result .title { font-size: 2rem; }
+.calendar-search { display: -webkit-box; margin: 15px 0px; }
+.calendar-search .search-text { }
+.calendar-search .search-category { }
+.calendar-search #lnkSeaarchCalendar { }
+
+@media only screen and (max-width: 767px) {
+	.calendar-search { display: block; }
+}
+</style>
+
+<div class="info infopage">
+
+	<?php if($this->pageTitle){ ?>
+	<div class="article-title title-panel">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+		<hr />
+	</div>
+	<?php } ?>
+
+	<div class="row">
+		<div class='calendar-search'>
+			<div class="col-md-8 col-sm-5 col-xs-12 search-text">
+				<?php echo $this->formText("calendarSearchText", $this->calendarSearchText, array('class' => 'form-control', 'placeholder' => Emwork_Translate::text($this->lang, 'calendar', 'search_placeholder') , 'maxlength' => '200')); ?>
+			</div>
+			<div class="col-md-3 col-sm-5 col-xs-12 search-category">
+				<?php echo $this->formSelect("calendarSearchCategory", $this->calendarSearchCategory, array('class' => 'form-control', 'placeholder' => ''), ($this->calendarCategoryOption)); ?>
+			</div>
+			<div class="col-md-1 col-sm-2 col-xs-12 search-category">
+				<button class="btn btn-info btn-block" id="lnkSeaarchCalendar">
+					<em class="fa fa-search"></em> <?php echo Emwork_Translate::text($this->lang, 'general', 'button_search'); ?>
+				</button>
+			</div>
+		</div>
+		<div class="title-panel calendar-search-result col-md-12">
+			<span class="title">
+				<?php echo Emwork_Translate::text($this->lang, 'calendar', 'result_title'); ?> <b><?php echo empty($this->calendarSearchText) ? '-' : ('"'.$this->calendarSearchText.'"'); ?></b> <?php echo Emwork_Translate::text($this->lang, 'calendar', 'result_middle'); ?> <span id="total"><?php echo count($this->data); ?></span> <?php echo Emwork_Translate::text($this->lang, 'calendar', 'result_list'); ?>
+			</span>
+			<hr>
+	 	</div>
+		<div class="calendar-event-list col-md-12">
+
+			<?php
+			if(count($this->data)>0){
+				foreach($this->data as $d){
+			?>
+
+			<div class="inforow">
+				<div class="header-title">
+					<a href="<?php echo $d['url']; ?>"><?php echo $d['title']; ?></a>
+				</div>
+
+				<div class="image">
+					<a href="<?php echo $d['url']; ?>">
+						<img alt="image" src="<?php echo $d['image-url']; ?>" />
+					</a>
+				</div>
+				<div class="detail">
+					<div class="detail-start-date" >
+						<em class="fa fa-clock-o"></em>&nbsp;
+						<?php echo $d['starttime']; ?>&nbsp;น.
+						&nbsp;&nbsp;&nbsp;
+						<em class="fa fa-calendar"></em>&nbsp;
+						<?php echo $d['startdate']; ?>
+					</div>
+					<div class="detail-place" >
+						<em class="fa fa-map-marker"></em> <?php echo $d['place']; ?>
+					</div>
+					<div class="detail-intro" >
+						<?php echo $d['introtext']; ?>
+					</div>
+					<div class="detail-more-detail">
+						<a class="btn btn-info" href="<?php echo $d['url']; ?>"><?php echo Emwork_Translate::text($this->lang, 'calendar', 'more_detail'); ?></a>
+					</div>
+					<div class="detail-publish-date">
+						<em class="fa fa-clock-o"></em>&nbsp;<?php echo Emwork_Translate::text($this->lang, 'calendar', 'publishdate'); ?>&nbsp;
+						<?php echo $d['publish-date']; ?>
+						&nbsp;&nbsp;&nbsp;
+						<em class="fa fa-pencil"></em>
+						&nbsp;<?php echo Emwork_Translate::text($this->lang, 'calendar', 'by'); ?>&nbsp;<?php echo $d['publish-by']; ?>		
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+
+			<?php
+				}
+			}
+			?>
+		
+		</div>
+	</div>
+
+</div>
+
+<script>
+$(document).ready(function() {
+	$('#lnkSeaarchCalendar').click(function(){
+		var cid = $('#calendarSearchCategory').val();
+		var text = $('#calendarSearchText').val();
+		window.location = "<?php echo $this->url(array('module' => 'calendar', 'controller' => 'article', 'action' => 'search'), null, true); ?>/cid/"+encodeURIComponent(cid)+"/text/"+encodeURIComponent(text);
+	});
+});
+</script>

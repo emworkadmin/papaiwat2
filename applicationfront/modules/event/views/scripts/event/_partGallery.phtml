@@ -1,0 +1,81 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/slick/slick.css'); ?>">
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/slick/slick-theme.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/slick/slick.min.js'); ?>"></script>
+
+<style>
+    .event-gallery { margin-bottom: 15px; display: inline-block; width: 100%; }
+    .slide-panel { position: relative; }
+    .slick-slide img { width: 100%; height: 500px; object-fit: cover; }
+    .galleryNext { display: inline-block; position: absolute; top: 50%; right: 0px; font-size: 60px; cursor: pointer; color: #FFF; background: rgba(0,0,0,0.8); padding: 0px 5px 0px 10px; transform: translateY(-50%); }
+    .galleryPrev { display: inline-block; position: absolute; top: 50%; left: 0px; font-size: 60px; cursor: pointer; color: #FFF; background: rgba(0,0,0,0.8); padding: 0px 10px 0px 5px; transform: translateY(-50%); }
+</style>
+
+<div class="event-gallery">
+
+    <div class="slide-panel">
+	
+        <div class="row" id="slide-event">
+
+            <?php
+                if(count($this->dataFileImages)>0) :
+                    foreach ( $this->dataFileImages as $img ) :
+                        $imgUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $img["hash_name"]), "default", true);
+                        ?>
+                            <div class="col-md-12" data-src="<?php echo $imgUrl; ?>">
+                                <div class="img-container">
+                                    <div class="img-inner">
+                                        <img alt="image" src="<?php echo $imgUrl; ?>" />
+                                    </div>
+                                </div>
+                            </div>                    
+                        <?php
+                    endforeach;
+                endif;
+            ?>
+
+        </div>
+
+        <em class="fa fa-angle-right galleryNext" id="slideSet_galleryNext"></em>
+        <em class="fa fa-angle-left galleryPrev" id="slideSet_galleryPrev"></em>
+    </div>
+
+</div>
+
+<script>
+jQuery(function(){
+
+	$("#slide-event").lightGallery();	
+	$("#slide-event").slick({
+		dots: false,
+		arrows: true,
+		nextArrow: $("#slideSet_galleryNext"),
+		prevArrow: $("#slideSet_galleryPrev"),
+		speed: 300,
+		slidesToShow: 1,
+		slidesToScroll: 1,
+		responsive: [
+			{
+				breakpoint: 1200,
+				settings: {
+					slidesToShow: 1,
+					slidesToScroll: 1,
+				}
+			},
+			{
+				breakpoint: 992,
+				settings: {
+					slidesToShow: 1,
+					slidesToScroll: 1,
+				}
+			},
+			{
+				breakpoint: 768,
+				settings: {
+					slidesToShow: 1,
+					slidesToScroll: 1,
+				}
+			}
+			]
+	});	
+});
+</script>

@@ -1,0 +1,367 @@
+<style>
+
+    .graph-box-subbox .graph-box-subbox-title { font-size: 2rem; }
+
+    .Police_travel { margin-bottom: 15px;  margin-top: 30px; background: #e7f4da; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+    .Police_travel .number-group { font-size: 45px;color: black;}
+    .Police_travel .number { font-family: 'Kanit'; }
+    .Police_travel .police_top {background-color: white; font-size: 17px;text-align: center;color: #0071bd; border: 1px solid;    padding: 4px 5px 3px 5px;}
+    .Police_travel img.img-guide-top {width: 104px;margin-left: -8px;    margin-top: -3px;}
+    .Police_travel .form-control{padding: 0px 0px; }
+    .Police_travel .police_top.charttop.col-md-6 {padding: 5px 5px 5px 50px;}
+    .Police_travel .img-guide{z-index: 1;}
+    .Police_travel .header-police-left { background-color: #8bc63c; }
+    .Police_travel .header-police-right { background-color: #662d8f; }
+
+
+    @media (max-width: 1200px){
+        .Police_travel img.img-guide-top {
+            width: 65px;
+            margin-left: 8px;
+            margin-top: -3px;
+        }
+    }
+
+    @media (max-width: 1199px){
+        .Police_travel .police_top {
+            font-size: 11px; 
+            margin-top: 5px;
+        }
+        .Police_travel img.img-guide-top {
+            width: 60px;
+        }
+    }
+
+    @media (max-width: 991px){
+        .Police_travel .police_top.charttop.col-md-6 {
+            padding: 5px 0px 5px 0px;
+        }
+        .Police_travel .travel { 
+            margin-top: 5px;
+            }
+        .Police_travel .img-guide {
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+        .Police_travel img.img-guide-top {
+            width: 100px;
+        }
+    }
+</style>
+
+
+<div class="graph-box with-color PoliceExportZone Police_travel" id="PoliceExportZone">
+
+    <div class="graph-box-title">
+        <div class="row">
+            <div class="col-md-9">
+            </div>
+            <div class="export col-md-3 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <?php // echo $this->formSelect("guide_police_year", $this->guide_police_year, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?>
+                    </div>
+                    <div class="col-sm-6">
+                        <?php echo $this->formSelect("guide_police_Export", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+                    </div>
+                </div>
+            </div>	
+        </div>
+    </div>
+
+    <div class="row mb-15">
+        <div class="col-md-6">
+            <div class="img-guide col-md-1">
+                <img alt="image" src="<?php echo $this->baseUrl('assets/graph/img/icon_web/3.png'); ?>" class = "img-guide-top" >
+            </div>
+            <div class="top-chart-guide col-md-11">
+                <div class="police_top charttop col-md-12" style="">
+                จำนวนตำรวจท่องเที่ยว
+                    <div class="number-group"  style="">
+                        <span class="number"><?php echo number_format($this->proliceAmount); ?></span>
+                        <span class="txt">คน</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="img-guide col-md-1">
+                <img alt="image" src="<?php echo $this->baseUrl('assets/graph/img/icon_web/4.png'); ?>" class = "img-guide-top" >
+            </div>
+            <div class="top-chart-guide col-md-11">
+                <div class="police_top charttop col-md-12" style="">
+                จำนวนอาสาสมัครท่องเที่ยว
+                    <div class="number-group"  style="">
+                        <span class="number"><?php echo number_format($this->volunteerAmount); ?></span>
+                        <span class="txt">คน</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-15">
+        <div class="col-md-6">
+            <div class="graph-box-subbox" >
+                <div class="graph-box-subbox-title header-police-left">
+                    จำนวนตำรวจท่องเที่ยว รายจังหวัด 
+                </div>
+                <div class="graph-box-subbox-body">
+                    <canvas id="myChart1" ></canvas>	
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="graph-box-subbox">
+                <div class="graph-box-subbox-title header-police-right">
+                    จำนวนอาสาสมัครตำรวจท่องเที่ยว รายจังหวัด
+                </div>
+                <div class="graph-box-subbox-body">
+                    <canvas id="myChart2" ></canvas>
+                </div>
+            </div>
+        </div>		
+    </div>
+    <div class="GUIDE_POLICE TIC-footer">ที่มา : กองบัญชาการตำรวจท่องเที่ยว</div>
+    <?php if (!empty($this->policeLatestYear)) : ?><div class="GUIDE_POLICE TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->policeLatestYear + 543; ?></div><?php endif; ?>
+</div>
+
+<div id="previewImage_guide_police" style="display: none;"></div>
+<a id="downloadImage_guide_police" href="#" style="display: none;"></a>
+
+<div class="graph-button-zone">
+    <a href="<?php echo $this->url(array("module"=>"graph", "controller" => "guide", "action" => "police"), null, true);?>" target="_blank" style="background: linear-gradient(to top, #3388BE, #27A8E2); ">
+        ดูข้อมูลสถิติทั้งหมด
+    </a>
+</div>
+<div class="mb-15"></div>
+
+<script>
+jQuery(function() {
+
+    var ctx = document.getElementById('myChart1');
+    var myBarChart  = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: [
+                <?php 
+                if(count($this->policeinprovice)>0) {
+                    foreach($this->policeinprovice as $k => $v) {
+                        echo "'". $v['DepartmentNameTH'] ."'";
+                        if($k != count($this->policeinprovice)-1)
+                            echo ',';
+                    }
+                } else {
+                    echo "-";
+                }
+                ?>
+            ],
+            datasets: [{
+                label: "จำนวนตำรวจท่องเที่ยว รายจังหวัด",
+                backgroundColor: '#00b7ab',
+                data: [
+                    <?php 
+                    if(count($this->policeinprovice)>0) {
+                        foreach($this->policeinprovice as $k => $v) {
+                                echo $v['Amount'];
+                                if($k != count($this->policeinprovice)-1)
+                                    echo ',';
+                            }
+                        } else {
+                            echo 0;
+                        }
+                    ?>
+                ],
+            }]
+        },
+        options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                    
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            var x = -10;
+                            if(data < 0) {
+                                x = +10;
+                            }
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x + x, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+                legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        // display: false,
+                        beginAtZero:true,
+                        fontSize: 14
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        // display : false
+                    },
+                    ticks: {
+                        beginAtZero:true,
+                        fontSize: 14
+                    }
+                }]
+            },
+            responsive: true
+        }
+    });
+
+    var ctx1 = document.getElementById('myChart2');
+    var myBarChart  = new Chart(ctx1, {
+        type: 'horizontalBar',
+        data: {
+            labels: [
+                <?php 
+                if(count($this->volunteerinprovince)>0) {
+                    foreach($this->volunteerinprovince as $k => $v) {
+                        echo "'". $v['WorkingAreaNameTH'] ."'";
+                        if($k != count($this->volunteerinprovince)-1)
+                            echo ',';
+                    }
+                } else {
+                    echo "-";
+                }
+                ?>
+            ],
+            datasets: [{
+                label: "จำนวนอาสาสมัครตำรวจท่องเที่ยว รายจังหวัด",
+                backgroundColor: '#f2c811',
+                data: [
+                    <?php 
+                    if(count($this->volunteerinprovince)>0) {
+                        foreach($this->volunteerinprovince as $k => $v) {
+                                echo $v['Amount'];
+                                if($k != count($this->volunteerinprovince)-1)
+                                    echo ',';
+                            }
+                        } else {
+                            echo 0;
+                        }
+                    ?>
+                ],
+            }]
+        },
+
+        options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                    
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            var x = -10;
+                            if(data < 0) {
+                                x = +10;
+                            }
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x + x, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+                legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        // display: false,
+                        beginAtZero:true,
+                        fontSize: 14
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        // display : false
+                    },
+                    ticks: {
+                        beginAtZero:true,
+                        fontSize: 14
+                    }
+                }]
+            },
+            responsive: true
+        }
+
+    });
+
+});
+
+function setCanvas_PoliceExportZone(val) {
+    html2canvas(document.querySelector("#PoliceExportZone")).then(function(canvas) {
+        $("#previewImage_guide_police").html(canvas);
+        if(val == 'image') {
+            let imgageData = canvas.toDataURL("image/png");
+            let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+            $("#downloadImage_guide_police").attr("download", "จำนวนตำรวจท่องเที่ยวและอาสาสมัครตำรวจท่องเที่ยว.png").attr("href", newData);
+            $("#downloadImage_guide_police")[0].click();
+            $("#guide_police_Export").val('export');
+        } else if(val == 'pdf') {
+            let canvas = $("#previewImage_guide_police canvas")[0];
+            let imgData = canvas.toDataURL("image/jpeg");
+            let pdf = new jsPDF("l", "mm", "a4");
+            pdf.addImage(imgData, 'JPEG', 0, 0);
+            pdf.save("จำนวนตำรวจท่องเที่ยวและอาสาสมัครตำรวจท่องเที่ยว.pdf");
+            $("#guide_police_Export").val('export');
+        }
+    });
+}
+
+$("#guide_police_Export").change(function() {
+    setCanvas_PoliceExportZone($(this).val());
+});
+
+</script>

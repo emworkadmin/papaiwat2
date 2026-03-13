@@ -1,0 +1,20 @@
+{
+	"name" : "กราฟ",
+	"controller" : "page",
+	"description" : "แสดงกราฟที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "page",
+			"type" : "select",
+			"size" : "",
+			"label" : "กราฟ",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Graphdata_Service_Item",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}
+	]
+}

@@ -1,0 +1,6 @@
+{
+	"name" : "รายการรวม Procedure",
+	"controller" : "procedure",
+	"description" : "แสดงรายการรวม Procedure ทั้งหมด",
+	"fields" : []
+}

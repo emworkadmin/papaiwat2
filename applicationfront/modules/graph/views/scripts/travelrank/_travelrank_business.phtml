@@ -1,0 +1,310 @@
+<style>
+.graph-box.with-color.BusinessZone {background-color: #e6e6e6;}
+
+
+    .business .export { display: inline-block; width: 100%; font-family: 'Kanit Medium';    margin-bottom: 15px; }
+    .business .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+    .business .export #businessYear { margin-right: 4%; }
+
+    .bus-do {background-color: #ff706c;text-align: center;color: white;    font-size: 15px;padding-bottom: 5px;padding-top: 5px;}
+    .bus-do-static {background-color: #662e91;text-align: center;color: white;    font-size: 15px;padding-bottom: 5px; padding-top: 5px;}
+    .mydoughnut {background: white;}
+    .business {margin-top: 30px; background: #e6e6e6;    margin-bottom: 15px; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+
+    .business-box {background: white;border: 1px solid;    padding: 10px 10px 10px 10px;}
+    .BusinessZone .bus-no { background: white; margin-bottom: 10px;text-align: center;font-size: 39px;color: #00c0ef;    padding-top: 8px; padding-bottom: 8px; font-family: "Kanit";}
+    .BusinessZone .unit { font-family: 'Mitr Light'; font-size: 25px;}
+    canvas#mydoughnut1 {margin-bottom: 12px;margin-top: 12px;}
+    canvas#mydoughnut2 {margin-bottom: 12px;margin-top: 12px;}
+    .business-chart.col-md-12{padding-left: 0px;padding-right: 0px;}
+
+    .Situation_seeAll_business a {color: white;}
+    .Situation_seeAll_business {display: inline-block;font-family: 'Mitr Light';font-size: 17px;padding: 12px 30px 12px;margin-bottom: 15px;color: white;background: linear-gradient(to left, #1892d3, #138dce);border-radius: 7px;border: 1px solid white;}
+
+    @media (max-width: 1199px) {
+        .bus-no {
+            font-size: 27px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        canvas#mydoughnut1 {margin-bottom: 12px;margin-top: 0px;}
+        canvas#mydoughnut2 {margin-bottom: 12px;margin-top: 0px;}
+        .charttopbusiness.col-md-12 {
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+
+        .charttop.col-md-4 {
+            margin-bottom: 10px;
+        }
+    }
+
+</style>
+
+	<div class="graph-box with-color BusinessZone" id="BusinessZone">
+		<div class="graph-box-title">
+			<div class="row">
+				<div class="col-md-9">
+					<span>ข้อมูลผู้ประกอบการธุรกิจนำเที่ยวและผู้นำเที่ยว</span>
+				</div>
+				<div class="export col-md-3 col-sm-12 col-xs-12">
+					<div class="row">
+						<div class="col-sm-6">
+							<?php // echo $this->formSelect("businessYear", $this->situationYear, array('class' => 'form-control', 'placeholder' => ''), $this->year); ?>
+						</div>
+						<div class="col-sm-6">
+							<?php echo $this->formSelect("businessExport", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		
+		<div class="business-chart row">
+		
+	        <div class="charttopbusiness col-md-4">	
+	            <div class="bus-do col-md-12">
+	                จำนวนผู้ประกอบธุรกิจนำเที่ยว รายประเภท (ราย)
+	            </div>
+	            <div class="mydoughnut col-md-12">
+	                <canvas id="mydoughnut1"></canvas>
+	            </div>	
+	        </div>
+	
+	        <div class="charttopbusiness col-md-4">
+	            <div class="charttopbusiness col-md-12" style="">
+	                <div class="bus-do charttopbusiness col-md-12" >
+	                    จำนวนผู้ประกอบธุรกิจนำเที่ยว
+	                </div>
+	                <div class="bus-no col-md-12">
+	                    <?php echo number_format($this->TourismBusinessAmount, 2); ?>
+	                    <span class="unit"><?php echo $this->TourismBusinessAmountText; ?>ราย</span>
+	                </div>
+	            </div>
+	            <div class="charttopbusiness col-md-12" style="">
+	                <div class="bus-do-static charttopbusiness col-md-12">
+	                    จำนวนผู้นำเที่ยว
+	                </div>
+	                <div class="bus-no col-md-12" >
+	                    <?php echo number_format($this->TouragenctAmout, 2); ?>
+	                    <span class="unit"><?php echo $this->TouragenctAmoutText; ?>คน</span>
+	                </div>
+	            </div>
+	        </div>
+	
+	        <div class=" charttopbusiness col-md-4" >
+	            <div class="bus-do-static col-md-12" > 
+	                จำนวนผู้นำเที่ยว รายประเภท (คน)
+	            </div>
+	            <div class="mydoughnut col-md-12">
+	                <canvas id="mydoughnut2"></canvas>
+	            </div>
+	        </div>
+	
+	    </div>
+	    
+	    <div class="GUIDE_BUSINESS TIC-footer">ที่มา : กองทะเบียนธุรกิจนำเที่ยวและมัคคุเทศก์</div>
+        <?php if (!empty($this->guideLatestYear)) : ?><div class="GUIDE_BUSINESS TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->guideLatestYear + 543; ?></div><?php endif; ?>
+	</div>	
+	
+	<div class="graph-button-zone">
+		<a href="https://app.powerbi.com/groups/me/reports/f957ee2b-1d4e-4586-a217-d009c357ab9a/ReportSection7d5437c3a064b4b285c7"  target="_blank" style="background: linear-gradient(to left, #1892d3, #138dce);">
+			ดูข้อมูลสถิติทั้งหมด
+		</a>
+	</div>
+
+<?php if (false) : ?>
+////////////////////////////////
+
+<div class="business col-md-12" id="BusinessZone" >
+
+    <div class="export">
+        <div class="col-md-9">ข้อมูลผู้ประกอบการธุรกิจนำเที่ยวและผู้นำเที่ยว</div>
+        <div class="col-md-3">
+                <!-- <?php echo $this->formSelect("businessYear", $this->businessYear, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?> -->
+                <?php echo $this->formSelect("businessExport", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6 col-md-offset-6 col-sm-offset-6 col-xs-offset-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+    
+
+    <div class="business-chart col-md-12">
+
+        <div class="charttopbusiness col-md-4">
+
+            <div class="bus-do col-md-12">
+                จำนวนผู้ประกอบธุรกิจนำเที่ยว รายประเภท (ราย)
+            </div>
+            <div class="mydoughnut col-md-12">
+                <canvas id="mydoughnut1"></canvas>
+            </div>
+
+        </div>
+
+        <div class="charttopbusiness col-md-4">
+            <div class="charttopbusiness col-md-12" style="">
+                <div class="bus-do charttopbusiness col-md-12" >
+                    จำนวนผู้ประกอบธุรกิจนำเที่ยว
+                </div>
+                <div class="bus-no col-md-12">
+                    <?php echo number_format($this->TourismBusinessAmount, 2); ?>
+                    <?php echo $this->TourismBusinessAmountText; ?>ราย
+                </div>
+            </div>     
+
+            <div class="charttopbusiness col-md-12" style="">
+                <div class="bus-do-static charttopbusiness col-md-12">
+                    จำนวนผู้นำเที่ยว
+                </div>
+                <div class="bus-no col-md-12" >
+                    <?php echo number_format($this->TouragenctAmout, 2); ?>
+                    <?php echo $this->TouragenctAmoutText; ?>คน
+                </div>
+            </div>
+        </div>
+
+        <div class=" charttopbusiness col-md-4" >
+            <div class="bus-do-static col-md-12" > 
+                จำนวนผู้นำเที่ยว รายประเภท (คน)
+            </div>
+            <div class="mydoughnut col-md-12">
+                <canvas id="mydoughnut2"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="col-md-12" style="text-align: center;">
+        <a href="https://app.powerbi.com/groups/me/reports/f957ee2b-1d4e-4586-a217-d009c357ab9a/ReportSection7d5437c3a064b4b285c7" target="_blank">
+            <div class="Situation_seeAll_business"> ดูข้อมูลสถิติทั้งหมด </div>
+        </a>
+</div>
+<?php endif; ?>
+
+
+<div id="previewImage_business" style="display: none;"></div>
+<a id="downloadImage_business" href="#In_Out" style="display: none;"></a>
+
+
+<script>
+jQuery(function() {
+
+    var ctxdoughnut1 = document.getElementById('mydoughnut1').getContext('2d');
+    var myBarChart  = new Chart(ctxdoughnut1, {
+    type: 'doughnut',
+    data: {
+        labels: [
+		<?php 
+		if (count($this->TourismBusinessTypeAmount) > 0) :
+			foreach ($this->TourismBusinessTypeAmount as $tourismBusinessType) :
+				echo '"' . $tourismBusinessType["PersonType"] . '",';
+			endforeach;
+		endif;
+		?>
+		],
+        datasets: [{
+            backgroundColor: ['#02b8ab','#354749'],
+            borderColor: ['#02b8ab','#354749'],
+            data: [
+        	<?php 
+        	if (count($this->TourismBusinessTypeAmount) > 0) :
+        		foreach ($this->TourismBusinessTypeAmount as $tourismBusinessType) :
+        			echo '"' . $tourismBusinessType["Amount"] . '",';
+        		endforeach;
+        	endif;
+        	?>
+        	],
+        }]
+    },
+    options: {
+        pieceLabel: {
+                render: function (txt) {
+                    // var tmp_data = txt.value.toFixed(0).toString().split(".");
+                    // txt.value = tmp_data[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") + '.' + tmp_data[1];
+                    txt.value = txt.value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                    return txt.label + ' ' + txt.value;
+                },
+                fontColor: '#000',
+                position: 'outside'
+            },
+            responsive: true,
+            legend : {
+                display: false
+            }
+        }
+    });
+
+    var ctxdoughnut2 = document.getElementById('mydoughnut2').getContext('2d');
+    var myBarChart  = new Chart(ctxdoughnut2, {
+        type: 'doughnut',
+        data: {
+            labels: [
+        	<?php 
+        	if (count($this->TouragenctTypeAmout) > 0) :
+        		foreach ($this->TouragenctTypeAmout as $touragenctTypeAmout) :
+        			echo '"' . $touragenctTypeAmout["CategoryDescription"] . '",';
+        		endforeach;
+        	endif;
+        	?>],
+            datasets: [{
+                backgroundColor: ['#fc8281','#dce01d'],
+                borderColor: ['#fc8281','#dce01d'],
+                data: [
+                <?php 
+                if (count($this->TouragenctTypeAmout) > 0) :
+                	foreach ($this->TouragenctTypeAmout as $touragenctTypeAmout) :
+               			echo '"' . $touragenctTypeAmout["Amount"] . '",';
+                    endforeach;
+               	endif;
+                ?>
+                ],
+            }]
+        },
+        options: {
+            pieceLabel: {
+                render: function (txt) {
+                    // var tmp_data = txt.value.toFixed(0).toString().split(".");
+                    // txt.value = tmp_data[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") + '.' + tmp_data[1];
+                    txt.value = txt.value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                    return txt.label + ' ' + txt.value;
+                },
+                fontColor: '#000',
+                position: 'outside'
+            },
+            responsive: true,
+            legend : {
+                display: false
+            }
+        }
+    });
+
+});
+
+function setCanvas_BusinessZone(val) {
+    html2canvas(document.querySelector("#BusinessZone")).then(function(canvas) {
+        $("#previewImage_business").html(canvas);
+        if(val == 'image') {
+            let imgageData = canvas.toDataURL("image/png");
+            let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+            $("#downloadImage_business").attr("download", "ข้อมูลผู้ประกอบการธุรกิจนำเที่ยวและผู้นำเที่ยว.png").attr("href", newData);
+            $("#downloadImage_business")[0].click();
+            $("#business_Export").val('export');
+        } else if(val == 'pdf') {
+            let canvas = $("#previewImage_business canvas")[0];
+            let imgData = canvas.toDataURL("image/jpeg");
+            let pdf = new jsPDF("l", "mm", "a4");
+            pdf.addImage(imgData, 'JPEG', 0, 0);
+            pdf.save("ข้อมูลผู้ประกอบการธุรกิจนำเที่ยวและผู้นำเที่ยว.pdf");
+            $("#business_Export").val('export');
+        }
+    });
+}
+
+$("#businessExport").change(function() {
+    setCanvas_BusinessZone($(this).val());
+});
+
+</script>

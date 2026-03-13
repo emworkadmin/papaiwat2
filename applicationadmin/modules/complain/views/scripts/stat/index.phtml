@@ -1,0 +1,69 @@
+<div class="panel-detail">
+    <form class="form-horizontal" id="formStat" name="formStat">
+    <div class="title-label">ภาพรวม</div>
+
+        <div class="form-group has-feedback">
+		    <label for="status" class="control-label col-md-1">ปี : </label>
+            <div class="col-md-4 divControl">
+                <?php echo $this->formSelect('selectYear', $this->year, array('class' => 'form-control'), $this->yearOption); ?>
+            </div>
+		    <label for="status" class="control-label col-md-1">เดือน : </label>
+            <div class="col-md-4 divControl">
+                <?php echo $this->formSelect('selectMonth', $this->month, array('class' => 'form-control'), $this->monthOption); ?>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary" id="btnSearch"><em class="fa fa-search"></em> ค้นหา</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div id="divReport"></div>
+        </div>
+
+    </from>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/chartjs/Chart.min.js'); ?>"></script>
+<script type="text/javascript">
+    $(function() {
+
+		$("#formStat").validate({
+			errorElement: "em",
+			errorPlacement: function(error, element) {
+				error.addClass( "help-block" );
+				error.appendTo( element.parents("div.divControl"));
+			}
+    	});
+
+        $("#selectYear").change(function() {
+            var val = $("#selectYear").val();
+            if(val == '') {
+                $("#selectMonth").removeClass('required');
+            } else {
+                $("#selectMonth").addClass('required');
+            }
+        });
+
+
+        loadData();
+
+        function loadData() {
+            var selectYear = $('#selectYear').val();
+            var selectMonth = $('#selectMonth').val();
+            $("#divReport")
+            .empty()
+            .load("<?php echo $this->url(array('action'=>'getstat')); ?>/selectYear/"+selectYear+"/selectMonth/"+selectMonth)
+            .css("display", "");
+        }
+
+        $('#btnSearch').click(function() {
+            var valid = $("#formStat").valid();
+            if(valid) {
+                loadData();
+            }
+        });
+
+    });
+</script>

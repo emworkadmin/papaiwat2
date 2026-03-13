@@ -1,0 +1,170 @@
+<style>
+    #viewImage ::-webkit-scrollbar {
+        width: 10px;
+    }
+    #viewImage ::-webkit-scrollbar-track {
+        /* background: #f1f1f1;  */
+    }
+    #viewImage ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 20px;
+    }
+    #viewImage ::-webkit-scrollbar-thumb:hover {
+        background: #555; 
+    }
+    #viewImage {
+        display: inline-block;
+        width: 100%;
+    }
+    #viewImage .image-box {
+        margin-bottom: 15px;
+        height: 600px;
+        background: #222222;
+        text-align: center;
+        position: relative;
+    }
+    #viewImage .image-box img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        max-height: 500px;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+    }
+    #viewImage .image-box .like {
+        position: absolute;
+        bottom: 0px;
+        right: 15px;
+        color: white;
+        font-size: 30px;
+        cursor: pointer;
+    }
+    #viewImage .description-box {
+        overflow: hidden;
+        margin-bottom: 15px;
+    }
+    #viewImage .description-box .des_name {
+        height: 35px;
+        padding: 5px 0;
+        border-bottom: 1px solid #333333;
+    }
+    #viewImage .description-box .des_detail {
+        overflow-y: scroll;
+        width: 100%;
+        display: inline-block;
+    }
+    @media only screen and (max-width: 768px) {
+        #viewImage .image-box {
+            height: 500px;
+        }
+        #viewImage .image-box img {
+            max-height: 400px;
+        }
+    }
+    @media only screen and (max-width: 550px) {
+        #viewImage .image-box {
+            height: 400px;
+        }
+        #viewImage .image-box img {
+            max-height: 300px;
+        }
+    }
+    @media only screen and (max-width: 375px) {
+        #viewImage .image-box {
+            height: 300px;
+        }
+        #viewImage .image-box img {
+            max-height: 200px;
+        }
+    }
+</style>
+
+<div class="information-panel printable viewImage-detail viewImage-detail-<?php echo $this->dataFile->FileInfoID; ?>" id="viewImage">
+
+    <div class="infodetail infopage">
+
+        <div class="article-title title-panel">
+            <span class="title">
+                <?php echo Emwork_Translate::text($this->lang, 'gallery', 'image'); ?> : <?php echo $this->dataFile->Name; ?> <?php echo Emwork_Translate::text($this->lang, 'gallery', 'of'); ?> <?php echo $this->data->Title; ?>
+            </span>
+            <hr />
+        </div>
+
+        <div class="infomation-detail">
+
+            <div class="col-md-12 col-sm-12 col-xs-12 image-box">
+                <img alt="image" class="col-md-12" src="<?php echo $this->imgUrl; ?>">
+                <span class="like" id="like">
+                <?php if($this->dataLike): ?>
+            		<em class="fa fa-heart"></em>
+                <?php else: ?>
+            		<em class="fa fa-heart-o"></em>
+                <?php endif; ?>
+                    <span class="num">0</span> <span class="like-text">Like</span>
+                </span>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12 description-box">
+                <div class="des_name"><strong><?php echo $this->dataFile->Name; ?></strong></div>
+                <div class="des_detail">
+                    <?php echo $this->dataFile->Description; ?>
+                </div>
+                <div class="des_mailto">
+                    <a id="mailto" href="">
+                        <img alt="image" src="http://png-2.findicons.com/files/icons/573/must_have/48/mail.png">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<?php if($this->ArticleCanComment == 'Y') : ?>
+<div class="information-comment-panel printable">
+    <?php echo $this->partial("article/_partComment_viewimage.phtml", $this); ?>
+</div>
+<?php endif; ?>
+
+<script>
+    $(function() {
+        $("a#mailto").attr('href', 'mailto:?body=' + window.location.href);
+        $("#like").click(function() {
+
+            var userID = '<?php echo $this->UserID; ?>';
+            if(userID == '' || isNaN(userID)){
+                DialogWarning(
+                    "<?php echo Emwork_Translate::text($this->lang, 'gallery', 'like_warning_login_first'); ?>",
+                    "<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_title'); ?>",
+                    "<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_close'); ?>"
+                );
+                return;
+            }
+			$.post("<?php echo $this->url(array('module' => 'gallery', 'controller' => 'article', 'action' => 'savelike'), null, true);?>/hdfFileID/" + <?php echo $this->dataFile->FileInfoID; ?>, null, function(data) {
+                if (data.result) {
+                    getlistlike();
+                }
+            });
+
+        });
+
+        getlistlike();
+        function getlistlike() {
+            var sendData = {};
+		    sendData.id = '<?php echo $this->dataFile->FileInfoID; ?>';
+			$.post("<?php echo $this->url(array('module' => 'gallery', 'controller' => 'article', 'action' => 'getlistlike'), null, true);?>", sendData, function(data) {
+                $("#like .num").html(data.countdata);
+                if(data.dataLike == true) {
+                    $("#like em").removeClass("fa fa-heart-o");
+                    $("#like em").addClass("fa fa-heart");
+                } else {
+                    $("#like em").removeClass("fa fa-heart");
+                    $("#like em").addClass("fa fa-heart-o");
+                }
+            });
+        }
+
+    });
+</script>

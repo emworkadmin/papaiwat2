@@ -1,0 +1,26 @@
+<?php  
+if($this->data->WidgetType=='grid'){
+	echo $this->partial("item/_grid.phtml", $this);	
+}
+if($this->data->WidgetType=='slideshow'){
+	echo $this->partial("item/_slideshow.phtml", $this);	
+}
+if($this->data->WidgetType=='slideset'){
+	echo $this->partial("item/_slideset.phtml", $this);	
+}
+if($this->data->WidgetType=='tab'){
+	echo $this->partial("item/_tab.phtml", $this);	
+}
+if($this->data->WidgetType=='collapse'){
+	echo $this->partial("item/_collapse.phtml", $this);	
+}
+if($this->data->WidgetType=='kenburns'){
+	echo $this->partial("item/_kenburns.phtml", $this);	
+}
+if($this->data->WidgetType=='marquee'){
+	echo $this->partial("item/_marquee.phtml", $this);	
+}
+if($this->data->WidgetType=='calendar'){
+	echo $this->partial("item/_calendar.phtml", $this);	
+}
+?>

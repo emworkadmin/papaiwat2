@@ -1,0 +1,166 @@
+<!-- lightslider -->
+<link rel="stylesheet" href="<?php echo substr($this->baseUrl('plugins/lightslider-master/css/lightslider.min.css'), $this->subStringAdminLen); ?>" />
+<script type="text/javascript" src="<?php echo substr($this->baseUrl('plugins/lightslider-master/js/lightslider.min.js'), $this->subStringAdminLen); ?>"></script>
+
+<!-- lightgallery -->
+<link rel="stylesheet" href="<?php echo substr($this->baseUrl('plugins/lightgallery-master/css/lightgallery.min.css'), $this->subStringAdminLen); ?>" />
+<script type="text/javascript" src="<?php echo substr($this->baseUrl('plugins/lightgallery-master/js/lightgallery.min.js'), $this->subStringAdminLen); ?>"></script>
+
+<!-- lightgallery Ext -->
+<script type="text/javascript" src="<?php echo substr($this->baseUrl('plugins/lightgallery-master/js/lg-fullscreen.min.js'), $this->subStringAdminLen); ?>"></script>
+<script type="text/javascript" src="<?php echo substr($this->baseUrl('plugins/lightgallery-master/js/lg-thumbnail.min.js'), $this->subStringAdminLen); ?>"></script>
+<script type="text/javascript" src="<?php echo substr($this->baseUrl('plugins/lightgallery-master/js/lg-video.min.js'), $this->subStringAdminLen); ?>"></script>
+<script type="text/javascript" src="<?php echo substr($this->baseUrl('plugins/lightgallery-master/js/lg-autoplay.min.js'), $this->subStringAdminLen); ?>"></script>
+
+<!-- lightbox -->
+<link rel="stylesheet" href="<?php echo substr($this->baseUrl('plugins/lightbox/css/lightbox.min.css'), $this->subStringAdminLen); ?>" />
+<script src="<?php echo substr($this->baseUrl('plugins/lightbox/js/lightbox.min.js'), $this->subStringAdminLen); ?>"></script>
+
+ <div class="infodetail infopage">
+	<?php 
+	// Layout
+	switch ($this->dataInfo->TemplateType) : 
+		case "1" : 
+	?>
+	
+	<div class="information-panel printable">
+		
+		<?php  echo $this->partial("article/_partTitle.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDate.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partIntroImage.phtml", $this); ?>
+		
+		<div class="row" >
+			<div class="col-md-9">
+				<?php  echo $this->partial("article/_partGallery.phtml", $this); ?>
+				
+				<?php  echo $this->partial("article/_partDetail.phtml", $this); ?>
+			</div>
+			<div class="col-md-3">
+				<?php  echo $this->partial("article/_partSocial.phtml", $this); ?>
+			</div>
+		</div>
+		
+		<?php  echo $this->partial("article/_partMulti.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDocument.phtml", $this); ?>
+
+		<?php  echo $this->partial("article/_partTag.phtml", $this); ?>
+	</div>
+	<?php 
+			break;
+		case "2" : 
+	?>
+	
+	<div class="information-panel printable">
+		
+		<?php  echo $this->partial("article/_partTitle.phtml", $this); ?>
+	
+		<?php  echo $this->partial("article/_partDate.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partIntroImage.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDetail.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partGallery.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partMulti.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDocument.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partSocial.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partTag.phtml", $this); ?>
+			
+	</div>
+	
+	<?php 
+			break;
+		case "3" : 
+	?>
+	
+	<div class="information-panel printable">
+			
+		<?php  echo $this->partial("article/_partIntroImage.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partTitle.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDate.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDetail.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partGallery.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partMulti.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDocument.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partSocial.phtml", $this); ?>
+
+		<?php  echo $this->partial("article/_partTag.phtml", $this); ?>
+			
+	</div>
+	
+	<?php 
+			break;
+		case "4" : 
+	?>
+	
+	<div class="information-panel printable">
+			
+		<?php  echo $this->partial("article/_partTitle.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDate.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDetail.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partIntroImage.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partGallery.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partMulti.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDocument.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partSocial.phtml", $this); ?>
+
+		<?php  echo $this->partial("article/_partTag.phtml", $this); ?>
+		
+	</div>
+	
+	<?php 
+			break;
+		case "5" : 
+		default : 
+	?>
+
+	<div class="information-panel printable">
+		
+		<?php  echo $this->partial("article/_partTitle.phtml", $this); ?>
+	
+		<?php  echo $this->partial("article/_partDate.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDetail.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partGallery.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partMulti.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDocument.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partSocial.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partTag.phtml", $this); ?>
+			
+	</div>
+	
+	<?php 
+			break;
+	?>
+	<?php 
+	endswitch;
+	?>
+</div>
+
+

@@ -1,0 +1,20 @@
+{
+	"name" : "รายการกลุ่มงาน",
+	"controller" : "category",
+	"description" : "แสดงรายการหน่วยงานภายใต้กลุ่มงานที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "category",
+			"type" : "select",
+			"size" : "",
+			"label" : "กลุ่มงาน",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Information_Service_Category",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

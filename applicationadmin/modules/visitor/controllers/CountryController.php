@@ -1,0 +1,325 @@
+<?php
+class Visitor_CountryController extends Zend_Controller_Action
+{   protected $export=array(
+        "today"=>"รายงานสถิติวันนี้",
+        "tomonth"=>"รายงานสถิติเดือนนี้",
+        "lastmonth"=>"รายงานสถิติเดือนที่แล้ว",
+        "viewall"=>"รายงานสถิติทั้งหมด"
+    );
+    public function indexAction(){
+        // Log Access
+        System_Model_Log::access();
+
+        $sUser = System_Model_SUser::getInstance();
+		if (!$sUser->hasData()) {
+			$this->_helper->redirector('index', 'index', 'default');
+		}
+		if ($sUser->getInfo()->UserType != "B") {
+			$this->_helper->redirector('index', 'index', 'default');
+		}
+
+		// Check Action Rights
+		$canView = $sUser->isAllow('visitor.stat.view');
+		if (!$canView) {
+			$this->_helper->redirector('index', 'index', 'default');
+        }
+        
+        $languages = System_Model_Setting::getLanguages();
+        $defaultLanguage = System_Model_Setting::getDefaultLanguage();
+        $model = new Visitor_Model_Country();
+
+        //Get params
+        $params=$this->getRequest()->getParams();
+
+        		// Get Data
+		$data = new stdClass();
+		$data->VisitorSiteOpenDate = System_Model_Setting::getValue("VisitorSiteOpenDate", "Visitor");
+		$data->VisitorBeginVisitor = System_Model_Setting::getValue("VisitorBeginVisitor", "Visitor");
+		$data->VisitorSiteModifiedDate = System_Model_Setting::getValue("VisitorSiteModifiedDate", "Visitor");
+		$data->VisitorSiteVisitor = System_Model_Setting::getValue("VisitorSiteVisitor", "Visitor");
+
+        $startdate = empty($params['startdate']) ? date("Y-m-d") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["startdate"]));
+        $enddate = empty($params['enddate']) ? date("Y-m-d") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["enddate"]));
+
+        //send to view
+        $this->view->datatoday=$datatoday;
+        $this->view->data=$data;
+        $this->view->export=Emwork_Utility::addEmptyOption ($this->export,"--ส่งออกรายงานสถิติการเยี่ยมชม--");
+        $this->view->startdate = Emwork_Utility_DateTime::MySQLToDateThai($startdate);
+        $this->view->enddate = Emwork_Utility_DateTime::MySQLToDateThai($enddate);
+        // Set View
+        $this->view->canAdd = $canAdd;
+        $this->view->pageName = "สถิติการเยี่ยมชม รายประเทศ";
+        $this->view->pageIcon = "fa fa-newspaper-o";
+        $this->view->subMenus = array();
+        $this->view->breadcrumb = array(
+            array('name' => 'หน้าแรก', 'url' => $this->view->url(array('module' => 'visitor', 'controller' => 'page', 'action' => 'index'), null, true)),
+            array('name' => 'สถิติการเยี่ยมชม รายประเทศ')
+            
+        );
+				// Log Acion
+		System_Model_Log::action("visitor.country", "view", null, null);
+    }
+    public function todayAction() { 
+        // Get Data
+        $data = new stdClass();
+        $data->VisitorSiteOpenDate = System_Model_Setting::getValue("VisitorSiteOpenDate", "Visitor");
+        $data->VisitorBeginVisitor = System_Model_Setting::getValue("VisitorBeginVisitor", "Visitor");
+        $data->VisitorSiteModifiedDate = System_Model_Setting::getValue("VisitorSiteModifiedDate", "Visitor");
+        $data->VisitorSiteVisitor = System_Model_Setting::getValue("VisitorSiteVisitor", "Visitor");
+        $limit=10;
+        $model = new Visitor_Model_Country();
+        //Get params
+        $params=$this->getRequest()->getParams();
+
+        $startdate = empty($params['startdate']) ? date("Y-m-d") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["startdate"]));
+        $enddate = empty($params['enddate']) ? date("Y-m-d") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["enddate"]));
+        
+        if($data->VisitorSiteOpenDate > $startdate){
+            $startdate=$data->VisitorSiteOpenDate;
+        }
+        else{
+            $startdate=$startdate;
+        }
+        $datatoday = $model->getLogAccessCountry($startdate,$enddate, $limit=10);
+        $data = $model->getLogAccessCountry($startdate,$enddate);
+        //send to view
+        $this->view->datatoday=$datatoday;
+        $this->view->data=$data;
+
+		Zend_Layout::resetMvcInstance();
+    }
+    public function tomonthAction() { 
+        // Get Data
+        $data = new stdClass();
+        $data->VisitorSiteOpenDate = System_Model_Setting::getValue("VisitorSiteOpenDate", "Visitor");
+        $data->VisitorBeginVisitor = System_Model_Setting::getValue("VisitorBeginVisitor", "Visitor");
+        $data->VisitorSiteModifiedDate = System_Model_Setting::getValue("VisitorSiteModifiedDate", "Visitor");
+        // $data->VisitorSiteVisitor = System_Model_Setting::getValue("VisitorSiteVisitor", "Visitor");
+        
+        $model = new Visitor_Model_Country();
+        //Get params
+        $params=$this->getRequest()->getParams();
+
+        $startdate = empty($params['startdate']) ? date("Y-m-01") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["startdate"]));
+        $enddate = empty($params['enddate']) ? date("Y-m-t") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["enddate"]));
+
+        
+        if($data->VisitorSiteOpenDate > $startdate){
+            $startdate=$data->VisitorSiteOpenDate;
+        }
+        else{
+            $startdate=$startdate;
+        }
+
+        $datatomonth = $model->getLogAccessCountry($startdate,$enddate, $limit=10);
+        $data = $model->getLogAccessCountry($startdate,$enddate);
+        
+        //send to view
+        $this->view->datatomonth=$datatomonth;
+        $this->view->data=$data;
+
+		Zend_Layout::resetMvcInstance();
+    }
+    public function lastmonthAction() { 
+        // Get Data
+        $data = new stdClass();
+        $data->VisitorSiteOpenDate = System_Model_Setting::getValue("VisitorSiteOpenDate", "Visitor");
+        $data->VisitorBeginVisitor = System_Model_Setting::getValue("VisitorBeginVisitor", "Visitor");
+        $data->VisitorSiteModifiedDate = System_Model_Setting::getValue("VisitorSiteModifiedDate", "Visitor");
+        $data->VisitorSiteVisitor = System_Model_Setting::getValue("VisitorSiteVisitor", "Visitor");
+
+        $model = new Visitor_Model_Country();
+        //Get params
+        $params=$this->getRequest()->getParams();
+        // $date=date("m")."-01";
+        $startdate = empty($params['startdate']) ?  date( "Y-m-01", strtotime("-1 month") ) : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["startdate"]));
+        $enddate = empty($params['enddate']) ? date("Y-m-t", strtotime("-1 month") ) : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["enddate"]));
+        
+        if($data->VisitorSiteOpenDate > $startdate){
+            $startdate=$data->VisitorSiteOpenDate;
+        }
+        else{
+            $startdate=$startdate;
+        }
+
+        $datatomonth = $model->getLogAccessCountry($startdate,$enddate, $limit=10);
+        $data = $model->getLogAccessCountry($startdate,$enddate);
+
+
+        //send to view
+        $this->view->datatomonth=$datatomonth;
+        $this->view->data=$data;
+
+		Zend_Layout::resetMvcInstance();
+    }
+    public function viewallAction() { 
+        // Get Data
+        $data = new stdClass();
+        $data->VisitorSiteOpenDate = System_Model_Setting::getValue("VisitorSiteOpenDate", "Visitor");
+        $data->VisitorBeginVisitor = System_Model_Setting::getValue("VisitorBeginVisitor", "Visitor");
+        $data->VisitorSiteModifiedDate = System_Model_Setting::getValue("VisitorSiteModifiedDate", "Visitor");
+        // $data->VisitorSiteVisitor = System_Model_Setting::getValue("VisitorSiteVisitor", "Visitor");
+
+        $model = new Visitor_Model_Country();
+        //Get params
+        $params=$this->getRequest()->getParams();
+
+        $startdate = empty($params['startdate']) ? date("Ym") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["startdate"]));
+        $enddate = empty($params['enddate']) ? date("Ym") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["enddate"]));
+   
+        $startdate = date("Ym", strtotime($data->VisitorSiteOpenDate));
+        $enddate = date("Ym", strtotime($enddate));
+
+        $datatomonth = $model->getLogAccessCountry($startdate,$enddate, $limit=10);
+        $data = $model->getLogAccessCountry($startdate,$enddate);
+        
+        //send to view
+        $this->view->datatomonth=$datatomonth;
+        $this->view->data=$data;
+
+		Zend_Layout::resetMvcInstance();
+    }
+    public function exporttodayAction() {     
+        // Get Data
+        $data = new stdClass();
+        $data->VisitorSiteOpenDate = System_Model_Setting::getValue("VisitorSiteOpenDate", "Visitor");
+        $data->VisitorBeginVisitor = System_Model_Setting::getValue("VisitorBeginVisitor", "Visitor");
+        $data->VisitorSiteModifiedDate = System_Model_Setting::getValue("VisitorSiteModifiedDate", "Visitor");
+        // Model
+        $model = new Visitor_Model_Country();
+
+        //Get params
+        $params=$this->getRequest()->getParams();
+
+        $startdate = empty($params['startdate']) ? date("Y-m-d") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["startdate"]));
+        $enddate = empty($params['enddate']) ? date("Y-m-d") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["enddate"]));
+        
+        if($data->VisitorSiteOpenDate > $startdate){
+            $startdate=$data->VisitorSiteOpenDate;
+        }
+        else{
+            $startdate=$startdate;
+        }
+        $datatoday = $model->getLogAccessCountry($startdate,$enddate, $limit=10);
+        $data = $model->getLogAccessCountry($startdate,$enddate);
+    	// Set View
+        $this->_helper->layout->disableLayout();
+        $this->view->datatoday=$datatoday;
+        $this->view->data=$data;
+        $this->view->startdate=Emwork_Utility_DateTime::MySQLToDateThai($startdate);
+        $this->view->enddate=Emwork_Utility_DateTime::MySQLToDateThai($enddate);
+    	 
+    	// Set Response
+    	header("Content-Type: application/vnd.ms-excel");
+    	header("Expires: 0");
+    	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    	header("content-disposition: attachment;filename=สถิติการเยี่ยมชมรายประเทศวันนี้.xls");
+    }
+    public function exporttomonthAction() {     
+        // Get Data
+        $data = new stdClass();
+        $data->VisitorSiteOpenDate = System_Model_Setting::getValue("VisitorSiteOpenDate", "Visitor");
+        $data->VisitorBeginVisitor = System_Model_Setting::getValue("VisitorBeginVisitor", "Visitor");
+        $data->VisitorSiteModifiedDate = System_Model_Setting::getValue("VisitorSiteModifiedDate", "Visitor");
+        
+        // Model
+        $model = new Visitor_Model_Country();
+        //Get params
+        $params=$this->getRequest()->getParams();
+
+        $startdate = empty($params['startdate']) ? date("Y-m-01") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["startdate"]));
+        $enddate = empty($params['enddate']) ? date("Y-m-d") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["enddate"]));
+        
+        if($data->VisitorSiteOpenDate > $startdate){
+            $startdate=$data->VisitorSiteOpenDate;
+        }
+        else{
+            $startdate=$startdate;
+        }
+        $datatomonth = $model->getLogAccessCountry($startdate,$enddate, $limit=10);
+        $data = $model->getLogAccessCountry($startdate,$enddate);
+    	// Set View
+        $this->_helper->layout->disableLayout();
+        $this->view->datatomonth=$datatomonth;
+        $this->view->data=$data;
+        $this->view->startdate=Emwork_Utility_DateTime::MySQLToDateThai($startdate);
+        $this->view->enddate=Emwork_Utility_DateTime::MySQLToDateThai($enddate);
+    	 
+    	// Set Response
+    	header("Content-Type: application/vnd.ms-excel");
+    	header("Expires: 0");
+    	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    	header("content-disposition: attachment;filename=สถิติการเยี่ยมชมรายประเทศเดือนปัจจุบัน.xls");
+    }
+    public function exportlastmonthAction() {     
+        // Get Data
+        $data = new stdClass();
+        $data->VisitorSiteOpenDate = System_Model_Setting::getValue("VisitorSiteOpenDate", "Visitor");
+        $data->VisitorBeginVisitor = System_Model_Setting::getValue("VisitorBeginVisitor", "Visitor");
+        $data->VisitorSiteModifiedDate = System_Model_Setting::getValue("VisitorSiteModifiedDate", "Visitor");
+
+        // Model
+        $model = new Visitor_Model_Country();
+
+        $params=$this->getRequest()->getParams();
+        // $date=date("m")."-01";
+        $startdate = empty($params['startdate']) ?  date( "Y-m-01", strtotime("-1 month") ) : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["startdate"]));
+        $enddate = empty($params['enddate']) ? date("Y-m-t", strtotime("-1 month") ) : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["enddate"]));
+        
+        if($data->VisitorSiteOpenDate > $startdate){
+            $startdate=$data->VisitorSiteOpenDate;
+        }
+        else{
+            $startdate=$startdate;
+        }
+
+        $datalastmonth = $model->getLogAccessCountry($startdate,$enddate, $limit=10);
+        $data = $model->getLogAccessCountry($startdate,$enddate);
+
+    	// Set View
+        $this->_helper->layout->disableLayout();
+        $this->view->datalastmonth=$datalastmonth;
+        $this->view->data=$data;
+        $this->view->startdate=Emwork_Utility_DateTime::MySQLToDateThai($startdate);
+        $this->view->enddate=Emwork_Utility_DateTime::MySQLToDateThai($enddate);
+    	 
+    	// Set Response
+    	header("Content-Type: application/vnd.ms-excel");
+    	header("Expires: 0");
+    	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    	header("content-disposition: attachment;filename=สถิติการเยี่ยมชมรายประเทศเดือนที่แล้ว.xls");
+    }
+    public function exportviewallAction() {     
+        
+        // Get Data
+        $data = new stdClass();
+        $data->VisitorSiteOpenDate = System_Model_Setting::getValue("VisitorSiteOpenDate", "Visitor");
+        $data->VisitorBeginVisitor = System_Model_Setting::getValue("VisitorBeginVisitor", "Visitor");
+        $data->VisitorSiteModifiedDate = System_Model_Setting::getValue("VisitorSiteModifiedDate", "Visitor");
+
+        $model = new Visitor_Model_Country();
+        //Get params
+        $params=$this->getRequest()->getParams();
+
+        $startdate = empty($params['startdate']) ? date("Ym") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["startdate"]));
+        $enddate = empty($params['enddate']) ? date("Ym") : Emwork_Utility_DateTime::dateThaiToMySQL(base64_decode($params["enddate"]));
+   
+        $startdate = date("Ym", strtotime($data->VisitorSiteOpenDate));
+        $enddate = date("Ym", strtotime($enddate));
+
+        $dataviewall = $model->getLogAccessCountry($startdate,$enddate, $limit=10);
+        $data = $model->getLogAccessCountry($startdate,$enddate);
+    	// Set View
+        $this->_helper->layout->disableLayout();
+        $this->view->dataviewall=$dataviewall;
+        $this->view->data=$data;
+    	 
+    	// Set Response
+    	header("Content-Type: application/vnd.ms-excel");
+    	header("Expires: 0");
+    	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    	header("content-disposition: attachment;filename=สถิติการเยี่ยมชมรายประเทศทั้งหมด.xls");
+    }
+}
+?>

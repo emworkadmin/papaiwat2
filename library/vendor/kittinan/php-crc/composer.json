@@ -1,0 +1,31 @@
+{
+    "name": "kittinan/php-crc",
+    "description": "Calculates CRC checksums for input data",
+    "keywords": [
+        "crc",
+	"crc1",
+	"crc16",
+	"crc16qt",
+	"crc16dnp",
+	"crc16usb",
+	"xmodem",
+	"zmodem",
+	"modbus",
+	"ccitt"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marc Ermshaus",
+            "email": "marc@ermshaus.org",
+            "homepage": "http://www.ermshaus.org/",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "mermshaus\\CRC\\": "src",
+            "mermshaus\\CRC\\Tests\\": "tests"
+        }
+    }
+}

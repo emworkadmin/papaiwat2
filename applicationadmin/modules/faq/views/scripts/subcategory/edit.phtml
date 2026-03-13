@@ -1,0 +1,210 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+		<div class="nav-tabs-custom">
+			<ul class="nav nav-tabs">
+				<?php 
+				if (count($this->languages) > 0) :
+					$i = 0;
+					foreach ($this->languages as $lang) :
+						$i ++;
+				?>
+				<li class="<?php echo $i == 1 ? 'active' : ''; ?>" data-tab-lang="<?php echo $lang["Code"]; ?>">
+					<a data-toggle="tab" href="#detail-<?php echo $lang['Code']; ?>" title="<?php echo $lang['Name']; ?>">
+						<?php echo $lang['NameLocal']; ?>
+						<em class="fa fa-warning text-danger warning"></em>
+					</a>
+				</li>
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</ul>
+			<div class="tab-content">
+				<?php 
+				if (count($this->languages) > 0) :
+					$i = 0;
+					foreach ($this->languages as $lang) :
+						$langCode = $lang['Code'];
+						$isRequired = $lang["IsRequired"] == "Y";
+						$isDefault = $lang["IsDefault"] == "Y";
+						$i ++;
+						$sugguestMessage = "";
+		
+						// Setting Validate
+						$labelClassRequired = '';
+						$controlClassRequired = '';
+						if ($isDefault || $isRequired) {
+							$labelClassRequired = ' labelRequest'; 
+							$controlClassRequired = ' required';
+						}
+				?>
+				<div id="detail-<?php echo $lang['Code']; ?>" class="tab-pane fade <?php echo $i == 1 ? 'in active' : ''; ?>">
+					<?php 
+						if (true) :					
+							$dataDetail = $this->dataDetails[$langCode];
+							if ($isDefault) : 
+								$defaultDataDetail = $dataDetail;
+							else :
+								$sugguestMessage = "<<โปรดจัดการข้อมูลที่ " . $this->defaultLanguageName . ">>";
+							endif;
+					?>
+					<div class="title-label">ข้อมูลทั่วไป</div>		
+					<div class="form-group" >
+						<label class="col-md-3 control-label<?php echo $labelClassRequired; ?>" for="">ชื่อ</label>		
+						<div class="col-md-9 divControl">
+							<?php echo $this->formText("params[{$langCode}][Name]", $dataDetail->Name, array('class' => 'form-control' . $controlClassRequired, 'placeholder' => '', 'maxlength' => '250')); ?>
+						</div>
+					</div>
+					<div class="form-group" >
+						<label class="col-md-3 control-label<?php echo $isDefault ? $labelClassRequired : ''; ?>" for="">หมวดหมู่หลัก</label>		
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->formSelect("params[{$langCode}][FaqCategoryID]", $dataDetail->FaqCategoryID, array('class' => 'form-control' . $controlClassRequired), $this->FaqCategoryOption); ?>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+					<div class="form-group" >
+						<label class="col-md-3 control-label<?php echo $isDefault ? $labelClassRequired : ''; ?>" for="">ลำดับการแสดงผล</label>		
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->formText("params[{$langCode}][Ordering]", $dataDetail->Ordering, array('class' => 'form-control digits ' . $controlClassRequired, 'placeholder' => '')); ?>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+			
+					<div class="title-label">สถานะ</div>		
+					<?php if ($isDefault) : ?>
+					<div class="form-group">
+						<label class="col-md-3 control-label labelRequest" >สถานะ</label>
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">
+								<?php echo $this->formRadio("params[{$langCode}][IsEnable]", $dataDetail->IsEnable, array('class' => 'required', 'label_class' => 'radio-inline'), $this->publishOption, " "); ?>
+							</div>						
+						</div>
+					</div>
+					<?php else : ?>
+					<div class="form-group">
+						<label class="col-md-3 control-label" >สถานะ</label>
+						<div class="col-md-9 divControl">
+							<p class="form-control-static">
+									<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+					</div>
+					<?php endif; ?>	
+			
+					<?php endif;?>
+				</div>
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</div>	
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canEdit) : ?>
+					<button type="button" class="btn btn-primary" id="btnSave">
+						<em class="fa fa-save"></em> บันทึก
+					</button>
+				<?php endif ; ?>
+				<?php if ($this->canDelete) : ?>
+					<button type="button" class="btn btn-danger" id="btnDelete"><em class="fa fa-trash"></em> ลบข้อมูล</button>
+				<?php endif ; ?>
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+    
+	$("#formData input[type=checkbox], #formData input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	var roxyFileman = '<?php echo $this->baseUrl('/fileman/index.html'); ?>';	
+	$( '.Detail' ).ckeditor({
+		language: 'th',
+		height: 400,
+		toolbar: [
+		          {name : 'basicstyles', items : ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']},
+		          {name : 'colors', items: [ 'FontSize', 'TextColor', 'BGColor' ] },
+		          {name : 'paragraph', items : ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+		          {name : 'links', items : ['Link', 'Unlink', 'Anchor']},
+		          {name : 'inserts', items : ['Image', 'Table', 'HorizontalRule']},
+		          {name : 'document', items: ['Source']},
+		          {name : 'video', items: ['Video']}
+		],
+		extraPlugins : 'uploadimage,justify,video,font,panelbutton,colorbutton',
+		filebrowserBrowseUrl: roxyFileman+'?integration=ckeditor',
+		filebrowserImageBrowseUrl:roxyFileman+'?integration=ckeditor&type=image',
+		filebrowserVideoBrowseUrl:roxyFileman+'?integration=ckeditor&type=video',
+		extraAllowedContent : 'video [*]{*}(*);source [*]{*}(*);iframe [*]{*}(*);'
+	});
+
+	<?php if ($this->canEdit) : ?>
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'faq', 'controller' => 'subcategory', 'action' => 'update'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'faq', 'controller' => 'subcategory', 'action' => 'edit'), null, true); ?>/itemid/" + data.id;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif; ?>
+
+	<?php if ($this->canDelete) : ?>
+	// Delete
+	$("#btnDelete").click(function(){
+		DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+			$.post("<?php echo $this->url(array('module' => 'faq', "controller" => 'subcategory', 'action' => 'delete'), null, true); ?>", {'id' : '<?php echo $this->data->ID?>'}, function(data){
+				if (data.result) {
+					DialogComplete('ลบสำเร็จ');
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'faq', 'controller' => 'subcategory', 'action' => 'index'), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		});
+	});
+	<?php endif ; ?>
+
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'faq', 'controller' => 'subcategory', 'action' => 'index'), null, true); ?>";
+	});
+});
+</script>

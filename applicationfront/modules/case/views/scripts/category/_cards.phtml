@@ -1,0 +1,76 @@
+<style>
+.infocardcase{background:#c7c7c7;padding:10px; border-radius: 10px;margin-bottom:30px;}
+.infocardcase .caseHead{ font-weight: bold;}
+.pattern {  margin-top: 65px;}
+</style>
+<div class="">
+	<div class="head-case">
+		<div class="title-search-date" style="font-size: 2.5rem;font-weight:bold;"><?php echo Emwork_Translate::text($this->lang, 'case', 'subtitle'); ?></div>
+		<span class="title font-mitr-light">จำนวนคดี&nbsp;=&nbsp;<?php print_r($this->AmountCase); ?></span>
+	</div>
+	<div class="row">
+
+	<?php if(count($this->items)>0):
+			foreach ($this->items as $item) :
+				$blackNo=$item['BlackCasePrefix'].$item['BlackCaseNo'].'/'.$item['BlackCaseYear'];
+				$trialReason=$item['TrialReason'];
+				$trialRoom=$item['TrialRoom'];
+				$trialDate=Emwork_Utility_DateTime::MSSqlToDateThai($item['TrialDate']);
+				$trialtime=$item['TrialDate']->format('H:i');
+				$subpoenaType=$item['SubpoenaType'];
+				$injunction=$item['Injunction'];
+				
+	?>
+	<div class="col-md-4 col-sm-6 col-xs-12 case-card-list">
+		<div class="infocardcase">
+			<div class="caseHead">
+				<?php echo $blackNo; ?>
+			</div>
+			<div class="row">
+				<div class="col-md-5">
+					<span class="caseHead"><?php echo Emwork_Translate::text($this->lang, 'case', 'remark'); ?></span>
+				</div>
+				<div class="col-md-7">
+					<?php echo $trialReason; ?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-5">
+					<span class="caseHead"><?php echo Emwork_Translate::text($this->lang, 'case', 'judment_room'); ?></span>
+				</div>
+				<div class="col-md-7">
+					<?php echo $trialRoom; ?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-5">
+					<span class="caseHead"><?php echo Emwork_Translate::text($this->lang, 'case', 'judgment_day'); ?></span>
+				</div>
+				<div class="col-md-7">
+					<span><?php echo $trialDate; ?>&nbsp;เวลา&nbsp;<?php echo $trialtime ;?>น.</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-5">
+					<span class="caseHead"><?php echo Emwork_Translate::text($this->lang, 'case', 'result'); ?></span>
+				</div>
+				<div class="col-md-7">
+					<?php echo $subpoenaType; ?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-5">
+					<span class="caseHead"><?php echo Emwork_Translate::text($this->lang, 'case', 'injunction'); ?></span>
+				</div>
+				<div class="col-md-7">
+					<?php echo $injunction; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php 
+			endforeach;
+		endif;
+	?>
+	</div>
+</div>

@@ -1,0 +1,13 @@
+<?php
+	$InfoImage = $this->baseUrl("images/other/no-image.jpg");
+	if ($this->dataInfo->FileHashName) {
+		$InfoImage = $this->url(array('module' => 'default', 'controller' => 'file', 'action' => 'get', 'file' => $this->dataInfo->FileHashName), null, true);
+	?>
+	<div class="lightgallery">
+		<div class="detail-img" data-src="<?php echo $InfoImage?>">
+			<img alt="image" src="<?php echo $InfoImage?>">
+		</div>
+	</div>
+	<?php 
+	}
+?>

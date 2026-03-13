@@ -1,0 +1,32 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+<div class="panel-detail">
+	<form class="form-horizontal" id="formData" name="formData">
+        <?php echo $this->formHidden("hdfID", $this->itemid); ?>
+        <div class="form-group" >
+        <label class="col-md-3 control-label labelRequest" for="">ชื่อ</label>
+        <div class="col-md-9 divControl">
+            <?php echo $this->formText("Title", null, array('class' => 'form-control', 'placeholder' => 'ระบุประเภทหน้าของหนังสือ เช่น หน้า , page', 'maxlength' => '250')); ?>
+            <div class="help-block">ระบุชื่อหน้าของหนังสือ</div>	
+        </div>	
+        </div>
+        <div class="form-group" >
+            <label class="col-md-3 control-label" for="">ไฟล์หนังสือรูปแบบ PDF </label>			
+            <div class="col-md-9 divControl">
+                <?php echo $this->UploadHtmlControl("FileDocument", "FileDocument", $this->dataFileDocuments, array( 'exts' => array('pdf'), 'maxsize' => $this->datasetting )); ?>
+			    <div class="help-block">ขนาดไฟล์ไม่เกิน <?php echo $this->datasetting?> MB<br>เฉพาะไฟล์นามสกุล: .pdf</div>
+            </div>
+        </div>
+        </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(function() {
+        $(".button-pdf").click(function() {
+            $(".button-pdf").attr("disabled", "disabled");
+        });
+    });
+</script>

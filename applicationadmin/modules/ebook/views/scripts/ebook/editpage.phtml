@@ -1,0 +1,335 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+
+<style>
+    #btnPublish .fa-check { color: green; }
+    #btnUnpublish .fa-times { color: red; }
+</style>
+
+<div>
+	<div class="searchPanel form-horizontal" id="formSearch">
+		<div class="form-group">
+			<div class="col-md-12">
+				<div class="text-right">
+
+                    <?php if($this->canEdit): ?>
+                        <button type="button" id="btnAddpic" class="btn btn-success">
+                            <em class="fa fa-plus"></em> เพิ่มรูปภาพ
+                        </button>
+                        <button type="button" id="btnAddpdf" class="btn btn-primary">
+                            <em class="fa fa-plus"></em> เพิ่มไฟล์ PDF
+                        </button>
+                        <button type="button" id="btnPublish" class="btn btn-default">
+                            <em class="fa fa-check"></em> เผยแพร่
+                        </button>
+                        <button type="button" id="btnUnpublish" class="btn btn-default">
+                            <em class="fa fa-times"></em> ไม่เผยแพร่
+                        </button>
+                    <?php endif; ?>
+
+                    <?php if($this->canDelete): ?>
+                        <button type="button" id="btnDelete" class="btn btn-danger">
+                            <em class="fa fa-trash"></em> ลบ
+                        </button>
+                        <button type="button" id="btnEditpage" class="btn btn-danger" style="display:none";>
+                            <em class="fa fa-trash"></em> ลบ
+                        </button>
+                    <?php endif; ?>
+                    
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<table id="tblData" class="table table-bordered table-hover">
+	<caption>จัดการหน้าหนังสือ</caption>
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>ชื่อหน้า</th>
+			<th>เรียงลำดับ</th>
+			<th>สถานะ</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script type="text/javascript">
+    jQuery(function(){
+
+        // Addpic
+        $("#btnAddpic").click(function(){
+            var dialogPreview = BootstrapDialog.show({
+                title: 'เพิ่มข้อมูลภาพหนังสือ',
+                message: $('<div id="dialogdialogAddpic"></div>').load("<?php echo $this->url(array('module' => 'ebook', 'controller' => 'ebook', 'action' => 'addbookpage','itemid' => $this->itemID), null, true); ?>", null),
+                closable: true,
+                closeByBackdrop: false,
+                closeByKeyboard: false,
+                autodestroy: true,
+                size: BootstrapDialog.SIZE_WIDE,
+                cssClass: "divPreview",
+                buttons : [{
+                    label: ' ตกลง',
+                    icon: 'fa fa-check',
+                    cssClass: 'btn btn-default button-img',
+                    action: function(dialog) {
+                        $.post("<?php echo $this->url(array("module" => 'ebook', "controller" => 'ebook', 'action' => 'savebook'), null, true); ?>" , $('#formData').serializeArray(), function(data) {
+                            if (data.result) {
+                                tblData.ajax.reload();
+                                DialogComplete("เพิ่มไฟล์รูปภาพสำเร็จ");
+                                dialog.close();
+                                $(".button-pdf").removeAttr("disabled");
+                            } else {
+                                DialogWarning(data.message);
+                                $(".button-pdf").removeAttr("disabled");
+                            }
+                        }, 'json');
+                    }
+                },
+                {
+                    label: ' ยกเลิก',
+                    icon: 'fa fa-times',
+                    action: function(dialog) {
+                        dialog.close();
+                    }
+                }]
+            });
+            dialogPreview.open();
+        });
+
+        // Addpdf
+        $("#btnAddpdf").click(function(){
+            var dialogPreview = BootstrapDialog.show({
+                title: 'เพิ่มข้อมูลภาพหนังสือแบบไฟล์ PDF',
+                message: $('<div id="dialogdialogAddpdf"></div>').load("<?php echo $this->url(array('module' => 'ebook', 'controller' => 'ebook', 'action' => 'addpdfpage','itemid' => $this->itemID), null, true); ?>", null),
+                closable: true,
+                closeByBackdrop: false,
+                closeByKeyboard: false,
+                autodestroy: true,
+                size: BootstrapDialog.SIZE_WIDE,
+                cssClass: "divPreview",
+                buttons : [{
+                    label: ' ตกลง',
+                    icon: 'fa fa-check',
+                    cssClass: 'btn btn-default button-pdf',
+                    action: function(dialog) {
+                        $.post("<?php echo $this->url(array("module" => 'ebook', "controller" => 'ebook', 'action' => 'savepdf'), null, true); ?>" , $('#formData').serializeArray(), function(data) {
+                            if (data.result) {
+                                tblData.ajax.reload();
+                                DialogComplete("เพิ่มข้อมูลภาพหนังสือแบบไฟล์ PDF สำเร็จ");
+                                dialog.close();
+                                $(".button-pdf").removeAttr("disabled");
+                            } else {
+                                DialogWarning(data.message);
+                                $(".button-pdf").removeAttr("disabled");
+                            }
+                        }, 'json');
+                    }
+                },
+                {
+                    label: ' ยกเลิก',
+                    icon: 'fa fa-times',
+                    action: function(dialog) {
+                        dialog.close();
+                    }
+                }]
+            });
+            dialogPreview.open();
+        });
+
+        function EditPic(id){
+            var dialogPreview = BootstrapDialog.show({
+                title: 'แก้ไขข้อมูลภาพหนังสือ',
+                message: $('<div id="dialogdialogEditpic"></div>').load("<?php echo $this->url(array('module' => 'ebook', 'controller' => 'ebook', 'action' => 'editbookpage','itemid' => $this->itemID), null, true); ?>/fileid/" + id, null),
+                closable: true,
+                closeByBackdrop: false,
+                closeByKeyboard: false,
+                autodestroy: true,
+                size: BootstrapDialog.SIZE_WIDE,
+                cssClass: "divPreview",
+                buttons : [{
+                    label: ' ตกลง',
+                    icon: 'fa fa-check',
+                    action: function(dialog) {
+                        $.post("<?php echo $this->url(array("module" => 'ebook', "controller" => 'ebook', 'action' => 'updatebook'), null, true); ?>" ,  $('#formData').serializeArray(), function(data) {
+                            if (data.result) {
+                                tblData.ajax.reload();
+                                DialogComplete("แก้ไขข้อมูลภาพหนังสือสำเร็จ");
+                                dialog.close();
+                            } else {
+                                DialogWarning(data.message);
+                            }
+                        }, 'json');
+                    }
+                },
+                {
+                    label: ' ยกเลิก',
+                    icon: 'fa fa-times',
+                    action: function(dialog) {
+                        dialog.close();
+                    }
+                }]
+            });
+            dialogPreview.open();
+        };
+
+    	// --------------- Begin: Table & Search Zone --------------------------    	
+    	function renderColumn ( data, type, row, meta ) {
+    		return data;
+    	}
+    	function renderColumnLink ( data, type, row, meta ) {
+    		return '<a href="<?php echo $this->url(array('module' => 'ebook', 'controller' => 'ebook', 'action' => 'editbookpage'), null, true);?>/itemid/' + row.DT_RowId + '">' + data + '</a>';
+    	}
+    	function renderColumnCheckbox ( data, type, row, meta ) {
+        	return '<input type="checkbox" name="ids[]" value="' + row.DT_RowId + '" />';
+    	}
+    	function renderColumnStatus ( data, type, row, meta ) {
+        	if (row.IsEnableCode == 'Y') {
+				return '<span class="label label-success">' + data + '</span>';
+        	} else if (row.IsEnableCode == 'S') {
+				return '<span class="label label-warning">' + data + '</span>';
+        	} else {
+				return '<span class="label label-danger">' + data + '</span>';
+        	}
+    	}
+        
+        // onclick="document.getElementById('+"'btnAddpic'"+').click()"
+        function linkeditpage (data, type, row, meta) {
+            return '<a data-id="'+row.DT_RowId+'" style="cursor: pointer;">' + data + '</a>';
+        }
+
+    	var rows_selected = [];
+    	
+    	var tblData = $('#tblData').DataTable({
+    		processing: true,
+    		serverSide: true,
+    		responsive: true,
+    		order: [[ 2, "asc" ]],
+    		ajax: {
+    	        url: '<?php echo $this->url(array('module' => 'ebook', 'controller' => 'ebook', 'action' => 'getpagelist','itemid' => $this->itemID), null, true); ?>',
+    	        type: 'POST',
+    	        data: function(d) {
+        	        d.textstr = $("#formSearch #textsearch").val();
+        	        d.isEnable = $("#formSearch #lstStatus").val();
+        	        d.isCat = $("#formSearch #lsCat").val();
+    	        }
+    	    },
+    	    language : {
+				url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+    	    },
+    		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+    		"columns": [
+    		            { "width": "40px", 'orderable': false, 'data' : 'NO', 'render' : renderColumnCheckbox, "class" : "text-center"},
+    		            { 'data' : 'Title' , 'render' : linkeditpage, "class" : "ratio"},
+    		            { "width": "15%", 'data' : 'PageIndex' , 'render' : linkeditpage , "class" : "ratio"},
+    		            { "width": "10%", 'data' : 'IsEnable', 'render' : renderColumnStatus, "class" : "ratio"},
+    		          ]
+        });
+
+        $("#tblData").on('click', 'a', function() {
+            var id = $(this).data("id");
+            <?php if($this->canEdit): ?>
+                EditPic(id);
+            <?php endif; ?>
+        });
+
+		$('#btnSearch').click(function(){
+			tblData.ajax.reload();
+		});
+
+		$('#btnReset').click(function(){
+			$(".searchPanel input[type=text]").val('');
+			$(".searchPanel select").val('');
+			tblData.ajax.reload();
+		});
+
+		
+        $('#btnPublish').click(function(){
+            var ids = [];
+            $.each($('#tblData input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+                ids.push($(e).val());
+            });
+            if (ids.length > 0) {
+                DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการเผยแพร่", function() {
+                    $.post("<?php echo $this->url(array("module" => 'ebook', "controller" => 'ebook', 'action' => 'bookpageupdate', 'itemid' => $this->itemID), null, true); ?>", {"ids" : ids, "status": "Y"}, function(data){
+                        if (data.result) {
+                            tblData.ajax.reload();
+                            DialogComplete("ปรับปรุงสถานะสำเร็จ");
+                        } else {
+                            DialogWarning(data.message);
+                        }
+                    }, 'json');
+                });
+            } else {
+                DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+            }
+        });
+    
+        $('#btnUnpublish').click(function(){
+            var ids = [];
+            $.each($('#tblData input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+                ids.push($(e).val());
+            });
+            if (ids.length > 0) {
+                DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการไม่เผยแพร่", function() {
+                    $.post("<?php echo $this->url(array("module" => 'ebook', "controller" => 'ebook', 'action' => 'bookpageupdate', 'itemid' => $this->itemID), null, true); ?>", {"ids" : ids, "status": "N"}, function(data){
+                        if (data.result) {
+                            tblData.ajax.reload();
+                            DialogComplete("ปรับปรุงสถานะสำเร็จ");
+                        } else {
+                            DialogWarning(data.message);
+                        }
+                    }, 'json');
+                });
+            } else {
+                DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+            }
+        });
+            
+        $('#btnDelete').click(function(){
+            var ids = [];
+            $.each($('#tblData input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+                ids.push($(e).val());
+            });
+            if (ids.length > 0) {
+                DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+                    $.post("<?php echo $this->url(array("module" => 'ebook', "controller" => 'ebook', 'action' => 'bookpagedelete', 'itemid' => $this->itemID), null, true); ?>", {"ids" : ids}, function(data){
+                        if (data.result) {
+                            tblData.ajax.reload();
+                            DialogComplete("ลบสำเร็จ");
+                        } else {
+                            DialogWarning(data.message);
+                        }
+                    }, 'json');
+                });
+            } else {
+                DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+            }
+        });
+		
+		// --------------- Toogle Advance Search ---------------
+		$("#btnAdvance").click(function(e) {
+			var val = $('#hdfAdvanceSearch').val();
+			if(val == 'H'){
+				$("#AdvanceSearch").slideDown(600, "swing");
+				$("#hdfAdvanceSearch").val('S');
+			}else{
+				$("#AdvanceSearch").slideUp(600, "swing");
+				$("#hdfAdvanceSearch").val('H');
+			}
+		});
+    	
+    });
+    
+</script>

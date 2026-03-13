@@ -1,0 +1,217 @@
+<!-- jQueryFiler -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("assets/emsa/js/jquery-filer/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("assets/emsa/js/jquery-filer/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("assets/emsa/js/jquery-filer/js/jquery.filer.js"); ?>'></script>
+
+<div class="emsa-title">
+	โปรดเลือกบริการที่คุณต้องการ
+</div>
+
+<form class="form-horizontal emsa-form" id="emsa-form">
+	<div class="form-group">
+		<div class="col-md-1 text-right">
+			<div class="">
+				<input type="radio" name="emsaContentServiceType" value="1" id="emsaContentServiceType-1"  <?php if(!$this->data->canUseService01){ echo 'disabled="true";'; } ?> />
+			</div>
+		</div>
+		<div class="col-md-11">
+			<label for="emsaContentServiceType-1">					
+				บริการนำข้อมูลเข้าสู่ระบบ (Content Edit)
+			</label>
+			<br />
+			<?php if($this->data->canUseService01){ ?>
+			ณ ปัจจุบัน คุณได้ใช้เครดิตไปแล้ว <span class="emsa-label-red"><?php echo $this->data->detailService01; ?></span>
+			<?php }else{ ?>
+			<span class="emsa-label-red">ท่านไม่มีเครดิตในการขอรับบริการนี้</span>
+			<?php } ?>
+		</div>
+	</div>
+	<div style="display: none;" id="emsa-contentservice-detail-form-1" class="emsa-contentservice-detail-form">
+		<div class="form-group">
+			<label for="status" class="control-label col-md-3">ชื่อเรื่อง</label>
+			<div class="col-md-9">
+				<?php echo $this->formText('emsaTitle01', null, array('class' => 'form-control')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="status" class="control-label col-md-3">เนื้อหารายละเอียด</label>
+			<div class="col-md-9">
+				<?php echo $this->formTextarea('emsaDetail01', null, array('class' => 'form-control', 'rows' => '5')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="status" class="control-label col-md-3">ไฟล์</label>
+			<div class="col-md-9">
+				<?php echo $this->EMSAUploadControl("emsaFile01", "emsaFile01", null, array('multi' => true, 'exts' => array('png', 'jpeg', 'jpg', 'gif', 'doc', 'docx', 'xls', 'xlsx', 'pdf'))); ?>
+				<div class="help-block">ขนาดไฟล์ไม่เกิน 10 MB<br>เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png, .doc, .docx, .xls, .xlsx, .pdf</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="status" class="control-label col-md-3">ระบุความต้องการเพิ่มเติม</label>
+			<div class="col-md-9">
+				<?php echo $this->formTextarea('emsaRemark01', null, array('class' => 'form-control', 'rows' => '5')); ?>
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<div class="col-md-1 text-right">
+			<div class="">
+				<input type="radio" name="emsaContentServiceType" value="2" id="emsaContentServiceType-2"  <?php if(!$this->data->canUseService02){ echo 'disabled="true";'; } ?> />
+			</div>
+		</div>
+		<div class="col-md-11">
+			<label for="emsaContentServiceType-2">
+				ออกแบบและจัดทำหน้าเทศกาลสำคัญ
+			</label>
+			<br />
+			<?php if($this->data->canUseService02){ ?>
+			ณ ปัจจุบัน คุณได้ใช้เครดิตไปแล้ว <span class="emsa-label-red"><?php echo $this->data->detailService02; ?></span>
+			<?php }else{ ?>
+			<span class="emsa-label-red">ท่านไม่มีเครดิตในการขอรับบริการนี้</span>
+			<?php } ?>
+		</div>
+	</div>
+	<div style="display: none;" id="emsa-contentservice-detail-form-2" class="emsa-contentservice-detail-form">
+		<div class="form-group">
+			<label for="status" class="control-label col-md-3">ชื่อเรื่อง</label>
+			<div class="col-md-9">
+				<?php echo $this->formText('emsaTitle02', null, array('class' => 'form-control')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="status" class="control-label col-md-3">ระบุความต้องการของเทศกาล</label>
+			<div class="col-md-9">
+				<?php echo $this->formTextarea('emsaDetail02', null, array('class' => 'form-control', 'rows' => '5')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="status" class="control-label col-md-3">ไฟล์ประกอบ</label>
+			<div class="col-md-9">
+				<?php echo $this->EMSAUploadControl("emsaFile02", "emsaFile02", null, array('multi' => true, 'exts' => array('png', 'jpeg', 'jpg', 'gif', 'doc', 'docx', 'xls', 'xlsx', 'pdf'))); ?>
+				<div class="help-block">ขนาดไฟล์ไม่เกิน 10 MB<br>เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png, .doc, .docx, .xls, .xlsx, .pdf</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="status" class="control-label col-md-3">แสดงตั้งแต่</label>
+			<div class="col-md-3">
+				<?php echo $this->formText('emsaPublicStartDate', null, array('class' => 'form-control', 'data-date-language' => 'th', 'readonly' => 'readonly')); ?>
+			</div>
+			<label for="status" class="control-label col-md-3">ถึงวันที่</label>
+			<div class="col-md-3">
+				<?php echo $this->formText('emsaPublicEndDate', null, array('class' => 'form-control', 'data-date-language' => 'th', 'readonly' => 'readonly')); ?>
+			</div>
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<div class="col-md-1 text-right">
+			<div class="">
+				<input type="radio" name="emsaContentServiceType" value="3" id="emsaContentServiceType-3" <?php if(!$this->data->canUseService03){ echo 'disabled="true";'; } ?> />
+			</div>
+		</div>
+		<div class="col-md-11">
+			<label for="emsaContentServiceType-3">
+				ออกแบบและจัดทำป้ายโฆษณา, สื่อมัลติมีเดีย
+			</label>
+			<br />
+			<?php if($this->data->canUseService03){ ?>
+			ณ ปัจจุบัน คุณได้ใช้เครดิตไปแล้ว <span class="emsa-label-red"><?php echo $this->data->detailService03; ?></span>
+			<?php }else{ ?>
+			<span class="emsa-label-red">ท่านไม่มีเครดิตในการขอรับบริการนี้</span>
+			<?php } ?>
+		</div>
+	</div>
+	<div style="display: none;" id="emsa-contentservice-detail-form-3" class="emsa-contentservice-detail-form">	
+		<div class="form-group">
+			<label for="status" class="control-label col-md-3">ชื่อเรื่อง</label>
+			<div class="col-md-9">
+				<?php echo $this->formText('emsaTitle03', null, array('class' => 'form-control')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="status" class="control-label col-md-3">ระบุความต้องการ</label>
+			<div class="col-md-9">
+				<?php echo $this->formTextarea('emsaDetail03', null, array('class' => 'form-control', 'rows' => '5')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="status" class="control-label col-md-3">ไฟล์ประกอบ</label>
+			<div class="col-md-9">
+				<?php echo $this->EMSAUploadControl("emsaFile03", "emsaFile03", null, array('multi' => true, 'exts' => array('png', 'jpeg', 'jpg', 'gif', 'doc', 'docx', 'xls', 'xlsx', 'pdf'))); ?>
+				<div class="help-block">ขนาดไฟล์ไม่เกิน 10 MB<br>เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png, .doc, .docx, .xls, .xlsx, .pdf</div>
+			</div>
+		</div>
+	</div>
+	
+	<input id="emsaSenderName" name="emsaSenderName" value="<?php echo $this->emsaSenderName . ' (' . $this->emsaSenderUserGroup . ')'; ?>" type="hidden" />
+	
+</form>
+
+<hr />
+
+<div class="alert alert-danger" id="warningMessage" style="display: none; margin-bottom: 0px;"></div>
+
+<div class="emsa-footer-contact">
+	มีข้อสงสัย หรือติดปัญหาเกี่ยวกับการให้บริการโปรดติดต่อ <br />
+	สายด่วน EMWORK CARE โทร 0 2555 5555
+</div>
+
+<script type="text/javascript">
+jQuery(function(){
+	if (emsaDialog != null) {
+		emsaDialog.setTitle("<?php echo $this->title; ?>");
+		emsaDialog.setButtons(
+				[{
+                    label: 'ส่ง',
+					action: function(dialog) {
+						var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+						dialog.enableButtons(false);
+	                    dialog.setClosable(false);
+
+	                    var type = $('input[name=emsaContentServiceType]:checked', '#emsa-form').val();
+						var canSend1 = <?php echo empty($this->data->canSendService01) ? 'false' : 'true'; ?>;
+						var canSend2 = <?php echo empty($this->data->canSendService02) ? 'false' : 'true'; ?>;
+						var canSend3 = <?php echo empty($this->data->canSendService03) ? 'false' : 'true'; ?>;
+						var canSend = true;
+						if(type == 1 && !canSend1){ canSend = false; }
+						if(type == 2 && !canSend2){ canSend = false; }
+						if(type == 3 && !canSend3){ canSend = false; }
+						if(!canSend){
+							dialog.enableButtons(true);
+							$('#warningMessage').html('ขออภัย ท่านไม่มีเครดิตในการขอรับบริการนี้');
+							$('#warningMessage').show();
+							return;
+						}
+						
+	                    $.post("<?php echo $this->url(array("module" => "emsa", "controller" => "contentservice", "action" => "send"), null, true);?>", $("#emsa-form").serializeArray(), function(data){
+							if (data.result) {
+								dialog.enableButtons(true);
+								emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'contentservice', 'action' => 'result'), null, true); ?>"));
+							} else {
+								dialog.enableButtons(true);
+								$('#warningMessage').html(data.message);
+								$('#warningMessage').show();
+							}
+		                }, "json");
+					}
+                }, {
+                    label: 'ยกเลิก',
+					action: function(dialog) {
+						dialog.close();
+					}
+                }]
+		);
+
+		$("#emsa-form input[type=radio]").click(function(){
+			var id = $(this).val();
+			$("#emsa-form .emsa-contentservice-detail-form").css("display", "none");
+			$("#emsa-form #emsa-contentservice-detail-form-" + id).css("display", "");
+		});
+
+		//Date picker
+	    $('#emsaPublicStartDate').datepicker({autoclose: true, format: 'dd/mm/yyyy', todayHighlight: true});
+	    $('#emsaPublicEndDate').datepicker({autoclose: true, format: 'dd/mm/yyyy', todayHighlight: true});
+	}
+});    
+</script>

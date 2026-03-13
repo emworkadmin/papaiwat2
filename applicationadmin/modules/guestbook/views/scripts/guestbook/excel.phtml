@@ -1,0 +1,44 @@
+<table class="data_table">
+<meta charset="UTF-8">
+
+<style>
+table, th, td {
+    border: 1px solid black;
+}
+</style>
+
+<tr>
+  <th>ลำดับ</th>
+  <th>ข้อความ</th>
+  <th>สมุดเยี่ยม</th>
+  <th>หน่วยงาน</th>
+  <th>ชื่อ - นามสกุล</th>
+  <th>วันที่ลงนาม</th>
+  <th>สถานะ</th>
+</tr>
+
+  <?php
+    $i = 1 ;
+    foreach ($this->data as $datatable) :
+      $id = $i;
+      $title = $datatable["Title"];
+      $name = $datatable["TitleName"]." ".$datatable["FirstName"]." ".$datatable["LastName"];
+      $departmentName = $datatable["DepartmentName"];
+      $detail = $datatable["Detail"];
+      $date = $datatable['Created']->format("d/m/y H:i");
+      $status = $datatable['IsEnable'];
+
+  ?>
+      <tr>
+      <td><?php echo $i ?></td>
+      <td><?php echo $detail?></td>
+      <td><?php echo $title ?></td>
+      <td><?php echo $departmentName ?></td>
+      <td><?php echo $name ?></td>
+      <td><?php echo $date ?></td>
+      <td><?php echo $status =='Y' ? 'เผยแพร่' : 'ไม่เผยแพร่' ?></td>
+      </tr>
+  <?php $i++ ?>
+  <?php endforeach;?>
+
+</table>

@@ -1,0 +1,137 @@
+<!-- jQuery Sortable  -->
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/story/js/jquery-ui-sortable.js'); ?>"></script>
+
+<style>
+.divContentManagementDialog .panel { margin-top: 15px; }
+.divContentManagementDialog .panel-detail .panel-body { padding: 15px; }
+
+.divContentManagementDialog .radio.with-icheck label { padding-left: 0px; }
+.divContentManagementDialog .radio.with-icheck div[class*=iradio] { margin-right: 5px; }
+.divContentManagementDialog .radio-inline { padding-top: 0 !important; }
+.divContentManagementDialog .vdoType { margin-bottom: 25px; }
+.divContentManagementDialog .showVideo { text-align: center; }
+
+.divContentManagementDialog .box-header { padding: 10px 0px; }
+.divContentManagementDialog .box-header .handle,
+.divContentManagementDialog .box-header .remove { cursor: pointer; }
+.divContentManagementDialog .box-header-title { font-size: 16px; }
+
+
+/* Custom Style Bootstrap */
+.divContentManagementDialog .form-group { margin:0; }
+
+/* Custom Style jQuery UI */
+.divContentManagementDialog .ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; }
+
+/* Custom Style ckEditor */
+.ui-tooltip-content { opacity: 0 !important; }
+
+/* Custom Style jQuery Filer */
+.divContentManagementDialog .jFiler-items { display: inline-block; margin: 5px 0px; }
+.divContentManagementDialog .jFiler-item-thumb-image {
+    width: 180px;
+    height: 120px;
+    background-color: #e4e4e4;
+    border-radius: 10px;
+    position: relative;
+    display: block;
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    box-shadow: 1px 1px 1px #999;
+	overflow: hidden;
+}
+.divContentManagementDialog .jFiler-item-thumb-image img { width: 100%; height: 100%; object-fit: cover;}
+.divContentManagementDialog .jFiler-item-others { display: none !important; }
+
+@media screen and (max-width: 767px) {
+	.divContentManagementDialog .panel { margin: 15px; }
+}
+@media screen and (max-width: 576px) {
+	.divContentManagementDialog .panel-detail .btn { display: block; width: 100%; margin-bottom: 5px; }
+	.divContentManagementDialog .panel-detail .div-upload-youtube input { width: 100% !important; }
+	.divContentManagementDialog .panel-detail .div-upload-youtube button { margin-top: 10px !important; margin-left: 0px !important; }
+	.divContentManagementDialog .jFiler-input { width: 100% !important; }
+	.divContentManagementDialog .radio-inline { display: block; margin: 0px !important; }
+}
+
+.panel-body {
+	padding: 10px;
+}
+.panel.panel-default {
+    margin: 0 0 5px 0;
+}
+.divContentManagementDialog .box-header {
+    padding: 0;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.divContentManagementDialog .box-header-title {
+	font-size: 14px;
+}
+.divContentManagementDialog .preview-desc {
+    font-size: 14px;
+}
+.modal-dialog {
+    width: 90%;
+    max-width: 800px;
+}
+</style>
+
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<div class="divContentManagementDialog" id="divContentManagementDialog">
+		<?php 
+		if(count($this->data)>0){
+			foreach ($this->data as $d){
+		?>
+			<div class='panel panel-default' data-type='D'>
+				<div class='panel-body'>
+					<div class='box-header'>
+						<em class='fa fa-bars handle'></em>
+						<b class='box-header-title'>
+							<?php
+							switch($d['type']){
+								case 'D': $str = 'เนื้อหา'; break;
+								case 'G': $str = 'รูปภาพ'; break;
+								case 'M': $str = 'วีดีโอ'; break;
+								default : $str = ''; break;
+							}
+							echo $str;
+							?>
+						</b>
+						<span class='preview-desc'><?php echo $d['name']; ?></span>
+					</div>
+					<div class='form-group section-body'>
+						<input type='hidden' name='newSortable[]' value='<?php echo $d['id']; ?>'>
+					</div>
+				</div>
+			</div>
+		<?php
+			}
+		}else{
+		?>
+		<div style="text-align: center; padding: 15px 0; color: #999;">
+			<em class="fa fa-exclamation-triangle" style="font-size: 50px; margin-bottom: 10px;"></em>
+			<div>ไม่พบข้อมูล</div>
+		</div>
+		<?php } ?>				
+		</div>
+	</form>
+</div>
+
+<div id="divClone"></div>
+
+<script>
+$(function () {
+	$('#divContentManagementDialog').sortable({
+		handle: '.handle',
+		cursor: 'move',
+		update: function ( event, ui ){ }, 
+		start: function ( event, ui ){ }, 
+		stop: function ( event, ui ){ }
+	}).disableSelection();
+});
+</script>

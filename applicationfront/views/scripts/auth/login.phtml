@@ -1,0 +1,207 @@
+<?php 
+/**
+ * EM D2MS
+ *
+ * @copyright  Copyright (c) 2018 EMWORK Group
+ * @license	EMWORK Group
+ * @version	1.0.0 applicationfront/views/scripts/auth/login.phtml 2018-02-20
+ * @author	EMWORK Group
+ */
+?>
+
+<?php if($this->ReCaptchaSiteKey) : ?>
+<!-- recaptcha  -->
+<script src='https://www.google.com/recaptcha/api.js?hl=<?php echo $this->lang; ?>'></script>
+<?php endif; ?>
+
+<style>
+/* .remember-me{float:left;font-size:20px;color:graytext;} */
+
+
+
+.forget-link{color:red;}
+.forget-link:hover{ color:red; } 
+
+/*
+#login-panel {
+	background: url('/assets/login/img/login_bg.png');
+    height: 650px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+*/
+#login-panel { text-align: right; }
+#login-panel .panel { width: 400px; margin-right: auto; margin-left: auto; margin-top: 90px; }
+#login-panel .panel-body { box-shadow: 3px 3px 15px 1px #b5b5b3; padding: 15px 35px; }
+#login-panel .title-login-box { text-align: center; color: #0272be; font-family: 'ThaiSans Neue'; font-size: 4rem; font-weight: bold; font-style: italic; }
+#login-panel .login-title { font-size: 1.6rem; text-align: left; color: #99c7e1; }
+#login-panel #username, #login-panel #password { background: #f2f2f2; border: unset; border-radius: 5px; height: 40px; }
+#login-panel #username::placeholder, #login-panel #password::placeholder { color: #99c7e1; }
+#login-panel .btn-login { margin-top: 25px; margin-bottom: 30px; text-align: center; }
+#login-panel .btn-login button { width: 50%; background: #8bc43f; color: white; }
+#login-panel .regis { font-size: 1.5rem; }
+#login-panel .regis-link { margin-right: 10px; }
+#login-panel .txt-right { text-align: right; padding: 0px; }
+#login-panel .txt-center { text-align: center; padding: 0px; }
+
+@media screen and (max-width: 500px) {
+	#login-panel .panel { width: calc(100% - 50px); }
+}
+
+@media screen and (max-width: 420px) {
+	#login-panel .set-checkbox { width: 100%; }
+	#login-panel .txt-right { width: 100%; text-align: left; }
+}
+
+#login-panel .set-checkbox {
+    position: relative;
+	padding-right: 0px; 
+}
+
+#login-panel .set-checkbox input {
+    position: absolute;
+    opacity: 0;
+    z-index: 1;
+    bottom: 52%;
+	margin: 0;
+    left: 0;
+    transform: translateY(50%);
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+}
+
+#login-panel .checkmark {
+    position: absolute;
+	bottom: 52%;
+    left: 0px;
+    transform: translateY(50%);
+    height: 15px;
+    width: 15px;
+    background-color: white;
+    border: 0.55px solid #333;
+}
+
+#login-panel .set-checkbox input:checked ~ .checkmark {
+    background-color: white;
+}
+
+#login-panel .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+#login-panel .set-checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+
+#login-panel .set-checkbox .checkmark:after {
+    left: 6px;
+    top: 3px;
+    width: 4px;
+    height: 9px;
+    border: solid #333;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+#login-panel #reCaptcha div {
+	margin: auto;
+}
+
+</style>
+
+
+<div id="login-panel">
+	<div class="row">
+
+	<div class="panel panel-default panel-detail">
+		<div class="panel-body">
+			
+			<?php if ($this->errorMessage) :?>
+			<div class="alert alert-danger login-alert text-center">
+				<?php echo $this->errorMessage;?>
+			</div>
+			<?php endif; ?>
+
+			<form class="" id="loginForm" method="POST">
+				<div class="title-login-box"><?php echo Emwork_Translate::text($this->lang, 'auth', 'login'); ?></div>
+				<div class="">
+					<div class="login-title">Username or email</div>
+					<div class="form-group">
+						<!-- <?php echo $this->formText('username', $this->ck_user, array('style' => 'font-family:Arial, FontAwesome', 'class' => 'form-control', 'placeholder' => '&#xF002;', 'autocomplete' => 'off')); ?> -->
+						<input type="text" title="username" name="username" id="username" value="<?php echo $this->ck_user;?>" class="form-control" placeholder="&#xf007;" style="font-family:Arial, FontAwesome" />
+					</div>
+					<div class="login-title">Password</div>
+					<div class="form-group">
+						<input type="password" title="password" name="password" id="password" value="<?php echo $this->ck_pass; ?>" class="form-control" placeholder="&#xf023;" autocomplete="off" style="font-family:Arial, FontAwesome">
+					</div>
+
+					<?php if($this->ReCaptchaSiteKey) : ?>
+						<div class="form-group">
+							<div id="reCaptcha" class="g-recaptcha text-center" data-sitekey="<?php echo $this->ReCaptchaSiteKey; ?>"></div>
+						</div>
+					<?php endif; ?>
+
+					<div class="form-group btn-login">
+						<button type="submit" id="submit" class="btn">Login</button>
+					</div>
+
+					<?php if(false) : ?>
+					<div class="linezone">
+						<div class="line-left"></div>
+						<div class="line-right"></div>
+						<span class="line-center "><?php echo $this->Translate('general', $this->lang, 'auth_login_or'); ?></span>
+					</div>
+
+					<div class="form-group">
+						<a href="<?php echo htmlspecialchars($this->fbLoginUrl); ?>" class="btn btn-primary btn-facebook"><em class="fa fa-facebook"></em>&nbsp;&nbsp;<?php echo $this->Translate('general', $this->lang, 'auth_login_facebook_button'); ?></a>
+					</div>
+					<?php endif; ?>
+
+					<div class="form-group regis text-left">
+
+						<div class="col-md-6 col-sm-6 col-xs-6 set-checkbox">
+							<input type="checkbox" title="keep_login" name="keep_login" id="keep_login" value="Y" class=""<?php if(isset($_COOKIE['ck_user'])&&($_COOKIE['ck_user']!='')){ echo "Checked='checked'"; }?> />&nbsp;&nbsp;<?php echo Emwork_Translate::text($this->lang, 'auth', 'remember_me'); ?>&nbsp;
+							<span class="checkmark"></span>
+						</div>
+
+						<div class="col-md-6 col-sm-6 col-xs-6 txt-right">
+							<a class="regis-link lnk" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'register', 'action' => 'index'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'auth', 'submit'); ?></a>
+							<a class="forget-link lnk" href="<?php echo $this->url(array('module' => 'default', 'controller' => 'forgetpassword', 'action' => 'index'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'auth', 'forgetpassword'); ?></a>
+						</div>
+					</div>
+				</div>
+			</form>		
+		</div>
+	</div>
+	</div>
+</div>
+
+<?php if(false) : ?>
+<script>
+$(document).ready(function () {
+	// Remove Facebook URL
+	if (window.location.hash && window.location.hash == '#_=_') {
+        if (window.history && history.pushState) {
+            window.history.pushState("", document.title, window.location.pathname);
+        } else {
+            // Prevent scrolling by storing the page's current scroll offset
+            var scroll = {
+                top: document.body.scrollTop,
+                left: document.body.scrollLeft
+            };
+            window.location.hash = '';
+            // Restore the scroll offset, should be flicker free
+            document.body.scrollTop = scroll.top;
+            document.body.scrollLeft = scroll.left;
+        }
+    }
+    
+});
+</script>
+<?php endif; ?>

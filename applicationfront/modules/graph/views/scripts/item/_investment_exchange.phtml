@@ -1,0 +1,281 @@
+<style>
+.Exchange { margin-bottom: 15px; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+.Exchange.bg { background: #F9FAFC; }
+.Exchange .export { display: inline-block; width: 100%; font-family: 'Kanit Medium'; color: #2B83AF; }
+.Exchange .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+.Exchange .export #Exchange_Year { margin-right: 4%; }
+.Exchange_seeAll { margin-bottom: 15px; margin-top: -15px; color: white; background: linear-gradient(to top, #43B74A, #90C34A); padding: 7px 30px 2px; border-radius: 7px; border: 1px solid white; }
+.Exchange_seeAll a {color: white;}
+
+.Exchange .intro-box { padding: 10px 0px 0px; color: white; font-family: 'Kanit Medium'; }
+.Exchange .intro-box .title-detail { background: #F3CA10; }
+.Exchange .intro-box .content-detail {  padding: 10px; background: white; height: 250px; }
+
+.Exchange_table { margin-top: 15px; box-shadow: 0px 0px 1px 0px grey; overflow-x: scroll; }
+.Exchange_table, .Exchange_table table { width: 100%; }
+.Exchange_table th { border: 1px solid white; text-align: center; padding: 3px; background: #FEDA00; }
+.Exchange_table tr { border: 1px solid white; text-align: center; padding: 3px; background: #F6F6F6; }
+.Exchange_table td { padding: 3px; }
+.Exchange_table td:first-child { padding-left: 15px; text-align:left; }
+.Exchange_table tr:nth-child(2n+1) { background: #F9F9F9; }
+</style>
+
+<div class="Exchange bg" id="ExchangeExportZone">
+
+    <div class="export">
+        <div class="col-md-9">อัตราแลกเปลี่ยนเงินตราต่างประเทศ</div>
+        <div class="col-md-3">
+            <?php echo $this->formSelect("Exchange_Year", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?>
+            <?php echo $this->formSelect("Exchange_Export", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+
+
+    <div class="Exchange_table">
+        <table>
+            <thead class="head">
+                <tr>
+                    <th colspan="2">FOREIGN CURRENCIES</th>
+                    <th rowspan="2">DENOM</th>
+                    <th colspan="2">NOTES</th>
+                    <th colspan="2">BUY</th>		
+                    <th rowspan="2">Sell</th>		
+                </tr>
+                <tr>
+                    <th>COUNTRY</th>
+                    <th>CUTTENCY</th>
+                    <th>BUY</th>
+                    <th>SELL</th>
+                    <th>SIGHT</th>
+                    <th>T/T</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/united-states-of-america.png"); ?>" style="width: 20px; margin-right: 5px;">U.S.A</td>
+                    <td>USD</td>
+                    <td>1</td>
+                    <td>30.25000</td>
+                    <td>31.63000</td>
+                    <td>31.00000</td>
+                    <td>31.10000</td>
+                    <td>31.60000</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/united-states-of-america.png"); ?>" style="width: 20px; margin-right: 5px;">U.S.A</td>
+                    <td>USD</td>
+                    <td>5-20</td>
+                    <td>30.65000</td>
+                    <td>31.64000</td>
+                    <td>UNQ.</td>
+                    <td>UNQ.</td>
+                    <td>UNQ.</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/united-states-of-america.png"); ?>" style="width: 20px; margin-right: 5px;">U.S.A</td>
+                    <td>USD</td>
+                    <td>50-100</td>
+                    <td>30.97000</td>
+                    <td>31.65000</td>
+                    <td>UNQ.</td>
+                    <td>UNQ.</td>
+                    <td>UNQ.</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/european-union.png"); ?>" style="width: 20px; margin-right: 5px;">EURO</td>
+                    <td>EUR</td>
+                    <td></td>
+                    <td>38.41000</td>
+                    <td>39.49000</td>
+                    <td>38.41632</td>
+                    <td>38.563632</td>
+                    <td>39.29632</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/united-kingdom.png"); ?>" style="width: 20px; margin-right: 5px;">UNITED KINGDOM</td>
+                    <td>GBP</td>
+                    <td></td>
+                    <td>43.77000</td>
+                    <td>45.94000</td>
+                    <td>43.85099</td>
+                    <td>44.03039</td>
+                    <td>44.95599</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/japan.png"); ?>" style="width: 20px; margin-right: 5px;">JAPAN</td>
+                    <td>JPY</td>
+                    <td>100</td>
+                    <td>28.32000</td>
+                    <td>29.55000</td>
+                    <td>28.33500</td>
+                    <td>28.42500</td>
+                    <td>29.05000</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/malaysia.png"); ?>" style="width: 20px; margin-right: 5px;">NAKAYSIA</td>
+                    <td>MYR*</td>
+                    <td></td>
+                    <td>7.45000</td>
+                    <td>8.28000</td>
+                    <td>UNQ.</td>
+                    <td>7.83640</td>
+                    <td>8.23640</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/singapore.png"); ?>" style="width: 20px; margin-right: 5px;">SINGAPORE</td>
+                    <td>SGD</td>
+                    <td></td>
+                    <td>23.43000</td>
+                    <td>24.27000</td>
+                    <td>23.48164</td>
+                    <td>23.55164</td>
+                    <td>24.24164</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/hong-kong.png"); ?>" style="width: 20px; margin-right: 5px;">HONGKONG</td>
+                    <td>HKD</td>
+                    <td></td>
+                    <td>3.92000</td>
+                    <td>4.10000</td>
+                    <td>3.94293</td>
+                    <td>3.96293</td>
+                    <td>4.05293</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/brunei.png"); ?>" style="width: 20px; margin-right: 5px;">BRUNEI</td>
+                    <td>BND</td>
+                    <td></td>
+                    <td>22.68000</td>
+                    <td>23.92000</td>
+                    <td>UNQ.</td>
+                    <td>UNQ.</td>
+                    <td>UNQ.</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/australia.png"); ?>" style="width: 20px; margin-right: 5px;">AUSTRALIA</td>
+                    <td>AUD</td>
+                    <td></td>
+                    <td>24.56000</td>
+                    <td>25.81000</td>
+                    <td>24.57036</td>
+                    <td>24.67036</td>
+                    <td>25.76866</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/canada.png"); ?>" style="width: 20px; margin-right: 5px;">CANADA</td>
+                    <td>CAD</td>
+                    <td></td>
+                    <td>24.82000</td>
+                    <td>25.85000</td>
+                    <td>25.12952</td>
+                    <td>25.12952</td>
+                    <td>25.82952</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/switzerland.png"); ?>" style="width: 20px; margin-right: 5px;">SWITZERLAND</td>
+                    <td>CHF</td>
+                    <td></td>
+                    <td>33.11000</td>
+                    <td>34.08000</td>
+                    <td>33.13826</td>
+                    <td>33.25826</td>
+                    <td>34.04170</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/china.png"); ?>" style="width: 20px; margin-right: 5px;">CHINA</td>
+                    <td>CHY*</td>
+                    <td></td>
+                    <td>4.63000</td>
+                    <td>5.14000</td>
+                    <td>4.86878</td>
+                    <td>4.88878</td>
+                    <td>5.08878</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/denmark.png"); ?>" style="width: 20px; margin-right: 5px;">DENMARK</td>
+                    <td>DKK</td>
+                    <td></td>
+                    <td>5.00000</td>
+                    <td>5.30000</td>
+                    <td>5.15121</td>
+                    <td>5.17121</td>
+                    <td>5.29047</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/india.png"); ?>" style="width: 20px; margin-right: 5px;">INR</td>
+                    <td>INR*</td>
+                    <td></td>
+                    <td>UNQ.</td>
+                    <td>UNQ.</td>
+                    <td>0.37631</td>
+                    <td>0.44631</td>
+                    <td>0.54031</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/south_korea.png"); ?>" style="width: 20px; margin-right: 5px;">KOREA</td>
+                    <td>KRW</td>
+                    <td>100</td>
+                    <td>2.31000</td>
+                    <td>3.34000</td>
+                    <td>UNQ.</td>
+                    <td>UNQ.</td>
+                    <td>UNQ.</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/norway.png"); ?>" style="width: 20px; margin-right: 5px;">NORWAY</td>
+                    <td>NOK</td>
+                    <td></td>
+                    <td>3.89000</td>
+                    <td>4.21000</td>
+                    <td>3.99306</td>
+                    <td>4.01306</td>
+                    <td>4.11312</td>
+                </tr>
+                <tr>
+                    <td><img src="<?php echo $this->baseUrl("assets/graph/img/Flag_National/new-zealand.png"); ?>" style="width: 20px; margin-right: 5px;">NEW ZEALAND</td>
+                    <td>NAZ</td>
+                    <td></td>
+                    <td>22.54000</td>
+                    <td>23.86000</td>
+                    <td>22.55771</td>
+                    <td>22.64771</td>
+                    <td>23.52771</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div id="previewImage_Exchange" style="display: none;"></div>
+<a id="downloadImage_Exchange" href="#In_Out" style="display: none;"></a>
+
+<div class="col-md-12" style="text-align: center;">
+    <button class="Exchange_seeAll"><a href="https://app.powerbi.com/view?r=eyJrIjoiMjk0ZTM2Y2EtYzRmOS00NjQ5LTg5MzctMjFlMjI4NjQ2ZjQwIiwidCI6IjdhNTlkMDM0LTEzNGYtNDI1Ny1hNmJiLTllYWZkNzg5NjA2ZCIsImMiOjEwfQ%3D%3D" target="_blank">ดูข้อมูลสถิติทั้งหมด</a></button>
+</div>
+
+<script>
+
+    function setCanvas_ExchangeExportZone(val) {
+        html2canvas(document.querySelector("#ExchangeExportZone")).then(function(canvas) {
+            $("#previewImage_Exchange").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_Exchange").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage_Exchange")[0].click();
+                $("#Exchange_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_Exchange canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#Exchange_Export").val('export');
+            }
+        });
+    }
+    $("#Exchange_Export").change(function() {
+        setCanvas_ExchangeExportZone($(this).val());
+    });
+</script>

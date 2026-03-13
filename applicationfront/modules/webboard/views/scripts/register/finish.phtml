@@ -1,0 +1,27 @@
+<div class="container webboard">
+	<div class="panel panel-default panel-detail">
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-12" id="finish-panal">
+					<div class="jumbotron">
+						<p>
+							<?php echo Emwork_Translate::text($this->lang, 'webboard', 'register_finish_1'); ?>
+						</p>
+						<p>
+						<?php echo Emwork_Translate::text($this->lang, 'webboard', 'register_finish_2'); ?>
+						</p>
+						<p>
+						<?php echo Emwork_Translate::text($this->lang, 'webboard', 'forgetpassword_subtitle_1'); ?> <a href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'home', 'action' => 'index'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'forgetpassword_subtitle_2'); ?></a> <?php echo Emwork_Translate::text($this->lang, 'webboard', 'forgetpassword_subtitle_3'); ?> <a href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'home', 'action' => 'login'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'forgetpassword_subtitle_4'); ?> </a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+jQuery(function(){
+	
+});
+</script>

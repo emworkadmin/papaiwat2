@@ -1,0 +1,25 @@
+<?php
+//<!----------------------------------------- ไฟล์เอกสาร ------------------------------------------------>
+if (count ( $this->dataFileDocuments ) > 0) :
+?>
+<div class="article-document">
+	<hr />
+	<div class="title-label">
+		<img alt="image" src="<?php echo substr($this->baseUrl("images/icons/icon_document.png"), $this->subStringAdminLen); ?>" /> <?php echo Emwork_Translate::text($this->lang, 'story', 'detail_document'); ?>
+	</div>
+	<?php
+	foreach ( $this->dataFileDocuments as $doc ) :
+		$docUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $doc["hash_name"]), null, true);
+		$docName = $doc["file_name"];
+	?>
+	<div class="">
+		<em class="glyphicon glyphicon-download-alt"></em> 
+		<a href="<?php echo $docUrl; ?>" target="_blank"> <?php echo $docName; ?></a>
+	</div>
+	<?php
+	endforeach;
+	?>
+</div>
+<?php 
+endif; 
+?>

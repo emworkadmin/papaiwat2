@@ -1,0 +1,42 @@
+<?php if(count($this->dataPromptPayAccountList)>0){ ?>
+
+<div class="section-wat-promptpay">
+
+	<div class="title-label">
+		<?php echo Emwork_Translate::text($this->lang, "wat", "detail_promptpayaccount_title"); ?>
+	</div>
+
+	<?php foreach($this->dataPromptPayAccountList as $d){ ?>
+
+	<div class="row wat-promptpay-list">
+		<div class="col-md-2 wat-promptpay-logo">
+			<img class="img-promptpay-logo" alt="PromptPay Logo" src="<?php echo $this->baseUrl('assets/wat/img/promptpay-logo.jpg'); ?>">
+		</div>
+		<div class="col-md-4 wat-promptpay-no" style="color: #093E68;">
+			<?php echo Emwork_Translate::text($this->lang, "wat", "detail_promptpayaccount_promptpay_no"); ?> : <?php echo $d['PromptPayNo']; ?>
+		</div>
+		<div class="col-md-5 wat-promptpay-name" style="color: #093E68;">
+			<?php echo Emwork_Translate::text($this->lang, "wat", "detail_promptpayaccount_promptpay_name"); ?> : <?php echo $d['PromptPayName']; ?>
+		</div>
+		<div class="col-md-1 wat-promptpay-qr-code">
+			<?php if($d['QRCodeImageHashName']){ ?>
+				<div class="PromptPay-lightGallery">
+					<img class="img-qr-code" alt="QR Code" data-src="/th/file/get/file/<?php echo $d['QRCodeImageHashName']; ?>" src="/th/file/get/type/thumbnail/size/100/file/<?php echo $d['QRCodeImageHashName']; ?>">
+				</div>
+			<?php }else{ ?>
+				&nbsp;
+			<?php } ?>
+		</div>
+	</div>
+
+	<?php } ?>
+
+</div>
+
+<script>
+jQuery(function(){
+	$(".PromptPay-lightGallery").lightGallery();	
+});
+</script>
+
+<?php } ?>

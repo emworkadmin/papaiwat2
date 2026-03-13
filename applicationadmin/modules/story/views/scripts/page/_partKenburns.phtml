@@ -1,0 +1,129 @@
+<style>
+#kenburns_story { position: relative; width: 100%; height: 450px; overflow: hidden; }
+#kenburns_story img {
+	max-width: none;
+	position:absolute;
+	width: calc(100% + 90px);
+	height: 450px;
+	top:0%;
+	left:0%;
+	margin-left: -30px;
+	margin-top:0px;
+	opacity:0;
+	transition-property: opacity, transform;
+	transition-duration: 2s, 40s;
+}
+#kenburns_story .fx_z-1 { z-index: -1; opacity:1; transform: scale(1.5) translate(15px); }
+#kenburns_story .fx { opacity:1; transform: scale(1.5) translate(15px); }
+#kenburns_story .ffx { opacity:1; }		
+#kenburns_story #divText {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 0;
+	color: white;
+	font-size: 3.6em;
+	transform: translate(-50%, -50%);
+	transition-property: opacity;
+	transition-duration: 1s;
+	opacity: 0;
+	padding-left: 50px;
+}
+#kenburns_story #divText>div { color: white; }
+#kenburns_story #divText.tfx { opacity:1; z-index: 1; }
+#kenburns_story #divText.tfx_z-1 { opacity:1; z-index: -1; }
+#kenburns_story #divText .kenburns-title-1 { font-size: 5rem; font-weight: bold; }
+#kenburns_story #divText .kenburns-title-2 { font-size: 4rem; font-weight: bold; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+#kenburns_story>.next-on, #kenburns_story>.prev-on { 
+	position: absolute;
+	z-index: 1;
+	right: 5px;
+	bottom: 5px;
+	color: #3333;
+	background: #fff;
+	cursor: pointer;
+	text-align: center;
+	width: 50px;
+	height: 45px;
+	line-height: 50px;
+	border-radius: 3px;
+	opacity: 0.5;
+	font-size: 15px;
+}
+#kenburns_story>.next-on:hover, #kenburns_story>.prev-on:hover { opacity: 0.8; color: black; }		
+#kenburns_story>.prev-on { left: 5px; }
+#kenburns_story>.next-on { right: 5px; }
+</style>
+
+<div id="kenburns_story">
+	<?php 
+	if(count($this->dataCover)>0){ 
+		foreach($this->dataCover as $d){
+	?>
+	<!-- <a href="google.com" target="_blank"> -->
+	<img src="/th/file/get/file/<?php echo $d['FileInfoHashName']; ?>">
+	<div id="divText" class="">
+		<div>
+			<div class="kenburns-title-1">
+				<?php echo $d['Title']; ?>
+			</div>
+			<div class="kenburns-title-2">
+				<?php echo $d['IntroText']; ?>
+			</div>
+		</div>
+	</div>
+	<!-- </a> -->
+	<?php 
+		}
+	}
+	?>
+</div>
+
+<script>
+$(function(){
+  	loadKenburn();
+	function loadKenburn() {
+		document.getElementById("kenburns_story").getElementsByTagName("img")[0].className = "fx";
+		let images = document.getElementById("kenburns_story").getElementsByTagName("img"),
+		numberOfImages = images.length,
+		i = 0;
+
+		let corner = 1;
+		$.each(images, function (i, e) {
+			if(corner == 1) { $(e).css("transform-origin", "bottom right") };
+			if(corner == 2) { $(e).css("transform-origin", "bottom left") };
+			if(corner == 3) { $(e).css("transform-origin", "top right") };
+			if(corner == 4) { $(e).css("transform-origin", "top left") };
+			corner++; if(corner==5){corner=1};
+		});
+
+		let text = [];
+		text = $("#kenburns_story #divText");
+		if(text.length>0) { text[0].className = "container tfx"; }
+
+		window.setInterval(kenBurns, 4000);			
+		function kenBurns() {
+			if(i==numberOfImages) {
+				images[i-1].className = "fx_z-1";
+				if(text.length>0) { text[i-1].className = "container tfx_z-1"; }
+				i = 0;
+			}
+			images[i].className = "fx";
+			if(text.length>0) { text[i].className = "container tfx"; }
+			if(i===0) {
+				images[numberOfImages-1].className = "";
+				if(text.length>0) { text[numberOfImages-1].className = "container"; }
+			}
+			if(i===1) {
+				images[0].className = "";
+				if(text.length>0) { text[0].className = "container"; }
+			}
+			if(i>1) {
+				images[i-1].className = "";
+				if(text.length>0) { text[i-1].className = "container"; }
+			}
+			i++;
+		};
+	};
+});
+</script>

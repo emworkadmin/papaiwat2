@@ -1,0 +1,9 @@
+RewriteEngine on
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1
+#RewriteRule !\.(js|ico|gif|jpg|png|css|pdf|mov|mp3|docx|swf|txt|zip|rar|xls|mp4|html)$ index.php
+
+RewriteCond %{ENV:REDIRECT_STATUS} 200
+RewriteRule .* - [L]
+ 

@@ -1,0 +1,190 @@
+<?php 
+/**
+ * EM D2MS
+ *
+ * @copyright  Copyright (c) 2018 EMWORK Group
+ * @license	EMWORK Group
+ * @version	1.0.0 applicationadmin/modules/system/views/scripts/user/add.phtml 2018-02-20
+ * @author	EMWORK Group
+ */
+?>	
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formAdd" name="formAdd">
+
+		<div class="title-label">ข้อมูลทั่วไป</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="">ชื่อ - นามสกุล</label>
+			<div class="col-md-1 divControl">
+				<?php echo $this->formText('txtTitleName', '', array('class' => 'form-control required', 'placeholder' => 'คำนำหน้า', 'maxlength' => '50')); ?>
+			</div>
+			<div class="col-md-4 divControl">
+				<?php echo $this->formText('txtFirstName', '', array('class' => 'form-control required', 'placeholder' => 'ชื่อ', 'maxlength' => '50')); ?>
+			</div>
+			<div class="col-md-4 divControl">
+				<?php echo $this->formText('txtLastName', '', array('class' => 'form-control required', 'placeholder' => 'นามสกุล', 'maxlength' => '50')); ?>
+			</div>
+		</div>
+		<div class="form-group has-feedback">
+			<label class="col-md-3 control-label" for="">เพศ</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('lstGender', '', array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->genderOption)); ?>
+			</div>
+			<label class="col-md-3 control-label" for="txtTelephone">วันเกิด</label>
+			<div class="col-md-3 divControl ">
+				<?php echo $this->formText('txtBirthDate', '', array('class' => 'form-control', 'placeholder' => '',  'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+				<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+				<span id="txtBirthDateClose" class="fa fa-times-circle" style="right: 50px; top: 10px; position: absolute; cursor: pointer; display: none;"></span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtTelephone">เบอร์โทรศัพท์</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formText('txtTelephone', '', array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '50')); ?>
+			</div>
+			<label class="col-md-3 control-label" for="txtFax">เบอร์แฟกซ์</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formText('txtFax', '', array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '50')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtMobile">เบอร์โทรศัพท์มือถือ</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formText('txtMobile', '', array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '50')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtEmail">อีเมล</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtEmail', null, array('class' => 'form-control required email', 'placeholder' => '', 'maxlength' => '100')); ?>
+				<span class="help-block">
+					อีเมลจะใช้ในการเข้าสู่ระบบและรับการแจ้งเตือนต่างๆ ซึ่งไม่สามารถเปลี่ยนได้ในภายหลัง
+				</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ใช้งานส่วน Front</label>
+			<div class="col-md-9 divControl">
+				<div class="form-inline radio with-icheck">
+					<?php echo $this->formRadio('rdlUserFrontType', 'Y', array('class' => 'required', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>	
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ใช้งานส่วน Back</label>
+			<div class="col-md-9 divControl">
+				<div class="form-inline radio with-icheck">
+					<?php echo $this->formRadio('rdlUserType', 'Y', array('class' => 'required', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>	
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="lstUsergroup">กลุ่มสมาชิก</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('lstUsergroup', null, array('class' => 'form-control required'), $this->usergroupOption); ?>
+			</div>
+		</div>
+		
+		<div class="title-label">ข้อมูลผู้ใช้งาน</div>
+		<div class="form-group">
+			<label class="col-md-3  labelRequest control-label" for="txtPostcode">รหัสผ่าน</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formPassword('txtPassword','', array('class' => 'form-control required', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3  labelRequest control-label" for="txtPostcode">ยืนยันรหัสผ่าน</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formPassword('txtConfirmPassword','', array('class' => 'form-control required', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" >สถานะ</label>
+			<div class="col-md-9 divControl">
+				<div class="form-inline radio with-icheck">
+					<?php echo $this->formRadio('isStatus', 'Y', array('class' => 'required', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>						
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+		
+</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formAdd").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$('#txtBirthDate').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	$('#txtBirthDate').change(function(){
+		if ($(this).val() != "") {
+			$("#txtBirthDateClose").css("display", "block");
+		}
+	});
+	$("#txtBirthDateClose").click(function(){
+		$('#txtBirthDate').val('');
+		$("#txtBirthDateClose").css("display", "none");
+	});
+
+	$("#formAdd input[type=checkbox], #formAdd input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+	$("input[type=radio][name=rdlUserType]").on('ifClicked', function(event){
+		if (event.target.value == 'Y') {
+			$("#lstUsergroup").removeAttr('disabled');
+			$("label[for=lstUsergroup]").addClass("labelRequest");
+			$("#lstUsergroup").addClass("required");
+		} else {
+			$("#lstUsergroup").attr('disabled', 'disabled').val('');
+			$("label[for=lstUsergroup]").removeClass("labelRequest");
+			$("#lstUsergroup").removeClass("required");
+		}
+	});
+		
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formAdd").valid();
+		if (valid) {
+			var Password = $('#txtPassword').val();
+			var ConfirmPassword = $('#txtConfirmPassword').val();
+			if(Password.length < 8){
+				DialogWarning('กรุณากรอกรหัสผ่านความยาวอย่างน้อย 8 ตัวอักษร');
+				return;
+			}
+			if(Password != ConfirmPassword){
+				DialogWarning('รหัสผ่านไม่ตรงกันกรุณาตรวจสอบ');
+				return;
+			}
+			$.post("<?php echo $this->url(array('module' => 'system', 'controller' => 'user', 'action' => 'save'), null, true);?>", $("#formAdd").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'user', 'action' => 'edit'), null, true); ?>" + "/itemid/" + data.id;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'user', 'action' => 'index'), null, true); ?>";
+	});
+
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'SYS-USR-02'); ?>

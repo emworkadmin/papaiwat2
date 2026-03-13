@@ -1,0 +1,265 @@
+<?php 
+$defaultDataDetail = null;
+?>
+<!-- bootstrap dialog -->
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/bootstrap-dialog/bootstrap-dialog.min.js'); ?>"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="<?php echo $this->baseUrl("plugins/jQueryUI/jquery-ui.min.js"); ?>"></script>
+
+<style>
+/* --------------- CSS for MainInfoList --------------- */
+.line {background-color: #ddd; padding: 5px 15px; margin-bottom: 10px;}
+.line .handle {cursor: move;}
+.line .remove {cursor: pointer;}
+.line .icon {display: inline-block; width: 15px; vertical-align: top;}
+.line .num {display: inline-block; width: 30px; text-align: center; vertical-align: top;}
+.line .radio.witch-icheck .icheckbox_minimal-blue {border: 1px solid rgba(150, 150, 150, 1);}
+.line .title {display: inline-block; }
+.line .title .name {font-weight: bold;}
+</style>
+
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<div class="nav-tabs-custom">		
+			<ul class="nav nav-tabs">
+				<?php 
+				if (count($this->languages) > 0) :
+					$i = 0;
+					foreach ($this->languages as $lang) :
+						$i ++;
+				?>
+				<li class="<?php echo $i == 1 ? 'active' : ''; ?>" data-tab-lang="<?php echo $lang["Code"]; ?>">
+					<a data-toggle="tab" href="#detail-<?php echo $lang['Code']; ?>" title="<?php echo $lang['Name']; ?>">
+						<?php echo $lang['NameLocal']; ?>
+						<em class="fa fa-warning text-danger warning"></em>
+					</a>
+				</li>
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</ul>
+			<div class="tab-content">
+				<?php 
+				if (count($this->languages) > 0) :
+					$i = 0;
+					foreach ($this->languages as $lang) :
+						$langCode = $lang['Code'];
+						$isRequired = $lang["IsRequired"] == "Y";
+						$isDefault = $lang["IsDefault"] == "Y";
+						$i ++;
+						$sugguestMessage = "";
+		
+						// Setting Validate
+						$labelClassRequired = '';
+						$controlClassRequired = '';
+						if ($isDefault || $isRequired) {
+							$labelClassRequired = ' labelRequest'; 
+							$controlClassRequired = ' required';
+						}
+				?>
+				<div id="detail-<?php echo $lang['Code']; ?>" class="tab-pane fade <?php echo $i == 1 ? 'in active' : ''; ?>">
+					<?php 
+						if (true) :
+					
+							$dataDetail = $this->dataDetails[$langCode];
+							if ($isDefault) : 
+								$defaultDataDetail = $dataDetail;
+							else :
+								$sugguestMessage = "<<โปรดจัดการข้อมูลที่ " . $this->defaultLanguageName . ">>";
+							endif;
+					?>
+	
+                        <div class="title-label">ข้อมูลทั่วไป</div>							
+                        <div class="form-group">
+                            <label class="col-md-3 control-label<?php echo $labelClassRequired; ?>" >ชื่อ</label>
+                            <div class="col-md-9 divControl">
+                                <?php echo $this->formText("params[{$langCode}][Title]", '', array('class' => 'form-control' . $controlClassRequired, 'placeholder' => '', 'maxlength' => '500')); ?>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="params-<?php echo $langCode; ?>-Detail">ข้อความ</label> 
+                            <div class="col-md-9 divControl">
+                                <?php echo $this->formTextarea("params[{$langCode}][Detail]", null, array('class' => 'form-control', 'style' => 'max-width:100%;', 'rows' => '3', 'cols' => '50', 'maxlength' => '1000')); ?>
+                            </div>
+                        </div>
+
+                        <?php if ($isDefault) : ?>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="params-<?php echo $langCode; ?>-IntroText">แสดงรายละเอียด</label> 
+                            <div class="col-md-3 divControl radio with-icheck">
+                                <input type="checkbox" name="params[<?=$langCode?>][ShowDetail]" id="params[<?=$langCode?>][ShowDetail]" value="Y" class="Checkbox" title=""> ใช่
+                            </div>
+                            <label class="col-md-3 control-label" for="params-<?php echo $langCode; ?>-LinkTarget">จำนวน Column</label> 
+                            <div class="col-md-3 divControl">
+                                <?php echo $this->formSelect("params[{$langCode}][Col]", "1", array('class' => 'form-control'), array("1"=>"1", "2"=>"2","3"=>"3", "4"=>"4")); ?>
+                            </div>                            
+                        </div>
+                        <?php else : ?>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >แสดงรายละเอียด</label>
+                            <div class="col-md-3 divControl">
+                                <p class="form-control-static">
+                                    <?php echo $sugguestMessage;?>
+                                </p>
+                            </div>
+                            <label class="col-md-3 control-label" >จำนวน Column</label>
+                            <div class="col-md-3 divControl">
+                                <p class="form-control-static">
+                                    <?php echo $sugguestMessage;?>
+                                </p>
+                            </div>                            
+                        </div>
+                        <?php endif; ?>
+
+                        <div class="title-label">กลุ่มเมนู</div>
+                        
+                            <div id='divRoute'>
+                            <?php if ($isDefault) : ?>
+                                <?php 
+                                if (count($this->dataGroupMenu) > 0) {
+                                    foreach ($this->dataGroupMenu as $item) {
+                                ?>
+                                    <div class="line">
+
+                                        <div class="icon">
+                                            <em class="fa fa-bars handle"></em>
+                                        </div>
+                                                
+                                        <div class="num" style="display: none;">
+                                            <?php echo $i . '.'; ?>
+                                        </div>                                    
+
+                                        <div class="radio witch-icheck" style="display: inline;">
+                                            <input type="checkbox" name="params[<?=$langCode?>][dataGroupMenu][]" id="params[<?=$langCode?>][dataGroupMenu][]" value="<?=$item['ID'];?>" class="Checkbox" title="">
+                                        </div>
+
+                                        <div class="title ">
+                                            <span class="name"><?php echo $item["Name"];?></span>
+                                        </div>
+
+                                    </div>
+                                <?php 
+                                    }
+                                }
+                                ?>
+                                <?php else: ?>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" > </label>
+                                    <div class="col-md-9 divControl">
+                                        <p class="form-control-static">
+                                            <?php echo $sugguestMessage;?>
+                                        </p>
+                                    </div>
+                                </div>                                
+                                <?php endif; ?>                                
+                            </div>
+
+
+                        <div class="title-label">การเผยแพร่</div>
+                        <?php if ($isDefault) : ?>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >สถานะ</label>
+                            <div class="col-md-9 divControl">
+                                <div class="radio with-icheck">
+                                    <?php echo $this->formRadio("params[{$langCode}][IsEnable]", 'Y', array('class' => '', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+                                </div>						
+                            </div>
+                        </div>
+                        <?php else : ?>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" >สถานะ</label>
+                            <div class="col-md-9 divControl">
+                                <p class="form-control-static">
+                                    <?php echo $sugguestMessage;?>
+                                </p>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+					
+					<?php endif;?>
+				</div>
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</div>
+		</div>	
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+<script>
+$(function () {
+
+    $("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+
+    $("#formData input[type=checkbox], #formData input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+    function reindexRoute() {
+		var idx = 0;
+		$("#divRoute .line").each(function(i, e){ 
+			idx ++;
+			$(e).find('div.num').html(idx + '.');
+		});
+	}
+
+    $("#btnSave").click(function() {
+        <?php foreach ($this->languages as $lang) :?>
+                $("li[data-tab-lang=<?php echo $lang["Code"]; ?>]").removeClass("warning");
+        <?php endforeach;?>
+        var valid = $("#formData").valid();
+        if(valid) {
+            $.post("<?php echo $this->url(array('module' => 'sitemap', 'controller' => 'index', 'action' => 'save'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'sitemap', 'controller' => 'index', 'action' => 'edit'), null, true); ?>" + "/itemid/" + data.id;
+					}, 500);
+				} else {
+					DialogWarning('บันทึกไม่สำเร็จ');
+				}
+			}, 'json');
+        } else {
+        <?php foreach ($this->languages as $lang) :?>
+                if ($("#detail-<?php echo $lang["Code"]; ?>").find("input.error,select.error,textarea.error").length > 0) {$("li[data-tab-lang=<?php echo $lang["Code"]; ?>]").addClass("warning");}
+        <?php endforeach;?>
+        }
+    });
+
+    $("#btnCancel").click(function() {
+        window.location = "<?php echo $this->url(array('module' => 'sitemap', 'controller' => 'index', 'action' => 'index'), null, true); ?>";
+    });    
+
+	$( "#divRoute" ).sortable({handle: '.handle',cursor: 'move', update: function( event, ui ){ reindexRoute(); }}).disableSelection();
+	function reindexRoute() {
+		var idx = 0;
+		$("#divRoute .line").each(function(i, e){ 
+			idx ++;
+			$(e).find('div.num').html(idx + '.');
+		});
+	}
+
+
+});
+</script>

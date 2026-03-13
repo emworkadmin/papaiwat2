@@ -1,0 +1,80 @@
+<style>
+#mypage { margin-bottom: 40px; font-size: 2.1rem;}
+#mypage .title-label { font-size: 2.6rem; color: #9A9A9A; border-bottom: solid 2px #0098FF; margin: 20px 0px 40px 0px; }
+#mypage .profile-header-container { text-align: center; }
+#mypage .profile-header-img > img.img-circle { width: 200px; height: 200px; box-shadow: 3px 3px 3px #ccc; }
+#mypage #lnkChangeProfilePicture { margin: 20px; }
+#mypage #lnkChangeProfilePicture a { background: #CCCCCC; color: #FFF; font-size: 1.8rem; display: inline-block; padding: 8px; border-radius: 5px; }
+#mypage #lnkChangeProfilePicture a:hover  { background: #B7B7B7; }
+#mypage .title { color: #2EA7FF; font-weight: bold; font-size: 26px; margin-bottom: 20px; }
+#mypage p { color: #6A6A6A;font-size: 2.1rem;line-height: 1.2;}
+#mypage a#lnkEditProfile { color: #0099ff; font-size: 1.8rem; display: inline-block; padding: 8px; border-radius: 5px; margin-top: 20px;}
+#mypage a#lnkEditProfile:hover { color: #0089e5; }
+#mypage a#lnkChangePassword { color: #e55b5b; font-size: 1.8rem; display: inline-block; padding: 8px; border-radius: 5px; margin-top: 20px; }
+#mypage a#lnkChangePassword:hover { color: #ce5151; }
+
+@media only screen and (max-width: 425px){
+    #mypage { margin-bottom: 10px; border-bottom: solid 1px #CCC; padding-bottom: 20px; }
+    #mypage .title-label { margin-left: 5px; margin: 0px 5px 10px 5px; }
+    #mypage #lnkChangeProfilePicture { margin: 10px; }
+    #mypage #lnkChangeProfilePicture a { font-size: 14px; }
+    #mypage .title { font-size: 22px; }
+    #mypage p { font-size: 14px; line-height: 1;}
+}
+
+#myDetail { border: solid 2px #f9db28; border-radius: 15px; padding: 15px 10px; background-color:#fffcfc;}
+    
+</style>
+
+<div class="container panel-detail">
+
+    <div class="row" id="mypage">
+        <div class="col-md-12">
+
+			<div class="title-label"><?php echo Emwork_Translate::text($this->lang, 'profile', 'detail_title'); ?></div>
+
+	        <div class="col-md-3 profile-header-container">   
+	    		<div class="profile-header-img">
+	                <img alt="image" class="img-circle" src="<?php echo $this->data->ProfileImageUrl; ?>" />
+	            </div>
+	            <div id="lnkChangeProfilePicture">
+	            	<?php  echo $this->partial("index/_uploadprofile.phtml", $this); ?>
+	            </div>
+	        </div>
+
+	        <div class="col-md-9">
+	        	<div class="row" id="myDetail">
+	        		<div class="col-md-12 title">
+					<?php echo Emwork_Translate::text($this->lang, 'profile', 'detail_name'); ?> : <?php echo $this->data->TitleName . ' ' . Emwork_Utility::notShowNull($this->data->FirstName) . ' ' . Emwork_Utility::notShowNull($this->data->LastName); ?>
+	        		</div>
+	        		<div class="col-md-6 col-sm-6">
+	        			<p><?php echo Emwork_Translate::text($this->lang, 'profile', 'detail_email'); ?> : <?php echo Emwork_Utility::notShowNull($this->data->Email); ?></p>
+	        			<p><?php echo Emwork_Translate::text($this->lang, 'profile', 'detail_gender'); ?> : <?php echo $this->genderOption[$this->data->Gender]; ?></p>
+						<p><?php echo Emwork_Translate::text($this->lang, 'profile', 'detail_birthdate'); ?> : <?php echo Emwork_Utility_DateTime::MySQLToDateThai($this->data->BirthDate, "DT_F");?></p>
+	        			<p><?php echo Emwork_Translate::text($this->lang, 'profile', 'detail_age'); ?> : <?php echo Emwork_Utility::notShowNull($this->data->Age, '0');?></p>
+	        		</div>
+	        		<div class="col-md-6 col-sm-6">
+	        			<p><?php echo Emwork_Translate::text($this->lang, 'profile', 'detail_created'); ?> : <?php echo Emwork_Utility_DateTime::MySQLToDateThai($this->data->Created, "DT_F");?></p>
+						<p><?php echo Emwork_Translate::text($this->lang, 'profile', 'detail_telephone'); ?> : <?php echo Emwork_Utility::notShowNull($this->data->Telephone);?></p>
+						<p><?php echo Emwork_Translate::text($this->lang, 'profile', 'detail_fax'); ?> : <?php echo Emwork_Utility::notShowNull($this->data->Fax);?></p>
+						<p><?php echo Emwork_Translate::text($this->lang, 'profile', 'detail_mobile'); ?> : <?php echo Emwork_Utility::notShowNull($this->data->Mobile);?></p>						
+	        		</div>
+	        	</div>
+	        	<div class="row">
+	        		<div class="col-md-12 edit1">
+	        			<a id="lnkEditProfile" href="<?php echo $this->url(array('module' => 'profile', 'controller' => 'index', 'action' => 'edit'), null, true); ?>" >
+	        				<em class="fa fa-user-circle-o" style="margin-right: 5px;"></em>
+	        				<?php echo Emwork_Translate::text($this->lang, 'profile', 'detail_edit_profile'); ?>
+	        			</a>
+	        		</div>
+	        	</div>
+	        </div>            
+
+        </div>
+    </div>
+	
+</div>
+
+<script>
+
+</script>

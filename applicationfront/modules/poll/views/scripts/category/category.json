@@ -1,0 +1,20 @@
+{
+	"name" : "รายการแบบสำรวจ",
+	"controller" : "category",
+	"description" : "แสดงรายการแบบสำรวจภายใต้หมวดหมู่ที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "category",
+			"type" : "select",
+			"size" : "",
+			"label" : "หมวดหมู่",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Poll_Service_Category",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

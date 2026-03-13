@@ -1,0 +1,163 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+
+<style type="text/css">
+#btnDelete { margin-left: 5px; }
+</style>
+
+<div>
+	<div class="searchPanel form-horizontal" id="formSearch">
+		<div class="form-group"> 
+			<div class="col-md-12">
+				<p class="form-control-static">
+					ค้นหาไฟล์ Virtual Reality
+					<?php if($this->canAdd) : ?>
+					<a class="btn btn-danger pull-right" title="ลบ" href="javascript:void(0)" id="btnDelete">
+						<em class="fa fa-trash"></em>
+					</a>
+					<?php endif; ?>
+				</p>
+			</div> 
+		</div>
+		<div class="form-group">
+			<div class="col-md-12">
+				<div class="input-group">
+						<?php echo $this->formText('textsearch', $this->InfoSearch->textsearch, array('class' => 'form-control', 'placeholder' => 'ค้นหาจากชื่อ Virtual Reality'));?>
+						<span class="input-group-btn">
+						<button type="button" class="btn btn-primary" id="btnSearch">
+							<em class="fa fa-search"></em> <span class="hidden-xs">ค้นหา</span>
+						</button>
+						<button type="button" class="btn btn-warning" id="btnReset">
+							<em class="fa fa-refresh"></em> <span class="hidden-xs">เริ่มใหม่</span>
+						</button>
+					</span>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<table id="tblData" class="table table-bordered table-hover">
+	<caption>รายการไฟล์ Virtual Reality</caption>
+	<thead>
+		<tr>
+			<th style="padding:0;">
+                <input type="checkbox" name="chkAll" id="chkAll">
+            </th>
+			<th>ชื่อไฟล์</th>
+			<th>ขนาดไฟล์</th>
+			<th>ผู้สร้าง</th>
+			<th>วันที่สร้าง</th>
+			<th>สถานะ</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script type="text/javascript">
+    jQuery(function(){
+
+    	function renderColumn ( data, type, row, meta ) {
+    		return data;
+    	}
+        function renderColumnCheckbox ( data, type, row, meta ) {
+            if (row.Status == 'Y') {
+        	    return '-';
+            }else{
+                return '<input type="checkbox" name="ids[]" value="' + row.DT_RowId + '" />';
+            }
+    	}
+        function renderColumnStatus ( data, type, row, meta ) {
+        	if (data == 'Y') {
+				return '<span class="label label-success">ใช้งาน</span>';
+        	} else {
+				return '<span class="label label-danger">ไม่ใช้งาน</span>';
+        	}
+    	}
+    	var rows_selected = [];
+    	
+    	var tblData = $('#tblData').DataTable({
+    		processing: true,
+    		serverSide: true,
+    		responsive: true,
+    		<?php
+			if ($this->InfoSearch->tblPage) {
+				echo 'displayStart: ' . $this->InfoSearch->tblPage . ',';
+			}
+			if ($this->InfoSearch->tblRow) {
+				echo 'pageLength: ' . $this->InfoSearch->tblRow . ',';
+			}
+			if ($this->InfoSearch->tblOrderCol && $this->InfoSearch->tblOrderDir) {
+				echo 'order: [[ ' . $this->InfoSearch->tblOrderCol . ', "' . $this->InfoSearch->tblOrderDir . '" ]],';
+			} else {
+				echo 'order: [[ 4, "desc" ]],';
+			}
+			?>
+    		ajax: {
+    	        url: '<?php echo $this->url(array('module' => 'vrv', 'controller' => 'files', 'action' => 'getlist'), null, true); ?>',
+    	        type: 'POST',
+    	        data: function(d) {
+        	        d.textstr = $("#formSearch #textsearch").val();
+    	        }
+    	    },
+    	    language : {
+				url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+    	    },
+    		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+    		"columns": [
+						{ 'width': '20px', 'orderable': false, 'data' : 'NO', 'render' : renderColumnCheckbox, 'class' : 'text-center'},
+    		            { 'data' : 'Name' , 'render' : renderColumn, 'class' : 'ratio'},
+    		            { 'width': '15%', 'data' : 'FileSize' , 'render' : renderColumn, 'class' : 'ratio'},
+    		            { 'width': '15%', 'data' : 'CreatedBy' , 'render' : renderColumn, 'class' : 'ratio'},
+    		            { 'width': '15%', 'data' : 'Created' , 'render' : renderColumn, 'class' : 'ratio'},
+    		            { 'width': '15%', 'data' : 'Status' , 'render' : renderColumnStatus, 'class' : 'ratio'},
+    		          ]
+        });
+
+		$('#btnSearch').click(function(){
+			tblData.ajax.reload();
+		});
+
+		$('#btnReset').click(function(){
+			$(".searchPanel input[type=text]").val('');
+			tblData.ajax.reload();
+		});
+    	        
+        $('#btnDelete').click(function(){
+            var ids = [];
+            $.each($('#tblData input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+                ids.push($(e).val());
+            });
+            if (ids.length > 0) {
+                DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+                    $.post("<?php echo $this->url(array('module' => 'vrv', 'controller' => 'files', 'action' => 'listdelete'), null, true); ?>", {"ids" : ids}, function(data){
+                        if (data.result) {
+                            tblData.ajax.reload();
+                            DialogComplete("ลบสำเร็จ");
+                        } else {
+                            DialogWarning(data.message);
+                        }
+                    }, 'json');
+                });
+            } else {
+                DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+            }
+            $('#chkAll').prop('checked',false);
+        });
+
+        $('#chkAll').click(function(){
+            var val = $(this).is(":checked");
+            if(val){
+                $('input[name="ids[]"]').prop('checked',true);
+            }else{
+                $('input[name="ids[]"]').prop('checked',false);
+            }
+        });
+    	
+    });
+    
+</script>

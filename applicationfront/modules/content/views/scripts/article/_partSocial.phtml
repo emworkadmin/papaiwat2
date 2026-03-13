@@ -1,0 +1,37 @@
+<?php 
+if ($this->dataInfo->SocialNetworkFacebook == 'Y' || $this->dataInfo->SocialNetworkTwitter == 'Y' || $this->dataInfo->SocialNetworkGoogleplus == 'Y' || $this->dataInfo->ShowQrcode == 'Y') :
+?>
+<div class="article-date-date_2">
+	<em class="fa fa-calendar"></em> <span class="date_2"><?php echo $this->data->Created == null ? '' : Emwork_Utility_DateTime::MSSqlToDateThai($this->data->Created); ?></span>
+</div>
+
+<?php if($this->data->Source){?>
+	<div class="Source">
+		<b>แหล่งที่มาของข้อมูล : </b><br><span><?php echo $this->data->Source ?></span>
+	</div>
+<?php } ?>
+<div class="article-social">
+	<?php if ($this->dataInfo->SocialNetworkFacebook == 'Y') : ?>
+	<a class="btn btn-social-icon btn-facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $this->currentUrl; ?>" onclick="window.open(this.href, 'facebook-share','width=500,height=300');return false;">
+		<em class="fa fa-facebook"></em>
+	</a>
+	<?php endif; ?>
+	<?php if ($this->dataInfo->SocialNetworkTwitter == 'Y') : ?>
+	<a class="btn btn-social-icon btn-twitter" href="http://twitter.com/share?text=<?php echo $this->data->Title; ?>&url=<?php echo $this->currentUrl; ?>&via=Devahoy" onclick="window.open(this.href, 'twitter-share', 'width=500,height=300');return false;">
+		<em class="fa fa-twitter"></em>
+	</a>
+	<?php endif; ?>
+	<?php if ($this->dataInfo->SocialNetworkGoogleplus == 'Y') : ?>
+	<a class="btn btn-social-icon btn-google" href="https://plus.google.com/share?url=<?php echo $this->currentUrl; ?>" onclick="window.open(this.href, 'google-plus-share', 'width=500,height=300');return false;">
+		<em class="fa fa-google-plus"></em>
+	</a> 
+	<?php endif; ?>
+	<?php if ($this->dataInfo->ShowQrcode == 'Y') : ?>
+	<a class="btn btn-social-icon btn-default" href="<?php echo $this->currentUrlQrCodeUrl; ?>" data-lightbox="image-1" data-title="" >
+		<em class="fa fa-qrcode"></em>
+	</a>
+	<?php endif; ?>
+</div>
+<?php 
+endif;
+?>

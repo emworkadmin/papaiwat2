@@ -1,0 +1,20 @@
+{
+	"name" : "รายการข้อมูลตามภูมิภาค",
+	"controller" : "region",
+	"description" : "แสดงรายการข้อมูลภายใต้ภูมิภาคที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "region",
+			"type" : "select",
+			"size" : "",
+			"label" : "ภูมิภาค",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Wat_Service_Region",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : false
+		}	
+	]
+}

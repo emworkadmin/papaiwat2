@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<?php 
+
+$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', 'init');
+$appFaviconPath = $this->baseUrl($config->app->faviconpath);
+$appLogoPath = $this->baseUrl($config->app->logopath);
+
+$appSystemName = $config->app->name;
+$appStartYear = $config->app->copyrightstartyear;
+$appEndYear = date('Y');
+$appCompanyName = $config->app->brand;
+$appCompanyUrl = $config->app->brandUrl;
+
+$appSystemName = empty(System_Model_Setting::getValue("SiteName", "Site")) ? $appSystemName : System_Model_Setting::getValue("SiteName", "Site");
+$appSystemDescription = empty(System_Model_Setting::getValue("Description", "Site")) ? null : System_Model_Setting::getValue("Description", "Site");
+$appSystemKeyword = empty(System_Model_Setting::getValue("Keyword", "Site")) ? null : System_Model_Setting::getValue("Keyword", "Site");
+
+// $breadcrumbs = count($this->breadcrumb) == 0 ? array(array('name' => 'หน้าแรก')) : $this->breadcrumb;
+// $pageName = empty($this->pageName) ? "Page Name" : $this->pageName;
+// $pageSubName = empty($this->pageSubName) ? "" : $this->pageSubName;
+
+$pageName = $appSystemName;
+$pageDescption = $appSystemDescription;
+$pageKeyword = $appSystemKeyword;
+
+if (!empty($this->pageName) || !empty($this->pageTitle)) {
+	$pageName = empty($this->pageName) ? $this->pageTitle : $this->pageName;
+	$pageDescption = empty($this->pageDescription) ? null : $this->pageDescription;
+	$pageKeyword = empty($this->pageKeyword) ? null : $this->pageKeyword;
+}
+
+if(mb_strlen($pageDescption) > 250) {
+	$pageDescption = htmlentities(mb_substr($pageDescption, 250) . '...');
+} else {
+	$pageDescption = htmlentities($pageDescption);
+}
+
+$pageResponseTime = "-";
+$pageScreenId = "-";
+$visitorAmount = "-";
+
+$auth = Zend_Auth::getInstance();
+$isLogin = $auth->getIdentity();
+$authData = $auth->getIdentity();
+
+$_moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+$_controllerName = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+$_actionName = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+
+$request = new Zend_Controller_Request_Http();
+$cFontSize = $request->getCookie('font_size');
+$cTheme = $request->getCookie('theme');
+
+// Layout Config & Setting
+$hideBreadcrumb = $this->hideBreadcrumb === true ? true : false;
+$hidePageName = $this->hidePageName === true ? true : false;
+$hideFooterCopyright = $this->hideCopyright === true ? true : false;
+$hideFooterBanner = $this->hideBanner === true ? true : false;
+$hideFooterSitemap = true;
+
+// Get Lang
+$lang = '';
+if (Zend_Registry::isRegistered('lang')) {
+    $lang = Zend_Registry::get('lang');
+} else {
+    $defaultLanguage = System_Model_Setting::getDefaultLanguage();
+    $lang = $defaultLanguage["Code"];
+}
+$languageList = System_Model_Setting::getLanguages();
+
+$socialMediaFacebookUrl = System_Model_Setting::getValue("FacebookUrl", "SocialMedia");
+$socialMediaTwitterUrl = System_Model_Setting::getValue("TwitterUrl", "SocialMedia");
+$socialMediaYoutubeUrl = System_Model_Setting::getValue("YoutubeUrl", "SocialMedia");
+$socialMediaInstagramUrl = System_Model_Setting::getValue("InstagramUrl", "SocialMedia");
+
+$analyticGoogleAnalytic = System_Model_Setting::getValue("GoogleAnalytic", "Analytic");
+$facebookAppID = System_Model_Setting::getValue("AppID", "Facebook");
+
+// Facebook Tag
+$ogImage = $this->ogImage;
+$ogUrl = $this->ogUrl;
+$ogDescription = $pageDescption;
+
+//$viewAmount = System_Model_Log::viewAmount();
+
+// Get MenuID
+$menuID = null;
+$parentMenuIds = array();
+if (Zend_Registry::isRegistered("MenuID")) :
+	$menuID = Zend_Registry::get("MenuID");
+	$parentMenuIds = System_Service_Menu::getParents($menuID);
+endif;
+
+// File Model
+$fileModel = new System_Model_Fileinfo();
+
+// Set Template
+$templateModel = new System_Model_Template();
+$templateID = $templateModel->getIDByMenu($menuID);
+if (empty($templateID)) {
+	$templateID = $templateModel->getDefault();
+}
+$templateData = $templateModel->getInfoByID($templateID);
+$templateLayout = $templateModel->getLayout($templateID);
+$templateCoding = $templateModel->getCoding($templateID);
+
+// Favicon & Logo
+if (!empty($templateData->FaviconImageHashName)) {
+	$appFaviconPath = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $templateData->FaviconImageHashName), null, true);
+} else {
+	if (!empty(System_Model_Setting::getValue("Favicon", "Site"))) {
+		$faviconFileInfoID = System_Model_Setting::getValue("Favicon", "Site");
+		$fileData = $fileModel->item($faviconFileInfoID);
+		if ($fileData->ID) {
+			$appFaviconPath = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $fileData->HashName), null, true);
+		}
+	}
+}
+if (!empty($templateData->LogoImageHashName)) {
+	$appLogoPath = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $templateData->LogoImageHashName), null, true);
+} else {
+	if (!empty(System_Model_Setting::getValue("Logo", "Site"))) {
+		$logoFileInfoID = System_Model_Setting::getValue("Logo", "Site");
+		$fileData = $fileModel->item($logoFileInfoID);
+		if ($fileData->ID) {
+			$appLogoPath = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $fileData->HashName), null, true);
+		}
+	}
+}
+
+// ogImage
+if (empty($ogImage)) {
+	$ogImage = $appLogoPath;
+}
+if (!empty($ogImage)) {
+	$siteUrl = System_Model_Setting::getValue("SiteUrl", "General");
+	$ogImage = $siteUrl . $ogImage;
+}
+// ogUrl 
+if (empty($ogUrl)) {
+	$siteUrl = System_Model_Setting::getValue("SiteUrl", "General");
+	$request = Zend_Controller_Front::getInstance()->getRequest();
+	$requestUri = $request->getRequestUri();
+	$ogUrl = $siteUrl . $requestUri;
+}
+
+
+$layoutParams = json_decode($templateLayout->LayoutParams, true);
+
+// Load Widget in this page/url
+// widgets[position][] = widgetItem;
+$widgets = array();
+$widgetDatas = $this->WidgetData($menuID, $lang);
+if (count($widgetDatas) > 0) :
+	foreach ($widgetDatas as $widgetData) : 
+		if (!isset($widgets[$widgetData["Position"]])) :
+			$widgets[$widgetData["Position"]] = array();
+		endif;
+		$widgets[$widgetData["Position"]][] = array(
+				"Title" => $widgetData["Title"], 
+				"ShowTitle" => $widgetData["ShowTitle"], 
+				"Widget" => ucfirst($widgetData["Widget"]), 
+				"Params" => json_decode($widgetData["Params"], true)
+		);
+	endforeach;
+endif;
+
+$bodyClass = empty($this->bodyClass) ? "" : $this->bodyClass; 
+
+?>
+
+<?php 
+function displayMenu($datas, $parentID, $selectedMenuID, $selectedParentMenuID) {
+	
+	$isUseLanguageCode = false;
+	$langCode = '';
+	if (Zend_Registry::isRegistered("IsUseLanguageCode")) {
+		$isUseLanguageCode = Zend_Registry::get("IsUseLanguageCode");
+		if($isUseLanguageCode) {
+			if (Zend_Registry::isRegistered('lang')) {
+				$langCode = Zend_Registry::get('lang');
+			} else {
+				$defaultLanguage = System_Model_Setting::getDefaultLanguage();
+				$langCode = $defaultLanguage["Code"];
+			}
+		}
+	}
+	
+	if ($parentID == 'main') {
+		echo '<div class="d2ms-widget-menu hidden-xs">';
+		echo '			<a id="d2ms-menu-toggle" class="button dark" href="#"><em class="icon-reorder"></em></a>';
+		echo '			<nav>';
+		echo '				<ul class="nav navbar-nav" id="d2ms-main-menu">';
+	} else {
+		echo '<ul class="sub-menu">';
+	}
+	
+	if ($datas[$parentID] > 0) {
+		foreach ($datas[$parentID] as $data) {
+			$menuID = $data["ID"];
+			$menuName = $data["Name"];
+			$menuUrl = $data["Url"];
+			$menuTarget = '_self';
+			if ($data["Type"] == "component") { 
+				if ($isUseLanguageCode) {
+					$menuUrl = '/' . $langCode . $menuUrl;
+				}
+			} elseif ($data["Type"] == "url") {
+				$menuUrl = $data["Url"];
+				$menuSetting = empty($data["Params"]) ? array() : json_decode($data["Params"], true);
+				$menuTarget = empty($menuSetting["Target"]) ? "_blank" : $menuSetting["Target"]; 
+			} else {
+				$menuUrl = '#';
+			}
+			$hasChild =  isset($datas[$menuID]) && count($datas[$menuID]) > 0;
+			
+			echo '<li class="' . ($menuID == $selectedMenuID || in_array($menuID, $selectedParentMenuID) ? 'active' : '') . '">';
+			
+			echo '<a href="' . $menuUrl . '" target="' . $menuTarget . '">' . $menuName . ($hasChild ? ' <span class="caret"></span>' : '') . '</a>';
+			
+			if ($hasChild) {
+				displayMenu($datas, $menuID, $selectedMenuID, $selectedParentMenuID);	
+			}
+			
+			echo '</li>';
+		}
+	}
+	
+	if ($parentID == 'main') {
+		echo '				</ul>';
+		echo '			</nav>';
+		echo '			<div class="clear"></div>';
+		echo '		</div>';
+	} else {
+		echo '</ul>';
+	}
+}
+?>
+<html lang="th">
+	<head>
+		<title><?php echo $pageName;?></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<?php if (!empty($pageDescption)) : ?><meta name="description" content="<?php echo $pageDescption; ?>" /><?php echo "\n";  endif; ?>
+		<?php if (!empty($pageKeyword)) : ?><meta name="keywords" content="<?php echo $pageKeyword; ?>" /><?php echo "\n"; endif; ?>
+	  
+		<!-- facebook -->
+		<?php if (!empty($facebookAppID)) : ?><meta property="fb:app_id" content="<?php echo $facebookAppID; ?>" /><?php echo "\n"; endif; ?>
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="<?php echo $pageName; ?>" />
+		<?php if (!empty($ogUrl)) : ?><meta property="og:url"  content="<?php echo $ogUrl; ?>" /><?php echo "\n"; endif; ?>
+		<?php if (!empty($ogDescription)) : ?><meta property="og:description"   content="<?php echo $ogDescription; ?>" /><?php echo "\n"; endif; ?>
+		<?php if (!empty($ogImage)) : ?><meta property="og:image"         content="<?php echo $ogImage; ?>" /><?php echo "\n"; endif; ?>
+	  
+		<link type="image/x-icon" href="<?php echo $appFaviconPath; ?>" rel="shortcut icon" />
+		<!-- Tell the browser to be responsive to screen width -->
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+		<!-- Bootstrap 3.3.6 -->
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('bootstrap/css/bootstrap.min.css'); ?>">
+		<!-- Font Awesome -->
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/font-awesome.min.css'); ?>">
+		<!-- Ionicons -->
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/ionicons.min.css'); ?>">
+		<!-- Theme style -->
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/AdminLTE.min.css'); ?>">
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/skins/_all-skins.css'); ?>">
+		<!-- iCheck -->
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/iCheck/minimal/orange.css'); ?>">
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/iCheck/minimal/blue.css'); ?>">
+		<!-- Date Picker -->
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datepicker/datepicker3.css'); ?>">
+		<!-- Daterange picker -->
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/daterangepicker/daterangepicker-bs3.css'); ?>">
+		<!-- bootstrap wysihtml5 - text editor -->
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css'); ?>">
+		<!-- lightbox -->
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightbox/css/lightbox.css'); ?>">
+		<!-- offcanvas -->
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/js-offcanvas/css/minified/js-offcanvas.css'); ?>">
+		<!-- Menu -->
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/menu/css/menu.css'); ?>">
+		<!-- D2MS -->
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/d2ms.css'); ?>">
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/d2ms.responsive.css'); ?>">
+		
+		<style type="text/css">
+		<?php 
+		  // Background From Template
+		  $bodyCss = "";
+		  if (!empty($templateData->BackgroundImageHashName)) :
+			  $bodyCss .= "background-image:url(" . $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $templateData->BackgroundImageHashName), null, true) . ");";
+			  $bodyCss .= (!empty($templateData->BackgroundColor) ? "background-color:" . $templateData->BackgroundColor . ";" : "");
+			  $bodyCss .= (!empty($templateData->BackgroundPosition) ? "background-position:" . $templateData->BackgroundPosition . ";" : "");
+			  $bodyCss .= (!empty($templateData->BackgroundSize) ? "background-size:" . $templateData->BackgroundSize . ";" : "");
+			  $bodyCss .= (!empty($templateData->BackgroundAttachment) ? "background-attachment:" . $templateData->BackgroundAttachment . ";" : "");
+			  $bodyCss .= (!empty($templateData->BackgroundRepeat) ? "background-repeat:" . $templateData->BackgroundRepeat . ";" : "");
+			  if (!empty($bodyCss)) :
+			 	echo ".skin-smart .wrapper {" . $bodyCss . "}" . "\n";
+			  endif;
+		  endif;
+	  
+		  // Custom CSS
+		  if($templateCoding->IsUseCustomCss == 'Y' && !empty($templateCoding->CustomCss)) :
+		  	echo $templateCoding->CustomCss  . "\n";
+		  endif;
+	  
+		  // Css In Template
+		  if (count($layoutParams) > 0) :
+			  foreach ($layoutParams as $layoutParam) :
+				  $sectionName = $layoutParam["name"];
+				  $sectionIsFluid = $layoutParam["fluid"];
+				  $sectionBoxs = $layoutParam["box"];		  
+				  $sectionNameID = "d2ms-section-" . str_replace(" ", "-", strtolower($sectionName));
+				  $sectionCss = "";
+				  $sectionCss .= (!empty($layoutParam["padding"]) ? "padding:" . $layoutParam["padding"] . ";" : "");
+				  $sectionCss .= (!empty($layoutParam["margin"]) ? "margin:" . $layoutParam["margin"] . ";" : "");
+				  $sectionCss .= (!empty($layoutParam["textColor"]) ? "color:" . $layoutParam["textColor"] . ";" : "");
+				  $sectionCss .= (!empty($layoutParam["bgColor"]) ? "background-color:" . $layoutParam["bgColor"] . ";" : "");
+				  $sectionCss .= (isset($layoutParam["bgImage"]) ? "background-image:url(" . $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $layoutParam["bgImage"]["fileHashName"]), null, true) . ");" : "");
+				  $sectionCss .= (!empty($layoutParam["bgPosition"]) ? "background-position:" . $layoutParam["bgPosition"] . ";" : "");
+				  $sectionCss .= (!empty($layoutParam["bgSize"]) ? "background-size:" . $layoutParam["bgSize"] . ";" : "");
+				  $sectionCss .= (!empty($layoutParam["bgAttachment"]) ? "background-attachment:" . $layoutParam["bgAttachment"] . ";" : "");
+				  $sectionCss .= (!empty($layoutParam["bgRepeat"]) ? "background-repeat:" . $layoutParam["bgRepeat"] . ";" : "");
+				  if (!empty($sectionCss)) :
+				  	echo "#" . $sectionNameID . "{" . $sectionCss . "}" . "\n";
+				  	endif;
+				  	if (!empty($layoutParam["linkColor"])) :
+				  		echo "#" . $sectionNameID . " a {color:" . $layoutParam["linkColor"] . "}" . "\n";
+				  	endif;
+				  	if (!empty($layoutParam["linkHoverColor"])) :
+				  		echo "#" . $sectionNameID . " a:hover {color:" . $layoutParam["linkHoverColor"] . "}" . "\n";
+				  	endif;
+			  
+			  endforeach;
+		  endif; 
+		  ?>
+		</style>
+		
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	  
+		<!-- jQuery 2.2.0 -->
+		<script src="<?php echo $this->baseUrl('plugins/jQuery/jQuery-2.2.0.min.js'); ?>"></script>
+		<!-- jQuery UI 1.11.4 -->
+		<script src="<?php echo $this->baseUrl('plugins/jQueryUI/jquery-ui.min.js'); ?>"></script>
+		<!-- jQuery validate -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('/plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script> 
+		<!-- jQuery Cookie -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('/plugins/jQueryCookie/jquery.cookie.js'); ?>"></script> 
+	
+		<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+		<script>
+		  $.widget.bridge('uibutton', $.ui.button);
+		</script>
+		<!-- Bootstrap 3.3.6 -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('bootstrap/js/bootstrap.min.js'); ?>"></script>
+		<!-- Sparkline -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/sparkline/jquery.sparkline.min.js'); ?>"></script>
+		<!-- daterangepicker -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/daterangepicker/daterangepicker.js'); ?>"></script>
+		<!-- datepicker -->
+		<?php if ($lang == 'th') { ?>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/datepicker/bootstrap-datepicker-th.min.js'); ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/datepicker/locales/bootstrap-datepicker.th.js'); ?>"></script>
+		<?php }else if ($lang == 'zh') { ?>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/datepicker/bootstrap-datepicker.js'); ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/datepicker/locales/bootstrap-datepicker.zh-CN.js'); ?>"></script>
+		<?php }else{ ?>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/datepicker/bootstrap-datepicker.js'); ?>"></script>
+		<?php }?>
+		<!-- Bootstrap WYSIHTML5 -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js'); ?>"></script>
+		<!-- Slimscroll -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/slimScroll/jquery.slimscroll.min.js'); ?>"></script>
+		<!-- FastClick -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/fastclick/fastclick.js'); ?>"></script>
+		<!-- iCheck -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/iCheck/icheck.min.js'); ?>"></script>
+		<!-- Bootpag -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/bootpag/jquery.bootpag.min.js'); ?>"></script>
+		<!-- Noty -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/noty/packaged/jquery.noty.packaged.min.js'); ?>"></script>
+		<!-- Jssor slider -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/jssor-slider/jssor.slider.min.js'); ?>"></script>
+		<!-- Offcanvas -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/js-offcanvas/js/js-offcanvas.pkgd.min.js'); ?>"></script>
+		<!-- AdminLTE App -->
+		<script type="text/javascript" src="<?php echo $this->baseUrl('dist/js/app.min.js'); ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('dist/js/common.js'); ?>"></script>
+		<script type="text/javascript">
+		$.ajaxSetup({cache: false, global: false});
+		</script>
+		<?php if (!empty($analyticGoogleAnalytic)) : ?>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo $analyticGoogleAnalytic; ?>"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());		
+		  gtag('config', '<?php echo $analyticGoogleAnalytic; ?>');
+		</script>
+		<?php endif; ?>
+		
+		  <?php 
+		  // Custom JS
+		  if($templateCoding->IsUseCustomJs == 'Y' && !empty($templateCoding->CustomJs)) :
+		  ?>
+		  <script type="text/javascript">
+		  <?php echo $templateCoding->CustomJs; ?>
+		  </script>
+		  <?php 
+		  endif;
+		  ?>
+	</head>
+
+	<body class="hold-transition skin-smart layout-top-nav <?php echo $bodyClass;?> lang-<?php echo $lang; ?> <?php echo (empty($menuID) ? "" : "m-" . md5($menuID))?>">
+		<?php if (!empty($facebookAppID)) : ?>
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  var fbLang = '<?php echo $lang == 'th' ? 'th_TH' : 'en_US'; ?>';
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = 'https://connect.facebook.net/' + fbLang + '/sdk.js#xfbml=1&version=v3.2&appId=<?php echo $facebookAppID; ?>&autoLogAppEvents=1';
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+		<?php endif;?>
+		<div class="wrapper">
+			<?php 
+			
+			if (count($layoutParams) > 0) :
+				foreach ($layoutParams as $layoutParam) :
+					$sectionName = $layoutParam["name"];
+					$sectionIsFluid = $layoutParam["fluid"];
+					$sectionBoxs = $layoutParam["box"];
+					$sectionColMissing = 0;
+					
+					$isPageManage = $this->isPageManage === true;
+					$hasMainBox = false;
+					if (count($sectionBoxs) > 0) :
+						foreach ($sectionBoxs as $sectionBox) :
+							$sectionBoxIsMain = $sectionBox["ismain"];
+							if ($sectionBoxIsMain) :
+								$hasMainBox = true;
+								break;
+							endif;
+						endforeach;
+					endif;
+					
+					// Check Has Widget
+					$hasWidget = false;
+					if (count($sectionBoxs) > 0) :
+						foreach ($sectionBoxs as $sectionBox) :
+							$sectionBoxIsMain = $sectionBox["ismain"];
+							$sectionBoxPosition = $sectionBoxIsMain ? "main" : $sectionBox["position"];
+							$sectionBoxSize = $sectionBox["size"];
+							
+							if ($sectionBoxIsMain) :
+								$hasWidget = true;
+								continue;
+							endif;
+							if (!empty($sectionBoxPosition) && isset($widgets[$sectionBoxPosition]) && (count($widgets[$sectionBoxPosition]) > 0)) :
+								$hasWidget = true;
+								continue;
+							endif;
+							if (!empty($sectionBoxPosition) && in_array($sectionBoxPosition, array('logo', 'menu'))) :
+								$hasWidget = true;
+								continue;					
+							endif;
+							
+							$sectionColMissing += $sectionBoxSize;
+						endforeach;
+					endif;
+					
+					if (!$hasMainBox && !$hasWidget) :
+						continue;
+					endif;
+					
+					// Section
+					echo "<section id='d2ms-section-" . str_replace(" ", "-", strtolower($sectionName)) . "' class='" . ($hasMainBox ? "d2ms-section-hasmainbox" : "") . "'>";
+					
+					// Container (if)
+					if ($hasMainBox) :  
+						if (!$isPageManage) :
+							echo "<div class='container'>"; 
+						endif;
+					else : 
+						if (!$sectionIsFluid) :
+							echo "<div class='container'>"; 
+						endif;
+					endif;
+					
+					// Row
+					echo "<div class='row'>";
+					
+					if (count($sectionBoxs) > 0) :
+						$colIdx = 0;
+						foreach ($sectionBoxs as $sectionBox) :
+							$colIdx++;
+							$sectionBoxIsMain = $sectionBox["ismain"];
+							$sectionBoxPosition = $sectionBoxIsMain ? "main" : $sectionBox["position"];
+							$sectionBoxSize = $sectionBox["size"];
+							
+							// If not be Main or not has widget or not be logo,menu position, then continue							
+							if (!($sectionBoxIsMain || !empty($sectionBoxPosition) && isset($widgets[$sectionBoxPosition]) && (count($widgets[$sectionBoxPosition]) > 0) || !empty($sectionBoxPosition) && in_array($sectionBoxPosition, array('logo', 'menu')) ) ) :
+								continue;
+							endif;
+							
+							// Add MissColSize to Main or Last Col
+							if ($hasMainBox) {
+								if ($sectionBoxIsMain) {
+									$sectionBoxSize += $sectionColMissing;
+								}
+							} else {
+								if (count($sectionBoxs) == $colIdx) {
+									$sectionBoxSize += $sectionColMissing;
+								}
+							}
+						
+							// Coloumn/Box
+							echo "<div id='d2ms-section-" . str_replace(" ", "-", strtolower($sectionName)) . "-" . str_replace(" ", "-", strtolower($sectionBoxPosition)) . "' class='col-md-" . $sectionBoxSize . " " . ($sectionBoxIsMain ? "d2ms-section-ismainbox" : "") . "'>";
+							
+							// Box Inner
+							echo "<div class='d2ms-box" . ($sectionBoxIsMain ? " d2ms-box-main" : "") . "'>";
+							
+							if ($sectionBoxIsMain) : // Main/Compoment Box
+								echo $this->layout()->content;
+							else : 
+								if ($sectionBoxPosition == 'logo') : // Logo Box
+									echo "<a href='" . $this->baseUrl("") . "' class='logo-brand'>";
+									echo "<img src='" . $appLogoPath . "' class='logo-brand-img' alt='Logo' />"; // Default 
+									echo "</a>";
+								elseif ($sectionBoxPosition == 'menu') : // Menu Box
+									if ($templateData->DisplayMenuGroupType == 'menu') :
+										$menus = $this->MenuData($templateData->MenuGroupID, $lang);										
+										echo '<div class="d2ms-widget-menu-wrapper">';
+										echo '	<a id="toggleCanvas" href="#offCanvas" data-offcanvas-trigger="offCanvas" class="visible-xs"><em class="fa fa-bars"></em></a>';
+										displayMenu($menus, "main", $menuID, $parentMenuIds);
+										echo '</div>';
+									elseif ($templateData->DisplayMenuGroupType == 'offcanvas') :
+										echo '<div class="d2ms-widget-menu-wrapper">';
+										echo '	<a id="toggleCanvas" href="#offCanvas" data-offcanvas-trigger="offCanvas"><em class="fa fa-bars"></em></a>';
+										echo '</div>';
+									else :
+										$menus = $this->MenuData($templateData->MenuGroupID, $lang);
+										echo '<div class="d2ms-widget-menu-wrapper with-offcanvas">';
+										echo '	<a id="toggleCanvas" href="#offCanvas" data-offcanvas-trigger="offCanvas"><em class="fa fa-bars"></em></a>';
+										displayMenu($menus, "main", $menuID, $parentMenuIds);
+										echo '</div>';									
+									endif;
+								else : // Other / Widget Box
+								
+								endif;
+								
+								// TODO: Widget
+								// Loop Widget in this position
+								if (!empty($sectionBoxPosition) && isset($widgets[$sectionBoxPosition]) && (count($widgets[$sectionBoxPosition]) > 0)) :
+									foreach ($widgets[$sectionBoxPosition] as $widget) :
+										// Check
+										$widgetPrefix = "Widget";
+										$widgetType = ucfirst($widget["Widget"]);
+										$widgetParams = $widget["Params"];
+										$widgetClass = "{$widgetPrefix}_{$widgetType}_{$widgetType}";
+										
+										echo "<div class='d2ms-widget'> ";
+										
+										if ($widget["ShowTitle"] == 'Y') :
+											echo "<div class='d2ms-widget-title'>" . $widget["Title"] . "</div>";
+										endif;
+										
+										echo "<div class='d2ms-widget-body'>";
+										$widgetObj = $this->$widgetClass($widgetParams);
+										if ($widgetObj != null && method_exists($widgetObj, "display")) :
+											$widgetObj->display();
+										endif;
+										echo "</div>";
+										
+										echo "</div>";
+									endforeach;
+								endif;
+								
+							endif;
+							
+							// End Box Inner
+							echo "</div>";
+							
+							// End Column/Box
+							echo "</div>";
+						endforeach;
+					endif;
+					
+					// End Row
+					echo "</div>";
+					
+					// End Container (if)
+					if ($hasMainBox) :
+						if (!$isPageManage) :
+							echo "</div>";
+						endif;
+					else :
+						if (!$sectionIsFluid) :
+							echo "</div>";
+						endif;
+					endif;
+					
+					// End Section
+					echo "</section>";
+				endforeach;
+			endif;
+			
+			?>		
+		</div>
+		<aside id="offCanvas" class="js-offcanvas" data-offcanvas-options='{"modifiers":"right,fixed,overlay"}' role="complementary">
+			<a href="javascript:void(0)" class="close-offcanvas js-offcanvas-close" data-button-options='{"modifiers":"m1,m2"}' title="">
+				<em class="fa fa-remove"></em>
+			</a>
+			<div class="offcanvas-inner">			
+				<?php 
+				$sectionBoxPosition = 'offcanvas';
+				if (!empty($sectionBoxPosition) && isset($widgets[$sectionBoxPosition]) && (count($widgets[$sectionBoxPosition]) > 0)) :
+					foreach ($widgets[$sectionBoxPosition] as $widget) :
+						// Check
+						$widgetPrefix = "Widget";
+						$widgetType = ucfirst($widget["Widget"]);
+						$widgetParams = $widget["Params"];
+						$widgetClass = "{$widgetPrefix}_{$widgetType}_{$widgetType}";
+						
+						echo "<div class='d2ms-widget'> ";
+						
+						if ($widget["ShowTitle"] == 'Y') :
+							echo "<div class='d2ms-widget-title'>" . $widget["Title"] . "</div>";
+						endif;
+						
+						echo "<div class='d2ms-widget-body'>";
+						$widgetObj = $this->$widgetClass($widgetParams);
+						if ($widgetObj != null && method_exists($widgetObj, "display")) :
+							$widgetObj->display();
+						endif;
+						echo "</div>";
+						
+						echo "</div>";
+					endforeach;
+				endif;
+				?>
+			</div>
+		</aside>
+		<script type="text/javascript">
+		$( function(){
+			$( document ).trigger( "enhance" );
+		});
+		</script>
+	</body>
+</html>

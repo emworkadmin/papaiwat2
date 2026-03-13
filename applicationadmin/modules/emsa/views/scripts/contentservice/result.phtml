@@ -1,0 +1,24 @@
+
+<div class="emsa-thank">
+	ศูนย์บริการลูกค้า Customer service<br />
+	ได้รับทราบข้อมูลของท่านเรียบร้อยแล้ว<br />
+	และกำลังเข้าสู่กระบวนการดำเนินการต่อไป
+</div>
+
+
+<script type="text/javascript">
+jQuery(function(){
+	if (emsaDialog != null) {
+		
+		emsaDialog.setTitle("<?php echo $this->title; ?>");
+		emsaDialog.setButtons(
+				[{
+                    label: 'ปิด',
+					action: function(dialog) {
+						dialog.close();
+					}
+                }]
+		);
+	}
+});    
+</script>

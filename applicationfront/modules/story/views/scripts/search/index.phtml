@@ -1,0 +1,124 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/select2/select2.min.css'); ?>">
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/story/css/story.css'); ?>">
+<script src="<?php echo $this->baseUrl('plugins/select2/select2.min.js'); ?>"></script>
+
+ <div class="info infopage">
+	 <div>
+    	<div class="article-title title-panel">
+			<span class="title">
+				<?php echo $this->pageTitle; ?>
+			</span>
+			<hr />
+		</div>
+    </div>
+    
+    <div class="story-search-panel">
+    	<form class="form-horizontal" method="get" action="<?php echo $this->url(array("module" => "story", "controller" => "search", "action" => "index"), null, true); ?>">
+    		<div class="form-group">
+    			<?php if ($this->colText > 0) : ?>
+    			<div class="col-md-<?php echo $this->colText; ?> search-text">
+    				<?php echo $this->formText("q", $this->searchParams["q"], array("class" => "form-control", "placeholder" => Emwork_Translate::text($this->lang, "story", "search_text_placeholder"))); ?>
+    			</div>
+    			<?php endif; ?>
+    			<?php if ($this->colCat > 0 && !empty($this->searchCategory1)) : ?>
+    			<div class="col-md-<?php echo $this->colCat; ?> search-select">
+    				<?php echo $this->formSelect("cat1", $this->searchParams["cat1"], array("class" => "form-control"), Emwork_Utility::addEmptyOption($this->category1Option));?>
+    			</div>
+    			<?php endif; ?>
+    			<?php if ($this->colCat > 0 && !empty($this->searchCategory2)) : ?>
+    			<div class="col-md-<?php echo $this->colCat; ?> search-select">
+    				<?php echo $this->formSelect("cat2", $this->searchParams["cat2"], array("class" => "form-control"), Emwork_Utility::addEmptyOption($this->category2Option));?>
+    			</div>
+    			<?php endif; ?>
+    			<?php if ($this->colCat > 0 && !empty($this->searchCategory3)) : ?>
+    			<div class="col-md-<?php echo $this->colCat; ?> search-select">
+    				<?php echo $this->formSelect("cat3", $this->searchParams["cat3"], array("class" => "form-control"), Emwork_Utility::addEmptyOption($this->category3Option));?>
+    			</div>
+    			<?php endif; ?>
+    			<div class="col-md-<?php echo $this->colBtn; ?> search-button">
+    				<button type="submit" class="btn btn-block" id="btnSearch"><em class="fa fa-search"></em> <?php echo Emwork_Translate::text($this->lang, "general", "button_search"); ?></button>
+    			</div>
+    		</div>
+    	</form>
+    	<div class="story-search-result"><div class="story-search-result-text"></div></div>
+    </div>
+    
+	<div class="result-list-panel">
+    	<div class="result-list story-result-list" id="result-list-art"></div>
+    	<div class="result-paging-art" style="display: none;">
+    		<p class="paging text-right"></p>
+    	</div>
+	</div>
+
+</div>
+<script>
+jQuery(function(){
+	// Select
+	$(".story-search-panel select").select2();
+
+	reloadResultList(1);
+
+	function reloadResultList(pageIndex) {
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		sendData.q = "<?php echo $this->searchParams["q"]; ?>";
+		sendData.cat1 = "<?php echo $this->searchParams["cat1"]; ?>";
+		sendData.cat2 = "<?php echo $this->searchParams["cat2"]; ?>";
+		sendData.cat3 = "<?php echo $this->searchParams["cat3"]; ?>";
+		$.post("<?php echo $this->url(array('module' => 'story', 'controller' => 'search', 'action' => 'getlist'), null, true); ?>", sendData, function(data){
+			
+			if (data.total > 0) {
+				$("#result-list-art").html(data.html);
+				$('.result-paging-art').css('display', '');
+				$('.paging').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+			        leaps: false,
+			        firstLastUse: true,
+			        first: '<<',
+			        last: '>>',
+			        next: '>',
+			        prev: '<',
+			        wrapClass: 'pagination',
+			        activeClass: 'active',
+			        disabledClass: 'disabled',	
+			        nextClass: 'next',
+			        prevClass: 'prev',
+			        lastClass: 'last',
+			        firstClass: 'first'
+				});
+			} else {
+				var html = '';
+				html += '<div class="story-result-empty">' + '\n';
+				html += '<div><em class="fa fa-search"></em> <?php echo Emwork_Translate::text($this->lang, 'general', 'alert_notfound_message')?></div>' + '\n';
+				html += '</div>' + '\n';
+				$('.result-list').html(html);
+				
+				$('.result-paging-art').css('display', 'none');
+				$('.paging').bootpag({total : 0});
+			}
+		}, 'json');
+	}
+
+	$('.paging').bootpag({
+        total: 0,
+        maxVisible: 5,
+        leaps: false,
+        firstLastUse: true,
+        first: '<<',
+        last: '>>',
+        next: '>',
+        prev: '<',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+    	reloadResultList(num);
+    }); 	
+});
+</script>

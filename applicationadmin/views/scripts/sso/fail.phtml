@@ -1,0 +1,23 @@
+<style>
+.box-main {background-color: #fff;}
+.box-main .header {padding: 15px; background-color: red; color: #fff; font-weight: bold; font-size: 16px;}
+.box-main .message {padding: 15px; font-size: 14px;}
+</style>
+
+<div class="login-box">
+	<div class="box-main">
+		<div class="header">
+			พบข้อผิดพลาด
+		</div>
+		<div class="message">
+			<p>
+				<?php echo $this->message; ?>
+			</p>
+		</div>
+		<?php if (false) : ?>
+		<div class="footer">
+			คลิกที่นี้เพื่อย้อนกลับไปยัง <a href="<?php echo $this->callBackUrl; ?>">เว็บไซต์ต้นทาง</a>
+		</div>
+		<?php endif; ?>
+	</div>
+</div>

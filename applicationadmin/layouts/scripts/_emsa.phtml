@@ -1,0 +1,238 @@
+<?php 
+if(Zend_Session::namespaceIsset("EMSADataSystem")) {
+	$EMSANamespace = new Zend_Session_Namespace("EMSADataSystem");
+	$EMSADataSystem = new stdClass();
+	$EMSADataSystem->data->isReportProblem = $EMSANamespace->isReportProblem;
+	$EMSADataSystem->data->isReportService = $EMSANamespace->isReportService;
+	$EMSADataSystem->data->isChatOnline = $EMSANamespace->isChatOnline;
+	$EMSADataSystem->data->isManual = $EMSANamespace->isManual;
+	$EMSADataSystem->data->isTracking = $EMSANamespace->isTracking;
+	$EMSADataSystem->data->isContract = $EMSANamespace->isContract;
+	$EMSADataSystem->data->isReport = $EMSANamespace->isReport;
+}else{
+	$modelEMSA = new Emsa_Model_Index();
+	$EMSADataSystem = $modelEMSA->getSystem();
+	$EMSANamespace = new Zend_Session_Namespace("EMSADataSystem");
+	$EMSANamespace->isReportProblem = $EMSADataSystem->data->isReportProblem;
+	$EMSANamespace->isReportService = $EMSADataSystem->data->isReportService;
+	$EMSANamespace->isChatOnline = $EMSADataSystem->data->isChatOnline;
+	$EMSANamespace->isManual = $EMSADataSystem->data->isManual;
+	$EMSANamespace->isTracking = $EMSADataSystem->data->isTracking;
+	$EMSANamespace->isContract = $EMSADataSystem->data->isContract;
+	$EMSANamespace->isReport = $EMSADataSystem->data->isReport;
+}
+Zend_Session::namespaceUnset("EMSADataSystem");
+// echo '<pre style="padding-left:250px;">'; print_r($EMSADataSystem); echo '</pre>'; exit();
+?>
+
+<?php 
+if(
+	$EMSADataSystem->data->isReportProblem == 'N' && 
+	$EMSADataSystem->data->isReportProblem == 'N' && 
+	$EMSADataSystem->data->isChatOnline == 'N' && 
+	$EMSADataSystem->data->isManual == 'N' && 
+	$EMSADataSystem->data->isTracking == 'N' && 
+	$EMSADataSystem->data->isContract == 'N' && 
+	$EMSADataSystem->data->isReport == 'N'
+){
+	exit();
+}
+?>
+
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/emsa/css/emsa.css'); ?>">
+<script src="<?php echo $this->baseUrl('assets/emsa/js/html2canvas/html2canvas.js'); ?>"></script>
+
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/emsa/js/bootstrap-dialog/bootstrap-dialog.min.css'); ?>">
+<script src="<?php echo $this->baseUrl('assets/emsa/js/bootstrap-dialog/bootstrap-dialog.min.js'); ?>"></script>
+
+<style type="text/css">
+#lhc_min {
+	visibility: hidden !important;
+}
+.lhc-min #lhc_iframe_container{
+	height:0px !important;
+}
+</style>
+
+<div id="emsa-box">
+	<div class="box collapsed-box">
+		<div class="box-header with-border">
+			<div class="col-md-2" style="padding-left: 5px;padding-right: 5px;">
+				<span class="logo-lg">
+					<img src="<?php echo $this->baseUrl("assets/emsa/images/logo.png"); ?>">
+				</span>
+			</div>
+			<div class="col-md-10" style="padding-left: 5px;">
+				<h3 class="box-title" style="font-family: 'ThaiSans Neue';font-size: 19px;width: 100%;margin-bottom: 5px;"> ระบบให้คำปรึกษาออนไลน์</h3>
+				<h3 class="box-title" style="width: 100%;font-size: 19px;">EM Support Assist</h3>
+			</div>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse"><em class="fa fa-plus" style="color: #ffffff;"></em></button>
+				<button type="button" class="btn btn-box-tool" data-widget="remove"><em class="fa fa-times" style="color: #ffffff;"></em></button>
+			</div>
+		</div>
+		<div class="box-body no-padding">
+			<ul class="users-list clearfix">
+				<?php if($EMSADataSystem->data->isReportProblem == 'Y'){ ?>
+				<li>
+					<a class="users-list-name" href="javascript:void(0);" id="emsa-lnk-request">
+						<em class="fa fa-laptop"></em><span>แจ้งปัญหา</span>
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($EMSADataSystem->data->isChatOnline == 'Y'){ ?>
+				<li>
+					<a class="users-list-name" href="javascript:void(0);" id="emsa-lnk-chatonline">
+						<em class="fa fa-comments-o"></em><span>สอบถามการใช้งาน</span>
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($EMSADataSystem->data->isManual == 'Y'){ ?>
+				<li>
+					<a class="users-list-name" href="javascript:void(0);" id="emsa-lnk-manual">
+						<em class="fa fa-book"></em><span>คู่มือ </span>
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($EMSADataSystem->data->isTracking == 'Y'){ ?>
+				<li>
+					<a class="users-list-name" href="javascript:void(0);" id="emsa-lnk-tracking">
+						<em class="fa fa-check-circle"></em><span>ติดตามสถานะ</span>
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($EMSADataSystem->data->isReportService == 'Y'){ ?>
+				<li>
+					<a class="users-list-name" href="javascript:void(0);" id="emsa-lnk-contentservice">
+						<em class="fa fa-th"></em><span>Content Service</span>
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($EMSADataSystem->data->isContract == 'Y'){ ?>
+				<li>
+					<a class="users-list-name" href="javascript:void(0);" id="emsa-lnk-status">
+						<em class="fa fa-history"></em><span>สถานะรับประกัน</span>
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($EMSADataSystem->data->isReport == 'Y'){ ?>
+				<li>
+					<a class="users-list-name" href="javascript:void(0);" id="emsa-lnk-report">
+						<em class="fa fa-file-text"></em><span>รายงาน</span>
+					</a>
+				</li>
+				<?php } ?>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+var LHCChatOptions = {};
+LHCChatOptions.opt = {widget_height:340,widget_width:300,popup_height:520,popup_width:500};
+(function() {
+var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+var referrer = (document.referrer) ? encodeURIComponent(document.referrer.substr(document.referrer.indexOf('://')+1)) : '';
+var location  = (document.location) ? encodeURIComponent(window.location.href.substring(window.location.protocol.length)) : '';
+po.src = '//supportassist.emworkgroup.co.th/livechat/index.php/chat/getstatus/(click)/internal/(position)/bottom_right/(ma)/br/(top)/350/(units)/pixels/(leaveamessage)/true/(department)/1?r='+referrer+'&l='+location;
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+})();
+</script>
+
+<script type="text/javascript">
+var emsaDialog = null;
+var emsaParams = {};
+jQuery(function(){
+
+	function emsaCreateDialog() {
+		var dialog = BootstrapDialog.show({
+			title: '',
+			message: '',
+			closable: true,
+			cssClass: 'EMSADialog',
+	        closeByBackdrop: false,
+	        closeByKeyboard: false,
+	        autodestroy: true,
+	        type: 'type-info',
+			buttons : [{
+                label: 'ปิด',
+                action: function(dialog) {
+                	dialog.close();
+                }
+            }]
+		});
+		return dialog;
+	}
+
+	var canUseEMSA = true;
+
+	<?php if($EMSADataSystem->data->isReportProblem == 'Y'){ ?>
+	$("#emsa-lnk-request").click(function(){
+		if(canUseEMSA){ canUseEMSA = false; }else{ return; }
+		html2canvas(document.body).then(function(canvas) {
+			emsaParams.screenCanvas = canvas;
+			emsaParams.currentUrl = window.location;
+			emsaParams.screenCode = $('#hdfEMSAScreenCode').val();
+			emsaDialog = emsaCreateDialog();
+			emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'request', 'action' => 'index'), null, true); ?>", function(){ canUseEMSA = true; }));
+			emsaDialog.open();
+		});
+	});
+	<?php } ?>
+
+	<?php if($EMSADataSystem->data->isChatOnline == 'Y'){ ?>
+	$("#emsa-lnk-chatonline").click(function(){
+		if(canUseEMSA){ canUseEMSA = false; }else{ console.log('ddd'); return; }
+		emsaDialog = emsaCreateDialog();
+		emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'chatonline', 'action' => 'index'), null, true); ?>", function(){ canUseEMSA = true; }));
+		emsaDialog.open();
+	});
+	<?php } ?>
+
+	<?php if($EMSADataSystem->data->isManual == 'Y'){ ?>
+	$("#emsa-lnk-manual").click(function(){
+		if(canUseEMSA){ canUseEMSA = false; }else{ return; }
+		emsaDialog = emsaCreateDialog();
+		emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'manual', 'action' => 'index'), null, true); ?>", function(){ canUseEMSA = true; }));
+		emsaDialog.open();
+	});
+	<?php } ?>
+
+	<?php if($EMSADataSystem->data->isTracking == 'Y'){ ?>
+	$("#emsa-lnk-tracking").click(function(){
+		if(canUseEMSA){ canUseEMSA = false; }else{ return; }
+		emsaDialog = emsaCreateDialog();
+		emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'tracking', 'action' => 'index'), null, true); ?>", function(){ canUseEMSA = true; }));
+		emsaDialog.open();
+	});
+	<?php } ?>
+
+	<?php if($EMSADataSystem->data->isReportService == 'Y'){ ?>
+	$("#emsa-lnk-contentservice").click(function(){
+		if(canUseEMSA){ canUseEMSA = false; }else{ return; }
+		emsaDialog = emsaCreateDialog();
+		emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'contentservice', 'action' => 'index'), null, true); ?>", function(){ canUseEMSA = true; }));
+		emsaDialog.open();
+	});
+	<?php } ?>
+
+	<?php if($EMSADataSystem->data->isContract == 'Y'){ ?>
+	$("#emsa-lnk-status").click(function(){
+		if(canUseEMSA){ canUseEMSA = false; }else{ return; }
+		emsaDialog = emsaCreateDialog();
+		emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'status', 'action' => 'index'), null, true); ?>", function(){ canUseEMSA = true; }));
+		emsaDialog.open();
+	});
+	<?php } ?>
+
+	<?php if($EMSADataSystem->data->isReport == 'Y'){ ?>
+	$("#emsa-lnk-report").click(function(){
+		if(canUseEMSA){ canUseEMSA = false; }else{ return; }
+		emsaDialog = emsaCreateDialog();
+		emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'report', 'action' => 'index'), null, true); ?>", function(){ canUseEMSA = true; }));
+		emsaDialog.open();
+	});
+	<?php } ?>
+
+});
+</script>

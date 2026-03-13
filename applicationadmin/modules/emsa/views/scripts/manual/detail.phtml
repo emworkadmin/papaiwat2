@@ -1,0 +1,71 @@
+<!-- lightbox -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/lightbox/css/lightbox.css"); ?>" />
+<script type="text/javascript" src="<?php echo $this->baseUrl('assets/emsa/js/lightbox/js/lightbox.js"'); ?>"></script>
+
+<div id="emsa-manual form-horizontal">
+
+	<?php if($this->data->Description){ ?>
+	<div class="form-group row">
+		<div class="col-md-12">
+			<div class="panel panel-default" style="margin-bottom: 0px;">
+  				<div class="panel-body" style="padding: 15px; word-wrap: break-word;">
+					<?php echo $this->data->Description; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php } ?>
+		
+	<?php if(count($this->data->ProjectManualImage)>0){ ?>
+	<div class="form-group">
+		<label class="col-md-12 control-label title-label" for="ProjectManualImage">ไฟล์รูปภาพ</label>
+		<div class="col-md-12" style="margin-bottom: 10px;">
+			<?php echo $this->EMSAUploadShowControl('ProjectManualImage', 'ProjectManualImage',  $this->data->ProjectManualImage , array('multi'=>true,'isimage'=>true,'showimage'=>true,'showlink'=>false,'readonly'=>true)) ; ?>
+		</div>
+	</div>
+	<?php } ?>
+	
+	<?php if(count($this->data->ProjectManualFile)>0){ ?>
+	<div class="form-group">
+		<label class="col-md-12 control-label title-label" for="ProjectManualFile">ไฟล์เอกสาร</label>
+		<div class="col-md-12" style="margin-bottom: 10px;">
+			<?php echo $this->EMSAUploadShowControl('ProjectManualFile', 'ProjectManualFile',  $this->data->ProjectManualFile , array('multi'=>true,'isimage'=>true,'showimage'=>true,'showlink'=>false,'readonly'=>true)) ; ?>
+		</div>
+	</div>
+	<?php } ?>
+	
+	<?php if(count($this->data->ProjectManualVideo)>0){ ?>
+	<div class="form-group">
+		<label class="col-md-12 control-label title-label" for="ProjectManualVideo">ไฟล์วีดิโอ</label>
+		<div class="col-md-12" style="margin-bottom: 10px;">
+			<?php echo $this->EMSAUploadShowControl('ProjectManualVideo', 'ProjectManualVideo',  $this->data->ProjectManualVideo , array('multi'=>true,'isimage'=>true,'showimage'=>true,'showlink'=>false,'readonly'=>true)) ; ?>
+		</div>
+	</div>
+	<?php } ?>
+	
+	<?php if($this->data->message){ ?>
+	<div class="alert alert-danger" id="warningMessage" style="margin-bottom: 0px;"><?php echo $this->data->message; ?></div>
+	<?php } ?>
+	
+</div>
+
+<script type="text/javascript">
+jQuery(function(){
+	if (emsaDialog != null) {
+		emsaDialog.setTitle("<?php echo $this->title; ?>");
+		emsaDialog.setButtons(
+				[{
+                    label: 'กลับ',
+					action: function(dialog) {
+						emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'manual', 'action' => 'index'), null, true); ?>"));
+					}
+                }, {
+                    label: 'ปิด',
+					action: function(dialog) {
+						dialog.close();
+					}
+                }]
+		);
+	}
+});    
+</script>

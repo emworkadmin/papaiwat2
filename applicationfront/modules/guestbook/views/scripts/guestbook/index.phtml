@@ -1,0 +1,332 @@
+<style>
+.inforowitemt {
+	min-height: 250px;
+    background-color: #0000001f;
+    margin: 10px 10px 10px 10px;
+    padding: 20px 20px 20px 20px;
+    margin-bottom: 40px;
+}
+
+.detail-intro {
+    background-color: white;
+    margin: 10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
+	min-height: 130px;
+}
+
+span.text {
+	color: #04b4de;
+}
+
+.fa-user:before {
+	content: "\f007";
+	margin: 10px 10px 10px 10px;
+	color: #777;
+}
+
+.fa-map-marker:before {
+	content: "\f041";
+	margin: 10px 10px 10px 10px;
+	color: #777;
+}
+
+.fa-clock-o:before {
+	content: "\f017";
+	margin: 10px 10px 10px 10px;
+	color: #777;
+}
+
+.fa-list:before {
+    content: "\f03a";
+	margin: 10px 10px 10px 10px;
+	color: #777;
+}
+
+.col-md-6.detail-title {
+    margin-bottom: 10px;
+}
+
+.from-data {
+    margin: 10px 10px 10px 10px;
+    background-color: #0000001f;
+    padding: 40px 140px 40px 140px;
+}
+
+.fa-newspaper-o:before {
+    content: "\f1ea";
+	margin: 10px 10px 10px 10px;
+	color: #777;
+}
+
+.form-horizontal .control-label {
+    text-align: left;
+    color: #04b4de;
+    padding-left: 55px;
+    padding-top: 0px;
+}
+
+.title-label{
+	font-size: 40px;
+	margin-bottom: 40px;
+}
+
+.data-guestbook {
+	font-size: 50px;
+	text-align: center;
+	color: red;
+	font-weight: bold;
+	padding-top: 50px;
+	padding-bottom: 330px;
+}
+
+@media screen and (max-width: 1200px) {
+
+	.form-horizontal .control-label {
+		font-size: 20px;
+		padding-left: 0px;
+	}
+	
+}
+
+@media screen and (max-width: 768px) {
+	.form-horizontal .control-label {
+    	padding-left: 10px;
+	}
+
+	.from-data {
+		background-color: #0000001f;
+		padding:10px;
+	}
+}
+
+@media screen and (max-width: 425px) {
+
+	.title {
+	    font-size: 24px;
+	}
+
+	.col-md-6.detail-title {
+    font-size: 15px;
+	}
+
+	.from-data {
+    background-color: #0000001f;
+    padding:0;
+	}
+}
+
+
+</style>
+
+
+<link rel="stylesheet"href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+
+
+<?php if($this->Status){?>
+<div class="searchPanel form-horizontal info infopage guestbook-detail guestbook-detail-<?php echo $this->data->ID; ?>" id="formSearch">
+
+	<div>
+		<div class="article-title title-panel">
+			<span class="title"><?php echo Emwork_Translate::text($this->lang, 'guestbook', 'title'); ?> <?php echo $this->Title ?></span>
+			<hr>
+		</div>
+	</div>
+
+	<div class="panel-detail">	
+		<form class="form-horizontal" id="formSave" name="formSave">
+			<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+
+
+
+		<div class="from-data">
+			<div class="title"><?php echo Emwork_Translate::text($this->lang, 'guestbook', 'sign_guest_book'); ?></div>
+				<div class="form-group">
+					<label class="col-md-3  control-label " for="txtInstantmessage"><em class="	fa fa-newspaper-o"></em> <?php echo Emwork_Translate::text($this->lang, 'guestbook', 'pattern_text'); ?></label>
+					<div class="col-md-9 divControl">
+						<?php echo $this->formSelect('Instantmessage', $this->data->BookInfoID, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->instantOption, Emwork_Translate::text($this->lang, 'general', 'emptyoption'))); ?>
+					</div>
+				</div>	
+
+				<div class="form-group" >
+					<label class="col-md-3 control-label" for="txtDetail"><em class="	fa fa-newspaper-o"></em> <?php echo Emwork_Translate::text($this->lang, 'guestbook', 'text'); ?></label>		
+					<div class="col-md-9 divControl">
+						<?php echo $this->formTextarea("Detail", $this->data->Detail, array('class' => 'form-control', 'placeholder' => Emwork_Translate::text($this->lang, 'guestbook', 'text_placeholder'), 'rows' => '3', 'maxlength' => '500')); ?>
+						<sub>0/500</sub>
+					</div>
+				</div>	
+								
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="txtTitleName"><em class="fa fa-user"></em> <?php echo Emwork_Translate::text($this->lang, 'guestbook', 'fullname'); ?></label>
+				<div class="col-md-3 divControl">
+					<?php echo $this->formText('TitleName', "", array('class' => 'form-control required', 'placeholder' => Emwork_Translate::text($this->lang, 'guestbook', 'title_name'), 'maxlength' => '50')); ?>
+					<sub>0/50</sub>
+				</div>
+				<div class="col-md-3 divControl">
+					<?php echo $this->formText('FirstName', "", array('class' => 'form-control required', 'placeholder' => Emwork_Translate::text($this->lang, 'guestbook', 'first_name'), 'maxlength' => '50')); ?>
+					<sub>0/50</sub>
+				</div>
+				<div class="col-md-3 divControl">
+					<?php echo $this->formText('LastName', "", array('class' => 'form-control required', 'placeholder' => Emwork_Translate::text($this->lang, 'guestbook', 'last_name'), 'maxlength' => '50')); ?>
+					<sub>0/50</sub>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="txtDepartmentName"><em class="	fa fa-map-marker"></em> <?php echo Emwork_Translate::text($this->lang, 'guestbook', 'department'); ?></label>
+				<div class="col-md-9 divControl">
+					<?php echo $this->formText('DepartmentName', "", array('class' => 'form-control', 'placeholder' => Emwork_Translate::text($this->lang, 'guestbook', 'department'), 'maxlength' => '50')); ?>
+					<sub>0/50</sub>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-md-9 col-md-offset-3 button-panel-zone">
+					<button type="button" class="btn btn-primary" id="btnSave" style="font-size: 30px;height: 40px;line-height: 30px; width: 110px;"> <?php echo Emwork_Translate::text($this->lang, 'guestbook', 'ok'); ?></button>
+				</div>
+			</div>
+		</div>
+
+		<div class="result-list1-panel">
+			<div class="result-list1" id="result-list1"></div>
+			<div class="result-paging1" style="display: none;">
+				<p class="paging1 text-right"></p>
+			</div>
+		</br>
+		</div>
+	</div>
+
+<?php }else{ ?>
+<div class="data-guestbook">
+	<?php echo Emwork_Translate::text($this->lang, 'guestbook', 'title'); ?> <?php echo $this->Title?> <?php echo Emwork_Translate::text($this->lang, 'guestbook', 'timeout'); ?>
+</div>
+<?php } ?>
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+jQuery(function() {
+
+	$("#formSave").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+			error.appendTo( element.closest("div.divControl"));
+		}, 
+		ignore: []
+	});
+
+	$("#Instantmessage").change(function() {
+		$("#Detail").val($(this).find('option:selected').text());
+	});
+
+	$("#TitleName").keyup(function() {
+		$(this).parent().find("sub").html($(this).val().length+'/50');
+	});
+
+	$("#FirstName").keyup(function() {
+		$(this).parent().find("sub").html($(this).val().length+'/50');
+	});
+
+	$("#LastName").keyup(function() {
+		$(this).parent().find("sub").html($(this).val().length+'/50');
+	});
+
+	$("#Detail").keyup(function() {
+		$(this).parent().find("sub").html($(this).val().length+'/500');
+	});
+
+	$("#DepartmentName").keyup(function() {
+		$(this).parent().find("sub").html($(this).val().length+'/50');
+	});
+
+		// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formSave").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'guestbook', 'controller' => 'guestbook', 'action' => 'save','id'=>$this->id), null, true);?>", $("#formSave").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'guestbook', 'controller' => 'guestbook', 'action' => 'index','id'=>$this->id), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message, '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_title'); ?>', '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_close'); ?>');
+				}
+			}, 'json');
+		}
+	});
+
+	reloadResultList1(1);
+
+	function reloadResultList1(pageIndex) {
+
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		
+			$.post("<?php echo $this->url(array('module' => 'guestbook', 'controller' => 'guestbook', 'action' => 'getlist','id'=>$this->id), null, true); ?>", sendData, function(data){
+		
+			$("span#total").html(data.total);
+			
+			// $("#result-list1")
+			var res = data.html.replace('<?php echo $this->text; ?>' , "<span style='background: yellow;'><?php echo $this->text; ?></span>");
+			var res = data.html.replace('<?php echo $this->text; ?>' , "<span style='background: yellow;'><?php echo $this->text; ?></span>");
+			
+			if (data.total > 0) {
+				$("#result-list1").html(res);
+				$('.result-paging1').css('display', '');
+				$('.paging1').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+					leaps: false,
+					firstLastUse: true,
+					first: '<<',
+					last: '>>',
+					next: '>',
+					prev: '<',
+					wrapClass: 'pagination',
+					activeClass: 'active',
+					disabledClass: 'disabled',
+					nextClass: 'next',
+					prevClass: 'prev',
+					lastClass: 'last',
+					firstClass: 'first'
+				});
+
+			} else {
+				
+				$('#result-paging1').css('display', 'none');
+				$('.result-list1').html(data.html);
+				$('.paging1').bootpag({total : 0});
+			}
+		}, 'json');
+	}
+
+				$('.paging1').bootpag({
+					
+					total: 0,
+					maxVisible: 5,
+					leaps: false,
+					firstLastUse: true,
+					first: '<<',
+					last: '>>',
+					next: '>',
+					prev: '<',
+					wrapClass: 'pagination',
+					activeClass: 'active',
+					disabledClass: 'disabled',
+					nextClass: 'next',
+					prevClass: 'prev',
+					lastClass: 'last',
+					firstClass: 'first'
+				}).on("page", function(event, num){
+					
+					reloadResultList1(num);
+
+				}); 
+
+});
+</script>

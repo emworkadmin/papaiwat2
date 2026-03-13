@@ -1,0 +1,594 @@
+<style>
+.graph-box.with-color.SituationExportZone {background-color: #D4EFFA;}
+
+.graph-box-subbox .graph-box-subbox-title {font-size: 2rem;}
+.chart_2_1 .graph-box-subbox-title {background-color: #8CC63E;}
+.chart_2_2 .graph-box-subbox-title {background-color: #F2C90F;}
+.chart_2_3 .graph-box-subbox-title {background-color: #DD427B;}
+.chart_2_4 .graph-box-subbox-title {background-color: #F3CA10;}
+
+.SituationExportZone .Situation-Amount {text-align: center;}
+.SituationExportZone .Situation-Amount .border { background: white; border: 1px solid #186E9D; padding: 5px; margin: 15px 0; }
+.SituationExportZone .Situation-Amount .text { color: #0071bd; font-family: 'Mitr Light'; font-weight: bold; padding-bottom: 10px;}
+.SituationExportZone .Situation-Amount .number { font-size: 3.6rem; font-family: 'Kanit';}
+.SituationExportZone .Situation-Amount .unit { font-size: 2rem; font-family: 'Mitr Light'; }
+
+.Situation { font-family: 'Mitr Light'; margin-bottom: 15px; background: #D4EFFA; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+.Situation .Situation-title { text-align: center; display: inline-block; width: 100%; }
+.Situation .Situation-title .border { background: white; border: 1px solid #186E9D; padding: 5px; margin: 15px 0; }
+.Situation .Situation-title .text { color: #186e9d; font-family: 'Mitr Light'; font-weight: bold; }
+.Situation .Situation-title .number { font-size: 1.6em; font-family: 'Mitr Light';}
+.Situation .export { display: inline-block; width: 100%; color: #2B83AF; }
+.Situation .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+.Situation .export #Situation_Year { margin-right: 4%; }
+.Situation_seeAll { display: inline-block; font-family: 'Mitr Light'; font-size: 17px; padding: 12px 30px 12px; margin-bottom: 15px; color: white; background: linear-gradient(to top, #3388BE, #27A8E2); border-radius: 7px; border: 1px solid white; }
+.Situation_seeAll a {color: white;}
+
+.Situation .intro-box { padding: 10px 0px 0px; color: white; }
+
+.Situation .intro-box .title-detail.TransportVolume { background: #8CC63E; padding : 0 15px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; font-size: 2rem; }
+.Situation .intro-box .title-detail.InvestmentBusiness { background: #F2C90F; padding : 0 15px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; font-size: 2rem; }
+.Situation .intro-box .title-detail.DirectInvestment { background: #DD427B; padding : 0 15px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; font-size: 2rem; }
+.Situation .intro-box .title-detail.InvestmentOutlook { background: #F3CA10; padding : 0 15px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; font-size: 2rem; }
+
+.Situation .intro-box .content-detail { padding: 10px; background: white; min-height: 315px;}
+
+@media screen and (max-width: 768px) {
+    .Situation .intro-box .content-detail { padding: 10px; background: white; min-height: 250px;}
+}
+
+@media screen and (max-width: 425px) {
+    .Situation .intro-box .content-detail { padding: 10px; background: white; min-height: 200px;}
+}
+</style>
+
+	<div class="graph-box with-color SituationExportZone" id="SituationExportZone">
+		<div class="graph-box-title">
+			<div class="row">
+				<div class="col-md-9">
+					<span>สถานการณ์การลงทุนโดยตรงจากต่างประเทศ</span>
+				</div>
+				<div class="export col-md-3 col-sm-12 col-xs-12">
+					<div class="row">
+						<div class="col-sm-6">
+							<?php echo $this->formSelect("Situation_Year", $this->situationYear, array('class' => 'form-control', 'placeholder' => ''), $this->fdiYears); ?>
+						</div>
+						<div class="col-sm-6">
+							<?php echo $this->formSelect("Situation_Export", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		
+		<div class="row mb-15 Situation-Amount">
+            <div class="col-md-4">
+                <div class="border">
+                    <div class="text">เงินลงทุนขาเข้าสุทธิ (Net)</div>
+                    <div class="number"><?php echo number_format($this->ForeignInvestment);?> <span class="unit">ล้านบาท</span></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="border">
+                    <div class="text">เงินลงทุนขาเข้า (Inflow)</div>
+                    <div class="number"><?php echo number_format($this->ForeignInvestmentInflow);?> <span class="unit">ล้านบาท</span></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="border">
+                    <div class="text">เงินลงทุนขาออก (Outflow)</div>
+                    <div class="number"><?php echo number_format($this->ForeignInvestmentOutflow);?> <span class="unit">ล้านบาท</span></div>
+                </div>
+            </div>            
+        </div>
+		
+		<div class="row mb-15">
+
+			<div class="col-md-12">
+				<div class="graph-box-subbox chart_2_1" >
+					<div class="graph-box-subbox-title">
+						สัดส่วนปริมาณเงินลงทุนของแต่ละทวีป (ล้านบาท)
+					</div>
+					<div class="graph-box-subbox-body">
+						<canvas id="Chart_2_1" ></canvas>	
+					</div>
+				</div>
+			</div>
+        </div>
+
+        <div class="row mb-15">
+			<div class="col-md-12">
+				<div class="graph-box-subbox chart_2_2">
+					<div class="graph-box-subbox-title">
+						เงินลงทุนขาเข้าสุทธิ รายสาขาธุรกิจ (ล้านบาท)
+					</div>
+					<div class="graph-box-subbox-body">
+						<canvas id="Chart_2_2" ></canvas>
+					</div>
+				</div>
+			</div>		
+		</div>		
+		
+		<div class="row mb-15">
+			<div class="col-md-5">
+				<div class="graph-box-subbox chart_2_3">
+					<div class="graph-box-subbox-title">
+						เงินลงทุนโดยตรง รายสัญชาติ (ล้านบาท)
+					</div>
+					<div class="graph-box-subbox-body" style="height:330px">
+						<canvas id="Chart_2_3"></canvas>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-7">
+				<div class="graph-box-subbox chart_2_4">
+					<div class="graph-box-subbox-title">
+						แนวโน้มการลงทุนจากต่างประเทศ รายปี (ล้านบาท)
+					</div>
+					<div class="graph-box-subbox-body" style="height:330px">
+						<canvas id="Chart_2_4"></canvas>
+					</div>
+				</div>
+			</div>		
+		</div>	
+		<div class="GUIDE_SITUATION TIC-footer">ที่มา : ธนาคารแห่งประเทศไทย</div>
+		<?php if (!empty($this->situationLatestYear)) : ?><div class="GUIDE_SITUATION TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->situationLatestYear + 543; ?></div><?php endif; ?>
+	</div>
+
+	<div id="previewImage_Situation" style="display: none;"></div>
+	<a id="downloadImage_Situation" href="#In_Out" style="display: none;"></a>
+	
+	<div class="graph-button-zone">
+		<a href="<?php echo $this->url(array("module"=>"graph", "controller" => "investment", "action" => "situation"), null, true);?>" target="_blank" style="background: linear-gradient(to top, #3388BE, #27A8E2); ">
+			ดูข้อมูลสถิติทั้งหมด
+		</a>
+	</div>
+	<div class="mb-15"></div>
+
+<script>
+    var Chart_2_1 = document.getElementById('Chart_2_1');
+    //Chart_2_1.height = 50;
+    var myChart_2_1  = new Chart(Chart_2_1, {
+        type: 'horizontalBar',
+        data: {
+            // labels: ["อเมริกาเหนือ", "แอฟริกา", "ออสเตเรีย", "ยุโรป", "เอเชีย"],
+            labels: [
+                <?php
+                if(count($this->ForeignInvestment01)>0){
+                    $index = 1;
+                    $loop = count($this->ForeignInvestment01);
+                    foreach($this->ForeignInvestment01 as $v){
+                        echo "'".$v['ContinentNameTH']."'";
+                        if($index != $loop){
+                            echo ",";
+                        }
+                        $index ++;
+                    }
+                }
+                ?>
+            ],
+            datasets: [{
+                // backgroundColor: ["#DC4F42","#697140","#D4EFFA","#333333", "#00a398"],
+                // data: [7335, 1300, 3327, 976, 87647],
+                backgroundColor: [
+                    <?php
+                    if(count($this->ForeignInvestment01)>0){
+                        $index = 1;
+                        $loop = count($this->ForeignInvestment01);
+                        foreach($this->ForeignInvestment01 as $v){
+                            echo 'getRandomColor()';
+                            if($index != $loop){
+                                echo ",";
+                            }
+                            $index ++;
+                        }
+                    }
+                    ?>
+                ],
+                data: [
+                    <?php
+                    if(count($this->ForeignInvestment01)>0){
+                        $index = 1;
+                        $loop = count($this->ForeignInvestment01);
+                        foreach($this->ForeignInvestment01 as $v){
+                            echo "'".$v['Amount']."'";
+                            if($index != $loop){
+                                echo ",";
+                            }
+                            $index ++;
+                        }
+                    }
+                    ?>
+                ],
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            responsive: true,
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function() {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = "14px ",
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function(dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            var data = dataset.data[index];
+                            var x = -10;
+                            if(data < 0) {
+                                x = 10;
+                            }
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x + x, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+        }
+    });
+
+    var Chart_2_2 = document.getElementById('Chart_2_2').getContext('2d');
+    //Chart_2_2.height = 50;
+    var myChart_2_2  = new Chart(Chart_2_2, {
+        type: 'horizontalBar',
+        data: {
+            // labels: [
+            //     "C รายการผลิต",
+            //     "K กิจกรรมทางการเงินและการประกันภัย",
+            //     "L กิจกรรมเกี่ยวกับอสังหาริมทรัพย์",
+            //     "B การทำเหมืองแร่และเหมืองหิน",
+            //     "G การขายส่งและการขายปลีก การซ่อมยานยนต์และจักร...",
+            //     "F การก่อสร้าง",
+            //     "H การขนส่งและสถานที่เก็บสินค้า",
+            //     "D ไฟฟ้า ก๊าซ ไอน้ำและระบบปรับอากาศ",
+            //     "A เกษตกรรม การป่าไม่และการประมง",
+            //     "I ทีพ่ักแรมและบริการด้านอาหาร",
+            //     "อื่น ๆ"
+            // ],
+            labels: [
+                <?php
+                if(count($this->ForeignInvestment02)>0){
+                    $index = 1;
+                    $loop = count($this->ForeignInvestment02);
+                    foreach($this->ForeignInvestment02 as $v){
+                        echo "'".$v['SectorNameTH']."'";
+                        if($index != $loop){
+                            echo ",";
+                        }
+                        $index ++;
+                    }
+                }
+                ?>
+            ],
+            datasets: [{
+                backgroundColor: '#00B8AC',
+                borderColor: '#00B8AC',
+                // data: ["43715","33197","10298","8373","3594","1126","1117","458","111","-141","-3907"],
+                data: [
+                    <?php
+                    if(count($this->ForeignInvestment02)>0){
+                        $index = 1;
+                        $loop = count($this->ForeignInvestment02);
+                        foreach($this->ForeignInvestment02 as $v){
+                            echo "'".$v['Amount']."'";
+                            if($index != $loop){
+                                echo ",";
+                            }
+                            $index ++;
+                        }
+                    }
+                    ?>
+                ],
+            }]
+        },
+        options: {
+			scales: {
+                yAxes: [{
+                    ticks: {
+                        fontSize: 14
+                    },
+                }],
+				xAxes: [{
+                    ticks: {
+                        fontSize: 14
+                    }
+                }],
+			},
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function() {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = "14px ",
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function(dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            var data = dataset.data[index];
+                            var x = -10;
+                            if(data < 0) {
+                                x = 10;
+                            }
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x + x, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            responsive: true
+        }
+    });
+
+    var Chart_2_3 = document.getElementById('Chart_2_3');
+    Chart_2_3.height = 200;
+    var myChart_2_3  = new Chart(Chart_2_3, {
+        type: 'horizontalBar',
+        data: {
+            // labels: [
+            //     "ญี่ปุ่น",
+            //     "สิงคโปร์",
+            //     "เนเธอร์แลนด์",
+            //     "สหรัฐอเมริกา",
+            //     "ฮ่องกง",
+            //     "สวิตเซอร์แลนด์",
+            //     "หมู่เกาะบริติชเวอร์จิน",
+            //     "ออสเตรเลีย",
+            //     "จีน",
+            //     "มอริเชียส"
+            // ],
+            labels: [
+                <?php
+                if(count($this->ForeignInvestment03)>0){
+                    $index = 1;
+                    $loop = count($this->ForeignInvestment03);
+                    foreach($this->ForeignInvestment03 as $v){
+                        echo "'".$v['CountryNameTH']."'";
+                        if($index != $loop){
+                            echo ",";
+                        }
+                        $index ++;
+                    }
+                }
+                ?>
+            ],
+            datasets: [{
+                backgroundColor: '#00B8AC',
+                borderColor: '#00B8AC',
+                // data: [54969, 25582, 6828, 5031, 4746, 4659, 3354, 3176, 1519, 1300],
+                data: [
+                    <?php
+                    if(count($this->ForeignInvestment03)>0){
+                        $index = 1;
+                        $loop = count($this->ForeignInvestment03);
+                        foreach($this->ForeignInvestment03 as $v){
+                            echo "'".$v['Amount']."'";
+                            if($index != $loop){
+                                echo ",";
+                            }
+                            $index ++;
+                        }
+                    }
+                    ?>
+                ],
+            }]
+        },
+        options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function() {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = "14px ",
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function(dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            var data = dataset.data[index];
+                            var x = -10;
+                            if(data < 0) {
+                                x = 10;
+                            }
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x + (ctx.measureText(data).width/2), bar._model.y + 7);
+                            // ctx.fillText(data, bar._model.x + data.length * 2 + 5, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black",
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        // display: false,
+                        fontSize: 14,
+                        beginAtZero:true
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        // display : false
+                    },
+                    ticks: {
+                        fontSize: 14,
+                        beginAtZero:true
+                    }
+                }]
+            },
+            responsive: true
+        }
+    });
+    var Chart_2_4 = document.getElementById('Chart_2_4');
+    Chart_2_4.height = 150;
+    var myChart_2_4  = new Chart(Chart_2_4, {
+        type: 'bar',
+        data: {
+            // labels: ["2548","2549","2550","2551","2552","2553","2554","2555","2556","2557","2558","2559"],
+            labels: [
+                <?php
+                if(count($this->ForeignInvestment04)>0){
+                    $index = 1;
+                    $loop = count($this->ForeignInvestment04);
+                    foreach($this->ForeignInvestment04 as $v){
+                        echo "'".$v['Y']."'";
+                        if($index != $loop){
+                            echo ",";
+                        }
+                        $index ++;
+                    }
+                }
+                ?>
+            ],
+            datasets: [{
+                backgroundColor: 'rgba(251, 176, 59, 1)',
+                borderColor: 'rgba(251, 176, 59, 1)',
+                // data: ["230349", "316204", "268626", "260611", "261149","201790","405903","787993","972454","514223","493309","487012"],
+                data: [
+                    <?php
+                    if(count($this->ForeignInvestment04)>0){
+                        $index = 1;
+                        $loop = count($this->ForeignInvestment04);
+                        foreach($this->ForeignInvestment04 as $v){
+                            echo "'".$v['Amount']."'";
+                            if($index != $loop){
+                                echo ",";
+                            }
+                            $index ++;
+                        }
+                    }
+                    ?>
+                ],
+            }]
+        },
+        options: {
+			scales: {
+                yAxes: [{
+                    ticks: {
+                        fontSize: 14
+                    },
+                }],
+				xAxes: [{
+                    ticks: {
+                        fontSize: 14
+                    }
+                }],
+			},
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function() {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = "12px ",
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.font = Chart.helpers.fontString(12, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function(dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            var data = dataset.data[index];
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x, bar._model.y);
+                        });
+                    });
+                }
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            responsive: true
+        }
+    });
+
+    function setCanvas_SituationExportZone(val) {
+        html2canvas(document.querySelector("#SituationExportZone")).then(function(canvas) {
+            $("#previewImage_Situation").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_Situation").attr("download", "สถานการณ์การลงทุนโดยตรงจากต่างประเทศ.png").attr("href", newData);
+                $("#downloadImage_Situation")[0].click();
+                $("#Situation_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_Situation canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("สถานการณ์การลงทุนโดยตรงจากต่างประเทศ.pdf");
+                $("#Situation_Export").val('export');
+            }
+        });
+    }
+    $("#Situation_Export").change(function() {
+        setCanvas_SituationExportZone($(this).val());
+    });
+
+    $("#Situation_Year").change(function() {
+        var situationYear = $('#Situation_Year').val();
+        var exchangeYear = $('#Exchange_Year').val();
+        window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'investment', 'action' => 'search'), null, true); ?>/situationYear/"+situationYear+"/exchangeYear/"+exchangeYear;
+    });
+
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+</script>

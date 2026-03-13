@@ -1,0 +1,32 @@
+<style>
+	.panel-complain-finish {
+		font-family: "Mitr Light";
+	}
+	.panel-complain-finish button#btnBack {
+		background: linear-gradient(to right, #0170b8, #2b5094);
+		color: white;
+	}
+</style>
+
+<div class="panel panel-default panel-complain-finish">
+	<div class="panel-body text-center">
+		<div class="form-group">
+			<p class="form-control-static">
+				<?php echo nl2br($this->responeMessage); ?>
+			</p>
+		</div>
+		<div class="form-group">
+			<button type="button" class="btn btn-primary" id="btnBack">
+				<em class="fa fa-save" style="display: none;"></em> <?php echo $this->responeButton; ?>
+			</button>
+		</div>
+	</div>
+</div>
+
+<script>
+jQuery(function() {
+	$('#btnBack').click(function() {
+		window.location = "<?php echo $this->url(array('module' => 'complain', 'controller' => 'index', 'action' => 'index'), null, true); ?>";
+	});
+});
+</script>

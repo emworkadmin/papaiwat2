@@ -1,0 +1,20 @@
+{
+	"name" : "หน่วยงาน",
+	"controller" : "department",
+	"description" : "แสดงรายละเอียดหน่วยงานได้เลือก",
+	"fields" : [
+		{
+			"name" : "department",
+			"type" : "select",
+			"size" : "",
+			"label" : "หน่วยงาน",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Information_Service_Department",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

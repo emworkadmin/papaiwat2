@@ -1,0 +1,7 @@
+<?php
+if($this->ResultDisplay=='pie'){
+	echo $this->partial("item/_pie.phtml", $this);
+}else{
+	echo $this->partial("item/_bar.phtml", $this);
+}
+?>

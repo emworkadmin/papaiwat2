@@ -1,0 +1,281 @@
+<style>
+
+@media screen and (max-width: 768px) {
+	.fa-caret-right:before {
+    content: "\f0da";
+    color: #f3f331;
+    margin: 0 5px 0 0px !important;
+}
+
+.logindate {
+    text-align: left !important;
+    clear: left;
+}
+
+}
+
+@media screen and (max-width: 425px) {
+	.logindate{
+	font-size: 20px;
+	}
+}
+
+@media screen and (max-width: 524px) {
+
+	label.control-label {
+		clear: left;
+	}
+
+	.divControl {
+		width: 100% !important;
+	}
+
+	.btnsub {
+    clear: left;
+	}
+
+}
+
+@media screen and (max-width: 375px) {
+	.logindate{
+	font-size: 15px;
+	}
+
+	.userlogin {
+	float: none;
+    background-color: #ccc;
+    padding: 10px 10px 10px 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    padding-bottom: 0px !important;
+	}
+
+	.btn {
+	font-size: 11px;
+    float: none !important;
+}
+
+}
+
+
+.fa-comment:before {
+    content: "\f075";
+    color: #9e9e15;
+	padding-right: 5px;
+}
+
+.fa-eye:before {
+    content: "\f06e";
+	padding-right: 5px;
+	color: #3c8dbc;
+	margin-left: 10px;
+}
+
+.image-inner {
+    background-color: #3c8dbc;
+	padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.login {
+    background-color: #ccc;
+	border-radius: 10px;
+	font-weight: bold;
+	padding: 10px 10px 10px 10px;
+}
+
+.userlogin {
+    background-color: #ccc;
+    padding: 10px 10px 10px 10px;
+	border-radius: 10px;
+	font-weight: bold;
+	padding-bottom: 60px;
+}
+
+
+.inforow .detail .detail-title {
+    text-overflow: ellipsis !important;
+    padding-bottom: 15px !important;
+    min-height: 40px !important;
+    overflow: hidden !important;
+}
+
+.inforowData {
+    border-bottom: 1px solid #999;
+    padding-bottom: 10px;
+	font-weight: bold;
+}
+
+.detail-detail.line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.fa-caret-right:before {
+    content: "\f0da";
+    color: #f3f331;
+    margin: 0 5px 0 10px;
+}
+
+a.forget-link {
+    color: black;
+}
+
+
+</style>
+
+
+<?php if ($this->fullname) { ?>
+<div class="userlogin webboard">
+	<div class="name" style="float:  left;">
+	<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_welcome'); ?>, <?php echo $this->fullname ?>
+	</div>
+
+	<div class="logindate" style="text-align: right;">
+	<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_last_login'); ?> : <?php echo $this->date == null ? (Emwork_Translate::text($this->lang, 'webboard', 'home_home_first_login')) : $this->date ?>
+	</div>
+
+	<!-- <em class="fa fa-plus"></em> -->
+
+	<div class="control-label" style="clear: left;margin-top: 10px; float:  left;">
+	<em class="fa fa-caret-right"></em><a class="forget-link" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'profile', 'action' => 'profile'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_my_profile'); ?></a>
+	<em class="fa fa-caret-right"></em><a class="forget-link" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'profile', 'action' => 'createpost'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_created_post_2'); ?></a>
+	<em class="fa fa-caret-right"></em><a class="forget-link" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'profile', 'action' => 'mypost'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_my_post'); ?></a>
+	</div>
+	<div class="btn" style="float:  right;">
+		<a class="btn btn-primary" title="btn" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'home', 'action' => 'logout'), null, false); ?>">
+		<span class="exit"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_logout'); ?></span></a>
+	</div>
+</div>
+
+<?php }else{ ?>
+	<div class='login webboard'>
+
+		<label class="control-label" for="NameTH"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_welcome'); ?>, <?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_normal_person'); ?></label>
+
+		<form action="<?php echo $this->url(array('module' => 'webboard', 'action' => 'login', 'controller' => 'home'), null, true); ?>" method="post">
+		
+		<?php if (!empty($this->errorMessage)) : ?>
+			<div class="alert alert-danger">
+				<?php echo $this->errorMessage; ?>
+			</div>
+		<?php endif; ?>
+
+
+			<div class="form-group">
+			<label class=" control-label" style= "float: left;padding-right: 10px;" for="NameTH"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_username'); ?> : </label>
+			
+			<div class="username">
+				<div class="divControl" style="width: calc(100% - 85%); float: left;">
+					<?php echo $this->formText('username', $this->ck_user, array('class' => 'form-control', 'placeholder' => Emwork_Translate::text($this->lang, 'webboard', 'home_home_username'), 'autocomplete' => 'off')); ?>			
+				</div>
+			</div>
+			
+			<label class="control-label" style= "float: left;padding-right: 10px;float: left;margin-left: 15px;" for="NameTH"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_password'); ?> : </label>
+			<div class="password">
+				<div class="divControl" style="width: calc(100% - 85%); float: left;">
+					<input type="password" name="password" id="password" value="<?php echo $this->ck_pass; ?>" class="form-control" placeholder="<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_password'); ?>" autocomplete="off">	
+				</div>
+			</div>
+
+			<div class="form-group">
+				<span class="control-label" style= "float: left;margin-left: 10px;padding-right: 10px;">
+				<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_remember'); ?> <input type="checkbox" name="keep_login"  id="keep_login" value="Y" class=""<?php if(isset($_COOKIE['ck_user'])&&($_COOKIE['ck_user']!='')){ echo "Checked='checked'"; }?> /> 
+				</span>	
+			</div>
+			
+			<div class='btnsub'>
+				<button type="submit" class="btn btn-primary " id="btnSave"> <?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_login'); ?></button>
+			</div>
+
+			<div class="control-label" style="clear: left;margin-top: 10px;">
+				<a class="forget-link" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'forgetpassword', 'action' => 'index'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_forget'); ?></a>
+				<a class="forget-link" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'register', 'action' => 'index'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_created_user'); ?></a>
+			</div>
+		</div>
+		</form>
+		
+	</div>
+<?php } ?>
+
+<div class="title-label webboard"style="clear:  left;font-size: 30px;padding-top: 30px;">
+<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_my_post'); ?>
+<?php echo $this->title ?> </div>
+
+<div class="result-list1-panel webboard">
+<div class="result-list1 webboard" id="result-list1" style="border: 1px solid;margin: 0px 0px 20px 0px;padding: 10px 10px 10px 10px;"></div>
+<div class="result-paging1" style="display: none;">
+  <p class="paging1 text-right"></p>
+</div>
+
+
+<script>
+jQuery(function(){
+
+	reloadResultList1(1);
+
+	function reloadResultList1(pageIndex) {
+
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		
+			$.post("<?php echo $this->url(array('module' => 'webboard', 'controller' => 'profile', 'action' => 'listpost','userid'=>$this->userid), null, true); ?>", sendData, function(data){
+		
+			if (data.total > 0) {
+				$("#result-list1").html(data.html);
+				$('.result-paging1').css('display', '');
+				$('.paging1').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+					leaps: false,
+					firstLastUse: true,
+					first: '<<',
+					last: '>>',
+					next: '>',
+					prev: '<',
+					wrapClass: 'pagination',
+					activeClass: 'active',
+					disabledClass: 'disabled',
+					nextClass: 'next',
+					prevClass: 'prev',
+					lastClass: 'last',
+					firstClass: 'first'
+				});
+
+			} else {
+				$('#result-paging1').css('display', 'none');
+				$('.result-list1').html("");
+				$('.paging1').bootpag({total : 0});
+
+			}
+		}, 'json');
+	}
+
+				$('.paging1').bootpag({
+					
+					total: 0,
+					maxVisible: 5,
+					leaps: false,
+					firstLastUse: true,
+					first: '<<',
+					last: '>>',
+					next: '>',
+					prev: '<',
+					wrapClass: 'pagination',
+					activeClass: 'active',
+					disabledClass: 'disabled',
+					nextClass: 'next',
+					prevClass: 'prev',
+					lastClass: 'last',
+					firstClass: 'first'
+				}).on("page", function(event, num){
+					
+					reloadResultList1(num);
+
+				}); 
+
+});
+</script>

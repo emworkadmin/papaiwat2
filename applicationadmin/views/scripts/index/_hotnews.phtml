@@ -1,0 +1,94 @@
+<style>
+    #dashboard_hotnews caption.dropdown {
+        width: 100%;
+        padding: 4px 6px 4px 4px;
+    }
+    #dashboard_hotnews caption.dropdown select {
+        width: 100%;
+    }
+    #dashboard_hotnews .title {
+        color: #ffffff;
+        font-size: 18px;
+        padding: 10px 10px;
+        border-bottom: none;
+        font-weight: bold;
+        background: #3a8adc;        
+    }
+    #dashboard_hotnews td:first-child
+    {
+        width: 10%;
+        text-align: center;
+    }
+    #dashboard_hotnews td:last-child
+    {
+        width: 10%;
+        text-align: center;
+    }
+    #dashboard_hotnews th
+    {
+        white-space: nowrap;
+    }
+</style>
+
+<div id="dashboard_hotnews">
+    <div class="table">
+        <table id="tblData_hotnews" class="table table-bordered table-hover">
+            <caption>รายการข่าว/บทความที่มีผู้เข้าอ่านมากที่สุด
+            <a class="viewall" href="<?php echo $this->url(array("module" => "content", "controller" => "article", "action" => "index")); ?>"><em class="fa fa-arrow-circle-o-right"></em></a>
+            </caption>
+            <caption class="dropdown"><?php echo $this->formSelect('select_category_hotnews', null, array("class" => "form-control"), Emwork_Utility::addEmptyOption($this->newscategory)); ?></caption>
+            <thead>
+                <tr>
+                    <th>ลำดับ</th>
+                    <th>รายการข่าว</th>
+                    <th>จำนวนผู้เข้าชม</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    jQuery(function() {
+
+
+    	function renderColumnLink ( data, type, row, meta ) {
+    		return '<a href="<?php echo $this->url(array('module' => 'content', 'controller' => 'article', 'action' => 'edit'), null, true);?>/itemid/' + row.ID + '" target="_blank">' + data + '</a>';
+    	}
+
+    	var tblData_hotnews = $('#tblData_hotnews').DataTable({
+            processing: true,
+            paging: false,
+            searching: false,
+            info: false,
+            ordering: true,
+            order: [[ 0, "asc" ]],
+            scrollCollapse: true,
+			scrollX: true,
+            responsive: true,
+            ajax: {
+                url: '<?php echo $this->url(array("action" => "gethotnews"), null, true); ?>',
+                type: 'POST',
+                data: function(d) {
+                    d.CategoryArticleID = $("#select_category_hotnews").val();
+                }
+            },
+            language : {
+                url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+            },
+            "dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+            "columns": [
+                { "width": "40px", 'orderable': true, 'data' : 'NO', "class" : "text-center"},
+                { 'data' : 'Title' , "render" : renderColumnLink, "class" : "ratio"},
+                { 'data' : 'Amount' , "render" : renderColumnLink, "class" : "ratio"},
+            ]
+        });
+
+        $("#select_category_hotnews").change(function() {
+            tblData_hotnews.ajax.reload();
+        });
+
+    });
+</script>
+

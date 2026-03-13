@@ -1,0 +1,111 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+	
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formAdd" name="formAdd">
+		<?php echo $this->formHidden('hdfID', $this->data->ID, null, null); ?>
+
+		<div class="title-label">ข้อมูลทั่วไป</div>	
+		
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtName">ชื่อกลุ่มผู้ใช้งาน</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtName', $this->data->Name, array('class' => 'form-control required', 'placeholder' => '', 'maxlangth' => '250')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtNameAbbr">ชื่อย่อ</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('txtNameAbbr', $this->data->NameAbbr, array('class' => 'form-control required', 'placeholder' => '', 'maxlangth' => '100')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtDescription">รายละเอียด</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formTextarea('txtDescription', $this->data->Description, array('class' => 'form-control', 'placeholder' => '', 'rows' => '5', 'cols' => '50', 'maxlangth' => '500')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" >สถานะ</label>
+			<div class="col-md-9 divControl">
+				<div class="form-inline radio with-icheck">
+					<?php echo $this->formRadio('isStatus', $this->data->IsEnable, array('class' => 'required', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>						
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> ปรับปรุงข้อมูล</button>
+				<?php endif; ?>
+				<?php if($this->canDelete){
+						echo '<button type="button" class="btn btn-danger" id="btnDelete"><em class="fa fa-trash"></em> ลบข้อมูล</button>';
+					}?>	
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+
+	$("#formAdd").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formAdd input[type=checkbox], #formAdd input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	<?php if ($this->canEdit) : ?>
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formAdd").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'system', 'controller' => 'usergroup', 'action' => 'update'), null, true);?>", $("#formAdd").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'usergroup', 'action' => 'edit', 'itemid' => $this->data->ID), null, true); ?>";
+					}, 1000);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif; ?>
+
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'usergroup', 'action' => 'index'), null, true); ?>";
+	});
+	
+	<?php if($this->canDelete){ ?>
+	$("#btnDelete").click(function(){
+		DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+			$.post("<?php echo $this->url(array("module" => 'system', "controller" => 'usergroup', 'action' => 'delete'), null, true); ?>", {'id' : '<?php echo $this->data->ID; ?>'}, function(data){
+				if (data.result) {
+					DialogComplete('ลบสำเร็จ');
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'usergroup', 'action' => 'index'), null, true); ?>";
+					}, 1000);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		});
+	});
+	<?php }?>
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'SYS-USG-03'); ?>

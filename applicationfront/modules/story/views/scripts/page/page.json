@@ -1,0 +1,20 @@
+{
+	"name" : "บทความเรื่องราว",
+	"controller" : "page",
+	"description" : "แสดงเรื่องราวที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "page",
+			"type" : "select",
+			"size" : "",
+			"label" : "บทความ",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Story_Service_Article",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

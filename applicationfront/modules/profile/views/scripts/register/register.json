@@ -1,0 +1,7 @@
+{
+	"name" : "แบบฟอร์มสมัครรับจดหมายข่าว",
+	"controller" : "register",
+	"description" : "",
+	"fields" : [
+	]
+}

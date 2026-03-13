@@ -1,0 +1,68 @@
+<style type="text/css">
+.g-recaptcha.error iframe {
+  border: solid 2px #dd4b39;
+  border-radius: 5px;
+  width: 100%;
+}
+</style>
+
+<div class="emsa-title">
+	กรุณายืนยันตัวตนของคุณก่อนเข้าใช้งาน
+</div>
+<div class="text-center emsa-mb15">
+	<span class="emsa-label-blue">ผู้ใช้งาน: <?php echo $this->emsaSenderName; ?></span>
+	<br />
+	<span class="emsa-label-blue">กลุ่มผู้ใช้งาน: <?php echo $this->emsaSenderUserGroup; ?></span>
+</div>
+<div class="text-center">	
+	<div id="recaptcha" class="g-recaptcha text-center emsa-recaptcha" data-sitekey="6LdUhVkUAAAAALDJ8jpjHx4aFF2-69H0PItRqRdN"></div>
+</div>
+
+<div class="alert alert-danger" id="warningMessage" style="display: none; margin-bottom: 0px; margin-top: 15px;"></div>
+
+<!-- recaptcha  -->
+<script src='https://www.google.com/recaptcha/api.js?hl=th'></script>
+
+<script type="text/javascript">
+jQuery(function(){
+	if (emsaDialog != null) {
+		emsaDialog.setTitle("<?php echo $this->title; ?>");
+		emsaDialog.setButtons(
+				[{
+                    label: 'ยืนยันตัวตน',
+					action: function(dialog) {
+						var isVerify = ChatOnlineVerify();
+						if(isVerify){
+							emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'chatonline', 'action' => 'finish'), null, true); ?>"));
+						}else{
+							$('#warningMessage').html('กรุณายืนยันตัวตนของคุณ !');
+							$('#warningMessage').show();
+							return;
+						}
+					}
+                },{
+                    label: 'ยกเลิก',
+					action: function(dialog) {
+						dialog.close();
+					}
+                }]
+		);
+
+		function ChatOnlineVerify() {
+			  var isVerify = false;
+			  var $captcha = $( '#recaptcha' ),
+			      response = grecaptcha.getResponse();
+			  if (response.length === 0) {
+			    if( !$captcha.hasClass( "error" ) ){
+			      $captcha.addClass( "error" );
+			    }
+			    isVerify = false;
+			  } else {
+			    $captcha.removeClass( "error" );
+			    isVerify = true;
+			  }
+			  return isVerify;
+		};
+	}
+}); 
+</script>

@@ -1,0 +1,591 @@
+<script src="<?php echo $this->baseUrl("/assets/jquery-sortable-lists/jquery-sortable-lists-mobile.min.js"); ?>"></script>
+<style>
+.table>caption+thead>tr:first-child>th {
+    padding: 7px 0px;
+}
+#divCategoryList {
+    margin: 0;
+}
+#divCategoryList ul#categoryList {
+    margin-bottom: 0;
+    margin-left: -35px;
+}
+#divCategoryList ul#categoryList li:last-child {
+    margin-bottom: 0;
+}
+#divCategoryList ul {
+	padding: 0px;
+}
+#divCategoryList li {
+    display: block;
+    position: relative;
+    margin-bottom: 5px;
+    border-top: solid 1px #ccc;
+    margin-left: 20px;
+}
+#divCategoryList .sort-title {
+	padding: 10px 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: calc(100% - 300px);
+}
+#divCategoryList .sort-title em {
+    margin-right: 5px;
+}
+#divCategoryList .sort-clickable {
+    position: relative;
+    top: 2px;
+    margin: 5px;
+}
+#divCategoryList .detail-1 {
+    text-align: center;
+    position: absolute; 
+    right: 200px; 
+    top: 15px;
+    width: 100px;
+}
+#divCategoryList .detail-2 {
+    text-align: center;
+    position: absolute; 
+    right: 100px; 
+    top: 15px;
+    width: 100px;
+}
+#divCategoryList .detail-3 {
+    text-align: center;
+    position: absolute; 
+    right: 0px; 
+    top: 15px;
+    width: 100px;
+}
+#divCategoryList .status-Y { 
+    font-weight: bold;
+    color: #00a65a; 
+}
+#divCategoryList .status-N { 
+    font-weight: bold;
+    color: #dd4b39;  
+}
+#divCategoryList .lnkEdit {
+    color: #3c8dbc;
+    cursor: pointer;
+}
+</style> 
+
+<style type="text/css">
+.input-group-btn { padding-right: 5px; }
+group-btn:last-child>.btn { border: none; border-radius: 3px; }
+</style> 
+
+<div>
+	<div class="searchPanel form-horizontal" id="formSearch">
+		<div class="form-group">
+			<div class="col-md-12">
+				<div class="input-group">
+					<p class="form-control-static">&nbsp;</p>
+					<?php if($this->canAdd) : ?>
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-primary" id="btnGoAdd" title="เพิ่ม">
+							<em class="fa fa-plus"> </em> เพิ่ม
+						</button>
+					</span>
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-default" id="btnCopy" title="คัดลอก">
+							<em class="fa fa-files-o"> </em>
+						</button>
+					</span>
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-success" id="btnPublish" title="เผยแพร่">
+							<em class="fa fa-eye"> </em>
+						</button>
+					</span>
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-warning" id="btnUnpublish" title="ไม่เผยแพร่">
+							<em class="fa fa-eye-slash"> </em>
+						</button>
+					</span>
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-danger" id="btnDelete" title="ลบ">
+							<em class="fa fa-trash"> </em>
+						</button>
+					</span>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<table id="tblData" class="table table-bordered table-hover dataTable no-footer" role="grid" aria-describedby="tblData_info" style="width: 100%;">
+	<caption>รายการหมวดหมู่</caption>
+	<thead>
+		<tr role="row">
+            <th style="width: 30px;" class="text-center">
+                <input type="checkbox" name="chkAll" id="chkAll">
+            </th>
+            <th class="text-center" style="">ชื่อหมวดหมู่</th>
+            <th class="text-center" style="width: 100px;">จัดเรียง</th>
+            <th class="text-center" style="width: 100px;">จำนวนข้อมูล</th>
+            <th class="text-center" style="width: 100px;">สถานะ</th>
+        </tr>
+	</thead>
+</table>
+
+<div class="col-md-12" id="divCategoryList">
+<?php
+if(count($this->recursiveList)>0){
+	echo '<ul class="row" id="categoryList">';
+	foreach($this->recursiveList as $k1=>$v1){
+		if(count($v1['Child'])>0){
+            echo '<li class="sortableListsClose" data-id="'.$v1['ID'].'" data-level="1">';
+            echo '  <div class="sort-title">';
+            echo '      <span class="sortableListsOpener"> </span>';
+            echo '      <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v1['ID'].'"> ';
+            echo '      <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v1['Title'].'<span>';
+            echo '  </div>';
+            echo '  <span class="detail-1">'.$v1['Ordering'].'</span>';
+            echo '  <span class="detail-2">'.$v1['ItemAmount'].'</span>';
+            echo '  <span class="detail-3 status-'.$v1['IsEnable'].'">'.$this->publishOption[$v1['IsEnable']].'</span>';
+			echo '  <ul class="">';
+			foreach($v1['Child'] as $k2=>$v2){
+
+				if(count($v2['Child'])>0){
+					echo '<li class="sortableListsClose" data-id="'.$v2['ID'].'" data-level="2">';
+                    echo '  <div class="sort-title">';
+                    echo '      <span class="sortableListsOpener"> </span>';
+                    echo '      <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v2['ID'].'"> ';
+                    echo '      <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v2['Title'].'<span>';
+                    echo '  </div>';
+                    echo '  <span class="detail-1">'.$v2['Ordering'].'</span>';
+                    echo '  <span class="detail-2">'.$v2['ItemAmount'].'</span>';
+                    echo '  <span class="detail-3 status-'.$v2['IsEnable'].'">'.$this->publishOption[$v2['IsEnable']].'</span>';
+                    echo '  <ul class="">';
+					foreach($v2['Child'] as $k3=>$v3){
+
+						if(count($v3['Child'])>0){
+							echo '<li class="sortableListsClose" data-id="'.$v3['ID'].'" data-level="3">';
+                            echo '  <div class="sort-title">';
+                            echo '      <span class="sortableListsOpener"> </span>';
+                            echo '      <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v3['ID'].'"> ';
+                            echo '      <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v3['Title'].'<span>';
+                            echo '  </div>';
+                            echo '  <span class="detail-1">'.$v3['Ordering'].'</span>';
+                            echo '  <span class="detail-2">'.$v3['ItemAmount'].'</span>';
+                            echo '  <span class="detail-3 status-'.$v3['IsEnable'].'">'.$this->publishOption[$v3['IsEnable']].'</span>';
+                            echo '  <ul class="">';
+							foreach($v3['Child'] as $k4=>$v4){
+
+								if(count($v4['Child'])>0){
+									echo '<li class="sortableListsClose" data-id="'.$v4['ID'].'" data-level="4">';
+                                    echo '  <div class="sort-title">';
+                                    echo '      <span class="sortableListsOpener"> </span>';
+                                    echo '      <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v4['ID'].'"> ';
+                                    echo '      <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v4['Title'].'<span>';
+                                    echo '  </div>';
+                                    echo '  <span class="detail-1">'.$v4['Ordering'].'</span>';
+                                    echo '  <span class="detail-2">'.$v4['ItemAmount'].'</span>';
+                                    echo '  <span class="detail-3 status-'.$v4['IsEnable'].'">'.$this->publishOption[$v4['IsEnable']].'</span>';
+                                    echo '  <ul class="">';
+									foreach($v4['Child'] as $k5=>$v5){
+
+										if(count($v5['Child'])>0){
+											echo '<li class="sortableListsClose" data-id="'.$v5['ID'].'" data-level="5">';
+                                            echo '  <div class="sort-title">';
+                                            echo '      <span class="sortableListsOpener"> </span>';
+                                            echo '      <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v5['ID'].'"> ';
+                                            echo '      <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v5['Title'].'<span>';
+                                            echo '  </div>';
+                                            echo '  <span class="detail-1">'.$v5['Ordering'].'</span>';
+                                            echo '  <span class="detail-2">'.$v5['ItemAmount'].'</span>';
+                                            echo '  <span class="detail-3 status-'.$v5['IsEnable'].'">'.$this->publishOption[$v5['IsEnable']].'</span>';
+                                            echo '  <ul class="">';
+											foreach($v5['Child'] as $k6=>$v6){
+
+                                                if(count($v6['Child'])>0){
+                                                    echo '<li class="sortableListsClose" data-id="'.$v6['ID'].'" data-level="6">';
+                                                    echo '  <div class="sort-title">';
+                                                    echo '      <span class="sortableListsOpener"> </span>';
+                                                    echo '      <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v6['ID'].'"> ';
+                                                    echo '      <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v6['Title'].'<span>';
+                                                    echo '  </div>';
+                                                    echo '  <span class="detail-1">'.$v6['Ordering'].'</span>';
+                                                    echo '  <span class="detail-2">'.$v6['ItemAmount'].'</span>';
+                                                    echo '  <span class="detail-3 status-'.$v6['IsEnable'].'">'.$this->publishOption[$v6['IsEnable']].'</span>';
+                                                    echo '  <ul class="">';
+                                                    foreach($v6['Child'] as $k7=>$v7){
+
+                                                        if(count($v7['Child'])>0){
+                                                            echo '<li class="sortableListsClose" data-id="'.$v7['ID'].'" data-level="7">';
+                                                            echo '  <div class="sort-title">';
+                                                            echo '      <span class="sortableListsOpener"> </span>';
+                                                            echo '      <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v7['ID'].'"> ';
+                                                            echo '      <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v7['Title'].'<span>';
+                                                            echo '  </div>';
+                                                            echo '  <span class="detail-1">'.$v7['Ordering'].'</span>';
+                                                            echo '  <span class="detail-2">'.$v7['ItemAmount'].'</span>';
+                                                            echo '  <span class="detail-3 status-'.$v7['IsEnable'].'">'.$this->publishOption[$v7['IsEnable']].'</span>';
+                                                            echo '  <ul class="">';
+                                                            foreach($v7['Child'] as $k8=>$v8){
+
+                                                                if(count($v8['Child'])>0){
+                                                                    echo '<li class="sortableListsClose" data-id="'.$v8['ID'].'" data-level="8">';
+                                                                    echo '  <div class="sort-title">';
+                                                                    echo '      <span class="sortableListsOpener"> </span>';
+                                                                    echo '      <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v8['ID'].'"> ';
+                                                                    echo '      <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v8['Title'].'<span>';
+                                                                    echo '  </div>';
+                                                                    echo '  <span class="detail-1">'.$v8['Ordering'].'</span>';
+                                                                    echo '  <span class="detail-2">'.$v8['ItemAmount'].'</span>';
+                                                                    echo '  <span class="detail-3 status-'.$v8['IsEnable'].'">'.$this->publishOption[$v8['IsEnable']].'</span>';
+                                                                    echo '  <ul class="">';
+                                                                    foreach($v8['Child'] as $k9=>$v9){
+
+                                                                        if(count($v9['Child'])>0){
+                                                                            echo '<li class="sortableListsClose" data-id="'.$v9['ID'].'" data-level="9">';
+                                                                            echo '  <div class="sort-title">';
+                                                                            echo '      <span class="sortableListsOpener"> </span>';
+                                                                            echo '      <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v9['ID'].'"> ';
+                                                                            echo '      <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v9['Title'].'<span>';
+                                                                            echo '  </div>';
+                                                                            echo '  <span class="detail-1">'.$v9['Ordering'].'</span>';
+                                                                            echo '  <span class="detail-2">'.$v9['ItemAmount'].'</span>';
+                                                                            echo '  <span class="detail-3 status-'.$v9['IsEnable'].'">'.$this->publishOption[$v9['IsEnable']].'</span>';
+                                                                            echo '  <ul class="">';
+                                                                            foreach($v9['Child'] as $k10=>$v10){
+
+                                                                                if(count($v10['Child'])>0){
+                                                                                    echo '<li class="sortableListsClose" data-id="'.$v10['ID'].'" data-level="10">';
+                                                                                    echo '  <div class="sort-title">';
+                                                                                    echo '      <span class="sortableListsOpener"> </span>';
+                                                                                    echo '      <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v10['ID'].'"> ';
+                                                                                    echo '      <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v10['Title'].'<span>';
+                                                                                    echo '  </div>';
+                                                                                    echo '  <span class="detail-1">'.$v10['Ordering'].'</span>';
+                                                                                    echo '  <span class="detail-2">'.$v10['ItemAmount'].'</span>';
+                                                                                    echo '  <span class="detail-3 status-'.$v10['IsEnable'].'">'.$this->publishOption[$v10['IsEnable']].'</span>';
+                                                                                    echo '  <ul class="">';
+                                                                                    foreach($v10['Child'] as $k11=>$v11){
+                                
+                                                                                        // End #Support 10 level
+
+                                                                                    }
+                                                                                    echo '</ul>';
+                                                                                    echo '</li>';
+                                                                                }else{
+                                                                                    echo '<li class="" data-id="'.$v10['ID'].'" data-level="10">';
+                                                                                    echo '  <div class="sort-title">';
+                                                                                    echo '  <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v10['ID'].'"> ';
+                                                                                    echo '  <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v10['Title'].'<span>';
+                                                                                    echo '  </div>';
+                                                                                    echo '  <span class="detail-1">'.$v10['Ordering'].'</span>';
+                                                                                    echo '  <span class="detail-2">'.$v10['ItemAmount'].'</span>';
+                                                                                    echo '  <span class="detail-3 status-'.$v10['IsEnable'].'">'.$this->publishOption[$v10['IsEnable']].'</span>';
+                                                                                    echo '</li>';
+                                                                                } // End Level 10
+                                                                
+                                                                            }
+                                                                            echo '</ul>';
+                                                                            echo '</li>';
+                                                                        }else{
+                                                                            echo '<li class="" data-id="'.$v9['ID'].'" data-level="9">';
+                                                                            echo '  <div class="sort-title">';
+                                                                            echo '  <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v9['ID'].'"> ';
+                                                                            echo '  <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v9['Title'].'<span>';
+                                                                            echo '  </div>';
+                                                                            echo '  <span class="detail-1">'.$v9['Ordering'].'</span>';
+                                                                            echo '  <span class="detail-2">'.$v9['ItemAmount'].'</span>';
+                                                                            echo '  <span class="detail-3 status-'.$v9['IsEnable'].'">'.$this->publishOption[$v9['IsEnable']].'</span>';
+                                                                            echo '</li>';
+                                                                        } // End Level 9
+                
+                                                                    }
+                                                                    echo '</ul>';
+                                                                    echo '</li>';
+                                                                }else{
+                                                                    echo '<li class="" data-id="'.$v8['ID'].'" data-level="8">';
+                                                                    echo '  <div class="sort-title">';
+                                                                    echo '  <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v8['ID'].'"> ';
+                                                                    echo '  <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v8['Title'].'<span>';
+                                                                    echo '  </div>';
+                                                                    echo '  <span class="detail-1">'.$v8['Ordering'].'</span>';
+                                                                    echo '  <span class="detail-2">'.$v8['ItemAmount'].'</span>';
+                                                                    echo '  <span class="detail-3 status-'.$v8['IsEnable'].'">'.$this->publishOption[$v8['IsEnable']].'</span>';
+                                                                    echo '</li>';
+                                                                } // End Level 8
+        
+                                                            }
+                                                            echo '</ul>';
+                                                            echo '</li>';
+                                                        }else{
+                                                            echo '<li class="" data-id="'.$v7['ID'].'" data-level="7">';
+                                                            echo '  <div class="sort-title">';
+                                                            echo '  <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v7['ID'].'"> ';
+                                                            echo '  <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v7['Title'].'<span>';
+                                                            echo '  </div>';
+                                                            echo '  <span class="detail-1">'.$v7['Ordering'].'</span>';
+                                                            echo '  <span class="detail-2">'.$v7['ItemAmount'].'</span>';
+                                                            echo '  <span class="detail-3 status-'.$v7['IsEnable'].'">'.$this->publishOption[$v7['IsEnable']].'</span>';
+                                                            echo '</li>';
+                                                        } // End Level 7
+                                        
+                                                    }
+                                                    echo '</ul>';
+                                                    echo '</li>';
+                                                }else{
+                                                    echo '<li class="" data-id="'.$v6['ID'].'" data-level="6">';
+                                                    echo '  <div class="sort-title">';
+                                                    echo '  <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v6['ID'].'"> ';
+                                                    echo '  <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v6['Title'].'<span>';
+                                                    echo '  </div>';
+                                                    echo '  <span class="detail-1">'.$v6['Ordering'].'</span>';
+                                                    echo '  <span class="detail-2">'.$v6['ItemAmount'].'</span>';
+                                                    echo '  <span class="detail-3 status-'.$v6['IsEnable'].'">'.$this->publishOption[$v6['IsEnable']].'</span>';
+                                                    echo '</li>';
+                                                } // End Level 6
+								
+											}
+											echo '</ul>';
+											echo '</li>';
+										}else{
+                                            echo '<li class="" data-id="'.$v5['ID'].'" data-level="5">';
+                                            echo '  <div class="sort-title">';
+                                            echo '  <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v5['ID'].'"> ';
+                                            echo '  <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v5['Title'].'<span>';
+                                            echo '  </div>';
+                                            echo '  <span class="detail-1">'.$v5['Ordering'].'</span>';
+                                            echo '  <span class="detail-2">'.$v5['ItemAmount'].'</span>';
+                                            echo '  <span class="detail-3 status-'.$v5['IsEnable'].'">'.$this->publishOption[$v5['IsEnable']].'</span>';
+                                            echo '</li>';
+										} // End Level 5
+						
+									}
+									echo '</ul>';
+									echo '</li>';
+								}else{
+                                    echo '<li class="" data-id="'.$v4['ID'].'" data-level="4">';
+                                    echo '  <div class="sort-title">';
+                                    echo '  <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v4['ID'].'"> ';
+                                    echo '  <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v4['Title'].'<span>';
+                                    echo '  </div>';
+                                    echo '  <span class="detail-1">'.$v4['Ordering'].'</span>';
+                                    echo '  <span class="detail-2">'.$v4['ItemAmount'].'</span>';
+                                    echo '  <span class="detail-3 status-'.$v4['IsEnable'].'">'.$this->publishOption[$v4['IsEnable']].'</span>';
+                                    echo '</li>';
+								} // End Level 4
+				
+							}
+							echo '</ul>';
+							echo '</li>';
+						}else{
+                            echo '<li class="" data-id="'.$v3['ID'].'" data-level="3">';
+                            echo '  <div class="sort-title">';
+                            echo '  <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v3['ID'].'"> ';
+                            echo '  <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v3['Title'].'<span>';
+                            echo '  </div>';
+                            echo '  <span class="detail-1">'.$v3['Ordering'].'</span>';
+                            echo '  <span class="detail-2">'.$v3['ItemAmount'].'</span>';
+                            echo '  <span class="detail-3 status-'.$v3['IsEnable'].'">'.$this->publishOption[$v3['IsEnable']].'</span>';
+                            echo '</li>';
+						} // End Level 3
+		
+					}
+					echo '</ul>';
+					echo '</li>';
+				}else{
+                    echo '<li class="" data-id="'.$v2['ID'].'" data-level="2">';
+                    echo '  <div class="sort-title">';
+                    echo '  <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v2['ID'].'"> ';
+                    echo '  <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v2['Title'].'<span>';
+                    echo '  </div>';
+                    echo '  <span class="detail-1">'.$v2['Ordering'].'</span>';
+                    echo '  <span class="detail-2">'.$v2['ItemAmount'].'</span>';
+                    echo '  <span class="detail-3 status-'.$v2['IsEnable'].'">'.$this->publishOption[$v2['IsEnable']].'</span>';
+                    echo '</li>';
+				} // End Level 2
+
+			}
+			echo '</ul>';
+			echo '</li>';
+		}else{
+            echo '<li class="" data-id="'.$v1['ID'].'" data-level="1">';
+            echo '  <div class="sort-title">';
+            echo '  <input class="sort-clickable" type="checkbox" name="ids[]" value="'.$v1['ID'].'"> ';
+            echo '  <em class="fa fa-bars"></em> <span class="lnkEdit sort-clickable">'.$v1['Title'].'<span>';
+            echo '  </div>';
+            echo '  <span class="detail-1">'.$v1['Ordering'].'</span>';
+            echo '  <span class="detail-2">'.$v1['ItemAmount'].'</span>';
+            echo '  <span class="detail-3 status-'.$v1['IsEnable'].'">'.$this->publishOption[$v1['IsEnable']].'</span>';
+            echo '</li>';
+		} // End Level 1
+	}
+	echo '</ul>';
+}
+?>
+</div>
+
+<script>
+jQuery(function(){
+
+    var options = {
+        ignoreClass: 'sort-clickable',
+        onDragStart: function( e, cEl ) {
+            $('.sort-title').css({
+                'padding': '10px 5px',
+            });
+            $('.sort-title').parent('li').css({
+                'display': 'block',
+                'position': 'relative',
+                'margin-bottom': '5px',
+                'border-top': 'solid 1px #ccc',
+                'margin-left': '20px',
+            });
+            $('.sort-title .lnkEdit').css({
+                'color':'#3c8dbc',
+                'cursor': 'pointer',
+            });
+            $('span.detail-1, span.detail-2, span.detail-3').css({'display':'none'});
+            return true;
+        },
+        isAllowed: function(cEl, hint, target){
+            hint.css({'border':'dashed 1px #ccc'});
+            return true;
+        },
+        onChange: function( cEl ) {
+            // Update Parent
+            var id = $(cEl).data('id');
+            var parent_id = $(cEl).parent('ul').parent('li').data('id');
+            $.post("<?php echo $this->url(array('module' => 'wat', 'controller' => 'category', 'action' => 'updateparent'), null, true);?>", {"id": id, "parent_id": parent_id}, function(data){
+                if(data.result){
+                   DialogComplete("จัดเรียงหมวดหมู่สำเร็จ"); 
+                }
+            }, 'json');
+            return true;
+        },
+        complete: function( cEl ) {
+            $('span.detail-1, span.detail-2, span.detail-3').css({'display':''});
+            return true;
+        }
+    };
+    $('#categoryList').sortableLists(options);
+
+    $('.lnkEdit').click(function(){
+        var id = $(this).parent('div').parent('li').data('id');
+        window.location = "<?php echo $this->url(array('module' => 'wat', 'controller' => 'category', 'action' => 'edit'), null, true); ?>/itemid/"+id;
+    });
+
+    <?php if($this->canAdd) : ?>
+    $("#btnGoAdd").click(function(e) {
+        window.location = "<?php echo $this->url(array('module' => 'wat', 'controller' => 'category', 'action' => 'add'), null, true); ?>";
+    });
+    <?php endif; ?>
+
+    $('#btnPublish').click(function(){
+        var ids = [];
+        $.each($('#divCategoryList input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+            ids.push($(e).val());
+        });
+        if (ids.length > 0) {
+            DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการเผยแพร่", function() {
+                $.post("<?php echo $this->url(array("module" => 'wat', "controller" => 'category', 'action' => 'listpublish'), null, true); ?>", {"ids" : ids, "status": "Y"}, function(data){
+                    if (data.result) {
+                        DialogComplete("ปรับปรุงสถานะสำเร็จ");
+                        setTimeout(function(){
+                            window.location = "<?php echo $this->url(array('module' => 'wat', 'controller' => 'category', 'action' => 'index'), null, true); ?>";
+                        }, 500);
+                    } else {
+                        DialogWarning(data.message);
+                    }
+                }, 'json');
+            });
+        } else {
+            DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+        }
+        $('#chkAll').prop('checked',false);
+    });
+
+    $('#btnUnpublish').click(function(){
+        var ids = [];
+        $.each($('#divCategoryList input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+            ids.push($(e).val());
+        });
+        if (ids.length > 0) {
+            DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการไม่เผยแพร่", function() {
+                $.post("<?php echo $this->url(array("module" => 'wat', "controller" => 'category', 'action' => 'listpublish'), null, true); ?>", {"ids" : ids, "status": "N"}, function(data){
+                    if (data.result) {
+                        DialogComplete("ปรับปรุงสถานะสำเร็จ");
+                        setTimeout(function(){
+                            window.location = "<?php echo $this->url(array('module' => 'wat', 'controller' => 'category', 'action' => 'index'), null, true); ?>";
+                        }, 500);
+                    } else {
+                        DialogWarning(data.message);
+                    }
+                }, 'json');
+            });
+        } else {
+            DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+        }
+        $('#chkAll').prop('checked',false);
+    });
+
+    $('#btnCopy').click(function(){
+        var ids = [];
+        $.each($('#divCategoryList input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+            ids.push($(e).val());
+        });
+        if (ids.length > 0) {
+            DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการคัดลอกข้อมูล", function() {
+                $.post("<?php echo $this->url(array("module" => 'wat', "controller" => 'category', 'action' => 'listcopy'), null, true); ?>", {"ids" : ids}, function(data){
+                    if (data.result) {
+                        DialogComplete("คัดลอกข้อมูลสำเร็จ");
+                        setTimeout(function(){
+                            window.location = "<?php echo $this->url(array('module' => 'wat', 'controller' => 'category', 'action' => 'index'), null, true); ?>";
+                        }, 500);
+                    } else {
+                        DialogWarning(data.message);
+                    }
+                }, 'json');
+            });
+        } else {
+            DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+        }
+        $('#chkAll').prop('checked',false);
+    });
+        
+    $('#btnDelete').click(function(){
+        var ids = [];
+        $.each($('#divCategoryList input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+            ids.push($(e).val());
+        });
+        if (ids.length > 0) {
+            DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+                $.post("<?php echo $this->url(array("module" => 'wat', "controller" => 'category', 'action' => 'listdelete'), null, true); ?>", {"ids" : ids}, function(data){
+                    if (data.result) {
+                        DialogComplete("ลบสำเร็จ");
+                        setTimeout(function(){
+                            window.location = "<?php echo $this->url(array('module' => 'wat', 'controller' => 'category', 'action' => 'index'), null, true); ?>";
+                        }, 500);
+                    } else {
+                        DialogWarning(data.message);
+                    }
+                }, 'json');
+            });
+        } else {
+            DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+        }
+        $('#chkAll').prop('checked',false);
+    });
+
+    $('#chkAll').click(function(){
+        var val = $(this).is(":checked");
+        if(val){
+            $('input[name="ids[]"]').prop('checked',true);
+        }else{
+            $('input[name="ids[]"]').prop('checked',false);
+        }
+    });
+
+});
+</script>
+
+<?php //echo $this->formHidden('hdfEMSAScreenCode', 'WAT-0001'); ?>

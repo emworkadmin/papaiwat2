@@ -1,0 +1,177 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+<!-- lightgallery dialog -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightgallery/css/lightgallery.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery/js/lightgallery.min.js'); ?>"></script>
+<!-- bootstrap dialog -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/bootstrap-dialog/bootstrap-dialog.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/bootstrap-dialog/bootstrap-dialog.min.js'); ?>"></script>
+<style>
+	.bootstrap-dialog .modal-header {border-top-left-radius: 0px; border-top-right-radius: 0px;}
+	.radioline {padding-bottom: 7px; margin-left: 7px; margin-right: 7px; margin-bottom: 7px !important; border-bottom: 1px solid #cccccc;}
+</style>
+
+<div class="panel-detail">
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+		<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+
+		<div class="title-label">เรื่องร้องเรียน</div>
+
+		<div class="form-group" >
+			<label class="col-md-3 control-label" for="">ชื่อเรื่องร้องเรียน</label>		
+			<div class="col-md-9 divControl">
+				<p class="form-control-static">
+					<?php echo $this->data->ComplainTopic; ?>
+				</p>
+			</div>
+		</div>
+
+		<div class="form-group" >
+			<label class="col-md-3 control-label" for="">รายละเอียด</label>		
+			<div class="col-md-9 divControl">
+				<p class="form-control-static">
+					<?php echo $this->data->ComplainDetail; ?>
+				</p>
+			</div>
+		</div>
+
+    	<div class="form-group" >
+    		<label class="col-md-3 control-label" for="">ไฟล์แนบ</label>		
+    		<div class="col-md-9 divControl">
+				<p class="form-control-static">
+					<a href="<?php echo $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $this->data->ImageIntro->hash_name), null, true); ?>" target="_blank"><?php echo $this->data->ImageIntro->file_name;?></a>
+				</p>
+    		</div>
+    	</div>
+
+		<div class="form-group" >
+			<label class="col-md-3 control-label" for="">กรอกข้อมูลด้วยภาษา</label>		
+			<div class="col-md-9 divControl">
+				<p class="form-control-static">
+					<?php echo $this->langOption[$this->data->Lang]; ?>
+				</p>				
+			</div>
+		</div>
+
+		<div class="form-group" >
+			<label class="col-md-3 control-label" for="">กรอกข้อมูลเมื่อวันที่</label>		
+			<div class="col-md-9 divControl">
+				<p class="form-control-static">
+					<?php echo Emwork_Utility_DateTime::MySQLToDateThai($this->data->ComplainDate, "DT"); ?>
+				</p>				
+			</div>
+		</div>		
+
+		<div class="title-label">รายละเอียดผู้ร้องเรียน</div>
+
+		<div class="form-group" >
+			<label class="col-md-3 control-label" for="">ชื่อ-นามสกุล</label>		
+			<div class="col-md-9 divControl">
+			<p class="form-control-static">
+					<?php echo $this->data->FullName; ?>
+				</p>	
+			</div>
+		</div>
+
+		<div class="form-group" >
+			<label class="col-md-3 control-label" for="">อีเมล์</label>		
+			<div class="col-md-9 divControl">
+				<p class="form-control-static">
+					<?php echo $this->data->Email; ?>
+				</p>
+			</div>
+		</div>
+
+		<div class="form-group" >
+			<label class="col-md-3 control-label" for="">เบอร์โทรศัพท์</label>		
+			<div class="col-md-9 divControl">
+				<p class="form-control-static">
+					<?php echo $this->data->Telephone; ?>
+				</p>
+			</div>
+		</div>
+
+		<div class="title-label">ข้อมูลตอบกลับ</div>	
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="">ผลการดำเนินการ / ข้อความตอบกลับไปยังผู้ร้องเรียน : </label>		
+			<div class="col-md-9 divControl">
+				<?php echo $this->formTextarea("ResponseDetail", $this->data->ResponseDetail, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '500', 'rows' => '5')); ?>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="">สถานะดำเนินการ : </label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect("Status", $this->data->Status, array('class' => 'form-control required', "id" => "Status"), count($this->statusOption) > 1 ? Emwork_Utility::addEmptyOption($this->statusOption) : $this->statusOption); ?>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3 button-panel-zone">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<?php endif ; ?>
+				<button type="button" class="btn btn-default" id="btnBack">กลับ</button>
+			</div>
+		</div>
+
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+<script type="text/javascript">
+	$(function () {
+
+		$("#formEdit").validate({
+			errorElement: "em",
+			errorPlacement: function(error, element) {
+				error.addClass( "help-block" );
+				error.appendTo( element.parents("div.divControl"));
+			}
+    	});
+
+		function buttonZoneDisabled() {
+			$(".button-panel-zone button").attr("disabled", "disabled");
+			$(".button-panel-zone").append('<em class="fa fa-refresh fa-spin"></em>');
+		}
+		function buttonZoneActive() {
+			$(".button-panel-zone button").removeAttr("disabled");
+			$(".button-panel-zone > em").remove();
+		}
+
+		<?php if($this->canEdit): ?>
+			// Save
+			$("#btnSave").click(function() {
+				buttonZoneDisabled();
+				var valid = $("#formEdit").valid();
+				if (valid) {
+					$.post("<?php echo $this->url(array('module' => 'complain', 'controller' => 'index', 'action' => 'update'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+						console.log(data);
+						if (data.result) {
+							DialogComplete();
+							setTimeout(function(){
+								window.location = "<?php echo $this->url(array('module' => 'complain', 'controller' => 'index', 'action' => 'edit'), null, true); ?>" + "/itemid/" + data.id;
+							}, 500);
+						} else {
+							buttonZoneActive();
+							DialogWarning(data.message);
+						}
+					}, 'json');
+				} else {
+					buttonZoneActive();
+				}
+			});
+		<?php endif; ?>
+
+		// Back
+		$("#btnBack").click(function(){
+			window.location = "<?php echo $this->url(array('module' => 'complain', 'controller' => 'index', 'action' => 'index'), null, true); ?>";
+		})
+
+	});
+</script>

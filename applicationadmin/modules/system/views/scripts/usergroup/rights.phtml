@@ -1,0 +1,135 @@
+<style>
+.menugroups {border: 1px solid #000; background-color: #fff; padding: 0px;}
+.menugroups a {display: block; border-top: 1px solid #000; padding: 5px 10px; color: #3A8ADC; background-color: #fff;}
+.menugroups a:first-child {border-top: none;}
+.menugroups a:hover {background-color: #3399FF; color: #fff;}
+.menugroups a.active {background-color: #3a8adc; color: #fff; font-weight: bold;}
+
+.menugroups-actions {border: 1px solid #000; background-color: #fff; padding: 0px;}
+.menugroups-actions form {display: none;}
+ .menugroups-actions form.active {display: inline;}
+.menugroups-actions .menugroups-actions-action {padding: 5px 10px;}
+.menugroups-actions .menugroups-actions-action ul {list-style: none; padding-left: 25px; }
+.menugroups-actions .menugroups-actions-action > ul {padding-left: 0px;}
+.menugroups-actions .menugroups-actions-button {padding: 5px 10px;}
+</style>
+<?php 
+function displayAction($data, $actionGroupID, $parentID, $values, $isDisabled = false) {
+	$actions = $data[$parentID];
+	if (count($actions) > 0) :
+		echo "<ul>";
+		foreach ($actions as $action) : 
+			echo "<li>";
+			echo "<input type='checkbox' value='" . $action["ID"] . "' id='chkAction=" . $action["ID"] . "' name='chkAction[]' " . (in_array($action["ID"], $values) ? "checked='checked'" : "") . " " . ($isDisabled ? "disabled='disabled'" : "") . " /> " . $action["Name"];
+			displayAction($data, $actionGroupID, $action["ID"], $values, ($isDisabled || !in_array($action["ID"], $values)));
+			echo "</li>";
+		endforeach;
+		echo "</ul>";
+	endif;
+}
+?>
+<div class="panel-detail">
+	<div class="row" style="margin-bottom: 15px;">
+		<div class="col-md-3">
+			<div class="menugroups">
+				<?php 
+				if (count($this->actionRecursives)) :
+					$idx = 0;
+					foreach ($this->actionRecursives as $actionGroup) :
+						$idx ++;
+						$actionGroupID = $actionGroup["ID"];
+						$actionGroupName = $actionGroup["Name"];
+						$cssClass = $idx == 1 ? " active" : "";
+				?>
+				<a data-id="<?php echo $actionGroupID;?>" class="lnkMenuGroup <?php echo $cssClass;?>" href="javascript:void(0);"><?php echo $actionGroupName; ?></a>
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</div>	
+		</div>
+		<div class="col-md-9">
+			<div class="menugroups-actions">
+				<?php 
+				if (count($this->actionRecursives)) :
+					$idx = 0;
+					foreach ($this->actionRecursives as $actionGroup) :
+						$idx ++;
+						$actionGroupID = $actionGroup["ID"];
+						$actionGroupName = $actionGroup["Name"];
+						$actions = $actionGroup["Action"];
+						$cssClass = $idx == 1 ? " active" : "";
+				?>
+				<form class="form-horizontal formAction <?php echo $cssClass;?>" id="formAction<?php echo $actionGroupID?>" name="formAction<?php echo $actionGroupID?>">
+					<?php echo $this->formHidden("hdfActionGroup", $actionGroupID); ?>
+					<?php echo $this->formHidden('hdfID', $this->id, null, null); ?>
+					<div class="menugroups-actions-action">
+						<?php displayAction($actions, $actionGroupID, "main", $this->usergroupActions, false); ?>
+					</div>
+					<div class="menugroups-actions-button">
+						<button type="button" class="btn btn-primary btnSave" id="btnSave-<?php echo $actionGroupID; ?>">
+							<em class="fa fa-save"></em> บันทึก
+						</button>
+					</div>
+				</form>
+				<?php 
+					endforeach;
+				endif;
+				?>
+				
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-9 col-md-offset-3">
+			<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+		</div>
+	</div>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+
+	$(".menugroups")
+	.on("click", "a.lnkMenuGroup", function(){
+		var dataID = $(this).data('id');
+		$(".menugroups a.lnkMenuGroup").removeClass("active");
+		$(".menugroups a.lnkMenuGroup[data-id=" + dataID + "]").addClass("active");
+		$(".formAction").removeClass("active");
+		$("#formAction" + dataID + "").addClass("active");		
+	});
+
+	$(".formAction")
+	.on("click change", "input[type=checkbox]", function(){
+		var qTarget = $(this);
+        var ul = qTarget.next("ul");
+        if (qTarget.is(':checked')) {
+            ul.children("li").children("input").removeAttr("disabled");
+        } else {
+            ul.find("input").each(function(){
+                this.checked = false;
+                jQuery(this).attr("disabled", "disabled");
+            });
+        }
+	});
+
+	$(".btnSave").click(function(){
+		var form = $(this).parents("form");
+		$.post("<?php echo $this->url(array('module' => 'system', 'controller' => 'usergroup', 'action' => 'rightssaveaction'), null, true);?>", form.serializeArray(), function(data){
+			if (data.result) {
+				DialogComplete();
+			} else {
+				DialogWarning(data.message);
+			}
+		}, 'json');
+	});
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'usergroup', 'action' => 'index'), null, true); ?>";
+	});
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'SYS-USG-04'); ?>

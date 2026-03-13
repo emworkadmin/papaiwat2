@@ -1,0 +1,32 @@
+{
+	"name" : "Poll",
+	"fields" : [
+		{
+			"name" : "item",
+			"type" : "select",
+			"size" : "",
+			"label" : "แบบสำรวจ",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Poll_Service_Item",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		},{
+			"name" : "HtmlClass",
+			"type" : "text",
+			"size" : "",
+			"label" : "Html Class",
+			"description" : "",
+			"required" : false
+		},{
+			"name" : "CustomCSS",
+			"type" : "textarea",
+			"size" : "",
+			"label" : "CSS",
+			"description" : "",
+			"required" : false
+		}
+	]
+}

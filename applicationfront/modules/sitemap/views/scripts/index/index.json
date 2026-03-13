@@ -1,0 +1,20 @@
+{
+	"name" : "รายการ Sitemap",
+	"controller" : "index",
+	"description" : "รายการ Sitemap",
+	"fields" : [
+		{
+			"name" : "category",
+			"type" : "select",
+			"size" : "",
+			"label" : "หมวดหมู่",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Sitemap_Service_Url",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

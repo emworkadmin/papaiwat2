@@ -1,0 +1,99 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/slick/slick-theme.css'); ?>">
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/slick/slick-theme.css'); ?>">
+<script src="<?php echo $this->baseUrl('plugins/slick/slick.min.js'); ?>"></script>
+
+<style>
+.article-gallery { position: relative; overflow: hidden; }
+#galleryNext { position: absolute; top: 42%; right: 0px; font-size: 60px; cursor: pointer; color: #FFF; background: rgba(0,0,0,0.8); padding: 0px 5px 0px 10px; }
+#galleryPrev { position: absolute; top: 42%; left: 0px; font-size: 60px; cursor: pointer; color: #FFF; background: rgba(0,0,0,0.8); padding: 0px 10px 0px 5px; }
+</style>
+
+<?php
+// <!---------------------------------------- รูปภาพแกลอรี่ ----------------------------------------------->
+if (count ( $this->dataFileImages ) > 0) :
+?>
+
+<div class="article-gallery">
+
+	<div class="row" id="lightGallery">
+		<?php 
+		foreach ( $this->dataFileImages as $k=>$img ) :
+			$imgUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $img["hash_name"]), "default", true);
+			$imgThumbnailUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "file" => $img["hash_name"]), "default", true);
+		?>
+			<div class="col-md-3 sliderFor" data-slick-index="<?php echo $k; ?>" data-src="<?php echo $imgUrl; ?>" onclick="window.location='<?php echo $this->url(array("module" => "gallery", "controller" => $this->controller, "action" => "viewimage", "id"=> $this->id, "cid" => $this->cid, "iid" => $this->iid), null, true); ?>/img/<?php echo $img['file_id']; ?>'">
+				<div class="img-container">
+					<div class="img-inner">
+						<img alt="image" src="<?php echo $imgThumbnailUrl; ?>" />
+					</div>
+				</div>
+			</div>
+    	<?php
+		endforeach;
+		?>
+	</div>
+
+	<div class="row" id="lightGalleryList">
+		<?php 
+		foreach ( $this->dataFileImages as $k=>$img ) :
+			$imgUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $img["hash_name"]), "default", true);
+			$imgThumbnailUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "file" => $img["hash_name"]), "default", true);
+		?>
+		<div class="col-md-3 sliderList" data-slick-index="<?php echo $k; ?>" data-src="<?php echo $imgUrl; ?>">
+			<div class="img-container">
+				<div class="img-inner">
+					<img alt="image" src="<?php echo $imgThumbnailUrl; ?>" />
+				</div>
+			</div>
+		</div>
+    	<?php
+		endforeach;
+		?>
+	</div>
+
+	<em id="galleryNext" class="fa fa-angle-right" style="z-index:1000;"></em>
+	<em id="galleryPrev" class="fa fa-angle-left" style="z-index:1000;"></em>
+
+</div>
+
+<hr />
+
+<script>
+function link(id) {
+	
+}
+jQuery(function(){
+
+	// $("#lightGallery").lightGallery();	
+
+	$('#lightGallery').slick({
+		slidesToShow: 1,
+		slidesToScroll: 1,
+		arrows: true,
+		nextArrow: $('#galleryNext'),
+		prevArrow: $('#galleryPrev'),
+		speed: 300,
+		fade: true,
+		asNavFor: '#lightGalleryList'
+	});
+
+	$('#lightGalleryList').slick({
+		slidesToShow: <?php 
+		 				if($this->data->ImagePerPage){
+							echo $this->data->ImagePerPage;
+						 }else{
+							echo 5;
+						 }
+		  			?>,
+		slidesToScroll: 1,
+		asNavFor: '#lightGallery',
+		centerMode: true,
+		focusOnSelect: true
+	});
+
+});
+</script>
+
+<?php 
+endif;
+?>

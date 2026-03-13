@@ -1,0 +1,52 @@
+<div class="">
+	<div class="">
+        <?php 
+        if (count($this->items) > 0) :
+        	foreach ($this->items as $item) :
+        	
+            	$id = $item["ID"];
+            	$title = $item["Title"];
+            	$introText = $item["IntroText"];
+            	$imageUrl = $this->defaultImageUrl; 
+            	if (!empty($item["IntroImageHashName"])) : 
+            		$imageUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "file" => $item["IntroImageHashName"]), null, true);
+            	endif;
+            	$date = $item["Created"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateThai($item["Created"]);
+            	$viewAmount = number_format($item["ViewAmount"]);
+            	$url = $this->url(array("module" => "banner", "controller" => "item", "action" => "detail", "id" => $this->id, "iid" => $id), null, true);
+        ?>
+		<div class="inforow">
+			<?php if ($this->bannerSettingItemShowImage) : ?>
+			<div class="image">
+				<div class="image-inner">
+					<a href="<?php echo $url; ?>">
+						<img src="<?php echo $imageUrl; ?>" />
+					</a>
+				</div>
+			</div>
+			<?php endif; ?>
+			<div class="detail">
+				<div class="detail-title">
+					<a href="<?php echo $url; ?>"><?php echo $title; ?></a>
+				</div>					
+				<?php if ($this->bannerSettingItemShowIntroText) : ?>
+				<div class="detail-intro" >
+					<?php echo nl2br($introText); ?>
+				</div>
+				<?php endif; ?>
+				<div class="detail-date">
+					<em class="fa fa-calendar"></em> <?php echo $date; ?>
+					|
+					<em class="fa fa-eye"></em> <?php echo $viewAmount; ?>
+					| 
+					<a href="<?php echo $url; ?>" class="btn btn-info">รายละเอียด</a>  
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+        <?php 
+        	endforeach;
+        endif;
+        ?>
+	</div>
+</div>

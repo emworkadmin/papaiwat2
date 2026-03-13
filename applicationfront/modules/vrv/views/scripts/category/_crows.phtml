@@ -1,0 +1,69 @@
+<div class="">
+	<div class="">
+        <?php 
+        if (count($this->items) > 0) :
+        	foreach ($this->items as $item) :
+        	
+            	$id = $item["ID"];
+            	$title = $item["Title"];
+            	$introText = $item["IntroText"];
+            	$imageUrl = $this->defaultImageUrl; 
+            	if (!empty($item["IntroImageHashName"])) : 
+            		$imageUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "file" => $item["IntroImageHashName"]), null, true);
+				endif;
+				if($this->lang == 'th') {
+					$date = $item["Created"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateThai($item["Created"]);
+				} else {
+					$date = $item["Created"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateEng($item["Created"]);
+				}
+				if($this->id==0) {
+					$url = $this->url(array("module" => "vrv", "controller" => "category", "action" => "index", "id" => $id), null, true);
+				} else {
+					$url = $this->url(array("module" => "vrv", "controller" => "category", "action" => "items", "id" => $this->id, "cid" => $id), null, true);
+				}            
+				if($item['Created']){
+					if($this->lang == 'th') {
+						$date = $item["Created"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateThai($item["Created"]);
+					} else {
+						$date = $item["Created"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateEng($item["Created"]);
+					}
+
+				}
+				if($item['Modified']){
+					$Modified = $item['Modified']->format("Y-m-d H:i");
+				}
+
+        ?>
+		<div class="inforow">
+			<?php if ($this->vrvSettingCategoryShowImage) : ?>
+			<div class="image">
+				<div class="image-inner">
+					<a href="<?php echo $url; ?>">
+						<img alt="image" src="<?php echo $imageUrl; ?>" />
+					</a>
+				</div>
+			</div>
+			<?php endif; ?>
+			<div class="detail">
+				<div class="detail-title">
+					<a href="<?php echo $url; ?>"><?php echo $title; ?></a>
+				</div>					
+				<?php if ($this->vrvSettingCategoryShowIntroText) : ?>
+				<div class="detail-intro" >
+					<?php echo nl2br($introText); ?>
+				</div>
+				<?php endif; ?>
+				<div class="detail-date">
+					<em class="fa fa-calendar"></em> <?php echo $date; ?>
+					|
+					<div class="detailbt"><a href="<?php echo $url; ?>" class="btn btn-info"><?php echo Emwork_Translate::text($this->lang, 'vrv', 'detail'); ?></a></div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+        <?php 
+        	endforeach;
+        endif;
+        ?>
+	</div>
+</div>

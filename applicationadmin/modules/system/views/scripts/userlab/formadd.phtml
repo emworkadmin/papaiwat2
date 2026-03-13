@@ -1,0 +1,145 @@
+<div class="panel-detail">	
+<form class="form-horizontal" id="formAdd" name="formAdd">
+	<div class="box box-info">
+		<div class="box-header with-border">
+			<h3 class="box-title">ข้อมูลทั่วไป</h3>
+		</div>
+		<div class="box-body">
+			<div class="form-group">
+				<label class="col-sm-3 labelRequest control-label" for="txtUsername">ชื่อผู้ใช้งาน</label> 
+				<div class="col-sm-9">
+					<?php echo $this->formText('txtUsername', null, array('class' => 'form-control required', 'placeholder' => 'ชื่อผู้ใช้งาน')); ?>
+					<span class="help-block">ใช้ตัวอักษรภาษาอังกฤษตัวเล็กหรือตัวเลขความยาวระหว่าง 4 - 16 ตัวอักษร และเริ่มตันด้วยตัวอักขระ</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 labelRequest control-label" for="txtPassword">รหัสผ่าน</label> 
+				<div class="col-sm-9">
+					<?php echo $this->formPassword('txtPassword', null, array('class' => 'form-control required', 'placeholder' => 'รหัสผ่าน')); ?>
+					<span class="help-block">กรอกตัวอักษร โดยมีความยาว 4 - 16 ตัวอักษร </span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3" for="txtConfirmPassword">ยืนยันรหัสผ่าน</label> 
+				<div class="col-sm-9">
+					<?php echo $this->formPassword('txtConfirmPassword', null, array('class' => 'form-control', 'placeholder' => 'ยืนยันรหัสผ่าน')); ?>
+					<span class="help-block">กรอกรหัสผ่านซ้ำอีกครั้ง </span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3" >คำนำหน้า</label> 
+				<div class="col-sm-9">
+					<div class="">
+						<?php echo $this->formRadio('rdlTitleName', null, array('class' => '', 'label_class' => 'radio-inline'), $this->titleNameOption, " "); ?>
+					</div>
+					<div class="form-inline">
+						<label for="txtTitleNameTh">ภาษาไทย</label> <?php echo $this->formText('txtTitleNameTh', null, array('class' => 'form-control')); ?> 
+						<label for="txtTitleNameEn">ภาษาอังกฤษ</label> <?php echo $this->formText('txtTitleNameEn', null, array('class' => 'form-control')); ?>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3" for="txtFirstNameTh">ชื่อ (ไทย)</label> 
+				<div class="col-sm-9">
+					<?php echo $this->formText('txtFirstNameTh', null, array('class' => 'form-control', 'placeholder' => 'ชื่อ (ไทย)')); ?>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3" for="txtLastNameTh">นามสกุล (ไทย)</label> 
+				<div class="col-sm-9">
+					<?php echo $this->formText('txtLastNameTh', null, array('class' => 'form-control', 'placeholder' => 'นามสกุล (ไทย)')); ?>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3" for="txtEmail">อีเมล์</label> 
+				<div class="col-sm-9">
+					<?php echo $this->formText('txtEmail', null, array('class' => 'form-control', 'type' => 'email', 'placeholder' => 'อีเมล์')); ?>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="box box-info">
+		<div class="box-header with-border">
+			<h3 class="box-title">ข้อมูลการใช้งาน</h3>
+		</div>
+		<div class="box-body">
+			<div class="form-group">
+				<label class="col-sm-3" >รหัสผ่านหมดอายุ?</label> 
+				<div class="col-sm-9">
+					<div class="form-inline">
+						<?php echo $this->formRadio('rdlTitleName', 'N', array('class' => '', 'label_class' => 'radio-inline'), $this->accountExpireOption, " "); ?>
+						<div class="input-group date">
+							<div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<?php echo $this->formText('txtExpireDate', null, array('class' => 'form-control pull-right', 'disabled' => 'disabled')); ?>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3" for="lstUsergroup">กลุ่มผู้ใช้งาน</label> 
+				<div class="col-sm-9">
+					<?php echo $this->formSelect('lstUsergroup', null, array('class' => 'form-control'), $this->usergroupOption); ?>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3" >การใช้งาน</label> 
+				<div class="col-sm-9">
+					<div class="form-inline">
+						<?php echo $this->formRadio('rdlStatus', 'Y', array('class' => '', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="box box-solid">
+		<div class="box-footer">
+			<div class="row">
+				<div class="col-sm-9 col-sm-offset-3">
+					<button type="button" id="btnSave" class="btn btn-primary"><em class="fa fa-save"></em> บันทึก</button>
+					<button type="button" id="btnCancel" class="btn btn-default"><em class="fa fa-refresh"></em> ยกเลิก</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	// Validate
+	$('#formAdd').validate({
+// 		errorPlacement: function(error, element) {
+// 	        error.appendTo( element.parent("td"));
+// 	        error.appendTo( element.parent("div"));
+// 	        error.appendTo( element.parent("label").parent());
+// 	    },
+		errorElement: "em",
+		errorPlacement: function ( error, element ) {
+			// Add the `help-block` class to the error element
+			error.addClass( "help-block" );
+	
+			if ( element.prop( "type" ) === "checkbox" ) {
+				error.appendTo( element.parent( "label" ) );
+			} else {
+				error.appendTo( element.parent() );
+			}
+		}
+	});
+	
+	//Date picker
+	$('#txtExpireDate').datepicker({
+	  autoclose: true
+	});
+
+	$('#btnSave').click(function(){
+		var isValid = $('#formAdd').valid();
+		console.log(isValid);
+	});
+});
+</script>

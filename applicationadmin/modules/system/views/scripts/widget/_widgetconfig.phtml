@@ -1,0 +1,123 @@
+<?php 
+$fields = $this->widgetConfig->fields; 
+$params = $this->data == null ? array() : json_decode($this->data->Params, true);
+$hasTextEditor = false;
+if (count($fields) > 0) :
+?>
+<div class="title-label">ตั้งค่า Widget</div>
+	<?php
+	foreach ($fields as $field) : 
+		$value = isset($params[$field->name]) ? $params[$field->name] : ($this->data == null ? $field->default : null);
+		$labelRequired = $field->required ? " labelRequest" : "";
+		$controlRequired = $field->required ? " required" : "";
+		$decription = isset($field->description) ? $field->description : "";
+	?>
+	<div class="form-group">
+		<label class="col-md-3 control-label <?php echo $labelRequired; ?>" for=""><?php echo $field->label; ?></label>
+		<div class="col-md-9 divControl">
+			<?php 
+			switch ($field->type) :
+				case "texteditor" : 
+					echo $this->formTextarea('params[' . $field->name . ']', $value, array('class' => 'form-control txtEditor' . $controlRequired, 'rows' => '5'));
+					$hasTextEditor = true;
+					break;
+				case "textarea" :
+					echo $this->formTextarea('params[' . $field->name . ']', $value, array('class' => 'form-control' . $controlRequired, 'rows' => '5'));
+					break;
+				case "select" :
+					$option = array();
+					if ($field->optiontype == 'dynamic') :
+						$optionFunctionClass = $field->optionfunction->class;
+						$optionFunctionMethod = $field->optionfunction->method;
+						$option = $optionFunctionClass::$optionFunctionMethod();
+					else : 
+						foreach ($field->options as $opt) :
+							$option[$opt->value] = $opt->name;
+						endforeach;
+					endif;
+					echo $this->formSelect('params[' . $field->name . ']', $value, array('class' => 'form-control' . $controlRequired), $option);
+					break;
+				case "cascading" :
+					echo $this->formSelect('params[' . $field->name . ']', $value, array('class' => 'form-control' . $controlRequired), array());
+					$optionFunctionClass = $field->optionfunction->class;
+					$optionFunctionMethod = $field->optionfunction->method;
+					$parent = $field->parent;
+			?>
+			<script>
+			$(function () {
+				var parentVal = $("#params-<?php echo $parent; ?>").val();
+				getData("<?php echo $this->url(array('module' => 'system', 'controller' => 'widget', 'action' => 'ajaxlist', 'c' => $optionFunctionClass, 'm' => $optionFunctionMethod), null, true);?>" + "?id=" + parentVal, "#params-<?php echo $field->name; ?>", "-- โปรดเลือก --", "name", "id", "<?php echo $value; ?>");
+				$("#params-<?php echo $parent; ?>").change(function(){
+					var selectValue = $(this).val();
+					getData("<?php echo $this->url(array('module' => 'system', 'controller' => 'widget', 'action' => 'ajaxlist', 'c' => $optionFunctionClass, 'm' => $optionFunctionMethod), null, true);?>" + "?id=" + selectValue, "#params-<?php echo $field->name; ?>", "-- โปรดเลือก --", "name", "id", "");
+				});
+			});
+			</script>			
+			<?php
+					break;
+				case "radio" :
+					$option = array();
+					if ($field->optiontype == 'dynamic') :
+						$optionFunctionClass = $field->optionfunction->class;
+						$optionFunctionMethod = $field->optionfunction->method;
+						$option = $optionFunctionClass::$optionFunctionMethod();
+					else :
+						foreach ($field->options as $opt) :
+							$option[$opt->value] = $opt->name;
+						endforeach;
+					endif;
+					echo '<div class="radio with-icheck">';
+					echo $this->formRadio('params[' . $field->name . ']', $value, array('class' => '' . $controlRequired), $option);
+					echo '</div>';
+					break;
+				case "text" :
+				default: 
+					echo $this->formText('params[' . $field->name . ']', $value, array('class' => 'form-control' . $controlRequired, 'placeholder' => ''));
+					break;
+			endswitch;
+			
+			if (!empty($decription)) :
+				echo '<div class="help-block">' . $decription . '</div>';
+			endif;
+			?>
+		</div>
+	</div>
+	<?php 
+	endforeach;
+	?>
+<?php 
+endif;
+?>
+
+<?php
+if ($hasTextEditor) : 
+?>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+<script>
+$(function () {
+	var roxyFileman = '<?php echo $this->baseUrl('/fileman/index.html'); ?>';	
+	$( '.txtEditor' ).ckeditor({
+		language: 'th',
+		height: 400,
+		toolbar: [
+		          {name : 'basicstyles', items : ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']},
+		          {name: 'colors', items: [ 'FontSize', 'TextColor', 'BGColor' ] },
+		          {name : 'paragraph', items : ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+		          {name : 'links', items : ['Link', 'Unlink', 'Anchor']},
+		          {name : 'inserts', items : ['Image', 'Table', 'HorizontalRule']},
+		          {name: 'document', items: ['Source']},
+		          {name: 'video', items: ['Video']}
+		],
+		extraPlugins : 'uploadimage,justify,video,font,panelbutton,colorbutton',
+		filebrowserBrowseUrl: roxyFileman+'?integration=ckeditor',
+		filebrowserImageBrowseUrl:roxyFileman+'?integration=ckeditor&type=image',
+		filebrowserVideoBrowseUrl:roxyFileman+'?integration=ckeditor&type=video',
+		extraAllowedContent : 'video [*]{*}(*);source [*]{*}(*);iframe [*]{*}(*);'
+	});
+
+});
+</script>
+<?php 
+endif;
+?>

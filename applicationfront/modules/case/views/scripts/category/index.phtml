@@ -1,0 +1,120 @@
+<style>
+.case-title-zone .case-title{text-align:center;}
+.head-case{margin-top:30px;}
+</style>
+<div class="info infopage case case-<?php echo $id; ?>" id="infopage">
+
+	<div class="case-title-zone">
+    	<div class="case-title title-panel">
+			<span class="title"><?php echo Emwork_Translate::text($this->lang, 'case', 'title'); ?>
+			</span>
+		</div>
+    </div>
+
+	<?php  echo $this->partial("category/_search.phtml", $this); ?>
+	<div class="pull-right switch-view-part pattern">
+		<span class="hidden-xs"><?php echo Emwork_Translate::text($this->lang, 'case', 'pattern'); ?> :</span>
+		<a id="large">
+			<em class="fa fa-th-large"></em>
+		</a>
+		<a id="list">
+			<em class="fa fa-list"></em>
+		</a>
+	</div>
+	
+	<div class="result-list-panel">
+    	<div class="result-list" id="result-list-art"></div>
+    	<div class="result-paging-art" style="display: none;">
+    		<p class="paging text-right"></p>
+    	</div>
+	</div>
+
+</div>
+
+<script>
+jQuery(function(){
+	var type='cards';
+
+	reloadResultList(1);
+	function reloadResultList(pageIndex) {
+		var sendData =  {};
+		sendData.pageIndex = pageIndex;
+		sendData.type = type;
+		sendData.BlackCasePrefix = $("#formSearch #BlackCasePrefix").val();
+		sendData.BlackCaseNo = $("#formSearch #BlackCaseNo").val();
+		sendData.BlackCaseYear = $("#formSearch #BlackCaseYear").val();
+		sendData.RedCasePrefix = $("#formSearch #RedCasePrefix").val();
+		sendData.RedCaseNo = $("#formSearch #RedCaseNo").val();
+		sendData.RedCaseYear = $("#formSearch #RedCaseYear").val();
+		sendData.casebeginDate = $("#formSearch #casebeginDate").val();
+		sendData.caseendDate = $("#formSearch #caseendDate").val();
+
+		$.post("<?php echo $this->url(array('module' => 'case', 'controller' => 'category', 'action' => 'getcase'), null, true); ?>", sendData, function(data){
+			if (data.total > 0) {
+				$("#result-list-art").html(data.html);
+				$('.result-paging-art').css('display', '');
+				$('.paging').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+			        leaps: false,
+			        firstLastUse: true,
+			        first: '<<',
+			        last: '>>',
+			        next: '>',
+			        prev: '<',
+			        wrapClass: 'pagination',
+			        activeClass: 'active',
+			        disabledClass: 'disabled',	
+			        nextClass: 'next',
+			        prevClass: 'prev',
+			        lastClass: 'last',
+			        firstClass: 'first'
+				});
+				$('.pattern').css('display', '');
+			} else {
+				var	html ='		<div class="head-case">';
+					html +='		<div class="title-search-date" style="font-size: 2.5rem;font-weight:bold;"><?php echo Emwork_Translate::text($this->lang, 'case', 'subtitle'); ?></div>';
+					html +='		<span class="title font-mitr-light"><?php echo Emwork_Translate::text($this->lang, 'case', 'amount_case'); ?>&nbsp;=&nbsp;0</span>';
+					html +='	</div>';
+				$('#result-list-art').html(html);
+				$('.result-paging-art').css('display', 'none');
+				$('.pattern').css('display', 'none');
+				$('.paging').bootpag({total : 0});
+			}
+		}, 'json');
+	}
+	
+	$('.paging').bootpag({
+        total: 0,
+        maxVisible: 5,
+        leaps: false,
+        firstLastUse: true,
+        first: '<<',
+        last: '>>',
+        next: '>',
+        prev: '<',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+    	reloadResultList(num);
+    }); 
+
+	$('#btnCaseSearch').click(function(){
+		reloadResultList(1);
+	});	
+	$('#large').click(function(){
+		type='cards';
+    	reloadResultList(1);
+	});
+	$('#list').click(function(){
+		type='rows';
+    	reloadResultList(1);
+	});
+});
+</script>

@@ -1,0 +1,137 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/license/css/license.css'); ?>">
+<div class="info infopage license-licenses-page">
+	 <div>
+    	<div class="license-title title-panel">
+			<span class="title">
+				<?php echo Emwork_Translate::text($this->lang, "license", "info_procedure_title_label"); ?>
+			</span>
+			<hr />
+		</div>
+    </div>
+	     
+    <div>
+    	<div class="license-search">
+    		<form class="form-horizontal" id="procedure-form">
+    			<div class="form-group">
+    				<div class="col-md-2">
+    					<?php echo $this->formSelect("category", $this->searchCategory, array("class" => "form-control", "title" => Emwork_Translate::text($this->lang, 'license', 'search_category_placeholder')), $this->categoryOption); ?>
+    				</div>
+    				<div class="col-md-2">
+    					<?php echo $this->formSelect("issue", null, array("class" => "form-control", "title" => Emwork_Translate::text($this->lang, 'license', 'search_issue_placeholder')), array()); ?>
+    				</div>
+    				<div class="col-md-2">
+    					<?php echo $this->formSelect("department", $this->searchDepartment, array("class" => "form-control", "title" => Emwork_Translate::text($this->lang, 'license', 'search_department_placeholder')), Emwork_Utility::addEmptyOption($this->departmentOption, Emwork_Translate::text($this->lang, 'license', 'search_department_placeholder'))); ?>
+    				</div>
+    				<div class="col-md-2">
+    					<?php echo $this->formText("license", $this->searchLicense, array("class" => "form-control", "placeholder" => Emwork_Translate::text($this->lang, "license", "search_license_placeholder"), "title" => Emwork_Translate::text($this->lang, "license", "search_license_placeholder"))); ?>
+    				</div>
+    				<div class="col-md-3">
+    					<?php echo $this->formText("procedure", $this->searchProcedure, array("class" => "form-control", "placeholder" => Emwork_Translate::text($this->lang, "license", "search_procedure_placeholder"), "title" => Emwork_Translate::text($this->lang, "license", "search_procedure_placeholder"))); ?>
+    				</div>
+    				<div class="col-md-1">
+    					<button class="btn btn-block btn-default" type="button" id="btnProcedureSearch"><?php echo Emwork_Translate::text($this->lang, "license", "search_search_button_label"); ?></button>
+    				</div>
+    			</div>
+    		</form>
+    	</div>
+    </div>
+
+	<div class="result-list-panel">
+		<div class="result-amount-text">-</div>
+    	<div class="result-list" id="result-list-info"></div>
+    	<div class="result-paging-info" style="display: none;">
+    		<p class="paging text-right"></p>
+    	</div>
+	</div>
+
+</div>
+<script>
+jQuery(function(){
+
+	getData("<?php echo $this->url(array("module" => "license", "controller" => "info", "action" => "issuelist"), null, true); ?>" + "?id=" + "<?php echo $this->searchCategory; ?>", "#issue", "<?php echo Emwork_Translate::text($this->lang, 'license', 'search_issue_placeholder')?>", "name", "id", "<?php echo $this->searchIssue; ?>"); 
+	$("#category").change(function(){
+		var selectValue = $(this).val();
+		if(selectValue == ''){selectValue = '-1';}
+		getData("<?php echo $this->url(array("module" => "license", "controller" => "info", "action" => "issuelist"), null, true); ?>" + "?id=" + selectValue, "#issue", "<?php echo Emwork_Translate::text($this->lang, 'license', 'search_issue_placeholder')?>", "name", "id", ""); 
+	});
+	
+	var category = '';
+	var issue = '';
+	var department = '';
+	var license = '';
+	var procedure = '';
+
+	reloadResultList(1);
+
+	$("#btnProcedureSearch").click(function(){
+		category = $("#procedure-form #category").val();
+		issue = $("#procedure-form #issue").val();
+		department = $("#procedure-form #department").val();
+		license = $("#procedure-form #license").val();
+		procedure = $("#procedure-form #procedure").val();
+
+		reloadResultList(1);
+	});
+
+	function reloadResultList(pageIndex) {
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		sendData.category = category;
+		sendData.issue = issue;
+		sendData.department = department;
+		sendData.license = license;
+		sendData.procedure = procedure;
+		$.post("<?php echo $this->url(array('module' => 'license', 'controller' => 'procedure', 'action' => 'getlist'), null, true); ?>", sendData, function(data){
+			
+			if (data.total > 0) {
+				$("#result-list-info").html(data.html);
+				$('.result-paging-info').css('display', '');
+				$(".result-amount-text").html(data.resultText);
+				$('.paging').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+			        leaps: false,
+			        firstLastUse: true,
+			        first: '<<',
+			        last: '>>',
+			        next: '>',
+			        prev: '<',
+			        wrapClass: 'pagination',
+			        activeClass: 'active',
+			        disabledClass: 'disabled',	
+			        nextClass: 'next',
+			        prevClass: 'prev',
+			        lastClass: 'last',
+			        firstClass: 'first'
+				});
+			} else {
+				$("#result-list-info").empty();
+				$(".result-amount-text").html(data.resultText);
+				$('.result-paging-info').css('display', 'none');
+				$('.paging').bootpag({total : 0});
+			}
+		}, 'json');
+	}
+
+	$('.paging').bootpag({
+        total: 0,
+        maxVisible: 5,
+        leaps: false,
+        firstLastUse: true,
+        first: '<<',
+        last: '>>',
+        next: '>',
+        prev: '<',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+    	reloadResultList(num);
+    }); 	
+});
+</script>

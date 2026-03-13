@@ -1,0 +1,36 @@
+<?php
+// <!---------------------------------------- รูปภาพแกลอรี่ ----------------------------------------------->
+if (count ( $this->dataFileImages ) > 0) :
+?>
+<div class="article-gallery">
+
+	<hr />
+
+	<div class="row" id="lightGallery">
+		<?php 
+		foreach ( $this->dataFileImages as $img ) :
+			$imgUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $img["hash_name"]), "default", true);
+			$imgThumbnailUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "file" => $img["hash_name"]), "default", true);
+		?>
+			<div class="col-md-3" data-src="<?php echo $imgUrl; ?>" onclick="window.location='<?php echo $this->url(array("module" => "gallery", "controller" => $this->controller, "action" => "viewimage", "id"=> $this->id, "cid" => $this->cid, "iid" => $this->iid), null, true); ?>/img/<?php echo $img['file_id']; ?>'">
+					<div class="img-container">
+					<div class="img-inner">
+						<img alt="image" src="<?php echo $imgThumbnailUrl; ?>" />
+					</div>
+				</div>
+			</div>
+    	<?php
+		endforeach;
+		?>
+	    </div>
+    </div>
+	
+    <script>
+	jQuery(function(){
+		// $("#lightGallery").lightGallery();	
+	});
+	</script>
+
+<?php 
+endif;
+?>

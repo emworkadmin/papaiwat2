@@ -1,0 +1,19 @@
+<div class="pull-right" style="margin: 5px 0px 10px;">
+	<button type="button" class="btn btn-primary" id="lnkExport"><em class="fa fa-external-link"></em> Export</button>
+</div>
+
+<script>
+jQuery(function(){
+	$('#lnkExport').click(function(){
+		window.open("<?php echo $this->url(array('module' => 'poll', 'controller' => 'item', 'action' => 'export', 'itemid' => $this->ID), null, true); ?>");
+	});
+});
+</script>
+
+<?php
+if($this->ResultDisplay=='pie'){
+	echo $this->partial("item/_pie.phtml", $this);
+}else{
+	echo $this->partial("item/_bar.phtml", $this);
+}
+?>

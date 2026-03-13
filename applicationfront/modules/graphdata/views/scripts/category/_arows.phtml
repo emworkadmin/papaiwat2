@@ -1,0 +1,70 @@
+<div class="graphdata-category-arows">
+	<div class="">
+		<?php 
+        if (count($this->items) > 0) :
+			foreach ($this->items as $item) :
+
+		
+				
+            	$id = $item["ID"];
+            	$title = $item["Title"];
+            	$introText = $item["IntroText"];
+				$imageUrl = $this->defaultImageUrl; 
+				if($item['Created']){
+					$date = $item['Created']->format("Y-m-d H:i");
+				}
+				if($item['Modified']){
+					$Modified = $item['Modified']->format("Y-m-d H:i");
+				}
+
+            	if (!empty($item["IntroImageHashName"])) : 
+            		$imageUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "file" => $item["IntroImageHashName"]), null, true);
+            	endif;
+
+            	$viewAmount = number_format($item["ViewAmount"]);
+            	$url = $this->url(array("module" => "graphdata", "controller" => "category", "action" => "detail", "id" => $this->id, "cid" => empty($this->cid) ? null : $this->cid, "iid" => $id), null, true);
+		?>
+		
+		<div class="inforow">
+
+			<?php if ($this->graphdataSettingItemShowImage) : ?>
+			<div class="image">
+				<div class="image-inner">
+					<a href="<?php echo $url; ?>">
+						<img alt="image" src="<?php echo $imageUrl; ?>" />
+					</a>
+				</div>
+			</div>
+			<?php endif; ?>
+
+			<div class="detail">
+
+				<?php if ($this->graphdataSettingItemShowTitle) : ?>
+				<div class="detail-title">
+					<a href="<?php echo $url; ?>"><?php echo $title; ?></a>
+				</div>
+				<?php endif; ?>
+
+				<?php if ($this->graphdataSettingItemShowIntroText) : ?>
+				<div class="detail-intro" >
+					<?php echo nl2br($introText); ?>
+				</div>
+				<?php endif; ?>
+
+				<div class="detail-date">
+					<em class="fa fa-calendar"></em> <?php echo $date; ?>
+					|
+					<em class="fa fa-eye"></em> <?php echo $viewAmount; ?>
+					| 
+					<div class="detailbt"><a href="<?php echo $url; ?>" class="btn btn-info"><?php echo Emwork_Translate::text($this->lang, 'graphdata', 'list_detail'); ?></a></div>
+				</div>
+
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<?php 
+        	endforeach;
+        endif;
+        ?>
+	</div>
+</div>

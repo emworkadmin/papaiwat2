@@ -1,0 +1,68 @@
+	<div class="panel-detail">
+		<div class="title-label">
+			เปลี่ยนรหัสผ่าน
+		</div>
+		<form id="formEdit" name="formEdit" class="form-horizontal">
+			<div class="form-group">
+				<label class="col-md-3 labelRequest control-label" for="txtOldPassword">รหัสผ่านเดิม</label>
+				<div class="col-md-9 divControl">
+					<?php echo $this->formPassword('txtOldPassword', null, array('class' => 'form-control required', 'placeholder' => '')); ?>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-3 labelRequest control-label" for="txtNewPassword">รหัสผ่านใหม่</label>
+				<div class="col-md-9 divControl">
+					<?php echo $this->formPassword('txtNewPassword', null, array('class' => 'form-control required', 'placeholder' => '')); ?>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-3 labelRequest control-label" for="txtConfirmPassword">ยืนยันรหัสผ่านใหม่</label>
+				<div class="col-md-9 divControl">
+					<?php echo $this->formPassword('txtConfirmPassword', null, array('class' => 'form-control required', 'placeholder' => '')); ?>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-md-9 col-md-offset-3">
+					<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-key"></em> เปลี่ยนรหัสผ่าน</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+	<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+	<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+	<script>
+	jQuery(function(){
+
+		$("#formEdit").validate({
+			errorElement: "em",
+			errorPlacement: function(error, element) {
+				error.addClass( "help-block" );
+		        error.appendTo( element.parents("div.divControl"));
+	        }
+	    });
+
+		$("#btnSave").click(function(){
+			var valid = $("#formEdit").valid();
+			if (valid) {
+				var NewPassword = $('#txtNewPassword').val();
+				if(NewPassword.length < 8){
+					DialogWarning('กรุณากรอกรหัสผ่านอย่าน้อย 8 ตัวอักษร');
+					return;
+				}
+				
+				$.post("<?php echo $this->url(array('module' => 'profile', 'controller' => 'password', 'action' => 'save'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+					if (data.result) {
+						DialogComplete();
+						setTimeout(function(){
+							window.location = "<?php echo $this->url(array('module' => 'profile', 'controller' => 'password', 'action' => 'index'), null, true); ?>";
+						}, 500);
+					} else {
+						DialogWarning(data.message);
+					}
+				}, 'json');
+			}
+		});
+	});
+	</script>
+	<?php echo $this->formHidden('hdfEMSAScreenCode', 'PROFILE-02'); ?>

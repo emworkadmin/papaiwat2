@@ -1,0 +1,63 @@
+.calendarpage .box-calendar { padding-left: 0px; }
+.calendarpage .box-calendar .inner { width: 100%; border: solid 2px #ccc; border-radius: 10px; padding: 5px 15px 15px 15px;}
+.calendarpage .box-calendar .inner .fc-event { font-size: 1em; }
+.calendarpage .box-event { border: solid 2px #ccc; border-radius: 10px; padding: 5px 15px 15px 15px; max-height: 720px; overflow: auto; }
+.calendarpage .box-event .eventList { margin-top: 15px; cursor: pointer; display: flex; }
+.calendarpage .box-event .divDate { 
+	width: 65px; 
+	display: inline-block; 
+	float: left; 
+	text-align: center; 
+	color: #fff; 
+	font-weight: bold; 
+	padding: 5px 0px;
+}
+.calendarpage .box-event .divDate .date1 { font-size: 40px; margin-top: -10px; margin-bottom: -17px;}
+.calendarpage .box-event .divDate .date2 { font-size: 18px; }
+.calendarpage .box-event .divTitle { 
+	width: calc(100% - 65px); 
+	display: inline-block; 
+	float: left; 
+	padding: 0px 10px; 
+	height: 70px; 
+	background: #dedede;
+	font-weight: bold; 
+}
+.calendarpage .box-event .divTitle .title1 { font-size: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 5px; }
+.calendarpage .box-event .divTitle .title2 { font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #226BB2; }
+.result-paging { display: none; }
+@media only screen and (max-width: 991px) {
+	.calendarpage .box-calendar { margin-bottom: 15px; padding-right: 0px; }
+}
+@media only screen and (max-width: 767px) {
+	.calendarpage .box-calendar .fc-center h2 { font-size: 26px; }
+}
+@media only screen and (max-width: 575px) {
+	.calendarpage .box-calendar .fc-center h2 { font-size: 22px; }
+}
+
+/* -------------------- Custom Calendar -------------------- */
+.widget-calendar { width: 360px !important; }
+.fc-toolbar { margin-bottom: -5px !important; }
+.fc-day-header span { font-size: 18px !important; }
+.fc-left button { 
+	background: none !important; 
+	border: none !important; 
+	box-shadow: none !important;
+	margin-top: -10px !important;
+    margin-left: -25px !important;
+}
+.fc-right button { 
+	background: none !important; 
+	border: none !important; 
+	box-shadow: none !important; 
+	margin-top: -10px !important;
+    margin-right: -25px !important;
+}
+.fc-center h2 { font-size: 20px !important; }
+.fc-widget-content { height: 30px !important; }
+.fc-day-top { text-align: center !important; } 
+.fc-basic-view .fc-body .fc-row { min-height: 1em !important; }
+.fc-ltr .fc-basic-view .fc-day-top .fc-day-number { float: none !important; font-weight: bold; font-size: 16px; }
+.fc-event { font-size: 16px !important;  padding: 0px 5px !important; }
+.fc-scroller { overflow-x: hidden !important; overflow-y: hidden !important; }

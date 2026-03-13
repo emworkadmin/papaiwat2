@@ -1,0 +1,93 @@
+.emsa-title {color: #000; font-family: 'ThaiSans Neue'; font-size: 30px; font-weight: bold; text-align: center; padding: 5px 15px 10px; margin-bottom: 15px;}
+
+.emsa-form .form-group {margin-bottom: 7px;}
+.emsa-form .emsa-tracking-textbox {padding: 10px 25px; text-align: center; border: none; background-color: #eee; box-shadow: 3px 3px 5px rgba(0,0,0, 0.5); border-radius: 5px; height: auto;}
+hr.emsa-hr {margin-top: 10px; margin-bottom: 10px;}
+
+.emsa-contentservice-detail-form {border: 1px solid #ccc; padding: 15px; margin-bottom: 15px;}
+
+.emsa-receiveno {text-align: center; font-family: 'ThaiSans Neue'; font-size: 26px; }
+.emsa-receiveno .emsa-receiveno-label {color: #0099cc; background-color: #f2f2f2; padding: 7px 35px; font-weight: bold;}
+.emsa-thank {font-family: 'ThaiSans Neue'; color: #3366ff; text-align: center; font-size: 26px; line-height: 1.2; margin-top: 15px;}
+.emsa-note {font-size: 13px; text-align: center;}
+
+.emsa-result {max-height: 440px; overflow: auto;}
+.emsa-result .emsa-row {border: 1px solid #ccc; padding: 7px; border-radius: 3px; margin-bottom: 7px;}
+.emsa-result .emsa-row .emsa-row-img {float: left; width: 100px; text-align: center; }
+.emsa-result .emsa-row .emsa-row-img img {width: 100px; height: 100px; object-fit: cover;}
+.emsa-result .emsa-row .emsa-row-icon {float: left; width: 50px; text-align: center; }
+.emsa-result .emsa-row .emsa-row-icon em {font-size: 36px;}
+.emsa-result .emsa-row .emsa-row-detail-icon {margin-left: 50px;}
+.emsa-result .emsa-row .emsa-row-detail {margin-left: 110px;}
+.emsa-result .emsa-row .emsa-row-link {margin-bottom: 7px;}
+.emsa-result .emsa-row .emsa-row-download {}
+.emsa-clearfix {clear: both; }
+.emsa-row-nodata {border: 1px solid #ccc; padding: 15px; text-align: center;}
+
+.emsa-tbl {width: 100%; border: 1px solid #000; background-color: #fff; color: #000;}
+.emsa-tbl tr th, .emsa-tbl tr td {border: 1px solid #000; padding: 2px 5px 3px;}
+.emsa-tbl tr th {background-color: #9fc5e8; text-align: center;}
+.emsa-tbl tr td {vertical-align: top;}
+.emsa-tbl tr.emsa-tr-main td {background-color: #e7e6e6; font-weight: bold;}
+
+.emsa-panel-group .panel-heading {background-color: #66cc99;}
+.emsa-panel-group .panel-heading .panel-title {color: #fff; font-weight: bold;}
+.emsa-panel-group .panel-heading .panel-title a:hover,
+.emsa-panel-group .panel-heading .panel-title a:active,
+.emsa-panel-group .panel-heading .panel-title a:focus {color: #ddd;}
+.emsa-panel-group .panel-body {background-color: #f2f2f2;}
+
+.emsa-download-link {text-align: center; margin-top: 15px;}
+
+.emsa-recaptcha > div {margin: 0px auto;}
+
+.emsa-status-panel {padding: 10px 0px; text-align: center; margin-bottom: 10px;}
+.emsa-status-panel .emsa-status-label {padding: 10px 25px; font-weight: bold; border-radius: 5px;}
+
+.emsa-tab {border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 10px 0px; word-wrap: break-word;}
+.emsa-tab .nav-tabs > li {width: 50%; text-align: center; margin-bottom : 5px;}
+.emsa-tab .nav-tabs > li.active > a,
+.emsa-tab .nav-tabs > li.active > a:focus,
+.emsa-tab .nav-tabs > li.active > a:hover
+{background-color: #c9c9c9; border-radius: 7px; color: #fff;}
+.emsa-tab .nav-tabs > li > a,
+.emsa-tab .nav-tabs > li > a:focus,
+.emsa-tab .nav-tabs > li > a:hover
+{background-color: #fff; border: none;}
+.emsa-tab .tab-content {display: flow-root;}
+.emsa-tab .tab-content .tab-pane {padding: 10px 0px;}
+.emsa-tab hr {margin-top: 10px; margin-bottom: 10px; border: 0; border-top: 1px solid #e0e0e0;}
+
+.emsa-tracking-item {border: none;}
+.emsa-tracking-item .emsa-tracking-item-title {font-family: 'ThaiSans Neue'; font-size: 22px; color: #000;}
+.emsa-tracking-item .emsa-tracking-item-datetime {font-family: 'tahoma'; font-size: 13px; color: #999;}
+
+.emsa-tracking-detail {padding: 5px 0px;}
+.emsa-tracking-detail .emsa-tracking-detail-title {padding: 5px 15px; background-color: #e4e4e4; color: #000;font-family: 'ThaiSans Neue'; font-size: 22px; border-radius: 5px; }
+.emsa-tracking-detail .emsa-tracking-detail-datetime {padding: 5px 15px; font-family: 'tahoma'; font-size: 13px; color: #999;}
+.emsa-tracking-detail .emsa-tracking-detail-metadata .row {padding: 5px 15px;}
+.emsa-tracking-detail .emsa-tracking-detail-detail {padding: 5px 15px;}
+
+.emsa-tracking-link {color: #0066ff; cursor: pointer;}
+
+.emsa-label-yellow {color: #F39C12;}
+.emsa-label-blue {color: #0066ff;}
+.emsa-label-red {color: #ff3300;}
+.emsa-label-green {color: #66cc99;}
+.emsa-mb15 {margin-bottom: 15px;}
+
+.emsa-loading {border: 1px solid #ccc; padding: 15px; text-align: center;}
+.emsa-loading em {font-size: 20px;}
+.emsa-footer-contact {font-size: 25px; text-align: center; line-height: 150%; font-family: 'ThaiSans Neue'; margin-top: 20px;}
+
+#lhc_status_container {right: 350px; display: none;}
+#lhc_container {right: 350px;}
+
+#emsa-box {position: fixed; right: 0;bottom: 0; width: 350px; z-index: 1000;}
+#emsa-box .box {border-top: none;margin-bottom: 0px;}
+#emsa-box .box .box-header {background: #3399ff;color: #fff;border-radius: 5px 5px 0px 0px;}
+#emsa-box .logo-lg img {height: 38px;background: #ffffff;padding: 3px 5px;border-radius: 5px;margin-top: 4px;}
+#emsa-box .users-list .users-list-name {font-family: 'ThaiSans Neue';font-size: 16px;display: block;}
+#emsa-box .users-list .users-list-name em {color: #87caea;font-size: 26px;display: block;}
+
+.emsa-text-ellipsis {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}

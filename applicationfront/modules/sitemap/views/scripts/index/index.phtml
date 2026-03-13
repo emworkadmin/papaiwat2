@@ -1,0 +1,215 @@
+<style>
+.list-text-header { padding: 15px; width: 100%; background: linear-gradient(#226BB2, #2677C7); color: white; }
+.list-text-detail p { padding: 15px 30px; }
+
+.just-padding { margin-bottom: 10px; padding: 0 10px; /* margin: 0.5%; width: 100%; border: 1px solid #ddd; border-radius: 4px; */ float: left;}
+.just-padding .list-group-item { border: unset; }
+.just-padding .list-group { margin-bottom: 0; }
+.just-padding .list-group > .list-group > .list-group-item { padding-left: 25px; } /* level2 */
+.just-padding .list-group > .list-group > .list-group > .list-group-item { padding-left: 35px; } /* level3 */
+.just-padding .list-group > .list-group > .list-group > .list-group > .list-group-item { padding-left: 45px; } /* level4 */
+.just-padding .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item { padding-left: 55px; } /* level5 */
+
+
+.just-padding .list-group > .list-group > .list-group-item { padding-left: 30px; } /* level2 */
+.just-padding .list-group > .list-group > .list-group > .list-group-item { padding-left: 60px; } /* level3 */
+.just-padding .list-group > .list-group > .list-group > .list-group > .list-group-item { padding-left: 90px; } /* level4 */
+.just-padding .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item { padding-left: 120px; } /* level5 */
+
+.just-padding .list-group > .list-group-item:before {
+    content: " ";
+    height: 7px;
+    display: block;
+    position: absolute;
+    background: black;
+    width: 7px;
+    border-radius: 50%;
+    top: 50%;
+    left: 0px;
+    transform: translateY(-50%);
+}
+.just-padding .list-group > .list-group > .list-group-item:before {
+    content: " ";
+    height: 7px;
+    display: block;
+    position: absolute;
+    background: white;
+    width: 7px;
+    border-radius: 50%;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    border: 1px solid black;
+}
+.just-padding .list-group > .list-group > .list-group > .list-group-item:before {
+    content: " ";
+    height: 7px;
+    display: block;
+    position: absolute;
+    background: black;
+    width: 7px;
+    border-radius: 0;
+    top: 50%;
+    left: 45px;
+    transform: translateY(-50%);
+}
+.just-padding .list-group > .list-group > .list-group > .list-group > .list-group-item:before {
+    content: " ";
+    height: 7px;
+    display: block;
+    position: absolute;
+    background: white;
+    width: 7px;
+    border-radius: 0;
+    top: 50%;
+    left: 75px;
+    transform: translateY(-50%);
+    border: 1px solid black;
+}
+.just-padding .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item:before {
+    content: " ";
+    height: 2px;
+    display: block;
+    position: absolute;
+    background: white;
+    border: 0px solid white;
+    border-top: 2px solid #040000;
+    width: 5px;
+    border-radius: 0;
+    top: 50%;
+    left: 110px;
+    transform: translateY(-50%);
+}
+</style>
+
+<div class="panel panel-default simap simap-<?php echo $this->id; ?> info infopage">
+
+	<div class="panel-body">
+
+        <?php
+            $cssCol = 'col-md-12 col-sm-12 col-xs-12';
+            if($this->data->Col == 1) {
+                $cssCol = 'col-md-12 col-sm-12 col-xs-12';
+            } else if($this->data->Col == 2) {
+                $cssCol = 'col-md-6 col-sm-6 col-xs-6';
+            } else if($this->data->Col == 3) {
+                $cssCol = 'col-md-4 col-sm-4 col-xs-4';
+            } else if($this->data->Col == 4) {
+                $cssCol = 'col-md-3 col-sm-3 col-xs-3';
+            }
+        ?>
+
+        <div class="article-title title-panel">
+            <span class="title"><?php echo $this->data->Title; ?></span>
+            <hr>
+        </div>
+        
+        <div class="form-group">
+            <?php if($this->data->ShowDetail == 'Y') : ?>
+                <div class="list-text-detail">
+                    <p><?php echo nl2br($this->data->Detail); ?></p>
+                </div>
+            <?php endif; ?>
+
+            <?php $i_Sitemap = 0; if(count($this->data->parentLevel1)>0) : 
+            
+                    $tmp_array = array();
+                ?>
+                <div class="form-group" id="post-data">
+                    <?php
+                        foreach($this->data->parentLevel1 as $parentlevel1) :
+                            $i_Sitemap++;
+                            if(!in_array($parentlevel1['menu_group_id'], $tmp_array) && count($tmp_array)>0) :
+                                ?>
+                                    </div>
+                                </div>
+                                <?php
+                            endif;
+                            if(!in_array($parentlevel1['menu_group_id'], $tmp_array)) :
+                                    array_push($tmp_array, $parentlevel1['menu_group_id']);
+                                ?>
+                                <div class="just-padding <?php echo $cssCol; ?>">
+                                    <div style="border: 1px solid #ddd; border-radius: 4px; padding: 0px 10px; ">
+                                <?php
+                            endif;
+                        ?>
+                            <div class="list-group">
+                                <a href="<?php echo $parentlevel1['url'];?>" class="list-group-item"><?php echo $parentlevel1['name']; ?></a>
+                                <?php
+                                if(count($parentlevel1['parentLevel2'])>0) :
+                                    foreach($parentlevel1['parentLevel2'] as $parentLevel2) :
+                                    ?>
+                                        <div class="list-group">
+                                            <a href="<?php echo $parentLevel2['url']?>" class="list-group-item"><?php echo $parentLevel2['name']; ?></a>
+                                            <?php
+                                            if(count($parentLevel2['parentLevel3'])>0) :
+                                                foreach($parentLevel2['parentLevel3'] as $parentLevel3) :
+                                                ?>
+                                                    <div class="list-group">
+                                                        <a href="<?php echo $parentLevel3['url'];?>" class="list-group-item"><?php echo $parentLevel3['name']; ?></a>
+                                                        <?php
+                                                        if(count($parentLevel3['parentLevel4'])>0) :
+                                                            foreach($parentLevel3['parentLevel4'] as $parentLevel4) :
+                                                            ?>
+                                                                <div class="list-group">
+                                                                    <a href="<?php echo $parentlevel4['url'];?>" class="list-group-item"><?php echo $parentLevel4['name']; ?></a>
+                                                                    <?php
+                                                                    if(count($parentLevel4['parentLevel5'])>0) :
+                                                                        foreach($parentLevel4['parentLevel5'] as $parentLevel5) :
+                                                                        ?>
+                                                                            <div class="list-group">
+                                                                                <a href="<?php echo $parentlevel5['url'];?>" class="list-group-item"><?php echo $parentLevel5['name']; ?></a>
+                                                                            </div>
+                                                                        <?php
+                                                                        endforeach;
+                                                                    endif;
+                                                                    ?> 
+                                                                </div>
+                                                            <?php
+                                                            endforeach;
+                                                        endif;
+                                                        ?> 
+                                                    </div>
+                                                <?php
+                                                endforeach;
+                                            endif;
+                                            ?>
+                                        </div>
+                                    <?php
+                                    endforeach;
+                                endif;
+                                ?>
+                            </div>
+                            <?php
+                                if($i_Sitemap == count($this->data->parentLevel1)) :
+                                ?>
+                                    </div>
+                                </div>
+                                <?php
+                            endif;
+                        endforeach;
+                    ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script>
+$(function () {
+
+    $(document).ready(function () {
+    	// CallMasonry();
+    });
+
+	function CallMasonry() {
+        var container = document.querySelector('#post-data');
+        var masonry = new Masonry(container, {
+          itemSelector: '.just-padding',
+          transitionDuration: '0.8s'
+        });
+	}
+
+});
+</script>

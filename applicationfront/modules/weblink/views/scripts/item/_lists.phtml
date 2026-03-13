@@ -1,0 +1,104 @@
+<style>
+.mainBox { display: grid; }
+.weblink-category { background: #226BB2; padding: 10px 15px; color: #FFF; border-radius: 5px; margin-bottom: 15px; }
+.weblink-category em { float: right; font-size: 18px; cursor: pointer; margin-top: 8px; }
+.weblink-sub-category-box { position: relative; margin-bottom: 15px; }
+.weblink-index { background: #0071BA; width: 40px; text-align: center; color: #FFF; padding: 5px 0px; position: absolute; left: 15px; z-index: 1; }
+.weblink-titile { background: #e0e0e0; padding: 5px 15px 5px 50px; border-bottom-right-radius: 5px; border-top-right-radius: 5px; }
+.weblink-titile a { color: #000; }
+</style>
+
+<?php 
+ if($this->setting->ItemCustomCss){
+	echo '<style>'.$this->setting->ItemCustomCss.'</style>';
+ } else {
+	echo '<style>.weblink-box { display: inline-block; padding: 15px; }</style>';
+ }
+ ?>
+ 
+<div class="info infopage weblink-lists">
+ 	<div class="item-title title-panel">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+		<hr />
+	</div>
+ 
+    <div class="result-list-panel">
+
+		<?php
+		if(count($this->dataList)>0){
+			$mainIndex = 1;
+			foreach($this->dataList as $k1=>$v1){
+		?>
+		<div class="mainBox">
+
+			<div class="weblink-category weblink-text-overflow col-md-12">
+				<?php echo $v1['Title']; ?>
+				<em class="fa fa-plus weblink-icon-swing" id="subCategoryShow-<?php echo $v1['ID']; ?>" ></em>
+				<em class="fa fa-minus weblink-icon-swing" id="subCategoryHide-<?php echo $v1['ID']; ?>" style="display: none;"></em>
+			</div>
+
+			<div id="subBox-<?php echo $v1['ID']; ?>">
+				<?php
+				if(count($v1['Items'])>0){
+					$subIndex = 1;
+					foreach($v1['Items'] as $k2=>$v2){
+				?>
+
+					<div class="weblink-sub-category-box col-md-12">
+						<div class="weblink-sub-category weblink-index weblink-text-overflow col-md-12">
+							<?php echo $subIndex; ?>
+						</div>
+						<div class="weblink-sub-category weblink-titile weblink-text-overflow col-md-12">
+							<a href="<?php echo $v2['Url']; ?>" target="<?php echo $v2['LinkTarget']; ?>">
+								<?php echo $v2['Title']; ?>
+							</a>
+						</div>
+					</div>
+
+				<?php
+					echo  "
+					<script>
+						$('.weblink-sub-category#".$v2['ID']."').click(function() {
+							$.post('".$this->url(array('module' => 'weblink', 'controller' => 'item', 'action' => 'click'), null, true)."', { id: ".$v2['ID']." });
+						});
+					</script>
+					";
+					$subIndex++;
+					}
+				}
+				?>
+			</div>
+
+			<script>
+			jQuery(function(){
+				$("#subCategoryShow-<?php echo $v1['ID']; ?>").click(function(e) {
+					$("#subBox-<?php echo $v1['ID']; ?>").slideDown(600, "swing");
+					$("#subCategoryShow-<?php echo $v1['ID']; ?>").hide();
+					$("#subCategoryHide-<?php echo $v1['ID']; ?>").show();
+				});
+				$("#subCategoryHide-<?php echo $v1['ID']; ?>").click(function(e) {
+					$("#subBox-<?php echo $v1['ID']; ?>").slideUp(600, "swing");
+					$("#subCategoryShow-<?php echo $v1['ID']; ?>").show();
+					$("#subCategoryHide-<?php echo $v1['ID']; ?>").hide();
+				});
+				<?php if($mainIndex==1){ ?>
+				$("#subBox-<?php echo $v1['ID']; ?>").show();
+				$("#subCategoryShow-<?php echo $v1['ID']; ?>").hide();
+					$("#subCategoryHide-<?php echo $v1['ID']; ?>").show();
+				<?php }else{ ?>
+				$("#subBox-<?php echo $v1['ID']; ?>").hide();
+				<?php } ?>
+			});
+			</script>
+
+		</div>
+		<?php
+			$mainIndex++;
+			}
+		}
+		?>
+
+    </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="">
+	<div class="row">
+        <?php 
+        $col = "col-md-4 col-sm-6 col-xs-12";
+        if ($this->calendarSettingArticleAmountColumn == 2) : 
+        	$col = "col-md-6 col-sm-6 col-xs-12";
+        elseif ($this->calendarSettingArticleAmountColumn == 3) :
+        	$col = "col-md-4 col-sm-6 col-xs-12";
+        else :
+        	$col = "col-md-3 col-sm-6 col-xs-12";
+        endif;
+        
+        
+        if (count($this->items) > 0) :
+			foreach ($this->items as $item) :
+				if($this->cid==0):
+	        $id = $item["ID"];
+	        $title = $item["Title"];
+	        $introText = $item["IntroText"];
+	        $imageUrl = $this->defaultImageUrl;
+	        if (!empty($item["IntroImageHashName"])) :
+	        	$imageUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "file" => $item["IntroImageHashName"]), null, true);
+	        	endif;
+	        	$date = $item["Created"] == null ? '' : Emwork_Utility_DateTime::MSSqlToDateThai($item["Created"]);
+	        $viewAmount = number_format($item["ViewAmount"]);
+	        $url = $this->url(array("module" => "calendar", "controller" => "category", "action" => "detail", "id" => $this->id,"cid" => $this->cid, "iid" => $id), null, true);
+        ?>
+		<div class="<?php echo $col; ?>">
+			<div class="infocard">
+				<?php if ($this->calendarSettingArticleShowImage) : ?>
+				<div class="image">
+					<div class="image-inner">
+						<a href="<?php echo $url; ?>">
+							<img alt="image" src="<?php echo $imageUrl; ?>" />
+						</a>
+					</div>
+				</div>
+				<?php endif; ?>
+				<div class="detail">
+					<div class="detail-title">
+						<a href="<?php echo $url; ?>"><?php echo $title; ?></a>
+					</div>				
+					<?php if ($this->calendarSettingArticleShowIntroText) : ?>
+					<div class="detail-intro" >
+						<?php echo nl2br($introText); ?>
+					</div>
+					<?php endif; ?>
+					<div class="detail-date">
+						<em class="fa fa-calendar"></em> <?php echo $date; ?>
+						|
+						<em class="fa fa-eye"></em> <?php echo $viewAmount; ?>
+					</div>
+					<div class="btDetail">
+						<a href="<?php echo $url; ?>" class="btn btn-info"><?php echo Emwork_Translate::text($this->lang, 'calendar', 'detail'); ?></a>  
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php 
+				endif;
+        	endforeach;
+        endif;
+        ?>
+	</div>
+</div>

@@ -1,0 +1,450 @@
+ /***************** font-face : ThaiSans Neue *****************/
+@font-face {
+    font-family: 'ThaiSans Neue';
+    src: url('../fonts/ThaiSansNeue-Regular.eot');
+    src: url('../fonts/ThaiSansNeue-Regular.eot?') format('embedded-opentype'),
+    	url('../fonts/ThaiSansNeue-Regular.woff?') format('woff'),
+    	url('../fonts/ThaiSansNeue-Regular.ttf?') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'ThaiSans Neue';
+    src: url('../fonts/ThaiSansNeue-Bold.eot');
+    src: url('../fonts/ThaiSansNeue-Bold.eot?') format('embedded-opentype'),
+    	url('../fonts/ThaiSansNeue-Bold.woff?') format('woff'),
+    	url('../fonts/ThaiSansNeue-Bold.ttf?') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'ThaiSans Neue';
+    src: url('../fonts/ThaiSansNeue-Italic.eot');
+    src: url('../fonts/ThaiSansNeue-Italic.eot?') format('embedded-opentype'),
+    	url('../fonts/ThaiSansNeue-Italic.woff?') format('woff'),
+    	url('../fonts/ThaiSansNeue-Italic.ttf?') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'ThaiSans Neue';
+    src: url('../fonts/ThaiSansNeue-BoldItalic.eot');
+    src: url('../fonts/ThaiSansNeue-BoldItalic.eot?') format('embedded-opentype'),
+    	url('../fonts/ThaiSansNeue-BoldItalic.woff?') format('woff'),
+    	url('../fonts/ThaiSansNeue-BoldItalic.ttf?') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+ /***************** font-face : THSarabunNew *****************/
+@font-face {
+    font-family: 'THSarabunNew';
+    src: url('../fonts/THSarabunNew.eot');
+    src: url('../fonts/THSarabunNew.eot?') format('embedded-opentype'),
+    	url('../fonts/THSarabunNew.woff?') format('woff'),
+    	url('../fonts/THSarabunNew.ttf?') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'THSarabunNew';
+    src: url('../fonts/THSarabunNewBold.eot');
+    src: url('../fonts/THSarabunNewBold.eot?') format('embedded-opentype'),
+    	url('../fonts/THSarabunNewBold.woff?') format('woff'),
+    	url('../fonts/THSarabunNewBold.ttf?') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'THSarabunNew';
+    src: url('../fonts/THSarabunNewItalic.eot');
+    src: url('../fonts/THSarabunNewItalic.eot?') format('embedded-opentype'),
+    	url('../fonts/THSarabunNewItalic.woff?') format('woff'),
+    	url('../fonts/THSarabunNewItalic.ttf?') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'THSarabunNew';
+    src: url('../fonts/THSarabunNewBoldItalic.eot');
+    src: url('../fonts/THSarabunNewBoldItalic.eot?') format('embedded-opentype'),
+    	url('../fonts/THSarabunNewBoldItalic.woff?') format('woff'),
+    	url('../fonts/THSarabunNewBoldItalic.ttf?') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+/***************** font-face : Kanit *****************/
+@font-face {
+    font-family: 'Kanit Medium';
+    src: url('../fonts/Kanit-Medium');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Kanit';
+    src: url('../fonts/Kanit-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/***************** font-face : Mitr *****************/
+@font-face {
+    font-family: 'Mitr Light';
+    src: url('../fonts/Mitr-Light');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Mitr Regular';
+    src: url('../fonts/Mitr-Regular');
+    font-weight: normal;
+    font-style: normal;
+}
+
+ /***************** font-face : SRISURYWONGSE *****************/
+@font-face {
+    font-family: 'SRISURYWONGSE';
+    src: url('../fonts/SriSuryWongse.eot');
+    src: url('../fonts/SriSuryWongse.eot?') format('embedded-opentype'),
+    	url('../fonts/SriSuryWongse.woff?') format('woff'),
+    	url('../fonts/SriSuryWongse.ttf?') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/***************** font-face : CSPraJad *****************/
+@font-face {
+  font-family: 'cs_prajadregular';
+  src: url('../fonts/CSPraJad.eot');
+  src: url('../fonts/CSPraJad.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/CSPraJad.woff') format('woff'),
+       url('../fonts/CSPraJad.ttf') format('truetype'),
+       url('../fonts/CSPraJad.svg#cs_prajadregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/***************** font-face : DBHelvethaicaX *****************/
+@font-face {
+  font-family: 'DBHelvethaicaX';
+  src: url('../fonts/DBHelvethaicaX-55Regular.eot');
+  src: url('../fonts/DBHelvethaicaX-55Regular.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/DBHelvethaicaX-55Regular.woff') format('woff'),
+       url('../fonts/DBHelvethaicaX-55Regular.ttf') format('truetype'),
+       url('../fonts/DBHelvethaicaX-55Regular.svg#DBHelvethaicaX-55Regular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+ /***************** font-face : RSUText *****************/
+@font-face {
+    font-family: 'RSUText';
+    src: url('../fonts/RSUTextRegular.woff?') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'RSUText';
+    src: url('../fonts/RSUTextBold.woff?') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'RSUText';
+    src: url('../fonts/RSUTextItalic.woff?') format('woff');
+    font-weight: normal;
+    font-style: italic;
+}
+
+html, body {
+	font-family: 'THSarabunNew';
+}
+body {font-size: 2.2rem;}
+
+/************** Validation ***************/
+.help-block.error {color: red; font-style: italic;}
+.form-group .labelRequest::after {color: red;content: " *";}
+
+/***************** layout *****************/
+.btn.disabled {border: #cbcbcb !important;background: #cbcbcb !important;}
+.btn-info.active {background-color: #ad7801;border-color: #ad7801;}
+
+/***************** Header *****************/
+.breadcrumbs-panel .breadcrumb>.active {color: #bb590f;}
+.information-panel .detail-zone #im-detail-list .item {padding-top: 13px;}
+.information-panel .detail-zone #im-detail-list .item small {color: #0c86f3;font-size: 19px;}
+.infodetail .hilight-panel .hilight-inner-top .title {font-size: 4.5rem;}
+
+.wrapper {background-color: #fff;}
+.content-wrapper {background-color: #fff;}
+.content-header, .content {padding-left: 0px;padding-right: 0px;} 
+
+h2.pageName {
+	color: #B21F29;
+	font-family: 'ThaiSans Neue' ;
+	font-size: 32px;
+	font-weight: bold; 
+	border-bottom: 1px solid #B21F29;
+	padding: 3px 0px 5px;
+	margin-bottom: 5px;
+}
+
+.title-label {
+	color: #215770;
+	font-size: 22px;
+	font-family: 'ThaiSans Neue' ;
+	padding: 2px 0px 3px;
+	border-bottom: 1px solid #215770;
+	margin-bottom: 15px;
+	font-weight: bold;
+}
+.pointer { cursor: pointer; }
+
+/***************** layout : breadcrumb *****************/
+.content-header > .breadcrumb {
+  position: relative;
+  margin-top: 5px;
+  top: 0;
+  right: 0;
+  float: none;
+  background: #d2d6de;
+  padding-left: 10px;
+}
+.content-header > .breadcrumb li:before {
+  color: #97a0b3;
+}
+
+
+/***************** button *****************/
+.btn-action, .btn-sidemenu {
+	font-family: 'ThaiSans Neue' ;
+	text-align: left;
+	font-size: 20px;
+}
+.infodetail.infopage .hilight-panel .hilight-inner-top {padding: 35px 0px 15px;}
+
+
+/************* Authentication ***********/
+
+.navbar-custom-menu>.navbar-nav>li>.dropdown-menu { z-index: 11000; position: absolute; top: 50px; right: 0px; }
+.navbar-nav>.user-menu>.dropdown-menu { width: auto; min-width: 200px; }
+.navbar-nav>.user-menu>.dropdown-menu>.user-footer div a { display: block; color: #444444; }
+.navbar-nav>.user-menu>.dropdown-menu>.user-footer div:hover { background-color: #E5E5E5; }
+.navbar-nav>.user-menu>.dropdown-menu>.user-footer div.active { background-color: #E5E5E5; }
+/* .navbar-nav>.user-menu>.dropdown-menu>.user-footer .btn-default { min-width: 120px; } */
+
+/********** Fix Position Header ***********/
+.content-header-fix { position: fixed; top: 0px; height: 20px; width: 100%; z-index: 10000; }
+
+
+/*************** Header ***************/
+.title-logo.mobile img{ width: 50px; margin-left: 60px; }
+.navbar-header.mobile { position: absolute; left: 0px; top: -12px; font-size: 32px; }
+
+
+/*************** Back to Top **************/
+#back-to-top {
+	position: fixed;
+	bottom: 10px;
+	right: 20px;
+	z-index: 9999;
+	text-align: center;
+	cursor: pointer;
+	border: 0;
+	text-decoration: none;
+	transition: opacity 0.2s ease-out;
+	opacity: 0;
+	border-radius: 5px;
+	background-color: rgba(255, 255, 255, .5);
+	text-align: center;
+	min-width: 100px;
+}
+#back-to-top:hover { background: #e9ebec; }
+#back-to-top.show { opacity: 1; }
+#back-to-top .toTop-content { margin: 5px; color: black; font-weight: bold; opacity: 0.5; filter: alpha(opacity=50); /* For IE8 and earlier */ }
+#back-to-top .toTop-content div { margin-top: 5px; }
+#back-to-top .toTop-img { height: 45px; }
+
+/** info page **/
+.hilight-panel {position: relative; }
+.hilight-panel img {width: 100%;}
+.hilight-panel .hilight-inner-top {position: absolute; width: 100%; top: 14px; padding: 15px 0px; color: #fff; text-align: center;padding: 50px 0px 0px;}
+.hilight-panel .hilight-inner-top .title {font-size: 6.5rem; font-family: 'SRISURYWONGSE'; font-weight: bold;text-shadow: 1px 1px 1px #636161;}
+.hilight-panel .hilight-inner-top .subtitle {font-size: 3rem; font-family: 'SRISURYWONGSE';text-shadow: 1px 1px 1px #636161;}
+.hilight-panel .hilight-inner {position: absolute; width: 100%; bottom: 0px; background-color: rgba(0,0,0, 0.5); padding: 15px 0px;}
+.hilight-panel .hilight-inner-title {color: #fff; font-size: 5rem; line-height: 1.4;}
+.hilight-panel .hilight-inner-category {padding: 0px 25px; border-top: 1px solid #fff; border-bottom: 1px solid #fff;}
+.hilight-panel .hilight-inner-category .hilight-inner-category-item {}
+.hilight-panel .hilight-inner-category .hilight-inner-category-item:hover {background-color: rgba(0,0,0,0.75);}
+.hilight-panel .hilight-inner-category .hilight-inner-category-item.active {background-color: #fff;}
+.hilight-panel .hilight-inner-category .hilight-inner-category-item.active:hover {background-color: #ccc;}
+.hilight-panel .hilight-inner-category a {display: block; width: 100%; padding: 7px; font-weight: bold; font-size: 2.1rem; color: #fff; text-align: center; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+.hilight-panel .hilight-inner-category .active  a {color: #000;}
+.breadcrumbs-panel {}
+.breadcrumbs-panel .breadcrumb {background-color: unset; padding-right: 0px; padding-left: 0px; margin-bottom: 0px; font-size: 1.8rem;}
+.breadcrumbs-panel .breadcrumb > li + li::before {content: ' >> '; font-size: 1.8rem; color: #999;}
+.breadcrumbs-panel .breadcrumb a {font-size: 1.8rem; color: #333;}
+.title-panel {padding: 7px 0px;}
+.title-panel .container {position: relative;}
+.title-panel hr {margin-top: 7px; margin-bottom: 5px; border-color: #cccccc;}
+.title-panel .title {font-family: 'ThaiSans Neue'; font-size: 3.1rem; font-weight: bold;}
+.title-panel small { font-size: 1.8rem; line-height: 1.2; display: inline-block; position: absolute;right: 0px; top: 50%; -webkit-transform: translate(0, -50%);-moz-transform: translate(0, -50%);transform: translate(0, -50%); margin-right: 15px;}
+.title-panel small img {height: 20px;}
+.title-panel .switch-view-part {}
+.title-panel .switch-view-part a, .title-panel .switch-view-part span {display: inline-block; margin-left: 30px; text-align: center;}
+.title-panel .switch-view-part a {color: #ccc;}
+.title-panel .switch-view-part a:hover {color: #333;}
+.title-panel .switch-view-part span {color: #333;}
+.title-panel .switch-view-part span .fa {color: #0099cc;}
+.result-list-panel {margin-top: 15px; margin-bottom: 15px;}
+.result-list-panel .infocard {padding-bottom: 15px; border-bottom: 1px solid #e4e4e4; margin-bottom: 30px;}
+.result-list-panel .infocard .fa.fa-map-marker {color: #999999;}
+.result-map-panel {margin-top: 15px; margin-bottom: 15px;}
+.result-map-panel .result-amount, .result-list-panel .result-amount {font-size: 1.8rem; color: #0066ff; padding: 3px 0 15px;}
+
+/********* infodetail **********/
+.infodetail {}
+.infodetail .hilight-panel {}
+.infodetail .hilight-panel img {/*height: 170px;*/ }
+.infodetail .hilight-panel .hilight-inner-top {position: absolute; padding: 35px 0px 15px; width: 100%; top: 50%; color: #fff; text-align: right; -webkit-transform: translate(0, -50%);-moz-transform: translate(0, -50%);transform: translate(0, -50%);}
+
+.infodetail .information-panel {font-size: 2.3rem; padding-bottom: 15px;}
+.infodetail .information-panel .title {color: #245aa3; font-weight: bold; padding-bottom: 5px; line-height: 1.5;}
+.infodetail .information-panel .detail { line-height: 1.5;}
+.infodetail .information-panel h3 {margin-top: 0px;   margin-bottom: 15px;   font-family: 'ThaiSans Neue';   font-size: 2.6rem;;   font-weight: bold;}
+.infodetail .information-panel h3 em {color: #1aa3d1; width: 28px; font-size: 2.2rem; text-align: center;}
+.infodetail .information-panel p.subtitle { background-color: #87bfdb; color: #fff; text-align: center; padding: 5px 0px;} 
+.infodetail .information-panel ul {margin-left: 20px;}
+.infodetail .information-panel ul li {list-style-position: outside; list-style-type: disc;}
+.infodetail .information-panel .btn-source, 
+.infodetail .information-panel .btn-source:active, 
+.infodetail .information-panel .btn-source:focus, 
+.infodetail .information-panel .btn-source:hover { font-size: 2.1rem; color: #fff; background-color: #0000ff; border-color: #0000ff;}
+.infodetail .information-panel .more-info {text-align: center;}
+.infodetail .information-panel .more-info .btn {background-color: #9999cd; color: #fff; border-radius: 25px; font-size: 2.1rem; padding-right: 15px; padding-left: 15px;}
+
+.infodetail .title-label {font-size: 2.8rem; padding: 2px 0px 3px; margin-bottom: 15px; margin-top: 15px; border-bottom: none; font-family: 'THSarabunNew'; }
+.infodetail .title-label  img {height: 24px; margin-top: -5px;}
+.infodetail .topcontent { display: block; width: 100%; text-align: right; color: #555555; }
+.infodetail div.effect-box { overflow: hidden; margin-top: 20px; } 
+.infodetail div.effect-image { overflow: hidden; text-align: center; margin-top: 20px; }
+.infodetail div.effect-image img { max-width: none; width: 100%; height: auto; -webkit-transition: opacity 1s, -webkit-transform 1s; transition: opacity 1s, transform 1s; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.infodetail div.effect-image:hover img { opacity: 1; -webkit-transform: scale3d(1.1,1.1,1); transform: scale3d(1.1,1.1,1); }
+.infodetail div.effect-box .item-img { border: solid 1px #CCCCCC; border-radius: 0px; text-align: center; position: relative; overflow: hidden; background-size: cover; background-repeat: no-repeat; background-position: center center; }
+.infodetail div.effect-box .item-img img { visibility: hidden; width: 100%; }
+.infodetail div.effect-box .item-img > a { width: 100%; height: 100%; display: block; }
+.infodetail div.effect-box .item-img > li { width: 100%; height: 100%; display: block; }
+
+.mb-15 {margin-bottom: 15px;}
+
+/********* infocard **********/
+.infocard {margin-bottom: 15px;}
+.infocard .image {box-shadow: 5px 5px 5px rgba(125, 125, 125, 0.34); width: 100%; position: relative;}
+.infocard .image .image-inner {width: 100%; padding-top: 56.25%; position: relative; }
+.infocard .image a {position: absolute; top: 0; left: 0; bottom: 0; right: 0;}
+.infocard .image img {object-fit: cover; width: 100%; height: 100%;}
+.infocard .image .openhour {position: absolute; bottom: 15px; right: 15px; padding: 5px 15px; background-color: #ccc; font-size: 1.6rem; color: #fff;}
+.infocard .image .openhour.OPEN {background-color: #339933;}
+.infocard .image .openhour.CLOSE {background-color: #e11130;}
+.infocard .image .openhour.NEARLYCLOSE {background-color: #f1ba39;}
+.infocard .image .ordering {position: absolute; top: 15px; left: 15px; font-size: 1.6rem; color: #fff; }
+.infocard .image .ordering img {height: 40px; width: auto; object-fit: unset;}
+.infocard .image .ordering span {position: absolute; top: 10px; left: 30px; font-size: 16px; font-weight: bold;}
+.infocard .detail {font-size: 2rem; padding: 15px 0px 7px;}
+.infocard .detail .detail-title {font-size: 2.6rem; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;line-height: 27px;}
+.infocard .detail .detail-title, .infocard .detail .detail-row, .infocard .detail .detail-date, .infocard .detail .detail-symbol {padding: 3px 0px;}
+.infocard .detail .detail-row {position: relative;}
+.infocard .detail .detail-address {color: #245aa3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;font-size: 22px;}
+.infocard .detail .detail-address img {height: 25px;}
+.infocard .detail .detail-rating {width: 100px; display: block; position: absolute; top: 0; right: 0;}
+.infocard .detail .detail-rating img {width: 20px; display: inline-block;}
+.infocard .detail .detail-symbol {height: 24px;}
+.infocard .detail .detail-title a {color: #333333;}
+.infocard .detail .detail-symbol img {height: 100%; display: inline-block;}
+.infocard .detail .detail-introtext {color: #000; height: 72px; line-height: 1.2; overflow: hidden; position: relative;margin-top: 5px;}
+.infocard .detail .detail-bottom-gradient {
+      position: absolute;
+      width: 100%;
+      height: 25px;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+      background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+      background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+      background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+   }
+/*.infocard .detail .detail-address img {display:none;}*/
+
+.infocard.with-border {box-shadow: 0px 2px 5px 0px #7d7d7d;}
+.infocard.with-border .image {box-shadow: unset;}
+.infocard.with-border .detail {padding-right: 15px; padding-left: 15px;}
+
+.infopage .hilight-panel .hilight-inner-top {padding: 100px 0px 0px;}
+
+/******** Inforow *********/
+.inforow {margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #ccc;}
+.inforow:last-child {margin-bottom: 0;}
+
+.inforow .image {display: block; float: left; width: 250px; }
+.inforow .image .image-inner {width: 100%; padding-top: 100%; position: relative; }
+.inforow .image a {position: absolute; top: 0; left: 0; bottom: 0; right: 0;}
+.inforow .image img {width: 100%; height: 100%; object-fit: cover; }
+
+.inforow .detail {margin-left: 265px; font-size: 2.2rem;}
+.inforow .detail.with-no-image {margin-left: 0px;}
+.inforow .detail .detail-title {font-size: 3rem; font-weight: bold; padding-bottom: 15px;}
+.inforow .detail .detail-intro {padding-bottom: 15px;}
+.inforow .detail .detail-date {}
+
+.inforow.noimgae .detail {margin-left: 0px; }
+
+/******** Content: Article ************/
+.article-title {}
+.article-date {margin-bottom: 15px;}
+.article-introimage {margin-bottom: 15px; width: 100%;}
+.article-introimage img {max-width: 100%; margin-left: auto; margin-right: auto; display: block;}
+
+.article-detail {}
+.article-document {}
+.article-gallery {}
+.article-gallery .img-container {width: 100%; /*padding-top: 100%;*/ padding-top: 75%; /*padding-top: 66.66%;*/ /*padding-top: 62.5%;*/ position: relative; cursor: pointer; margin-bottom: 15px;}
+.article-gallery .img-container .img-inner {position: absolute; top: 0; left: 0; bottom: 0; right: 0;}
+.article-gallery .img-container .img-inner img {object-fit: cover; width: 100%; height: 100%;}
+
+
+/*************** Input date calendar icon *****************/
+.inner-addon { position: relative; }
+.inner-addon .fa { position: absolute; padding: 10px; pointer-events: none; }
+.left-addon .fa  { left:  15px;}
+.right-addon .fa { right: 15px;}
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
+/****************Check box & radio ******************/
+.checkbox.with-icheck, .radio.with-icheck {}
+.checkbox.with-icheck label {padding-left: 0px; padding-top: 0;}
+.checkbox.with-icheck div[class*=icheckbox] {margin-right: 5px;}
+.radio.with-icheck label {padding-left: 0px; padding-top: 0;}
+.radio.with-icheck div[class*=iradio] {margin-right: 5px;}
+
+
+/******************* Bootstrap Overwrite ******************/
+.form-control {font-size: 16px;}
+.form-control-static { padding-top: 2px; }
+.form-control-feedback { right: 15px; }
+.modal-dialog .modal-header { background: #0099CC; font-weight: bold; color: #FFFFFF; }
+.modal-dialog .btn.btn-primary { background: #0099CC; border-color: #0099CC; }
+
+/** D2MS Widget **/
+.d2ms-widget {}
+
+/*** offCanvas ***/
+#offCanvas {}
+#offCanvas .close-offcanvas {position: absolute; top: 10px; right: 10px; height: 22px; width: 22px; line-height: 22px; font-size: 12px; text-align: center; font-size: 12px; color: #fff; border-radius: 50%; background: rgba(0,0,0,0.3);} 
+#offCanvas .offcanvas-inner { margin-top: 35px;} 
+
+.d2ms-widget-menu-wrapper {position: relative;}
+.d2ms-widget-menu-wrapper #toggleCanvas {float: right;}
+.d2ms-widget-menu-wrapper .d2ms-widget-menu {float:left;}
+.d2ms-widget-menu-wrapper.with-offcanvas .d2ms-widget-menu {margin-right: 30px;}
+.d2ms-widget-menu-wrapper.with-offcanvas #toggleCanvas {position: absolute; top: 5px; right: 0px;}

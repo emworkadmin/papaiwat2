@@ -1,0 +1,381 @@
+<script>
+function convertHex(hex,opacity){
+    hex = hex.replace('#','');
+    r = parseInt(hex.substring(0,2), 16);
+    g = parseInt(hex.substring(2,4), 16);
+    b = parseInt(hex.substring(4,6), 16);
+
+    result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
+    return result;
+}
+function randomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+</script>
+
+<?php
+if(count($this->graphData)>0){
+    foreach($this->graphData as $graph){
+        $UID = uniqid();
+        $graphData = json_decode($graph['Data'],true);
+        $graphType = $graphData['Header'][$this->lang]['Type'];
+?>
+
+        <!-- -------------------------------------- Bar Chart -------------------------------------- -->
+
+        <?php if($graphType=='Bar Chart'){ ?>
+
+            <div class="chart-title title-bar-chart">
+                <span class="">
+                    <em class="fa fa-bar-chart"></em>&nbsp;
+                    <?php echo empty($graphData['Header'][$this->lang]['Title']) ? '' : $graphData['Header'][$this->lang]['Title']; ?>
+                </span>
+            </div>
+
+            <div class="item-bar-chart">
+                <canvas id="graphdata-bar-chart-<?php echo $UID; ?>"></canvas>
+            </div>
+
+            <script>
+            jQuery(function() {
+
+                var ctx_<?php echo $UID; ?> = document.getElementById('graphdata-bar-chart-<?php echo $UID; ?>');
+                var Chart_<?php echo $UID; ?> = new Chart(ctx_<?php echo $UID; ?>, {
+                    type: 'bar',
+                    data: {
+                        datasets: [{
+                            label: '<?php echo empty($graphData['Header'][$this->lang]['Title']) ? '' : $graphData['Header'][$this->lang]['Title']; ?>',
+                            data: [
+                                <?php
+                                $maxValueChart = 0;
+                                if(count($graphData['Order'])>0){
+                                    foreach($graphData['Order'] as $k1=>$v1){
+                                        if($v1['Lang'][$this->defaultLanguage]['Value']){
+                                            if($v1['Lang'][$this->defaultLanguage]['Value'] > $maxValueChart){
+                                                $maxValueChart = $v1['Lang'][$this->defaultLanguage]['Value'];
+                                            }
+                                            echo "'" . $v1['Lang'][$this->defaultLanguage]['Value'] . "',";
+                                        }else{
+                                            echo '0,';
+                                        }
+                                    }
+                                }
+                                ?>
+                            ],
+                            backgroundColor: [
+                                <?php
+                                if(count($graphData['Order'])>0){
+                                    foreach($graphData['Order'] as $k1=>$v1){
+                                        if($v1['Lang'][$this->defaultLanguage]['Color']){
+                                            echo "convertHex('" . $v1['Lang'][$this->defaultLanguage]['Color'] . "',70),";
+                                        }else{
+                                            echo "convertHex(randomColor(),80),";
+                                        }
+                                    }
+                                }
+                                ?>
+                            ],
+                        }],
+                        labels: [
+                            <?php
+                            if(count($graphData['Order'])>0){
+                                foreach($graphData['Order'] as $k1=>$v1){
+                                    if($v1['Lang'][$this->lang]['Title']){
+                                        echo "'" . $v1['Lang'][$this->lang]['Title'] . "',";
+                                    }else{
+                                        echo "'" . $v1['Lang'][$this->defaultLanguage]['Title'] . "',";
+                                    }
+                                }
+                            }
+                            ?>
+                        ]
+                    },
+                    options: {
+                        legend: {
+                            display: false
+                        },
+                        scales: {
+                            yAxes: [{
+                                display: true,
+                                position: 'left',
+                                ticks: {
+                                    <?php if(strlen($maxValueChart)<3){ ?>
+                                    max: <?php echo $maxValueChart+2; ?>,
+                                    <?php } ?>
+                                    beginAtZero: true,
+                                    callback: function(value, index, values) {
+                                        return value;
+                                    }
+                                }
+                            }],
+                            xAxes: [{
+                                gridLines: {
+                                    display : false
+                                },
+                                ticks: {
+                                    beginAtZero:true,
+                                    autoSkip: false
+                                }
+                            }]
+                        },
+                        hover: {
+                            animationDuration: 0
+                        },
+                        animation: {
+                            duration: 1,
+                            onComplete: function() {
+                                var chartInstance = this.chart,
+                                ctx = chartInstance.ctx;
+                                ctx.font = "10px ",
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'bottom';
+                                ctx.fillStyle = '#666';
+                                this.data.datasets.forEach(function(dataset, i) {
+                                    var meta = chartInstance.controller.getDatasetMeta(i);
+                                    meta.data.forEach(function(bar, index) {
+                                        var data = dataset.data[index];
+                                        data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                                        ctx.fillText(data, bar._model.x, bar._model.y - data.length);
+                                    });
+                                });
+                            }
+                        },
+                        tooltips: {
+                            enabled: true,
+                            backgroundColor : "rgb(234, 234, 234)",
+                            titleFontColor : "black",
+                            bodyFontColor : "black"
+                        },
+                        responsive: true
+                    }
+                });
+
+            });
+            </script>
+
+        <?php } // End Bar Chart ?>
+
+        <!-- -------------------------------------- Line Chart -------------------------------------- -->
+
+        <?php if($graphType=='Line Chart'){ ?>
+
+            <div class="chart-title title-line-chart">
+                <span class="">
+                    <em class="fa fa-line-chart"></em>&nbsp;
+                    <?php echo empty($graphData['Header'][$this->lang]['Title']) ? '' : $graphData['Header'][$this->lang]['Title']; ?>
+                </span>
+            </div>
+
+            <div class="item-line-chart">
+                <canvas id="graphdata-line-chart-<?php echo $UID; ?>"></canvas>
+            </div>
+
+            <script>
+            jQuery(function() {
+                var ctx_<?php echo $UID; ?> = document.getElementById('graphdata-line-chart-<?php echo $UID; ?>');
+                var Chart_<?php echo $UID; ?> = new Chart(ctx_<?php echo $UID; ?>, {
+                    type: 'line',
+                    data: {
+                    datasets: [
+                        {
+                            label: "<?php echo empty($graphData['Header'][$this->lang]['Title']) ? '' : $graphData['Header'][$this->lang]['Title']; ?>",
+                            data : [
+                                <?php
+                                $maxValueChart = 0;
+                                if(count($graphData['Order'])>0){
+                                    foreach($graphData['Order'] as $k1=>$v1){
+                                        if($v1['Lang'][$this->defaultLanguage]['Value']){
+                                            if($v1['Lang'][$this->defaultLanguage]['Value'] > $maxValueChart){
+                                                $maxValueChart = $v1['Lang'][$this->defaultLanguage]['Value'];
+                                            }
+                                            echo "'" . $v1['Lang'][$this->defaultLanguage]['Value'] . "',";
+                                        }else{
+                                            echo "-,";
+                                        }
+                                    }
+                                }
+                                ?>
+                            ],
+                            <?php if($graphData['Header'][$this->defaultLanguage]['Color']){ ?>
+                            backgroundColor: convertHex("<?php echo $graphData['Header'][$this->defaultLanguage]['Color']; ?>",80),
+                            <?php }else{ ?>
+                            backgroundColor: convertHex(randomColor(),60),
+                            <?php } ?>
+                            lineTension : 0
+                        }
+                    ],
+                    labels: [
+                        <?php
+                        if(count($graphData['Order'])>0){
+                            foreach($graphData['Order'] as $k1=>$v1){
+                                if($v1['Lang'][$this->lang]['Title']){
+                                    echo "'" . $v1['Lang'][$this->lang]['Title'] . "',";
+                                }else{
+                                    echo "'" . $v1['Lang'][$this->defaultLanguage]['Title'] . "',";
+                                }
+                            }
+                        }
+                        ?>
+                    ]
+                    },
+                    options : {
+                        legend: {
+                            display: false
+                        },
+                        hover: {
+                            animationDuration: 0
+                        },
+                        animation: {
+                            duration: 1,
+                            onComplete: function() {
+                                var chartInstance = this.chart,
+                                ctx = chartInstance.ctx;
+                                ctx.font = "10px ",
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'bottom';
+                                ctx.fillStyle = '#404040';
+                                this.data.datasets.forEach(function(dataset, i) {
+                                    var meta = chartInstance.controller.getDatasetMeta(i);
+                                    meta.data.forEach(function(bar, index) {
+                                        var data = dataset.data[index];
+                                        data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                                        ctx.fillText(data, bar._model.x, bar._model.y);
+                                    });
+                                });
+                            }
+                        },
+                        tooltips: {
+                            enabled: true,
+                            backgroundColor : "rgb(234, 234, 234)",
+                            titleFontColor : "black",
+                            bodyFontColor : "black"
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    <?php if(strlen($maxValueChart)<3){ ?>
+                                    max: <?php echo $maxValueChart+2; ?>,
+                                    <?php } ?>
+                                }
+                            }],
+                            xAxes: [{
+                                gridLines: {
+                                    display : false
+                                },
+                                ticks: {
+                                    autoSkip: false
+                                }
+                            }]
+                        },
+                        responsive: true
+                    }
+                });  
+            });
+            </script>
+
+        <?php } // End Line Chart ?>
+
+        <!-- -------------------------------------- Pie Chart -------------------------------------- -->
+
+        <?php if($graphType=='Pie Chart'){ ?>
+
+            <div class="chart-title title-pie-chart">
+                <span class="">
+                    <em class="fa fa-pie-chart"></em>&nbsp;
+                    <?php echo empty($graphData['Header'][$this->lang]['Title']) ? '' : $graphData['Header'][$this->lang]['Title']; ?>
+                </span>
+            </div>
+
+            <div class="item-pie-chart">
+                <canvas id="graphdata-pie-chart-<?php echo $UID; ?>"></canvas>
+            </div>
+
+            <script>
+            jQuery(function() {
+                var ctx_<?php echo $UID; ?> = document.getElementById('graphdata-pie-chart-<?php echo $UID; ?>');
+                var Chart_<?php echo $UID; ?> = new Chart(ctx_<?php echo $UID; ?>, {
+                    type: 'pie',
+                    data: {
+                        labels: [
+                            <?php
+                            if(count($graphData['Order'])>0){
+                                foreach($graphData['Order'] as $k1=>$v1){
+                                    if($v1['Lang'][$this->lang]['Title']){
+                                        echo "'" . $v1['Lang'][$this->lang]['Title'] . "',";
+                                    }else{
+                                        echo "'" . $v1['Lang'][$this->defaultLanguage]['Title'] . "',";
+                                    }
+                                }
+                            }
+                            ?>
+                        ],
+                        datasets: [{
+                            backgroundColor: [
+                                <?php
+                                if(count($graphData['Order'])>0){
+                                    foreach($graphData['Order'] as $k1=>$v1){
+                                        if($v1['Lang'][$this->defaultLanguage]['Color']){
+                                            echo "convertHex('" . $v1['Lang'][$this->defaultLanguage]['Color'] . "',70),";
+                                        }else{
+                                            echo "-,";
+                                        }
+                                    }
+                                }
+                                ?>
+                            ],
+                            borderColor: [
+                                <?php
+                                if(count($graphData['Order'])>0){
+                                    foreach($graphData['Order'] as $k1=>$v1){
+                                        if($v1['Lang'][$this->defaultLanguage]['Color']){
+                                            echo "convertHex('" . $v1['Lang'][$this->defaultLanguage]['Color'] . "',50),";
+                                        }else{
+                                            echo "convertHex(randomColor(),80),";
+                                        }
+                                    }
+                                }
+                                ?>
+                            ],
+                            data: [
+                                <?php
+                                if(count($graphData['Order'])>0){
+                                    foreach($graphData['Order'] as $k1=>$v1){
+                                        if($v1['Lang'][$this->defaultLanguage]['Value']){
+                                            echo "'" . $v1['Lang'][$this->defaultLanguage]['Value'] . "',";
+                                        }else{
+                                            echo "-,";
+                                        }
+                                    }
+                                }
+                                ?>
+                            ],
+                        }]
+                    },
+                    options: {
+                        pieceLabel: {
+                            render: function (txt) {
+                                return txt.label + ' ' + txt.value;
+                            },
+                            fontColor: '#000',
+                            position: 'outside'
+                        },
+                        responsive: true,
+                        legend : {
+                            display: false
+                        }
+                    }
+                });
+            });
+            </script>
+
+        <?php } // End Pie Chart ?>
+
+<?php
+    } // End Foreach
+} // End If
+?>

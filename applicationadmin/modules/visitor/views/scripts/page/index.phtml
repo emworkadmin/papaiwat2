@@ -1,0 +1,157 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<style>
+.visitorpage .long {
+	white-space:nowrap; 
+	width:300px; 
+	overflow:hidden;
+	text-overflow:ellipsis;
+}
+.head { 
+	background: linear-gradient(#E6E6E6, #FFFFFF);
+    background-image: linear-gradient(rgb(230, 230, 230), rgb(255, 255, 255));
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial; 
+	font-size: 15px;
+	 }
+	.table-bordered>thead>tr>th, .table-bordered>thead>tr>td {
+    border-bottom-width: 5px;
+}
+/* .fa-calendar {margin-right: 15px;} */
+</style>
+<form class="form-horizontal" id="formData" name="formData">
+	<!-- <div class="pull-right" style="margin: 5px 0px 10px;">
+		<button type="button" class="btn btn-primary" id="lnkExport"><em class="fa fa-external-link"></em> Export</button>
+	</div> -->
+
+	<!-- <div class="form-group">
+		<label class="col-md-1 control-label" for="StartDate">เริ่ม</label>
+		<div class="col-md-5 divControl">
+			<?php echo $this->formText('txtStartDate',$this->startdate, array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+			<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+		</div>
+		<label class="col-md-1 control-label" for="EndDate">สิ้นสุด</label>
+		<div class="col-md-5 divControl">
+			<?php echo $this->formText('txtEndDate',$this->enddate, array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+			<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+		</div>
+	</div> 
+
+	<div class="form-group">
+		<div class="col-md-11 col-md-offset-1">
+			<button type="button" class="btn btn-primary" id="btcalculate"><em class="fa fa-calculator"></em> คำนวณ</button>
+			<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+		</div>
+	</div> -->
+	<div class="pull-right" style="margin: 5px 0px 10px;">
+		<?php echo $this->formSelect('Export', null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+	</div>
+	
+	<div class="Box-Chart" style="padding-top: 60px;">
+		<div class="pull-right viewall"><button type="button" class="btn btn-primary" id="viewall">จำนวนทั้งหมดตั้งแต่เปิดเว็บไซต์</button></div>
+		<div class="pull-right lastmonth"><button type="button" class="btn btn-primary" id="lastmonth">เดือนที่แล้ว</button></div>
+		<div class="pull-right tomonth"><button type="button" class="btn btn-primary" id="tomonth">เดือนนี้</button></div>
+		<div class="pull-right today"><button type="button" class="btn btn-primary" id="today">วันนี้</button></div>
+		<div class="form-group">
+			<!-- <canvas id="OverviewChart" width="100%" height="50px"></canvas> -->
+			<div id="OverviewChart" ></div>
+		</div>
+	</div>
+</form>
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<!-- Chart -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script type="text/javascript">
+jQuery(function(){
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$('#Export').change(function(){
+		var typeExport=$("#Export").val();
+		
+		if(typeExport=='today'){
+			window.open("<?php echo $this->url(array('module' => 'visitor', 'controller' => 'page', 'action' => 'exporttoday'), null, true); ?>");
+		}else if(typeExport=='tomonth'){
+			window.open("<?php echo $this->url(array('module' => 'visitor', 'controller' => 'page', 'action' => 'exporttomonth'), null, true); ?>");
+		}else if(typeExport=='lastmonth'){
+			window.open("<?php echo $this->url(array('module' => 'visitor', 'controller' => 'page', 'action' => 'exportlastmonth'), null, true); ?>");
+		}else if(typeExport=='viewall'){
+			window.open("<?php echo $this->url(array('module' => 'visitor', 'controller' => 'page', 'action' => 'exportviewall'), null, true); ?>");
+		}
+	});
+
+	$('#today').click(function() {
+		loadToday();
+		
+	});
+	$('#tomonth').click(function() {
+		loadTomonth();
+		
+	});
+	$('#lastmonth').click(function() {
+		loadlastmonth();
+		
+	});
+	$('#viewall').click(function() {
+		loadviewall();
+		
+	});
+	loadToday();
+	function loadToday() {
+		$("#OverviewChart").empty()
+		.load("<?php echo $this->url(array('action'=>'today')); ?>")
+		.css("display","");
+	}
+
+	function loadTomonth() {
+		$("#OverviewChart").empty()
+		.load("<?php echo $this->url(array('action'=>'tomonth')); ?>")
+		.css("display","");
+	}
+	function loadlastmonth() {
+		$("#OverviewChart").empty()
+		.load("<?php echo $this->url(array('action'=>'lastmonth')); ?>")
+		.css("display","");
+	}
+	function loadviewall() {
+		$("#OverviewChart").empty()
+		.load("<?php echo $this->url(array('action'=>'viewall')); ?>")
+		.css("display","");
+	}
+	// $('#txtStartDate').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	// $('#txtEndDate').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+
+	// $('#btcalculate').click(function(){
+	// 	var valid = $("#formData").valid();
+	// 	if (valid) {
+	// 		var startdate=$('#txtStartDate').val();
+	// 		var enddate=$('#txtEndDate').val();
+	// 		window.location = "<?php //echo $this->url(array('module' => 'visitor', 'controller' => 'page', 'action' => 'index', 'type' => 'search'), null, true); ?>/startdate/"+btoa(startdate) + "/enddate/"+btoa(enddate);
+	// 	}else{
+	// 		DialogWarning("กรุณากรอกวันที่");
+	// 	}
+	// });
+	// $('#btnCancel').click(function(){
+	// 	var valid = $("#formData").valid();
+	// 	if (valid) {
+	// 		window.location = "<?php //echo $this->url(array('module' => 'visitor', 'controller' => 'page', 'action' => 'index'), null, true); ?>";
+	// 	}else{
+	// 		DialogWarning("กรุณากรอกวันที่");
+	// 	}
+	// });
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'STAT-02'); ?>

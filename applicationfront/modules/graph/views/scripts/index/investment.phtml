@@ -1,0 +1,155 @@
+<style>
+.Graph-subtitle { position: relative; display: inline-block; width: 100%; }
+.Graph-subtitle .borderHead { float: left; background: linear-gradient(to right, #29a2db,#2e4f97); width: 153px; height: 5px; position: absolute; top: 50%; }
+.Investment-title { text-align: center; display: inline-block; width: 100%; }
+.Investment-title .border { background: white; border: 1px solid #186E9D; padding: 5px; margin: 15px 0; }
+.Investment-title .text { color: #186e9d; font-family: 'ThaiSans Neue'; font-weight: bold; }
+.Investment-title .number { font-size: 56px; font-family: 'ThaiSans Neue'; font-weight: bold; }
+.form-control{padding: 0px 0px; }
+
+</style>
+
+<script src="<?php echo $this->baseUrl('assets/chartjs/Chart.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/html2canvas/html2canvas.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/graph/jspdf/jspdf.min.js');?>"></script>
+<script>
+Chart.pluginService.register({
+    beforeDraw: function (chart) {
+        if (chart.config.options.elements.center) {
+            var ctx = chart.chart.ctx;
+            var centerConfig = chart.config.options.elements.center;
+            var fontStyle = centerConfig.fontStyle || 'Arial';
+            var txt = centerConfig.text;
+            var color = centerConfig.color || '#000';
+            var sidePadding = centerConfig.sidePadding || 20;
+            var sidePaddingCalculated = (sidePadding/100) * (chart.innerRadius * 2)
+            var stringWidth = ctx.measureText(txt).width;
+            var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
+            var widthRatio = elementWidth / stringWidth;
+            var newFontSize = Math.floor(30 * widthRatio);
+            var elementHeight = (chart.innerRadius * 2);
+            var fontSizeToUse = Math.min(newFontSize, elementHeight);
+            ctx.textAlign = centerConfig.textAlign || 'center';
+            ctx.textBaseline = centerConfig.textBaseline || 'middle';
+            var centerX = centerConfig.centerX != null ? centerConfig.centerX : ((chart.chartArea.left + chart.chartArea.right) / 2);
+            var centerY = centerConfig.centerY != null ? centerConfig.centerY : ((chart.chartArea.top + chart.chartArea.bottom) / 2);
+            ctx.font = centerConfig.fontSize != null ? centerConfig.fontSize + " " + fontStyle : "10px " + fontStyle;
+            ctx.fillStyle = color;
+            ctx.fillText(txt, centerX, centerY);
+        }
+    },
+    beforeRender: function (chart) {
+        if (chart.config.options.showAllTooltips) {
+            chart.pluginTooltips = [];
+            chart.config.data.datasets.forEach(function (dataset, i) {
+                chart.getDatasetMeta(i).data.forEach(function (sector, j) {
+                    chart.pluginTooltips.push(new Chart.Tooltip({
+                        _chart: chart.chart,
+                        _chartInstance: chart,
+                        _data: chart.data,
+                        _options: chart.options.tooltips,
+                        _active: [sector]
+                    }, chart));
+                });
+            });
+            chart.options.tooltips.enabled = false;
+        }
+    },
+    afterDraw: function (chart, easing) {
+        if (chart.config.options.showAllTooltips) {
+            if (!chart.allTooltipsOnce) {
+                if (easing !== 1)
+                    return;
+                chart.allTooltipsOnce = true;
+            }
+            chart.options.tooltips.enabled = true;
+            Chart.helpers.each(chart.pluginTooltips, function (tooltip) {
+                tooltip.initialize();
+                tooltip.update();
+                tooltip.pivot();
+                tooltip.transition(easing).draw();
+            });
+            chart.options.tooltips.enabled = false;
+        }
+    },
+    afterDatasetsDraw: function(chart) {
+        if (chart.config.options.showTooltips) {
+            var ctx = chart.ctx;
+            chart.data.datasets.forEach(function(dataset, i) {
+                var meta = chart.getDatasetMeta(i);
+                if (!meta.hidden) {
+                    meta.data.forEach(function(element, index) {
+                        ctx.fillStyle = 'rgb(0, 0, 0)';
+                        var fontSize = 16;
+                        var fontStyle = 'normal';
+                        var fontFamily = 'Helvetica Neue';
+                        ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+                        dataset.data[index] += '';
+                        x = dataset.data[index].split('.');
+                        x1 = x[0];
+                        x2 = x.length > 1 ? '.' + x[1] : '';
+                        var rgx = /(\d+)(\d{3})/;
+                        while (rgx.test(x1)) {
+                            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                        }
+                        dataset.data[index] = x1 + x2;
+                        var txt= '';
+                        if(chart.config.options.showTooltips.showLabel) {
+                            txt = chart.data.labels[index] + ' ';
+                        }
+                        var val = '';
+                        if(chart.config.options.showTooltips.showValue) {
+                            val = dataset.data[index].toString();
+                        }                        
+                        var dataString = txt + val;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        var padding = 5;
+                        var position = element.tooltipPosition();
+                        ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding);
+                    });
+                }
+            });
+        }
+    }
+});
+</script>
+
+<div class="info infopage Graph-list">
+
+	<div class="Graph-title title-panel">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+	</div>
+
+    <div class="Graph-subtitle">
+		<div class="borderHead"></div>
+    </div>
+
+
+    <div class="Investment-title">
+        <div class="col-md-12">
+
+            <div class="col-md-4 col-md-offset-1 col-sm-12 col-xs-12">
+                <div class="border">
+                    <div class="text">ดัชนีความเชื่อมั่นการท่องเที่ยว</div>
+                    <div class="number">209</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="border">
+                    <div class="text">อันดับความสามารถประเทศไทยในการแข่งขันระดับสากล</div>
+                    <div class="number">28</div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+    <?php echo $this->partial("item/_investment_situation.phtml", $this); ?>
+
+    <?php echo $this->partial("item/_investment_exchange.phtml", $this); ?>
+
+</div>

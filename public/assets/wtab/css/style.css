@@ -1,0 +1,6 @@
+.tab-content>.tab-pane { margin-bottom: 15px; }
+.template1, .template2 { margin: 15px 0px; }
+.wg-tab-image { width: 100%; }
+.wg-tab-title { font-size: 2.6rem; font-weight: bold; }
+.wg-tab-content { font-size: 1.6rem; word-break: break-word; color: #666666; margin: 15px 0px; }
+.wg-tab-link {}

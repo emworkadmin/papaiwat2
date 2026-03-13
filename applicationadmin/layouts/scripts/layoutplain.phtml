@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<?php 
+
+$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', 'init');
+
+$appFaviconPath = $this->baseUrl($config->app->faviconpath);
+$appLogoPath = $this->baseUrl($config->app->logopath);
+
+$appSystemName = $config->app->name;
+$appStartYear = $config->app->copyrightstartyear;
+$appEndYear = date('Y');
+$appCompanyName = $config->app->brand;
+$appCompanyUrl = $config->app->brandUrl;
+
+$pageName = empty($_pageName) ? "Page Name" : $_pageName;
+$pageSubName = empty($_pageSubName) ? "" : $_pageSubName;
+$pageResponseTime = "";
+$pageScreenId = "";
+
+?>
+<html  xmlns="http://www.w3.org/1999/xhtml" xml:lang="th" lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title><?php echo $appSystemName;?></title>
+  <link type="image/x-icon" href="<?php echo $appFaviconPath; ?>"
+	rel="shortcut icon" />
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('bootstrap/css/bootstrap.min.css'); ?>">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/font-awesome.min.css'); ?>">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/ionicons.min.css'); ?>">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/AdminLTE.min.css'); ?>">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  
+	<!-- jQuery 2.2.0 -->
+	<script src="<?php echo $this->baseUrl('plugins/jQuery/jQuery-2.2.0.min.js'); ?>"></script>
+	<!-- jQuery UI 1.11.4 -->
+	<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+	<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+	<script>
+	  $.widget.bridge('uibutton', $.ui.button);
+	</script>
+	<!-- Bootstrap 3.3.6 -->
+	<script src="<?php echo $this->baseUrl('bootstrap/js/bootstrap.min.js'); ?>"></script>
+	
+</head>
+<body class="hold-transition login-page">
+	<?php echo $this->layout()->content; ?>
+</body>
+</html>

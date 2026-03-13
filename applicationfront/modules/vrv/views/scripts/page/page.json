@@ -1,0 +1,20 @@
+{
+	"name" : "Virtual Reality",
+	"controller" : "page",
+	"description" : "แสดง Virtual Reality ที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "page",
+			"type" : "select",
+			"size" : "",
+			"label" : "Virtual Reality",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Vrv_Service_Item",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}
+	]
+}

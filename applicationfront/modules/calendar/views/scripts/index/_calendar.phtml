@@ -1,0 +1,230 @@
+<script type='text/javascript' src='<?php echo $this->baseUrl("/assets/calendar/plugins/fullcalendar-3.9.0/lib/moment.min.js"); ?>'></script>
+<script type='text/javascript' src='<?php echo $this->baseUrl("/assets/calendar/plugins/fullcalendar-3.9.0/fullcalendar-th.min.js"); ?>'></script>
+<script type='text/javascript' src='<?php echo $this->baseUrl("/assets/calendar/plugins/fullcalendar-3.9.0/locale-all.js"); ?>'></script>
+<link rel='stylesheet' type='text/css' href='<?php echo $this->baseUrl("/assets/calendar/plugins/fullcalendar-3.9.0/fullcalendar.min.css"); ?>' />
+<link rel='stylesheet' type='text/css' href='<?php echo $this->baseUrl("/assets/calendar/plugins/fullcalendar-3.9.0/fullcalendar.print.css"); ?>' media='print' />
+
+<style>
+.calendarpage { display: block; }
+.calendarpage .box-calendar { padding-left: 0px; padding-right: 0px; }
+.calendarpage .box-calendar .inner { width: 100%; border: solid 2px #ccc; border-radius: 10px; padding: 5px 15px 15px 15px; min-height: 150px; } 
+.calendarpage .box-calendar .inner .fc-event { font-size: 1em; }
+.calendarpage .box-event { border: solid 2px #ccc; border-radius: 10px; padding: 5px 15px 15px 15px; max-height: 720px; overflow: auto; }
+.calendarpage .box-event .eventList { margin-top: 15px; cursor: pointer; display: flex; }
+.calendarpage .box-event .divDate { 
+	width: 65px; 
+	display: inline-block; 
+	float: left; 
+	text-align: center; 
+	color: #fff; 
+	font-weight: bold; 
+	padding: 5px 0px;
+}
+.calendarpage .box-event .divDate .date1 { font-size: 40px; margin-top: -10px; margin-bottom: -17px;}
+.calendarpage .box-event .divDate .date2 { font-size: 18px; }
+.calendarpage .box-event .divTitle { 
+	width: calc(100% - 65px); 
+	display: inline-block; 
+	float: left; 
+	padding-left: 10px; 
+	height: 70px; 
+	background: #dedede;
+	font-weight: bold; 
+}
+.calendarpage .box-event .divTitle .title1 { font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 5px; }
+.calendarpage .box-event .divTitle .title2 { font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #226BB2; }
+.result-paging { display: none; }
+
+.calendar-event-list { margin-top: 30px; }
+.inforow .header-title { font-size: 1.5em; font-weight: bold; }
+.inforow .header-title a { color: #4E4E4E; }
+.inforow .image { width: 350px; height: 235px; }
+.inforow .image a { position: unset; }
+.inforow .detail { margin-left: 365px; }
+.inforow .detail em { font-size: 0.8em; }
+.inforow .detail .detail-start-date { padding-bottom: 10px; color: #0081B9; font-size: 2rem; }
+.inforow .detail .detail-place { padding-bottom: 10px; color: #0081B9; font-size: 2rem; }
+.inforow .detail .detail-intro { margin-bottom: 15px; padding-bottom: 0px; height: 60px; overflow: hidden; }
+.inforow .detail .detail-more-detail { padding-bottom: 15px; }
+.inforow .detail .detail-more-detail a { font-size: 2.2rem; }
+.inforow .detail .detail-publish-date { color: #0081B9; font-size: 2rem; }
+.inforow .detail .detail-publish-date em { color: #CCCCCC; }
+
+.calendar-search .search-text { }
+.calendar-search .search-category { }
+.calendar-search #lnkSeaarchCalendar { margin-bottom: 30px; }
+
+@media only screen and (max-width: 991px) {
+	.calendarpage .box-calendar { margin-bottom: 15px; padding-right: 0px; }
+}
+@media only screen and (max-width: 767px) {
+	.calendarpage .box-calendar .fc-center h2 { font-size: 26px; }
+}
+@media only screen and (max-width: 575px) {
+	.calendarpage .box-calendar .fc-center h2 { font-size: 22px; }
+}
+</style>
+
+<div class="">
+	<div class='calendar-search row'>
+		<div class="col-md-8 col-sm-5 col-xs-12 search-text">
+			<?php echo $this->formText("calendarSearchText", null, array('class' => 'form-control', 'placeholder' => Emwork_Translate::text($this->lang, 'calendar', 'search_placeholder') , 'maxlength' => '200')); ?>
+		</div>
+		<div class="col-md-3 col-sm-5 col-xs-12 search-category">
+			<?php echo $this->formSelect("calendarSearchCategory", null, array('class' => 'form-control', 'placeholder' => ''), ($this->calendarCategoryOption)); ?>
+		</div>
+		<div class="col-md-1 col-sm-2 col-xs-12 search-category">
+			<button class="btn btn-info btn-block" id="lnkSeaarchCalendar">
+				<em class="fa fa-search"></em> <?php echo Emwork_Translate::text($this->lang, 'general', 'button_search'); ?>
+			</button>
+		</div>
+	</div>
+	<div class="calendarpage">
+		<div class='col-md-12 box-calendar'>
+			<div class="inner">
+				<div id='calendar'></div>
+			</div>
+		</div>
+		<!-- <div class='col-md-3 box-event'></div> -->
+	</div>
+	<div class="calendar-event-list"></div>
+</div>
+
+<script>
+$(document).ready(function() {
+	jQuery.curCSS = function(element, prop, val) {
+		return jQuery(element).css(prop, val);
+	};
+	$('#calendar').fullCalendar({
+		<?php if($this->type=='date' && !empty($this->filter)){ ?>
+		defaultView: 'agendaDay',
+		defaultDate: '<?php echo $this->filter; ?>',
+		<?php } ?>
+		header: {
+			left: 'prev,next today',
+			center: 'title',
+			right: 'agendaDay,agendaWeek,month,listYear'
+		},
+		height: "auto",
+		locale: '<?php echo $this->lang; ?>',
+		navLinks: true,
+		selectable: true,
+		displayEventTime: false,
+		eventBackgroundColor: "<?php echo empty($this->data->Color) ? '#3A87AD' : $this->data->Color; ?>",
+		events: function(start, end, timezone, callback) {
+			jQuery.ajax({
+				url: '<?php echo $this->url(array('action' => 'getcalendar')); ?>',
+				type: 'POST',
+				data: {
+					// start: start.format(),
+					// end: end.format(),
+					<?php if($this->type=='date' && !empty($this->filter)){ ?>
+					filter: "<?php echo $this->filter; ?>"
+					<?php }else{ ?>
+					start: start.format(),
+					end: end.format()
+					<?php } ?>
+				},
+				success: function(doc) {
+					var events = [];
+					// $('.box-event').empty();
+					$('.calendar-event-list').empty();
+					if(doc != null){
+						$(doc).each(function() {
+							events.push({
+								id: $(this).attr('id'),
+								title: $(this).attr('title'),
+								start: $(this).attr('start'),
+								end: $(this).attr('end'),
+								url: $(this).attr('url'),
+								color: $(this).attr('color')
+							});
+							
+							// var html = '';
+							// html += '<div class="eventList eventList-' + $(this).attr('id') + '">' + '\n';
+							// html += '	<div class="divDate" style="background: ' + $(this).attr('color') + '">' + '\n';
+							// html += '		<div class="date1">' + $(this).attr('date-d') + '</div>' + '\n';
+							// html += '		<div class="date2">' + $(this).attr('date-m') + ' ' + $(this).attr('date-y') + '</div>' + '\n';
+							// html += '	</div>' + '\n';
+							// html += '	<div class="divTitle">' + '\n';
+							// html += '		<div class="title1">' + $(this).attr('title') + '</div>' + '\n';
+							// html += '		<div class="title2">สถานที่: ' + $(this).attr('place') + '</div>' + '\n';
+							// html += '	</div>' + '\n';
+							// html += '	<script>' + '\n';
+							// html += '	$(document).ready(function() {' + '\n';
+							// html += '		$(".eventList-' + $(this).attr('id') + '").click(function() {' + '\n';
+							// html += '			window.location = "<?php echo $this->url(array("module" => "calendar", "controller" => "article", "action" => "detail"), null, true); ?>/id/' + $(this).attr('id') + '/iid/' + $(this).attr('id') + '"' + '\n';
+							// html += '		});' + '\n';
+							// html += '	});' + '\n';
+							// html += '	<\/script>' + '\n';
+							// html += '</div>' + '\n';
+							// $('.box-event').append(html);
+
+							var html2 = '';
+							html2 += '<div class="inforow">' + '\n';
+							html2 += '	<div class="header-title">' + '\n';
+							html2 += '		<a href="' + $(this).attr('url') + '">' + $(this).attr('title') + '</a>' + '\n';
+							html2 += '	</div>' + '\n';
+										<?php if ($this->calendarSettingArticleShowImage){ ?>
+							html2 += '	<div class="image">' + '\n';
+							html2 += '		<a href="' + $(this).attr('url') + '">' + '\n';
+							html2 += '			<img alt="image" src="' + $(this).attr('image-url') + '" />' + '\n';
+							html2 += '		</a>' + '\n';
+							html2 += '	</div>' + '\n';
+										<?php } ?>
+							html2 += '	<div class="detail">' + '\n';
+							html2 += '		<div class="detail-start-date" >' + '\n';
+							html2 += '			<em class="fa fa-clock-o"></em>&nbsp;' + '\n';
+							html2 += '			' + $(this).attr('starttime') + '&nbsp;น.' + '\n';
+							html2 += '			&nbsp;&nbsp;&nbsp;' + '\n';
+							html2 += '			<em class="fa fa-calendar"></em>&nbsp;' + '\n';
+							html2 += '			' + $(this).attr('startdate') + '\n';
+							html2 += '		</div>' + '\n';
+							html2 += '		<div class="detail-place" >' + '\n';
+							html2 += '			<em class="fa fa-map-marker"></em> ' + $(this).attr('place') + '\n';
+							html2 += '		</div>' + '\n';
+											<?php if ($this->calendarSettingArticleShowIntroText) { ?>
+							html2 += '		<div class="detail-intro" >' + '\n';
+							html2 += '			' + $(this).attr('introtext') + '\n';
+							html2 += '		</div>' + '\n';
+											<?php } ?>
+							html2 += '		<div class="detail-more-detail">' + '\n';
+							html2 += '			<a class="btn btn-info" href="' + $(this).attr('url') + '"><?php echo Emwork_Translate::text($this->lang, 'calendar', 'more_detail'); ?></a>' + '\n';
+							html2 += '		</div>' + '\n';
+							html2 += '		<div class="detail-publish-date">' + '\n';
+							html2 += '			<em class="fa fa-clock-o"></em>&nbsp;<?php echo Emwork_Translate::text($this->lang, 'calendar', 'publishdate'); ?>&nbsp;' + '\n';
+							html2 += '			' + $(this).attr('publish-date') + '\n';
+							html2 += '			&nbsp;&nbsp;&nbsp;' + '\n';
+							html2 += '			<em class="fa fa-pencil"></em>' + '\n';
+							html2 += '			&nbsp;<?php echo Emwork_Translate::text($this->lang, 'calendar', 'by'); ?>&nbsp;' + $(this).attr('publish-by') + '\n';		
+							html2 += '		</div>' + '\n';
+							html2 += '	</div>' + '\n';
+							html2 += '	<div class="clearfix"></div>' + '\n';
+							html2 += '</div>' + '\n';
+							$('.calendar-event-list').append(html2);
+
+						});
+						// $('.box-calendar').removeClass('col-md-12');
+						// $('.box-calendar').addClass('col-md-9');
+						// $('.box-event').show();
+						$('.calendar-event-list').show();
+					}else{
+						// $('.box-calendar').removeClass('col-md-9');
+						// $('.box-calendar').addClass('col-md-12');
+						// $('.box-event').hide();
+						$('.calendar-event-list').hide();
+					}
+					callback(events);
+				}
+			});
+		}
+	});
+
+	$('#lnkSeaarchCalendar').click(function(){
+		var cid = $('#calendarSearchCategory').val();
+		var text = $('#calendarSearchText').val();
+		var url = "<?php echo $this->url(array('module' => 'calendar', 'controller' => 'article', 'action' => 'search'), null, true); ?>/cid/"+encodeURIComponent(cid)+"/text/"+encodeURIComponent(text);
+		window.open(url, "_blank");
+	});
+});
+</script>

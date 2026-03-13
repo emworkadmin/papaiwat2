@@ -1,0 +1,115 @@
+<style>
+	#formPreview p.form-control-static { padding-top: 7px; }
+</style>
+
+<div class="panel panel-default panel-detail">
+	<div class="panel-body">
+
+		<div class="item-title title-panel">
+			<span class="title">
+				<span class="complain-hilight"><?php echo $this->pageTitle;?></span>
+			</span>
+			<hr />
+		</div>
+            
+        <form class="form-horizontal" id="formPreview" name="formPreview">
+
+            <div id='ControlParams'>
+            <?php 
+            if (count($this->dataType) > 0) :
+                $i = 0;
+                foreach ($this->dataType as $item) :
+                    $i ++;
+                    $dataPreview = new stdClass();
+                    $dataPreview->ID = $item['ID'];
+                    $dataPreview->EformControlTypeID = $item['EformControlTypeID'];
+                    $dataPreview->NAME = $item['NAME_'];
+                    $dataPreview->LABEL = $item['LABEL_'];
+					$dataPreview->VALUE = $item['VALUE_'];
+
+					if(!in_array($dataPreview->EformControlTypeID,array(9,10,11))) {
+						echo '<div class="form-group">';
+							echo '<label class="col-md-3 control-label">' . $dataPreview->LABEL . '</label>';
+							echo '<div class="col-md-9 divControl">';
+
+								if($dataPreview->EformControlTypeID == '1') {
+
+									echo "<p class='form-control-static'>";
+									echo $dataPreview->VALUE;
+									echo "</p>";
+									
+								} else if($dataPreview->EformControlTypeID == '2') {
+
+									echo "<p class='form-control-static'>";
+									echo nl2br($dataPreview->VALUE);
+									echo "</p>";
+
+								} else if($dataPreview->EformControlTypeID == '3') {
+										
+									if(count($dataPreview->VALUE)>0){
+										foreach($dataPreview->VALUE as $k => $v) {
+											echo "<p class='form-control-static'>" . $v . "</p>";
+										}
+									} else {
+										echo "<p class='form-control-static'>-</p>";
+									}
+									
+								} else if($dataPreview->EformControlTypeID == '4') {
+									
+									if(count($dataPreview->VALUE)>0){
+										foreach($dataPreview->VALUE as $k => $v) {
+											echo "<p class='form-control-static'>" . $v . "</p>";
+										}
+									} else {
+										echo "<p class='form-control-static'>-</p>";
+									}
+									
+								} else if($dataPreview->EformControlTypeID == '5') {
+
+									if(count($dataPreview->VALUE)>0){
+										foreach($dataPreview->VALUE as $k => $v) {
+											echo "<p class='form-control-static'>" . $v . "</p>";
+										}
+									} else {
+										echo "<p class='form-control-static'>-</p>";
+									}
+															
+								} else if($dataPreview->EformControlTypeID == '6') {
+
+									echo "<p class='form-control-static'>";
+									echo $dataPreview->VALUE;
+									echo "</p>";
+									
+								} else if($dataPreview->EformControlTypeID == '7') {
+
+									if(count($dataPreview->VALUE)>0) {
+
+										echo "<p class='form-control-static'>";
+										echo '<a href="' . $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $dataPreview->VALUE['HASHNAME']), null, true) . '" >';
+										echo $dataPreview->VALUE['NAME'];
+										echo '</a>';
+										echo '</p>';
+
+									} else {
+										echo "<p class='form-control-static'>-</p>";
+									}
+
+								} else if($dataPreview->EformControlTypeID == '8') {
+
+									echo "<p class='form-control-static'>";
+									echo $dataPreview->VALUE;
+									echo "</p>";
+
+								}
+								
+							echo '</div>';
+						echo '</div>';
+					}
+                endforeach;
+            endif;
+            ?>
+            </div>
+
+        </form>
+    </div>
+</div>

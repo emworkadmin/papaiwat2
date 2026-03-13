@@ -1,0 +1,216 @@
+<link rel="stylesheet" 	href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+<style>
+.lnkAction {
+	cursor: pointer;
+}
+</style>
+
+<div class="searchPanel form-horizontal" id="formSearch">
+	<div class="form-group">
+		<div class="col-md-12">
+			<p class="form-control-static">
+				ค้นหาจาก
+				<button type="button" class="btn btn-success pull-right" id="reportExcel"><em class="fa fa-file-excel-o"></em> Excel</button>				
+			</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-12">
+			<div class="input-group">
+					<?php echo $this->formText('textsearch', $this->InfoSearch->textsearch, array('class' => 'form-control', 'placeholder' => 'กรอกคำค้นหา'));?>
+					<span class="input-group-btn">
+					<button type="button" class="btn btn-primary" id="btnSearch">
+						<em class="fa fa-search"></em> <span class="hidden-xs">ค้นหา</span>
+					</button>
+					<button type="button" class="btn btn-warning" id="btnReset">
+						<em class="fa fa-refresh"></em> <span class="hidden-xs">เริ่มใหม่</span>
+					</button>
+					<button type="button" class="btn btn-default" id="btnAdvance">
+						<em class="fa fa-minus-circle"></em> <span class="hidden-xs">ลดเงื่อนไขการค้นหา</span>
+					</button>
+				</span>
+			</div>
+
+		</div>
+	</div>
+	<div id="AdvanceSearch">
+		<?php echo $this->formHidden('hdfAdvanceSearch', 'S', null, null); ?>
+		<div class="form-group has-feedback">
+			<label for="status" class="control-label col-md-2">ตั้งแต่วันที่
+				: </label>
+			<div class="col-md-4">
+                    <?php echo $this->formText('txtSendDateFrom', $this->InfoSearch->sendfrom, array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+                    <span class="fa fa-calendar form-control-feedback"
+					aria-hidden="true"></span>
+			</div>
+			<label for="status" class="control-label col-md-2">ถึงวันที่ : </label>
+			<div class="col-md-4">
+                    <?php echo $this->formText('txtSendDateTo', $this->InfoSearch->sendto, array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+                    <span class="fa fa-calendar form-control-feedback"
+					aria-hidden="true"></span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="status" class="control-label col-md-2">กิจกรรม</label>
+			<div class="col-md-4">
+					<?php echo $this->formSelect('lstLogType', $this->InfoSearch->logtype, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->logTypeOption)); ?>
+				</div>
+			<label for="status" class="control-label col-md-2">ผลลัพธ์</label>
+			<div class="col-md-4">
+					<?php echo $this->formSelect('lstResult', $this->InfoSearch->result, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->resultOption)); ?>
+				</div>
+		</div>
+	</div>
+</div>
+
+<table id="tblData" class="table table-bordered table-hover"
+	style="width: 100%;">
+	<caption>รายการประวัติการเข้าใช้งาน</caption>
+	<thead>
+		<tr>
+			<th>ลำดับ</th>
+			<th>วันที่/เวลา</th>
+			<th>กิจกรรม</th>
+			<th>ผลลัพธ์</th>
+			<th>Username</th>
+			<th>ชื่อ - นามสกุล</th>
+			<th>IP Address</th>
+        </tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script type="text/javascript">
+jQuery(function(){
+
+	var textSearch = '<?php echo $this->InfoSearch->textsearch; ?>';
+	var sendFrom = '<?php echo $this->InfoSearch->sendfrom; ?>';
+	var sendTo = '<?php echo $this->InfoSearch->sendto; ?>';
+	var logType = '<?php echo $this->InfoSearch->logtype; ?>';
+	var resultType = '<?php echo $this->InfoSearch->result; ?>';
+
+	$("#reportExcel").click(function() {
+		window.open("<?php echo $this->url(array('module'=>'system', 'controller'=>'log','action'=>'securityexportexcel'), null, true); ?>" + (sendFrom == '' ? '' : '/sendfrom/' + btoa(sendFrom)) + (sendTo == '' ? '' : '/sendto/' + btoa(sendTo))  + (textSearch == '' ? '' : '/textsearch/' + btoa(textSearch))  + (logType == '' ? '' : '/logtype/' + btoa(logType)) + (resultType == '' ? '' : '/result/' + btoa(resultType)));
+	});
+
+	function viewDetail(id){
+        var dialogPreview = BootstrapDialog.show({
+            title: 'รายละเอียด',
+            message: $('<div id="dialogViewDetail"></div>').load("<?php echo $this->url(array('module' => 'system', 'controller' => 'log', 'action' => 'securitydetail'), null, true); ?>/id/" + id, null),
+            closable: true,
+            closeByBackdrop: false,
+            closeByKeyboard: false,
+            autodestroy: true,
+            size: BootstrapDialog.SIZE_WIDE,
+            cssClass: "divPreview",
+            buttons : [{
+                label: ' ปิด',
+                icon: 'fa fa-times',
+                action: function(dialog) {
+                    dialog.close();
+                }
+            }]
+        });
+        dialogPreview.open();
+    };
+	
+
+	// --------------- Begin: Table & Search Zone --------------------------
+	
+	function renderColumn ( data, type, row, meta ) {
+		return data;
+	}
+	function renderColumnLink ( data, type, row, meta ) {
+		//return data;
+		return '<a data-id="'+row.DT_RowId+'" style="cursor: pointer;">' + data + '</a>';
+	}
+	var rows_selected = [];
+	var tblData = $('#tblData').DataTable({
+		processing: true,
+		serverSide: true,
+		responsive: true,
+		<?php
+		if ($this->InfoSearch->tblPage) {
+			echo 'displayStart: ' . $this->InfoSearch->tblPage . ',';
+		}
+		if ($this->InfoSearch->tblRow) {
+			echo 'pageLength: ' . $this->InfoSearch->tblRow . ',';
+		}
+		if ($this->InfoSearch->tblOrderCol && $this->InfoSearch->tblOrderDir) {
+			echo 'order: [[ ' . $this->InfoSearch->tblOrderCol . ', "' . $this->InfoSearch->tblOrderDir . '" ]],';
+		} else {
+			?>
+		order: [[ '1', "desc" ]],
+		<?php
+		}
+		?>
+		ajax: {
+	        url: '<?php echo $this->url(array('module' => 'system', 'controller' => 'log', 'action' => 'getsecuritylist'), null, true); ?>',
+	        type: 'POST',
+	        data: function(d) {
+    	        d.textsearch = $("#formSearch #textsearch").val();
+    	        d.logtype = $("#formSearch #lstLogType").val();
+    	        d.result = $("#formSearch #lstResult").val();
+    	        d.sendfrom = $("#formSearch #txtSendDateFrom").val();
+    	        d.sendto = $("#formSearch #txtSendDateTo").val();
+    	        
+    	        textSearch = $("#formSearch #textsearch").val();
+    	        logType = $("#formSearch #lstLogType").val();
+    	       	resultType = $("#formSearch #lstResult").val();
+    	        sendFrom = $("#formSearch #txtSendDateFrom").val();
+    	        sendTo = $("#formSearch #txtSendDateTo").val();
+	        }
+	    },
+	    language : {
+			url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+	    },
+		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+		"columns": [
+	            { "width": "40px", 'orderable': false, 'data' : 'NO', "class" : "text-center"},
+	            { "width": "20%", 'data' : 'ActionDate' , 'render' : renderColumnLink, "class" : "ratio"},
+	            { "width": "12%", 'data' : 'LogType' , 'render' : renderColumnLink, "class" : "ratio"},
+	            { "width": "12%", 'data' : 'Result' , 'render' : renderColumnLink, "class" : "ratio"},
+	            { "width": "15%", 'data' : 'Username' , 'render' : renderColumnLink, "class" : "ratio"},
+	            {'data' : 'FullName', 'render' : renderColumnLink},
+	            { "width": "15%", 'data' : 'RemoteIP' , 'render' : renderColumnLink, "class" : "ratio"}
+	          ]
+    });
+
+    $("#tblData").on('click', 'a', function() {
+        var id = $(this).data("id");
+		viewDetail(id);
+    });
+
+	$('#btnSearch').click(function(){
+		tblData.ajax.reload();
+	});
+
+	$('#btnReset').click(function(){
+		$(".searchPanel input[type=text]").val('');
+		$(".searchPanel select").val('');
+		tblData.ajax.reload();
+	});
+	
+	// --------------- End: Table & Search Zone --------------------------
+
+	// --------------- Toogle Advance Search ---------------
+	$("#btnAdvance").click(function(e) {
+		var val = $('#hdfAdvanceSearch').val();
+		if(val == 'H'){
+			$("#AdvanceSearch").slideDown(600, "swing");
+			$("#hdfAdvanceSearch").val('S');
+		}else{
+			$("#AdvanceSearch").slideUp(600, "swing");
+			$("#hdfAdvanceSearch").val('H');
+		}
+	});
+	 $('#txtSendDateFrom').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	 $('#txtSendDateTo').datepicker({autoclose: true, format: 'dd/mm/yyyy'});	
+
+});
+
+</script>

@@ -1,0 +1,137 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+
+<div class="panel-detail">
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+		
+		<div class="title-label">ตั้งค่า</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="StatServiceAccount">Service Account</label> 
+			<div class="col-md-9 divControl">				
+				<?php echo $this->UploadHtmlControl("StatServiceAccount", "StatServiceAccount", $this->data->StatServiceAccount, array('multi' => false, 'exts' => array('json'), 'maxsize' => '1')); ?>
+				<div class="help-block">ขนาดไฟล์ไม่เกิน 1 MB<br />เฉพาะไฟล์นามสกุล: .json</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="StatViewID">View ID</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('StatViewID', $this->data->StatViewID, array('class' => 'form-control', 'placeholder' => ''), " "); ?>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<hr />
+
+<div class="panel-detail">
+	<div class="form-horizontal" >
+				
+		<div class="title-label">วิธีการตั้งค่า</div>			
+		<div class="form-group">
+			<div class="col-md-12">
+				<p style="padding: 10px;background: #eee;padding-left: 20px;">
+					1. กรอก Google Analytics ในหน้าตั้งค่าระบบ ที่สร้างจาก Google Analytic (หากไม่สามารถเข้าหน้าตั้งระบบได้ กรุณาติดต่อผู้ดูแลระบบ)
+				</p>
+				<p style="padding: 10px;background: #eee;padding-left: 20px;">
+					2. เปิดการใช้งาน Analytics Reporting API และสร้างบัญชีบริการของ Google
+					<br>
+					</p><ul>
+						<li>
+							ไปที่ <a href="https://console.developers.google.com/start/api?id=analyticsreporting.googleapis.com&amp;credential=client_key" target="_blank">เครื่องมือการตั้งค่า</a> โดยต้อง Login ด้วยบัญชีของ Google (สามารถใช้บัญชีเดียวกันกับที่สมัคร Google Analytics ได้)
+						</li>
+						<li>
+							สร้างโปรเจค หรือเลือกโปรเจคที่มีอยู่แล้ว และคลิก "ต่อไป"				
+						</li>
+						<li>
+							เมื่อเปิดใช้งานแล้ว ให้คลิก "ยกเลิก" แล้วเลือก "ข้อมูลรับรอง" ที่เมนูด้านข้าง
+						</li>
+						<li>
+							เลือก "สร้างข้อมูลรับรอง" และเลือก "คีย์บัญชีบริการ"
+						</li>
+						<li>
+							โดยกำหนดข้อมูลบัญชีบริการดังนี้
+							<br>
+							- บัญชีบริการ : บัญชีบริการใหม่
+							<br>
+							- ชื่อบัญชีบริการ : กำหนดเป็นชื่อที่จะไปขอใช้สิทธิ์ใน Google Analytic
+							<br>
+							- ประเภทคีย์ : เลือกเป็น json
+							<br>
+							- คลิก "สร้าง" โดยจะมีคำเตือนให้ระบุบทบาท ให้เลือก "สร้างโดยไม่มีบทบาท"
+							<br>
+							จะได้ไฟล์ .json มา ให้เก็บไว้ในที่ปลอดภัย และนำมา Upload ที่ช่อง "Service Account"
+						</li>
+					</ul>
+				<p></p>
+				<p style="padding: 10px;background: #eee;padding-left: 20px;">
+					3. เพิ่มสิทธิ์ให้บัญชีบริการใน Google Analytic และหา ViewID
+					<br>
+					</p><ul>
+						<li>
+							ไปที่ส่วนจัดการของ Google Analytic
+						</li>
+						<li>
+							เลือกไปที่คอลัมน์ที่ 3 (คอลัมน์ทางขวา) แล้วเลือก "การจัดการผู้ใช้"
+						</li>
+						<li>
+							เลือกเพิ่มผู้ใช้งานใหม่ โดยกรอกที่อยู่อีเมล์ที่ได้สร้างจากขั้นตอนที่สอง 
+							<br>
+							โดยจะมีรูปแบบ quickstart@PROJECT-ID.iam.gserviceaccount.com
+							<br>
+							ไม่เลือก "แจ้งข้อมูลให้ผู้ใช้ใหม่ทราบทางอีเมล"
+							<br>
+							กำหนดสิทธิ์ เป็น อ่านและวิเคราะห์ และคลิก "เพิ่ม"
+						</li>
+						<li>
+							เมื่อกลับมาที่หน้าจัดการ ให้คลิก "การตั้งค่าข้อมูลพร็อพเพอร์ตี้"
+							<br>
+							ให้นำรหัสข้อมูลพร็อพเพอร์ตี้ มากรอกที่ช่อง "View ID"
+						</li>
+					</ul>
+				<p></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formEdit").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formEdit").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'stat', 'controller' => 'setting', 'action' => 'save'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'stat', 'controller' => 'setting', 'action' => 'index'), null, true); ?>" ;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+});
+</script>

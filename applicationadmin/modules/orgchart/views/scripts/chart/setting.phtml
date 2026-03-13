@@ -1,0 +1,211 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden("hdfID", $this->dataInfo->ID); ?>
+
+		<div class="title-label">ตั้งค่าการแสดงผลแผนผัง</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowImageSetting', (isset($this->data["PersonShowImageSetting"]) ? $this->data["PersonShowImageSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="PersonShowImage">แสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowImage', (isset($this->data["PersonShowImage"]) ? $this->data["PersonShowImage"] : $this->dataDefault->PersonShowImage), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงชื่อ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowTitleSetting', (isset($this->data["PersonShowTitleSetting"]) ? $this->data["PersonShowTitleSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="PersonShowTitle">แสดงชื่อ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowTitle', (isset($this->data["PersonShowTitle"]) ? $this->data["PersonShowTitle"] : $this->dataDefault->PersonShowTitle), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงตำแหน่งงาน</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowJobSetting', (isset($this->data["PersonShowJobSetting"]) ? $this->data["PersonShowJobSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="PersonShowJob">แสดงตำแหน่งงาน</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowJob', (isset($this->data["PersonShowJob"]) ? $this->data["PersonShowJob"] : $this->dataDefault->PersonShowJob), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงกลุ่มงาน</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowWorkgroupSetting', (isset($this->data["PersonShowWorkgroupSetting"]) ? $this->data["PersonShowWorkgroupSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="PersonShowWorkgroup">แสดงกลุ่มงาน</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowWorkgroup', (isset($this->data["PersonShowWorkgroup"]) ? $this->data["PersonShowWorkgroup"] : $this->dataDefault->PersonShowWorkgroup), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงหน่วยงาน</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowDepartmentSetting', (isset($this->data["PersonShowDepartmentSetting"]) ? $this->data["PersonShowDepartmentSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="PersonShowDepartment">แสดงหน่วยงาน</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowDepartment', (isset($this->data["PersonShowDepartment"]) ? $this->data["PersonShowDepartment"] : $this->dataDefault->PersonShowDepartment), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงลิ้งค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowLinkSetting', (isset($this->data["PersonShowLinkSetting"]) ? $this->data["PersonShowLinkSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="PersonShowLink">แสดงลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonShowLink', (isset($this->data["PersonShowLink"]) ? $this->data["PersonShowLink"] : $this->dataDefault->PersonShowLink), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="PersonLinkTarget">ลิงค์ Target</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('PersonLinkTarget', (isset($this->data["PersonLinkTarget"]) ? $this->data["PersonLinkTarget"] : $this->dataDefault->PersonLinkTarget), array('class' => 'form-control', 'placeholder' => ''), $this->targetOption); ?>
+			</div>
+		</div>
+		<hr />
+		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าการแสดงลำดับชั้น</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('PersonLevelSetting', (isset($this->data["PersonLevelSetting"]) ? $this->data["PersonLevelSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="PersonVerticalLevel">แสดงแนวตั้งตั้งแต่ระดับชั้นที่</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('PersonVerticalLevel', (isset($this->data['PersonVerticalLevel']) ? $this->data['PersonVerticalLevel'] : $this->dataDefault->PersonVerticalLevel), array('class' => 'form-control digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="PersonVisibleLevel">แสดงข้อมูลถึงระดับชั้นที่</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('PersonVisibleLevel', (isset($this->data['PersonVisibleLevel']) ? $this->data['PersonVisibleLevel'] : $this->dataDefault->PersonVisibleLevel), array('class' => 'form-control digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="PersonCustomCss">CSS</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formTextarea('PersonCustomCss', $this->data['PersonCustomCss'], array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+				</div>
+			</div>
+		</div>
+
+		<div class="title-label">ตั้งค่าการแสดงผลรายละเอียดบุคคล</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="PersonDetailCustomCss">CSS</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+				<?php echo $this->formTextarea('PersonDetailCustomCss', $this->data['PersonDetailCustomCss'], array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+				</div>
+			</div>
+		</div>
+		
+		<?php if($this->canEdit): ?>
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			</div>
+		</div>
+		<?php endif; ?>
+
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formData input[type=checkbox], #formData input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	<?php if($this->canEdit): ?>
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'orgchart', 'controller' => 'chart', 'action' => 'settingsave'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'orgchart', 'controller' => 'chart', 'action' => 'setting', "itemid" => $this->dataInfo->ID), null, true); ?>" ;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif; ?>
+});
+</script>

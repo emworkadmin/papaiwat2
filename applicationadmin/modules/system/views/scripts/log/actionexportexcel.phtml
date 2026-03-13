@@ -1,0 +1,35 @@
+<table id="tblData">
+    <caption>รายการประวัติการใช้งาน</caption>
+    <thead>
+        <tr>
+            <th>ลำดับ</th>
+            <th>ระบบ</th>
+            <th>ผู้ใช้งาน</th>
+            <th>การกระทำ</th>
+            <th>ชื่อข้อมูล</th>
+            <th>วันที่/เวลา</th>
+            <th>IP Address</th>
+        </tr>
+    </thead>
+    <?php if (count($this->data) > 0) : ?>
+    <tbody>
+    	<?php 
+    	$i = 0;
+    	foreach ($this->data as $item) :
+    		$i ++;
+    	?>
+    	<tr>
+    		<td><?php echo $i; ?></td>
+    		<td><?php echo $item["ModuleName"]; ?></td>
+    		<td><?php echo $item["FullName"]; ?></td>
+    		<td><?php echo $item["ActionTypeName"]; ?></td>
+    		<td><?php echo $item["ValueString"]; ?></td>
+    		<td><?php echo ($item["ActionDate"] != null ? $item["ActionDate"]->format("Y-m-d H:i:s") : ""); ?></td>
+    		<td><?php echo $item["RemoteIP"]; ?></td>
+    	</tr>
+    	<?php 
+    	endforeach;
+    	?>
+    </tbody>
+    <?php endif; ?>
+</table>

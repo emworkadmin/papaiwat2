@@ -1,0 +1,224 @@
+<?php 
+$defaultDataDetail = null;
+?>
+<!-- jQueryFiler -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+
+<!-- select2 -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/select2/select2.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/select2/select2.min.js'); ?>"></script>
+
+<!-- wickedpicker -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/wickedpicker/wickedpicker.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/wickedpicker/wickedpicker.min.js'); ?>"></script>
+
+
+<style>
+.tt-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+
+.tt-selector input:active +.template-type {opacity: .9;}
+.tt-selector input:checked +.template-type {
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+
+</style>
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+		<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+		<div class="title-label">รายละเอียด</div>
+
+		<div class="form-group">
+			<label class="col-md-3  control-label" for="txtTitleName">ชื่อ - นามสกุล</label>
+			<div class="col-md-1 divControl">
+				<?php echo $this->formText('TitleName', $this->data->TitleName, array('class' => 'form-control ', 'placeholder' => '')); ?>
+			</div>
+            <div class="col-md-4 divControl">
+				<?php echo $this->formText('FirstName', $this->data->FirstName, array('class' => 'form-control ', 'placeholder' => '')); ?>
+			</div>
+            <div class="col-md-4 divControl">
+				<?php echo $this->formText('LastName', $this->data->LastName, array('class' => 'form-control ', 'placeholder' => '')); ?>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtTitle">Username</label>
+			<div class="col-md-9 divControl">
+				<p class="form-control-static">
+					<?php echo $this->data->Username; ?>
+				</p>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtTitle">E-mail</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('Email', $this->data->Email, array('class' => 'form-control', 'placeholder' => '')); ?>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtTitle">เลขบัตรประจำตัวประชาชน</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('CardID', $this->data->IdentityCardID, array('class' => 'form-control required digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" >เพศ</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('Sex', $this->data->Gender, array('class' => 'form-inline', 'label_class' => 'radio-inline'), $this->genderOption, " "); ?>
+				</div>						
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtTitle">เบอร์โทร</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('Telephone', $this->data->Telephone, array('class' => 'form-control required', 'placeholder' => '')); ?>
+			</div>
+		</div>
+
+
+        <div class="form-group" >
+            <label class="col-md-3 labelRequest control-label" for="txtDetail">ที่อยู่</label>		
+            <div class="col-md-9 divControl">
+                <?php echo $this->formTextarea("Address", $this->data->Address, array('class' => 'form-control', 'placeholder' => '', 'rows' => '5', 'maxlength' => '1000')); ?>
+            </div>
+        </div>
+
+		<div class="title-label">เปลี่ยนรหัสผ่าน</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtTitle">รหัสผ่าน</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formPassword('Passwordone', null, array('class' => 'form-control', 'placeholder' => '')); ?>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtTitle">ยืนยันรหัสผ่าน</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formPassword('Passwordtwo', null, array('class' => 'form-control', 'placeholder' => '')); ?>
+				<div class="help-block">กรุณากรอกข้อมูลให้ครบทั้ง 2 ช่องเมื่อต้องการเปลี่ยนรหัสผ่าน</div>
+			</div>
+		</div>
+				
+		<div class="title-label">สถานะสมาชิก</div>
+		
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" >สถานะ</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('IsStatus', $this->data->IsEnable, array('class' => 'form-inline', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>						
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3 button-panel-zone">
+				
+				<?php if($this->canEdit): ?>
+					<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<?php endif; ?>
+				<?php if($this->canDelete): ?>
+					<button type="button" class="btn btn-danger" id="btnDelete"><em class="fa fa-trash"></em> ลบข้อมูล</button>
+				<?php endif; ?>
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+		
+</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+
+<script type="text/javascript">
+$(function () {
+	
+	$("#formEdit").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formEdit input[type=checkbox], #formEdit input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	function buttonZoneDisabled() {
+		$(".button-panel-zone button").attr("disabled", "disabled");
+		$(".button-panel-zone").append('<em class="fa fa-refresh fa-spin"></em>');
+	}
+	function buttonZoneActive() {
+		$(".button-panel-zone button").removeAttr("disabled");
+		$(".button-panel-zone > em").remove();
+	}
+		
+	<?php if($this->canEdit): ?>
+		// Save
+		$("#btnSave").click(function() {
+			if($("#Passwordone").val().length>1) {
+				if($("#Passwordone").val().length<8) {
+					DialogWarning("กรุณากรอกรหัสผ่านอย่างน้อย 8 ตัวอักษร");
+					return;
+				}
+				if($("#Passwordone").val() != $("#Passwordtwo").val()) {
+					DialogWarning("รหัสผ่านไม่ตรงกัน กรุณาตรวจสอบ");
+					return;
+				}
+			}
+
+			var valid = $("#formEdit").valid();
+			if (valid) {
+				$.post("<?php echo $this->url(array('module' => 'webboard', 'controller' => 'user', 'action' => 'update'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+					if (data.result) {
+						DialogComplete();
+						setTimeout(function(){
+							window.location = "<?php echo $this->url(array('module' => 'webboard', 'controller' => 'user', 'action' => 'edit'), null, true); ?>" + "/itemid/" + data.id;
+						}, 500);
+					} else {
+						DialogWarning(data.message);
+					}
+				}, 'json');
+			}
+		});
+	<?php endif; ?>
+
+	<?php if($this->canDelete): ?>
+		$("#btnDelete").click(function(){
+			DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+				$.post("<?php echo $this->url(array("module" => 'webboard', "controller" => 'user', 'action' => 'delete'), null, true); ?>", {'id' : '<?php echo $this->data->ID?>'}, function(data){
+					if (data.result) {
+						DialogComplete('ลบสำเร็จ');
+						setTimeout(function(){
+							window.location = "<?php echo $this->url(array('module' => 'webboard', 'controller' => 'user', 'action' => 'index'), null, true); ?>";
+						}, 500);
+					} else {
+						DialogWarning(data.message);
+					}
+				}, 'json');
+			});
+		});
+	<?php endif; ?>
+	
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'webboard', 'controller' => 'user', 'action' => 'index'), null, true); ?>";
+	});
+
+});
+</script>

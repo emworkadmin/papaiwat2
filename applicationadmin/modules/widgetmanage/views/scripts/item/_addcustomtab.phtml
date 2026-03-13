@@ -1,0 +1,300 @@
+<!-- jQuery UI 1.11.4 -->
+<script src="<?php echo $this->baseUrl("plugins/jQueryUI/jquery-ui.min.js"); ?>"></script>
+
+<style type="text/css">
+.content-herder { margin-bottom: 20px;  }
+.lnkRemove { cursor: pointer; } 
+.handle-box, #lnkAddContent { cursor: pointer; }
+.ui-sortable-placeholder { border: 1px dotted #ccc; visibility: visible !important; }
+.with-icheck { margin-top: 5px; }
+</style>
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden("hdfWidgetType", $this->widgetType, null, null); ?>
+		<?php echo $this->formHidden("hdfDataType", $this->dataType, null, null); ?>
+
+		<div class="title-label">ตั้งค่าข้อมูล</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="Name">ชื่อ Widget</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText("Name", $this->data->Name, array('class' => 'form-control required', 'maxlength' => '500')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="widgetType">ประเภท Widget</label>
+			<div class="col-md-9 divControl">
+				<div class="form-control-static"><?php echo $this->widgetType; ?></div>
+			</div>
+		</div>
+		<!-- <div class="form-group">
+			<label class="col-md-3 control-label" for="dataType">ประเภทข้อมูล</label>
+			<div class="col-md-9 divControl">
+				<div class="form-control-static"><?php echo $this->dataType; ?></div>
+			</div>
+		</div> -->
+
+		<div class="title-label">จัดการเนื้อหา<em class="fa fa-plus pull-right" id="lnkAddContent"></em></div>
+		<div id="divContent">
+		
+		</div>
+
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canAdd) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<?php endif ; ?>
+				<button type="button" class="btn btn-default" id="btnBack">กลับ</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<div id="divRunScript"></div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+
+	$("#divContent").sortable({
+		handle: '.handle-box',
+		cursor: 'move', 
+		update: function ( event, ui ){  }, 
+		start: function ( event, ui ){ 
+			$(".form-group-content").css("display", "none");
+			$(".content-title-herder").css("display", "");
+			$(".content-herder").css("margin-bottom", "0px");
+			ui.item.height(55); 
+			ui.placeholder.height(ui.item.height()); 
+			$(ui.item).parents("#divContent").sortable( "refreshPositions" );
+		}, 
+		stop: function ( event, ui ){ 
+			$(".form-group-content").css("display", ""); 
+			$(".content-title-herder").css("display", "none");
+			$(".content-herder").css("margin-bottom", "20px"); 
+
+			$("#divContent .panel").not(".ui-sortable-placeholder").each(function(i, e){ 
+				var val1 = $(e).find('input[alt=DataTypeText]').is(":checked");  			 
+				var val2 = $(e).find('input[alt=DataTypeWidget]').is(":checked");  			 
+				var val3 = $(e).find('input[alt=DataTypeWidgetTool]').is(":checked");
+				var html = '';
+				if(val1){ html += '<script>$(function(){ toggleDataType_'+(i+1)+'("text"); });<\/script>'; }
+				if(val2){ html += '<script>$(function(){ toggleDataType_'+(i+1)+'("widget"); });<\/script>'; }
+				if(val3){ html += '<script>$(function(){ toggleDataType_'+(i+1)+'("widgettool"); });<\/script>'; }
+				$('#divRunScript').html(html);
+			});
+		}
+	}).disableSelection();
+    
+	<?php if ($this->canAdd) : ?> 
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'savecustom'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'edit'), null, true); ?>" + "/itemid/" + data.id;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif ; ?>
+
+	// Back
+	$("#btnBack").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'index'), null, true); ?>";
+	});
+
+	$("#lnkAddContent").click(function(){	
+		var index = $("#divContent .panel").length + 1;
+		var html = '';
+		html += '<div class="panel panel-default">' + '\n';
+		html += '	<div class="panel-body">' + '\n';
+		html += '		<div class="content-herder">' + '\n';
+		html += '			<em class="fa fa-bars handle-box ui-sortable-handle"></em>' + '\n';
+		html += '			<em class="fa fa-trash pull-right lnkRemove"></em>' + '\n';
+		html += '			<label id="ContentList-'+index+'-Title-Herder" class="content-title-herder" style="display: none;"></label>' + '\n';
+		html += '		</div>' + '\n';
+		html += '		<div class="form-group form-group-content">' + '\n';
+		html += '			<label class="col-md-3 control-label" for="ContentList-'+index+'-Title">ชื่อ</label>' + '\n';
+		html += '			<div class="col-md-9 divControl">' + '\n';
+		html += '				<input type="text" name="ContentList['+index+'][Title]" id="ContentList-'+index+'-Title" alt=Title value="" class="form-control" maxlength="500">' + '\n';
+		html += '			</div>' + '\n';
+		html += '		</div>' + '\n';
+		html += '		<div class="form-group form-group-content">' + '\n';
+		html += '			<label class="col-md-3 control-label" for="ContentList-'+index+'-DataType">ประเภทข้อมูล</label>' + '\n';
+		html += '			<div class="col-md-9 divControl with-icheck">' + '\n';
+		html += '				<span class="" for="ContentList-'+index+'-DataType-text" >' + '\n';
+		html += '					<input type="radio" name="ContentList['+index+'][DataType]" id="ContentList-'+index+'-DataType-text" alt="DataTypeText" value="text" class="required" checked>&nbsp;&nbsp; Text &nbsp;&nbsp;' + '\n';
+		html += '				</span>' + '\n';
+		html += '				<span class="" for="ContentList-'+index+'-DataType-widget" >' + '\n';
+		html += '					<input type="radio" name="ContentList['+index+'][DataType]" id="ContentList-'+index+'-DataType-widget" alt="DataTypeWidget" value="widget" class="required" >&nbsp;&nbsp; Widget &nbsp;&nbsp;' + '\n';
+		html += '				</span>' + '\n';
+		html += '				<span class="" for="ContentList-'+index+'-DataType-widgettool" >' + '\n';
+		html += '					<input type="radio" name="ContentList['+index+'][DataType]" id="ContentList-'+index+'-DataType-widgettool" alt="DataTypeWidgetTool" value="widgettool" class="required" >&nbsp;&nbsp; Widget Tool &nbsp;&nbsp;' + '\n';
+		html += '				</span>' + '\n';
+		html += '			</div>' + '\n';
+		html += '		</div>' + '\n';
+		html += '		<div class="form-group form-group-content" id="divDataTypeText-'+index+'">' + '\n';
+		html += '			<label class="col-md-3 control-label" for="ContentList-'+index+'-IntroText">ข้อความ</label>' + '\n';
+		html += '			<div class="col-md-9 divControl">' + '\n';
+		html += '				<textarea name="ContentList['+index+'][IntroText]" id="ContentList-'+index+'-IntroText" alt="IntroText" class="form-control" maxlength="2000" rows="5" cols="80"></textarea>' + '\n';
+		html += '			</div>' + '\n';
+		html += '		</div>' + '\n';
+		html += '		<div class="form-group form-group-content" id="divDataTypeWidget-'+index+'">' + '\n';
+		html += '			<label class="col-md-3 control-label" for="ContentList-'+index+'-Widget">Widget</label>' + '\n';
+		html += '			<div class="col-md-9 divControl">' + '\n';
+		html += '			<select name="ContentList['+index+'][Widget]" id="ContentList-'+index+'-Widget" class="form-control" alt="Widget">' + '\n';
+		html += '				<option value="" label="-- โปรดเลือก --">-- โปรดเลือก --</option>' + '\n';
+		<?php 
+		if(count($this->widgetOption)){ 
+			foreach($this->widgetOption as $k=>$v){
+		?>
+		html += '				<option value="<?php echo $k; ?>" label="<?php echo $v; ?>"><?php echo $v; ?></option>' + '\n';
+		<?php
+			}
+		}
+		?>
+		html += '			</select>' + '\n';
+		html += '			</div>' + '\n';
+		html += '		</div>' + '\n';
+		html += '		<div class="form-group form-group-content" id="divDataTypeWidgetTool-'+index+'">' + '\n';
+		html += '			<label class="col-md-3 control-label" for="ContentList-'+index+'-WidgetTool">WidgetTool</label>' + '\n';
+		html += '			<div class="col-md-9 divControl">' + '\n';
+		html += '			<select name="ContentList['+index+'][WidgetTool]" id="ContentList-'+index+'-WidgetTool" class="form-control" alt="WidgetTool">' + '\n';
+		html += '				<option value="" label="-- โปรดเลือก --">-- โปรดเลือก --</option>' + '\n';
+		<?php 
+		if(count($this->widgetToolOption)){ 
+			foreach($this->widgetToolOption as $k=>$v){
+		?>
+		html += '				<option value="<?php echo $k; ?>" label="<?php echo $v; ?>"><?php echo $v; ?></option>' + '\n';
+		<?php
+			}
+		}
+		?>
+		html += '			</select>' + '\n';
+		html += '			</div>' + '\n';
+		html += '		</div>' + '\n';
+		html += '		<div class="form-group form-group-content">' + '\n';
+		html += '			<label class="col-md-3 control-label" for="ContentList-'+index+'-ImageUrl">URL รูปภาพหน้าปก</label>' + '\n';
+		html += '			<div class="col-md-9 divControl">' + '\n';
+		html += '				<input type="text" name="ContentList['+index+'][ImageUrl]" id="ContentList-'+index+'-ImageUrl" alt=ImageUrl value="" class="form-control" maxlength="500" placeholder="http://www.emworkgroup.com/image/logo.png">' + '\n';
+		html += '			</div>' + '\n';
+		html += '		</div>' + '\n';
+		html += '		<div class="form-group form-group-content">' + '\n';
+		html += '			<label class="col-md-3 control-label" for="ContentList-'+index+'-URL">Link URL</label>' + '\n';
+		html += '			<div class="col-md-9 divControl">' + '\n';
+		html += '				<input type="text" name="ContentList['+index+'][Url]" id="ContentList-'+index+'-Url" alt=Url value="" class="form-control" maxlength="500" placeholder="http://www.emworkgroup.com/">' + '\n';
+		html += '			</div>' + '\n';
+		html += '		</div>' + '\n';
+		html += '	</div>' + '\n';
+		html += '</div>' + '\n';
+		html += '<script>' + '\n';
+		html += '$(function () {' + '\n';
+		html += '	$("#ContentList-'+index+'-Title").keyup(function(){' + '\n';
+		html += '		var str = $(this).val();' + '\n';
+		html += '		if(str.length>100){' + '\n';
+		html += '			str = str.substring(0, 100)+"...";' + '\n';
+		html += '		}' + '\n';
+		html += '		$("#ContentList-'+index+'-Title-Herder").html(str);' + '\n';
+		html += '	});' + '\n';
+		html += '	$(".lnkRemove").click(function(){' + '\n';
+		html += '		$(this).parent(".content-herder").parent(".panel-body").parent(".panel").remove();' + '\n';
+		html += '		reindexContent();' + '\n';
+		html += '	});' + '\n';
+		html += '});' + '\n';
+		html += '$("#formData input[type=radio]").iCheck({checkboxClass: "icheckbox_minimal-blue",radioClass: "iradio_minimal-blue"});' + '\n';
+		html += 'function toggleDataType_'+index+'(val) {' + '\n';
+		html += '	if (val == "text") {' + '\n';
+		html += '		$("#divDataTypeText-'+index+'").css("display","");' + '\n';
+		html += '		$("#divDataTypeWidget-'+index+'").css("display","none");' + '\n';
+		html += '		$("#divDataTypeWidgetTool-'+index+'").css("display","none");' + '\n';
+		html += '		$("input[name=\'ContentList['+index+'][Text]\']").attr("disabled", false);' + '\n';
+		html += '		$("input[name=\'ContentList['+index+'][Widget]\']").attr("disabled", true);' + '\n';
+		html += '		$("input[name=\'ContentList['+index+'][WidgetTool]\']").attr("disabled", true);' + '\n';
+		html += '	} else if (val == "widget") {' + '\n';
+		html += '		$("#divDataTypeText-'+index+'").css("display","none");' + '\n';
+		html += '		$("#divDataTypeWidget-'+index+'").css("display","");' + '\n';
+		html += '		$("#divDataTypeWidgetTool-'+index+'").css("display","none");' + '\n';
+		html += '		$("input[name=\'ContentList['+index+'][Text]\']").attr("disabled", true);' + '\n';
+		html += '		$("input[name=\'ContentList['+index+'][Widget]\']").attr("disabled", false);' + '\n';
+		html += '		$("input[name=\'ContentList['+index+'][WidgetTool]\']").attr("disabled", true);' + '\n';
+		html += '	} else if (val == "widgettool") {' + '\n';
+		html += '		$("#divDataTypeText-'+index+'").css("display","none");' + '\n';
+		html += '		$("#divDataTypeWidget-'+index+'").css("display","none");' + '\n';
+		html += '		$("#divDataTypeWidgetTool-'+index+'").css("display","");' + '\n';
+		html += '		$("input[name=\'ContentList['+index+'][Text]\']").attr("disabled", true);' + '\n';
+		html += '		$("input[name=\'ContentList['+index+'][Widget]\']").attr("disabled", true);' + '\n';
+		html += '		$("input[name=\'ContentList['+index+'][WidgetTool]\']").attr("disabled", false);' + '\n';
+		html += '	}' + '\n';
+		html += '}' + '\n';
+		html += 'toggleDataType_'+index+'("text");' + '\n';
+		html += '$("#formData").on("ifClicked", "input[name=\'ContentList['+index+'][DataType]\']", function(){' + '\n';
+		html += '	toggleDataType_'+index+'($(this).val());' + '\n';
+		html += '});' + '\n';
+		html += '<\/script>' + '\n';
+
+		$('#divContent').append(html);
+	});
+
+	$(".lnkRemove").click(function(){
+		$(this).parent(".content-herder").parent(".panel-body").parent(".panel").remove();
+		reindexContent();
+	});
+
+	$("#lnkAddContent").click();
+
+});
+
+function reindexContent() {
+	var idx = 1;
+	$("#divContent .panel").each(function(i, e){ 
+		$(e).find('input[alt=Title]').attr("name", "ContentList[" + idx + "][Title]") ; 
+		$(e).find('input[alt=DataTypeText]').attr("name", "ContentList[" + idx + "][DataType]");  			 
+		$(e).find('input[alt=DataTypeWidget]').attr("name", "ContentList[" + idx + "][DataType]");  			 
+		$(e).find('input[alt=DataTypeWidgetTool]').attr("name", "ContentList[" + idx + "][DataType]");  			 
+		$(e).find('textarea[alt=IntroText]').attr("name", "ContentList[" + idx + "][IntroText]");
+		$(e).find('select[alt=Widget]').attr("name", "ContentList[" + idx + "][Widget]");
+		$(e).find('select[alt=WidgetTool]').attr("name", "ContentList[" + idx + "][WidgetTool]");
+		$(e).find('input[alt=ImageUrl]').attr("name", "ContentList[" + idx + "][ImageUrl]") ; 			 
+		$(e).find('input[alt=Url]').attr("name", "ContentList[" + idx + "][Url]") ; 
+
+		$(e).find('input[alt=Title]').attr("id", "ContentList-" + idx + "-Title") ; 	
+		$(e).find('input[alt=DataTypeText]').attr("id", "ContentList-" + idx + "-DataType-text");  			 
+		$(e).find('input[alt=DataTypeWidget]').attr("id", "ContentList-" + idx + "-DataType-widget");  			 
+		$(e).find('input[alt=DataTypeWidgetTool]').attr("id", "ContentList-" + idx + "-DataType-widgettool"); 		 
+		$(e).find('textarea[alt=IntroText]').attr("id", "ContentList-" + idx + "-IntroText"); 
+		$(e).find('select[alt=Widget]').attr("id", "ContentList-" + idx + "-Widget");
+		$(e).find('select[alt=WidgetTool]').attr("id", "ContentList-" + idx + "-WidgetTool");  
+		$(e).find('input[alt=ImageUrl]').attr("id", "ContentList-" + idx + "-ImageUrl") ; 			 
+		$(e).find('input[alt=Url]').attr("id", "ContentList-" + idx + "-Url") ; 
+
+		$(e).find('textarea[alt=IntroText]').parent('div.divControl').parent('div.form-group').attr("id", "divDataTypeText-" + idx + "");
+		$(e).find('select[alt=Widget]').parent('div.divControl').parent('div.form-group').attr("id", "divDataTypeWidget-" + idx + "");
+		$(e).find('select[alt=WidgetTool]').parent('div.divControl').parent('div.form-group').attr("id", "divDataTypeWidgetTool-" + idx + "");
+
+		idx++;			 
+	});
+}
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'WDG-MGT-05'); ?>

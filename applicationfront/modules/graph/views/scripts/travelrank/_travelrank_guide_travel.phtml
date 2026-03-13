@@ -1,0 +1,416 @@
+<style>
+.graph-box.with-color.TravelExportZone {background-color: #e7f4da;}
+    .travel .export { display: inline-block; width: 100%; font-family: 'Mitr Light';    margin-bottom: 15px; }
+    .travel .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+    .travel .export #travelYear { margin-right: 4%; }
+
+    .travel-head {background: #a3d166;color: white;text-align: center;font-size: 20px;padding-top: 5px; padding-bottom: 5px;padding-left: 0px;}
+    .travel-no { word-wrap: break-word; background: white;text-align: center;font-size: 50px; font-family: "Kanit"}
+    .travel-no .unit {font-family: 'Mitr Light'; font-size: 25px;}
+    .myChartGuideTravelBar {background: white;}
+
+    .Situation_seeAll_travel a {color: white;}
+    .Situation_seeAll_travel {display: inline-block;font-family: 'Mitr Light';font-size: 17px;padding: 12px 30px 12px;margin-bottom: 45px;color: white;background: linear-gradient(to left, #1892d3, #138dce);border-radius: 7px;border: 1px solid white;}
+
+
+    .mydoughnut {background: white;}
+    .travel {    margin-bottom: 15px;margin-top: 30px; background: #e7f4da; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+
+    .travel-box {background: white;border: 1px solid;    padding: 10px 10px 10px 10px;}
+
+    .text-travel {
+        margin-top: 15px;
+        margin-bottom: 10px;
+        text-align: center;
+        color: #0071bd;
+        font-size: 18px;
+        width: 100%;
+    }
+    .text-travel-head {
+        margin-top: 15px;
+        margin-bottom: 10px;
+        padding-top: 5px;
+        padding-bottom: 15px;
+        font-weight: bold;
+    }
+
+
+    .chart-travel.col-md-12 {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .main-top-travel-right.col-md-9 {
+        padding-left: 25px;
+        font-weight: bold;
+    }
+    .main-top-travel-left.col-md-3 {
+        padding-right: 25px;
+        font-weight: bold;
+    }
+
+    .myChartGuideTravelBar {
+        display: flex;
+        align-items: center;
+        display: -webkit-flex;
+        -webkit-align-items: center;
+        width: 100%;
+    }
+
+    @media (max-width: 1199px) {
+        .travel-head {
+            font-size: 12px;
+        }
+
+        img {
+            margin-left: -12px;
+        }
+
+        .main-top-travel-left.col-md-3 {
+            padding-right: 14px;
+        }
+
+        .myChartGuideTravelBar {
+            background: white;
+            min-height: 320px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        img {
+            margin-left: 0px;
+            padding-top: 10px;
+        }
+        .travel-no {
+            font-size: 35px;
+        }
+
+        .topmixchart-mixchart.col-md-10 {
+            padding-left: 0px;
+        }
+
+    }
+</style>
+
+	<div class="graph-box with-color TravelExportZone" id="TravelExportZone">
+		<div class="graph-box-title">
+			<div class="row">
+				<div class="col-md-9">
+					<span>ข้อมูลมัคคุเทศก์</span>
+				</div>
+				<div class="export col-md-3 col-sm-12 col-xs-12">
+					<div class="row">
+						<div class="col-sm-6">
+							<?php // echo $this->formSelect("travelYear", $this->situationYear, array('class' => 'form-control', 'placeholder' => ''), $this->year); ?>
+						</div>
+						<div class="col-sm-6">
+							<?php echo $this->formSelect("travelExport", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="charttop col-md-6">
+	            <div class="travel-head " >จำนวนมัคคุเทศก์</div>
+	            <div class="travel-no " >
+	            	<?php echo number_format($this->GuideAmount, 1); ?> 
+	            	<span class="unit"><?php echo $this->GuideAmountText; ?>คน</span>
+	            </div>
+	        </div>	
+	        <div class="charttop col-md-6">
+	            <div class="travel-head  " >จำนวนนักท่องเที่ยว</div>
+	            <div class="travel-no " >
+	            	<?php echo number_format($this->TouristAmount, 1); ?> 
+	            	<span class="unit"><?php echo $this->TouristAmountText; ?>คน</span>
+	            </div>
+	        </div>
+		</div>
+		<div class="mb-15"></div>
+		
+		<div class="graph-box-title">
+			<div class="row">
+				<div class="col-md-12">
+					<span>ข้อมูลมัคคุเทศก์ แบ่งตามประเภทการให้บริการแก่นักท่องเที่ยว</span>
+				</div>
+			</div>
+		</div>
+		
+		<div class="chart-travel row" style="">
+
+            <div class="col-md-12" style="">
+                <div class="myChartGuideTravelBar" >
+                    <canvas height="180" id="myChartGuideTravel"></canvas>
+                </div>
+                <div class="text-travel" >
+                     แบ่งตามรายประเภทการให้บริการ
+                </div>
+            </div>
+
+            <div class="col-md-12" style="">
+                <div class="myChartGuideTravelBar">
+                    <canvas id="myChartGuideTravelBar"></canvas>
+                </div>
+                <div class="text-travel" >
+                     แบ่งตามภาษาที่ให้บริการ
+                </div>
+
+            </div>
+
+        </div>
+        <div class="GUIDE_GUIDE_TRAVEL TIC-footer">ที่มา : กองทะเบียนธุรกิจนำเที่ยวและมัคคุเทศก์</div>
+        <?php if (!empty($this->guideLatestYear)) : ?><div class="GUIDE_GUIDE_TRAVEL TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->guideLatestYear + 543; ?></div><?php endif; ?>
+	</div>
+	
+	<div class="graph-button-zone">
+		<a href="https://app.powerbi.com/groups/me/reports/f957ee2b-1d4e-4586-a217-d009c357ab9a/ReportSection7d5437c3a064b4b285c7"  target="_blank" style="background: linear-gradient(to left, #1892d3, #138dce);">
+			ดูข้อมูลสถิติทั้งหมด
+		</a>
+	</div>
+
+<?php if (false) : ?>
+/////////////////////////////
+
+<div class="travel col-md-12" id="TravelExportZone">
+
+    <div class="export">
+        <div class="main-top-travel-right col-md-9">ข้อมูลมัคคุเทศก์</div>
+        <div class="main-top-travel-left col-md-3">
+                <!-- <?php echo $this->formSelect("travelYear", $this->travelYear, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?> -->
+                <?php echo $this->formSelect("travelExport", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6 col-md-offset-6 col-sm-offset-6 col-xs-offset-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+    
+
+        <div class="charttop col-md-6">
+            <div class="travel-head " >จำนวนมัคคุเทศก์</div>
+            <div class="travel-no " ><?php echo number_format($this->GuideAmount, 1); ?> <?php echo $this->GuideAmountText; ?>คน</div>
+        </div>
+
+        <!-- <div class="charttop col-md-4">
+            <div class="travel-head  " >สัดส่วนมัคคุเทศก์ต่อจำนวนนักท่องเที่ยว</div>
+            <div class="travel-no " ><?php echo number_format($this->GuidePerTouristAmount); ?></div>
+        </div> -->
+
+        <div class="charttop col-md-6">
+            <div class="travel-head  " >จำนวนนักท่องเที่ยว</div>
+            <div class="travel-no " ><?php echo number_format($this->TouristAmount, 1); ?> <?php echo $this->TouristAmountText; ?>คน</div>
+        </div>
+
+        <div class="text-travel-head col-md-12" >
+             ข้อมูลมัคคุเทศก์ แบ่งตามประเภทการให้บริการแก่นักท่องเที่ยว
+        </div>
+        
+        <div class="chart-travel col-md-12" style="">
+
+            <div class="col-md-5" style="">
+                <div class="myChartGuideTravelBar" >
+                    <canvas height="180" id="myChartGuideTravel"></canvas>
+                </div>
+
+                <div class="text-travel" >
+                     แบ่งตามรายประเภทการให้บริการ
+                </div>
+            </div>
+
+            <div class="col-md-7" style="">
+                <div class="myChartGuideTravelBar">
+                    <canvas id="myChartGuideTravelBar"></canvas>
+                </div>
+
+                <div class="text-travel" >
+                     แบ่งตามภาษาที่ให้บริการ
+                </div>
+
+            </div>
+
+        </div>
+
+</div>
+
+<div class="col-md-12" style="text-align: center;">
+        <a href="https://app.powerbi.com/groups/me/reports/f957ee2b-1d4e-4586-a217-d009c357ab9a/ReportSection7d5437c3a064b4b285c7" target="_blank">
+            <div class="Situation_seeAll_travel"> ดูข้อมูลสถิติทั้งหมด </div>
+        </a>
+</div>
+
+<?php endif; ?>
+
+<div id="previewImage_travel" style="display: none;"></div>
+<a id="downloadImage_travel" href="#In_Out" style="display: none;"></a>
+
+<script>
+jQuery(function(){
+
+    var ctxfood = document.getElementById('myChartGuideTravelBar');
+    ctxfood.height = 100;
+    var myBarChart  = new Chart(ctxfood, {
+        type: 'horizontalBar',
+        data: {
+            labels: ["จีน","ญี่ปุ่น","ฝรั่งเศส","เยอรมัน","เกาหลี"],
+            datasets: [{
+                backgroundColor: ['#2188b3','#8cc63e','#2188b3','#8cc63e','#8cc63e'],
+                borderColor: ['#2188b3','#8cc63e','#2188b3','#8cc63e','#8cc63e'],
+                data: [3.25 , 4, 3.5, 6.3, 4.8],
+            }]
+        },
+        options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                    
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            var tmp_data = data.toFixed(2).toString().split(".");
+							data = tmp_data[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") + '.' + tmp_data[1];
+                            // data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data+'k', bar._model.x - ctx.measureText(data).width, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+            legend: {
+                display: false
+            },
+            // showTooltips: {
+            //     // showValue: false,
+            // },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        // display: false,
+                        fontSize: 14,
+                        beginAtZero:true
+                    },
+                    barPercentage: 1,
+                }],
+                xAxes: [{
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        fontSize: 14,
+                        beginAtZero:true,
+                        callback: function(value, index, values) {
+                            return value+'K';
+                        }
+                        
+                    }
+                }]
+            },
+            responsive: true
+        }
+    });
+
+
+    var ctxGuideTravel = document.getElementById('myChartGuideTravel');
+    var myBarChart  = new Chart(ctxGuideTravel, {
+        // The type of chart we want to create
+        type: 'horizontalBar',
+
+        // The data for our dataset
+        data: {
+            labels: [<?php 
+           			if (count($this->GuideTypeAmount) > 0) :
+	            		foreach ($this->GuideTypeAmount as $guideTypeAmount) :
+		            		echo '"' . $guideTypeAmount["CategoryDescription"] . '",';
+                		endforeach;
+                	endif;
+                	?>],
+            datasets: [{
+                // label: "",
+                backgroundColor: ['#45af11','#181a1b','#ff615e'],
+                borderColor:['#45af11','#181a1b','#ff615e'],
+                data: [<?php 
+               			if (count($this->GuideTypeAmount) > 0) :
+    	            		foreach ($this->GuideTypeAmount as $guideTypeAmount) :
+    		            		echo '"' . $guideTypeAmount["Amount"] . '",';
+                    		endforeach;
+                    	endif;
+                    	?>],
+            }]
+        },
+        options: {
+            responsive: true,
+            legend : {
+                display: false
+            },
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function() {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = "14px ",
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function(dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            var data = dataset.data[index];
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+                            ctx.fillText(data, bar._model.x + (ctx.measureText(data).width/2), bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+        }
+    });
+
+});
+
+function setCanvas_TravelExportZone(val) {
+    html2canvas(document.querySelector("#TravelExportZone")).then(function(canvas) {
+        $("#previewImage_travel").html(canvas);
+        if(val == 'image') {
+            let imgageData = canvas.toDataURL("image/png");
+            let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+            $("#downloadImage_travel").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+            $("#downloadImage_travel")[0].click();
+            $("#mix_chart_Export").val('export');
+        } else if(val == 'pdf') {
+            let canvas = $("#previewImage_travel canvas")[0];
+            let imgData = canvas.toDataURL("image/jpeg");
+            let pdf = new jsPDF("l", "mm", "a4");
+            pdf.addImage(imgData, 'JPEG', 0, 0);
+            pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+            $("#mix_chart_Export").val('export');
+        }
+    });
+}
+
+$("#travelExport").change(function() {
+    setCanvas_TravelExportZone($(this).val());
+});
+
+</script>

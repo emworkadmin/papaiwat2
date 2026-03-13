@@ -1,0 +1,119 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/license/css/license.css'); ?>">
+<div class="info infopage license-category-page">
+	 <div>
+    	<div class="license-title title-panel">
+			<span class="title">
+				<?php echo Emwork_Translate::text($this->lang, "license", "info_category_title_label"); ?>
+			</span>
+			<hr />
+		</div>
+    </div>
+    
+    <div>
+    	<div class="license-search">
+    		<form class="form-horizontal" method="get" action="<?php echo $this->url(array("module" => "license", "controller" => "info", "action" => "search"), null, true); ?>">
+    			<div class="form-group">
+    				<div class="col-md-2">
+    					<?php echo $this->formSelect("category", null, array("class" => "form-control", "title" => Emwork_Translate::text($this->lang, 'license', 'search_category_placeholder')), $this->categoryOption); ?>
+    				</div>
+    				<div class="col-md-2">
+    					<?php echo $this->formSelect("issue", null, array("class" => "form-control", "title" => Emwork_Translate::text($this->lang, 'license', 'search_issue_placeholder')), array()); ?>
+    				</div>
+    				<div class="col-md-2">
+    					<?php echo $this->formSelect("department", null, array("class" => "form-control", "title" => Emwork_Translate::text($this->lang, 'license', 'search_department_placeholder')), Emwork_Utility::addEmptyOption($this->departmentOption, Emwork_Translate::text($this->lang, 'license', 'search_department_placeholder'))); ?>
+    				</div>
+    				<div class="col-md-2">
+    					<?php echo $this->formText("license", null, array("class" => "form-control", "placeholder" => Emwork_Translate::text($this->lang, "license", "search_license_placeholder"), "title" => Emwork_Translate::text($this->lang, "license", "search_license_placeholder"))); ?>
+    				</div>
+    				<div class="col-md-3">
+    					<?php echo $this->formText("procedure", null, array("class" => "form-control", "placeholder" => Emwork_Translate::text($this->lang, "license", "search_procedure_placeholder"), "title" => Emwork_Translate::text($this->lang, "license", "search_procedure_placeholder"))); ?>
+    				</div>
+    				<div class="col-md-1">
+    					<button class="btn btn-block btn-default" type="submit"><?php echo Emwork_Translate::text($this->lang, "license", "search_search_button_label"); ?></button>
+    				</div>
+    			</div>
+    		</form>
+    	</div>
+    </div>
+    <div>
+		<?php if (!empty($this->introData->Detail)) : ?>
+		<div class="license-intro-detail">
+			<?php echo $this->introData->Detail;?>
+		</div>
+		<?php endif; ?>
+    </div>    
+
+	<div class="result-list-panel">
+    	<div class="result-list" id="result-list-info"></div>
+    	<div class="result-paging-info" style="display: none;">
+    		<p class="paging text-right"></p>
+    	</div>
+	</div>
+
+</div>
+<script>
+jQuery(function(){
+
+	getData("<?php echo $this->url(array("module" => "license", "controller" => "info", "action" => "issuelist"), null, true); ?>" + "?id=" + "<?php echo ""; ?>", "#issue", "<?php echo Emwork_Translate::text($this->lang, 'license', 'search_issue_placeholder')?>", "name", "id", "<?php echo ""; ?>"); 
+	$("#category").change(function(){
+		var selectValue = $(this).val();
+		if(selectValue == ''){selectValue = '-1';}
+		getData("<?php echo $this->url(array("module" => "license", "controller" => "info", "action" => "issuelist"), null, true); ?>" + "?id=" + selectValue, "#issue", "<?php echo Emwork_Translate::text($this->lang, 'license', 'search_issue_placeholder')?>", "name", "id", ""); 
+	});
+
+	reloadResultList(1);
+
+	function reloadResultList(pageIndex) {
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		$.post("<?php echo $this->url(array('module' => 'license', 'controller' => 'info', 'action' => 'getcategorylist'), null, true); ?>", sendData, function(data){
+			
+			if (data.total > 0) {
+				$("#result-list-info").html(data.html);
+				$('.result-paging-info').css('display', '');
+				$('.paging').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+			        leaps: false,
+			        firstLastUse: true,
+			        first: '<<',
+			        last: '>>',
+			        next: '>',
+			        prev: '<',
+			        wrapClass: 'pagination',
+			        activeClass: 'active',
+			        disabledClass: 'disabled',	
+			        nextClass: 'next',
+			        prevClass: 'prev',
+			        lastClass: 'last',
+			        firstClass: 'first'
+				});
+			} else {
+				$('.result-paging-info').css('display', 'none');
+				$('.paging').bootpag({total : 0});
+			}
+		}, 'json');
+	}
+
+	$('.paging').bootpag({
+        total: 0,
+        maxVisible: 5,
+        leaps: false,
+        firstLastUse: true,
+        first: '<<',
+        last: '>>',
+        next: '>',
+        prev: '<',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+    	reloadResultList(num);
+    }); 	
+});
+</script>

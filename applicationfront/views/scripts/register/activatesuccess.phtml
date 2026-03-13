@@ -1,0 +1,24 @@
+<style>
+	.jumbotron {text-align: center;}
+	#register-success { width: 800px; margin-left: auto; margin-right: auto; margin-top: 20px; }
+</style>
+
+<div id="register-success">
+	<div class="row">
+		<div class="col-md-12" id="activate-panal">
+			<div class="jumbotron">
+				<p>
+					<?php echo Emwork_Translate::text($this->lang, 'auth', 'register_view_success_title'); ?>
+				</p>
+				<p>
+				<?php echo Emwork_Translate::text($this->lang, 'auth', 'default_1');?> <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'home', 'action' => 'index'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'auth', 'default_2');?></a> <?php echo Emwork_Translate::text($this->lang, 'auth', 'default_3');?> <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'auth', 'action' => 'login'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'auth', 'default_4');?> </a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>	
+<script>
+jQuery(function(){
+	
+});
+</script>

@@ -1,0 +1,90 @@
+<?php
+// Translate 
+// $comment_title = Emwork_Translate::text($this->lang, "general", "comment_title");
+// $comment_send = Emwork_Translate::text($this->lang, "general", "comment_send");
+// $comment_list_title = Emwork_Translate::text($this->lang, "general", "comment_list_title");
+// $comment_btn_loadmore = Emwork_Translate::text($this->lang, "general", "comment_btn_loadmore");
+// $comment_warning_login_first = Emwork_Translate::text($this->lang, "general", "comment_warning_login_first");
+// $comment_warning_send_approve = Emwork_Translate::text($this->lang, "general", "comment_warning_send_approve");
+// $comment_warning_send_success = Emwork_Translate::text($this->lang, "general", "comment_warning_send_success");
+// $comment_warning_send_fail = Emwork_Translate::text($this->lang, "general", "comment_warning_send_fail");
+// $comment_warning_message_length = Emwork_Translate::text($this->lang, "general", "comment_warning_message_length");
+// $comment_warning_title = Emwork_Translate::text($this->lang, "general", "comment_warning_title");
+// $comment_btn_close = Emwork_Translate::text($this->lang, "general", "comment_btn_close");
+
+// ข้อความสำหรับทดสอบ
+$comment_title = "แสดงความคิดเห็น";
+$comment_send = "ส่งความคิดเห็น";
+$comment_list_title = "ความคิดเห็น";
+$comment_btn_loadmore = "ดูเพิ่มเติม";
+$comment_warning_login_first = "กรุณาลงทะเบียนเข้าสู่ระบบ<br>เพื่อแสดงความคิดเห็น";
+$comment_warning_send_approve = "ความคิดเห็นของท่านอยู่ระหว่างการพิจารณา ขอบคุณที่ร่วมแสดงความคิดเห็น";
+$comment_warning_send_success = "ส่งความคิดเห็นสำเร็จ";
+$comment_warning_send_fail = "ส่งความคิดเห็นไม่สำเร็จ";
+$comment_warning_message_length = "กรุณากรอกความคิดเห็นอย่างน้อย 10 ตัวอักษร";
+$comment_warning_title = "แจ้งเตือน";
+$comment_btn_close = "ปิด";
+?>
+
+
+<style type="text/css">
+.information-comment-panel .review-item { margin-bottom: 30px; color: #3d3d3d; display: block; }
+.information-comment-panel .review-item-list { border-bottom: solid 1px #ccc; }
+.information-comment-panel .review-img { float: left; display: block; width: 70px; height: 70px; }
+.information-comment-panel .review-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.information-comment-panel .review-detail { margin-left: 70px; padding-left: 15px; }
+.information-comment-panel .review-detail .review-name { font-weight: bold; margin-bottom: 7px; }
+.information-comment-panel .review-detail .review-msg { color: #333; margin: 15px 0px; }
+.information-comment-panel .title-panel { color: #226BB2; }
+.information-comment-panel .article-comment { margin-top: 10px; }
+.information-comment-panel #txtMessage { font-size: 2.2rem; }
+.information-comment-panel #btnSendComment { margin-top: 15px; }
+.information-comment-panel #btnLoadMore { background: #7a7a7a; border-color: #7a7a7a; }
+.information-comment-panel #btnLoadMore:hover { background: #666666; }
+</style>
+
+
+<form class="form-horizontal" id="formComment" name="formComment">
+	<input type="hidden" name="hdfID" value="<?php echo $this->dataInfo->ID; ?>">
+	<input type="hidden" name="hdfArticlePublicComment" value="<?php echo $this->ArticlePublicComment; ?>">
+
+	<div class="article-comment-title title-panel">
+		<span class="title">
+			<?php echo $comment_title; ?>
+		</span>
+		<hr />
+	</div>
+
+	<div class="article-comment">
+		<div class="row">
+			<div class="col-md-12 review-item">
+				<div class="alert alert-success approveWarning" style="display: none;">
+					<?php echo $comment_warning_send_approve; ?>
+				</div>
+				<div class="review-img">
+					<?php if($this->ProfileImageHashName){ ?>
+						<img src="<?php echo $this->url(array('module' => 'default', 'controller' => 'file', 'action' => 'get', 'file' => $this->ProfileImageHashName), null, true); ?>">
+					<?php }else{ ?>
+						<img src="<?php echo $this->baseUrl('images/logos/user.png'); ?>">
+					<?php } ?>
+				</div>
+				<div class="review-detail">
+					<textarea name='txtMessage' id='txtMessage' class='form-control' rows='3' cols='80' maxlength="490"></textarea>
+					<button type="button" class="btn btn-primary" name="btnSendComment" id="btnSendComment">
+						<em class="fa fa-paper-plane"></em>&nbsp;
+						<?php echo $comment_send; ?>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="article-comment-list-title title-panel">
+		<span class="title">
+			<?php echo $comment_list_title; ?>
+		</span>
+		<hr />
+	</div>
+
+
+</form>

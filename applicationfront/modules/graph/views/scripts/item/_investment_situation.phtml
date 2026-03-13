@@ -1,0 +1,358 @@
+<style>
+.Situation { margin-bottom: 15px; background: #D4EFFA; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+.Situation .Situation-title { text-align: center; display: inline-block; width: 100%; }
+.Situation .Situation-title .border { background: white; border: 1px solid #186E9D; padding: 5px; margin: 15px 0; }
+.Situation .Situation-title .text { color: #186e9d; font-family: 'ThaiSans Neue'; font-weight: bold; }
+.Situation .Situation-title .number { font-size: 50px; font-family: 'ThaiSans Neue'; font-weight: bold; }
+.Situation .export { display: inline-block; width: 100%; font-family: 'Kanit Medium'; color: #2B83AF; }
+.Situation .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+.Situation .export #Situation_Year { margin-right: 4%; }
+.Situation_seeAll { margin-bottom: 15px; margin-top: 15px; color: white; background: linear-gradient(to top, #3388BE, #27A8E2); padding: 7px 30px 2px; border-radius: 7px; border: 1px solid white; }
+.Situation_seeAll a {color: white;}
+
+.Situation .intro-box { padding: 10px 0px 0px; color: white; font-family: 'Kanit Medium'; }
+
+.Situation .intro-box .title-detail.TransportVolume { background: #8CC63E; padding : 0 15px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.Situation .intro-box .title-detail.InvestmentBusiness { background: #F2C90F; padding : 0 15px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.Situation .intro-box .title-detail.DirectInvestment { background: #DD427B; padding : 0 15px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.Situation .intro-box .title-detail.InvestmentOutlook { background: #F3CA10; padding : 0 15px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+
+.Situation .intro-box .content-detail { padding: 10px; background: white; min-height: 315px;}
+
+@media screen and (max-width: 768px) {
+    .Situation .intro-box .content-detail { padding: 10px; background: white; min-height: 250px;}
+}
+
+@media screen and (max-width: 425px) {
+    .Situation .intro-box .content-detail { padding: 10px; background: white; min-height: 200px;}
+}
+
+</style>
+
+<div class="Situation bg" id="SituationExportZone">
+
+    <div class="export">
+        <div class="col-md-9">สถานการณ์การลงทุนโดยตรงจากต่างประเทศ</div>
+        <div class="col-md-3">
+            <?php echo $this->formSelect("Situation_Year", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?>
+            <?php echo $this->formSelect("Situation_Export", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+
+    <?php
+        $tourists = array(1,2,3,4,5,6,7,8,9,10);
+        function rand_float($st_num=0,$end_num=1,$mul=100)
+        {
+            if ($st_num>$end_num) return false;
+            return mt_rand($st_num*$mul,$end_num*$mul)/$mul;
+        }
+
+    ?>
+
+    <div class="Situation-title">
+
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <div class="border">
+                    <div class="text">เงินลงทุนขาเข้าสุทธิ (Net)</div>
+                    <div class="number">97,667M บาท</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="border">
+                    <div class="text">เงินลงทุนขาเข้าสุทธิ (Inflow)</div>
+                    <div class="number">487,012M บาท</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="border">
+                    <div class="text">เงินลงทุนขาเข้าสุทธิ (Outflow)</div>
+                    <div class="number">389,345M บาท</div>
+                </div>
+            </div>            
+        </div>
+
+        <div class="col-md-12">
+            <div class="col-md-5">
+                <div class="intro-box">
+                    <div class="title-detail TransportVolume">สัดส่วนปริมาณเงินลงทุน รายสัญชาติ</div>
+                    <div class="content-detail">
+                        <canvas id="Chart_2_1"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="intro-box">
+                    <div class="title-detail InvestmentBusiness">เงินลงทุนขาเข้ารายสุทธิ รายสาขาธุรกิจ</div>
+                    <div class="content-detail">
+                        <canvas id="Chart_2_2"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="col-md-5">
+                <div class="intro-box">
+                    <div class="title-detail DirectInvestment">เงินลงทุนโดยตรง รายสัญชาติ</div>
+                    <div class="content-detail">
+                        <canvas id="Chart_2_3"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="intro-box">
+                    <div class="title-detail InvestmentOutlook">แนวโน้มการลงทุนจากต่างประเทศ รายปี</div>
+                    <div class="content-detail">
+                        <canvas id="Chart_2_4"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>        
+
+    </div>    
+
+
+</div>
+
+<div id="previewImage_Situation" style="display: none;"></div>
+<a id="downloadImage_Situation" href="#In_Out" style="display: none;"></a>
+
+<div class="col-md-12" style="text-align: center;">
+    <button class="Situation_seeAll"><a href="https://app.powerbi.com/view?r=eyJrIjoiMjk0ZTM2Y2EtYzRmOS00NjQ5LTg5MzctMjFlMjI4NjQ2ZjQwIiwidCI6IjdhNTlkMDM0LTEzNGYtNDI1Ny1hNmJiLTllYWZkNzg5NjA2ZCIsImMiOjEwfQ%3D%3D" target="_blank">ดูข้อมูลสถิติทั้งหมด</a></button>
+</div>
+
+<script>
+    var Chart_2_1 = document.getElementById('Chart_2_1').getContext('2d');
+    var myChart_2_1  = new Chart(Chart_2_1, {
+        type: 'doughnut',
+        data: {
+            labels: ["อเมริกาเหนือ","ยุโรป","เอเชีย","อื่น ๆ"],
+            datasets: [{
+                label: "My First dataset",
+                backgroundColor: ["#323380","#697140","#848770","#289540"],
+                data: ["32338","69714","84877","289540"],
+            }]
+        },
+        options: {
+            legend: {
+                display: true
+            },
+            responsive: true,
+            showTooltips: {
+                showLabel: true,
+                showValue: true
+            }
+        }
+    });
+
+    var Chart_2_2 = document.getElementById('Chart_2_2').getContext('2d');
+    var myChart_2_2  = new Chart(Chart_2_2, {
+        type: 'horizontalBar',
+        data: {
+            labels: [
+                "C รายการผลิต",
+                "K กิจกรรมทางการเงินและการประกันภัย",
+                "L กิจกรรมเกี่ยวกับอสังหาริมทรัพย์",
+                "B การทำเหมืองแร่และเหมืองหิน",
+                "G การขายส่งและการขายปลีก การซ่อมยานยนต์และจักร...",
+                "F การก่อสร้าง",
+                "H การขนส่งและสถานที่เก็บสินค้า",
+                "D ไฟฟ้า ก๊าซ ไอน้ำและระบบปรับอากาศ",
+                "A เกษตกรรม การป่าไม่และการประมง",
+                "I ทีพ่ักแรมและบริการด้านอาหาร",
+                "อื่น ๆ"
+            ],
+            datasets: [{
+                backgroundColor: '#00B8AC',
+                borderColor: '#00B8AC',
+                data: ["43715","33197","10298","8373","3594","1126","1117","458","111","-141","-3907"],
+            }]
+        },
+        options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function() {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = "10px ",
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    this.data.datasets.forEach(function(dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            var data = dataset.data[index];
+                            var x = -10;
+                            if(data < 0) {
+                                x = 10;
+                            }
+                            ctx.fillText(data, bar._model.x + x, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            responsive: true
+        }
+    });
+
+    var Chart_2_3 = document.getElementById('Chart_2_3').getContext('2d');
+    var myChart_2_3  = new Chart(Chart_2_3, {
+        type: 'horizontalBar',
+        data: {
+            labels: [
+                "ญี่ปุ่น",
+                "อื่นๆ",
+                "จีน",
+                "สิงคโปร์",
+                "สหรัฐอเมริกา",
+                "เยอรมนี",
+                "มาเลเซีย",
+                "เกาหลีใต้",
+                "ไต้หวัน",
+                "เนเธอร์แลนด์",
+                "สวิตเซอร์แลนด์"
+            ],
+            datasets: [{
+                backgroundColor: '#00B8AC',
+                borderColor: '#00B8AC',
+                data: ["110546","84828","64466","45069","40055","35051","30870","27011","24685","21005", "18766"],
+            }]
+        },
+        options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                    
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            var x = -10;
+                            if(data < 0) {
+                                x = 10;
+                            }                                                
+                            ctx.fillText(data, bar._model.x + x, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+                legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        // display: false,
+                        beginAtZero:true
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        // display : false
+                    },
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            responsive: true
+        }
+    });
+    var Chart_2_4 = document.getElementById('Chart_2_4').getContext('2d');
+    var myChart_2_4  = new Chart(Chart_2_4, {
+        type: 'bar',
+        data: {
+            labels: ["2548","2549","2550","2551","2552","2553","2554","2555","2556","2557","2558","2559"],
+            datasets: [{
+                backgroundColor: '#8cc63e',
+                borderColor: '#8cc63e',
+                data: ["230349","316205","268626","260612","261149","201790","405903","787994","912454","514223","493310","487012"],
+            }]
+        },
+        options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function() {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = "10px ",
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    this.data.datasets.forEach(function(dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            var data = dataset.data[index];
+                            ctx.fillText(data, bar._model.x, bar._model.y);
+                        });
+                    });
+                }
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            responsive: true
+        }
+    });
+
+    function setCanvas_SituationExportZone(val) {
+        html2canvas(document.querySelector("#SituationExportZone")).then(function(canvas) {
+            $("#previewImage_Situation").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_Situation").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage_Situation")[0].click();
+                $("#Situation_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_Situation canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#Situation_Export").val('export');
+            }
+        });
+    }
+    $("#Situation_Export").change(function() {
+        setCanvas_SituationExportZone($(this).val());
+    });
+</script>

@@ -1,0 +1,32 @@
+{
+	"name" : "Menu",
+	"fields" : [
+		{
+			"name" : "menugroup",
+			"type" : "select",
+			"size" : "",
+			"label" : "กลุ่มเมนู",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "System_Service_Menugroup",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		},
+		{
+			"name" : "deep",
+			"type" : "select",
+			"size" : "",
+			"label" : "ระดับความลึก",
+			"optiontype" : "static",
+			"options" : [
+				{"name" : "ไม่จำกัด" , "value" : "-1"},
+				{"name" : "1" , "value" : "1"},
+				{"name" : "2" , "value" : "2"}
+			],
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

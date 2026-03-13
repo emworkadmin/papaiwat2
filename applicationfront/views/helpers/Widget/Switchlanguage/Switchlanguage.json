@@ -1,0 +1,49 @@
+{
+	"name" : "สลับภาษา",
+	"description" : "สลับภาษาในหน้าจอ (ใช้งานได้เมื่อมีภาษาที่เปิดใช้งานมากกว่า 1 ภาษา)",
+	"fields" : [
+		{
+			"name" : "showflag",
+			"type" : "select",
+			"size" : "",
+			"label" : "แสดงธง",
+			"optiontype" : "static",
+			"options" : [
+				{"name" : "แสดง" , "value" : "Y"},
+				{"name" : "ไม่แสดง" , "value" : "N"}
+			],
+			"default" : "Y",
+			"description" : "",
+			"required" : true
+		},
+		{
+			"name" : "displayname",
+			"type" : "select",
+			"size" : "",
+			"label" : "รูปแบบการแสดงชื่อ",
+			"optiontype" : "static",
+			"options" : [
+				{"name" : "รหัสภาษา" , "value" : "code"},
+				{"name" : "ชื่อภาษา" , "value" : "name"},
+				{"name" : "ไม่แสดง" , "value" : "no"}
+			],
+			"default" : "name",
+			"description" : "",
+			"required" : true
+		},
+		{
+			"name" : "displaytype",
+			"type" : "select",
+			"size" : "",
+			"label" : "รูปแบบการแสดงผล",
+			"optiontype" : "static",
+			"options" : [
+				{"name" : "แนวตั้ง (กดเลือก)" , "value" : "V"},
+				{"name" : "แนวนอน" , "value" : "H"}
+			],
+			"default" : "V",
+			"description" : "",
+			"required" : true
+		}
+	]
+}

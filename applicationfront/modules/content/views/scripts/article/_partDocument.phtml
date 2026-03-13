@@ -1,0 +1,54 @@
+<?php
+//<!----------------------------------------- ไฟล์เอกสาร ------------------------------------------------>
+if (count ( $this->dataFileDocuments ) > 0) :
+?>
+<style>
+.document-download-amount{ color: #666; font-size: 0.8em; }
+</style>
+
+<div class="article-document">
+	<hr />
+	<div class="title-label">
+		<img alt="image" src="<?php echo $this->baseUrl("images/icons/icon_document.png"); ?>" /> <?php echo Emwork_Translate::text($this->lang, "general", "infodetail_document_title"); ?>
+	</div>
+	<?php
+	foreach ( $this->dataFileDocuments as $doc ) :
+		$docUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $doc["hash_name"]), null, true);
+		$docName = $doc["file_name"];
+		$downloadAmount = empty($doc["DownloadAmount"]) ? 0 : $doc["DownloadAmount"];
+		
+	?>
+
+	<div class="docname">
+		<em class="glyphicon glyphicon-download-alt"></em>&nbsp;
+		<a id="lnkDocumentDownload-<?php echo $doc['ContentArticleFileID']; ?>" href="<?php echo $docUrl; ?>" target="_blank">
+			<?php echo $docName; ?>
+			<span class="document-download-amount">
+				(<?php echo Emwork_Translate::text($this->lang, 'content', 'person_dowload_document'); ?> <span id="document-download-amount-<?php echo $doc['ContentArticleFileID']; ?>"><?php echo $downloadAmount; ?></span> <?php echo Emwork_Translate::text($this->lang, 'content', 'content_times'); ?>)
+			</span>
+		</a>
+	</div>
+	
+	<?php if($doc['Extension']=="pdf"):?>
+		<!-- <object data="<?php echo $docUrl; ?>" type="application/pdf" width="100%" height="500px">
+			<p><a href="<?php echo $docUrl; ?>"><?php echo $docName; ?></a></p>
+		</object> -->
+		<iframe style="height: 550px; width: 100%;" src="/pdf/web/viewer.html?file=<?php echo $docUrl; ?>"></iframe>
+	<?php endif;?>
+
+	<script>
+	$('#lnkDocumentDownload-<?php echo $doc['ContentArticleFileID']; ?>').click(function(){
+		var ContentArticleFileID = '<?php echo $doc['ContentArticleFileID']; ?>';
+		$.post("<?php echo $this->url(array('module' => 'content', 'controller' => 'article', 'action' => 'savedownload'), null, true);?>", {"ContentArticleFileID":ContentArticleFileID}, function(data){
+			$('#document-download-amount-<?php echo $doc['ContentArticleFileID']; ?>').html(data.download_amount);
+		}, 'json');
+	});
+	</script>
+
+	<?php
+	endforeach;
+	?>
+</div>
+<?php 
+endif; 
+?>

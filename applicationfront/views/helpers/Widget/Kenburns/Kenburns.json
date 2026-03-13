@@ -1,0 +1,18 @@
+{
+	"name" : "Kenburns",
+	"fields" : [
+		{
+			"name" : "item",
+			"type" : "select",
+			"size" : "",
+			"label" : "รายการ Widget",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Widgetmanage_Service_Item",
+				"method" : "getOptionKenburns"
+			},
+			"description" : "",
+			"required" : true
+		}
+	]
+}

@@ -1,0 +1,844 @@
+<?php 
+$defaultDataDetail = null;
+?>
+<!-- jQueryFiler -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+<!-- lightGallery -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightgallery/css/lightgallery.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery/js/lightgallery.min.js'); ?>"></script>
+<!-- select2 -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/select2/select2.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/select2/select2.min.js'); ?>"></script>
+<!-- wickedpicker -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/wickedpicker/wickedpicker.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/wickedpicker/wickedpicker.min.js'); ?>"></script>
+
+
+<style>
+.tt-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+
+.tt-selector input:active +.template-type {opacity: .9;}
+.tt-selector input:checked +.template-type {
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+.template-type {
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:100px;height:70px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: grayscale(1) opacity(.7);
+       -moz-filter: grayscale(1) opacity(.7);
+            filter:  grayscale(1) opacity(.7);
+}
+.template-type:hover{
+    -webkit-filter: grayscale(.5) opacity(.9);
+       -moz-filter: grayscale(.5) opacity(.9);
+            filter: grayscale(.5) opacity(.9);
+}
+.divPreview .modal-dialog { width: 95% !important; }
+</style>
+
+<?php if($this->isiOS) :  ?>
+<style>
+.jFiler.jFiler-theme-default { 
+	position: relative !important;
+}
+input[type="file"]{
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 900000 !important;
+    width: 100% !important;
+    max-width: 300px !important;
+    height: 35px !important;
+    opacity: 0 !important;
+}
+</style>
+<?php endif; ?>
+
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+		<div class="nav-tabs-custom">		
+			<ul class="nav nav-tabs">
+				<?php 
+				if (count($this->languages) > 0) :
+					$i = 0;
+					foreach ($this->languages as $lang) :
+						$i ++;
+				?>
+				<li class="<?php echo $i == 1 ? 'active' : ''; ?>" data-tab-lang="<?php echo $lang["Code"]; ?>">
+					<a data-toggle="tab" href="#detail-<?php echo $lang['Code']; ?>" title="<?php echo $lang['Name']; ?>">
+						<?php echo $lang['NameLocal']; ?>
+						<em class="fa fa-warning text-danger warning"></em>
+					</a>
+				</li>
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</ul>
+			<div class="tab-content">
+				<?php 
+				if (count($this->languages) > 0) :
+					$i = 0;
+					foreach ($this->languages as $lang) :
+						$langCode = $lang['Code'];
+						$isRequired = $lang["IsRequired"] == "Y";
+						$isDefault = $lang["IsDefault"] == "Y";
+						$i ++;
+						$sugguestMessage = "";
+		
+						// Setting Validate
+						$labelClassRequired = '';
+						$controlClassRequired = '';
+						if ($isDefault || $isRequired) {
+							$labelClassRequired = ' labelRequest'; 
+							$controlClassRequired = ' required';
+						}
+				?>
+				<div id="detail-<?php echo $lang['Code']; ?>" class="tab-pane fade <?php echo $i == 1 ? 'in active' : ''; ?>">
+					<?php 
+						if (true) :
+					
+							$dataDetail = $this->dataDetails[$langCode];
+							if ($isDefault) : 
+								$defaultDataDetail = $dataDetail;
+							else :
+								$sugguestMessage = "<<โปรดจัดการข้อมูลที่ " . $this->defaultLanguageName . ">>";
+								
+							endif;
+					?>
+	
+
+					<div class="title-label">หัวข้อปฏิทินกิจกรรม</div>							
+					<div class="form-group">
+						<label class="col-md-3 control-label<?php echo $labelClassRequired; ?>" >ชื่อ</label>
+						<div class="col-md-9 divControl">
+							<?php echo $this->formText("params[{$langCode}][Title]", $dataDetail->Title, array('class' => 'form-control' . $controlClassRequired, 'placeholder' => '', 'maxlength' => '500')); ?>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-md-3 control-label<?php echo $isDefault ? $labelClassRequired : ''; ?>" >หมวดหมู่</label>
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->formSelect("CategoryIds[]", $this->dataCategoryIds, array('class' => 'form-control' . $controlClassRequired, 'placeholder' => '', 'multiple'=>"multiple"), ($this->calendarCategoryOption)); ?>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="">รูปภาพหน้าปก</label>
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->UploadHtmlControl("IntroImage", "IntroImage", $this->dataIntroImages, array('multi' => false, 'exts' => array('png', 'jpg', 'gif'))); ?>
+							<div class="help-block">ขนาดไฟล์ไม่เกิน 10 MB<br>เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png</div>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="params-<?php echo $langCode; ?>-IntroText">ข้อความเกริ่นนำ</label> 
+						<div class="col-md-9 divControl">
+							<?php echo $this->formTextarea("params[{$langCode}][IntroText]", $dataDetail->IntroText, array('class' => 'form-control', 'style' => 'max-width:100%;', 'rows' => '3', 'cols' => '50', 'maxlength' => '1000')); ?>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="params-<?php echo $langCode; ?>-Place">สถานที่</label> 
+						<div class="col-md-9 divControl">
+							<?php echo $this->formTextarea("params[{$langCode}][Place]", $dataDetail->Place, array('class' => 'form-control', 'style' => 'max-width:100%;', 'rows' => '3', 'cols' => '50', 'maxlength' => '1000')); ?>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-3 control-label" >ข้อมูลการติดต่อ</label>
+						<div class="col-md-9 divControl">
+							<?php echo $this->formText("params[{$langCode}][Contact]", $dataDetail->Contact, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '500')); ?>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-3 control-label" >เบอร์โทรศัพท์</label>
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) { ?>
+								<?php echo $this->formText("params[{$langCode}][Telephone]", $dataDetail->Telephone, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '50')); ?>
+							<?php }else{ ?>
+								<?php echo $sugguestMessage;?>
+							<?php } ?>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-3 control-label" >ลิงค์ของกิจกรรม</label>
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) { ?>
+								<?php echo $this->formText("params[{$langCode}][EventLink]", $dataDetail->EventLink, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '200')); ?>
+							<?php }else{ ?>
+								<?php echo $sugguestMessage;?>
+							<?php } ?>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-3 control-label" >ชื่อหน่วยงานที่จัดกิจกรรม</label>
+						<div class="col-md-9 divControl">
+							<?php echo $this->formText("params[{$langCode}][EventOrganizer]", $dataDetail->EventOrganizer, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '500')); ?>
+						</div>
+					</div>
+
+					<?php if ($isDefault) : ?>
+					<div class="form-group has-feedback">
+            			<label class="col-md-3 labelRequest control-label" for="params-<?php echo $langCode; ?>-StartDate">วันที่เริ่มต้น</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][StartDate]", Emwork_Utility_DateTime::MSSqlToDateThai($dataDetail->StartDate), array('class' => 'form-control required', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+        					<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+            			</div>
+						<label class="col-md-3 labelRequest control-label" for="">เวลา</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][StartDateTime]", ($dataDetail->StartDate != null ? $dataDetail->StartDate->format('H:i') : '0:00'), array('class' => 'form-control required', 'id' => 'StartDateTime')); ?>
+            			</div>
+            		</div>
+            		<div class="form-group has-feedback">
+            			<label class="col-md-3 labelRequest control-label" for="params-<?php echo $langCode; ?>-EndDate">วันที่สิ้นสุด</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][EndDate]", Emwork_Utility_DateTime::MSSqlToDateThai($dataDetail->EndDate), array('class' => 'form-control required', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+            				<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+            			</div>
+						<label class="col-md-3 labelRequest control-label" for="">เวลา</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][EndDateTime]", ($dataDetail->EndDate != null ? $dataDetail->EndDate->format('H:i') : '0:00'), array('class' => 'form-control required', 'id' => 'EndDateTime')); ?>
+            			</div>
+            		</div>
+					<?php else : ?>
+					<div class="form-group">
+						<label class="col-md-3 control-label" >วันที่เริ่มต้น</label>
+						<div class="col-md-3 divControl">
+							<p class="form-control-static">
+									<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+						<label class="col-md-3 control-label" >วันที่สิ้นสุด</label>
+						<div class="col-md-3 divControl">
+							<p class="form-control-static">
+									<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+					</div>
+					<?php endif; ?>
+
+					<div class="form-group" >
+						<label class="col-md-3 control-label<?php echo $isDefault ? $labelClassRequired : ''; ?>" for="">พิกัด Latitude</label>		
+						<div class="col-md-3 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->formText("params[{$langCode}][Latitude]", $dataDetail->Latitude, array('class' => 'form-control' . $controlClassRequired, 'placeholder' => '', 'maxlength' => '500', "id" => "txtLatitude")); ?>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage; ?>
+							</p>
+							<?php endif; ?>
+						</div>
+						<label class="col-md-3 control-label<?php echo $isDefault ? $labelClassRequired : ''; ?>" for="">พิกัด Longitude</label>		
+						<div class="col-md-3 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->formText("params[{$langCode}][Longitude]", $dataDetail->Longitude, array('class' => 'form-control' . $controlClassRequired, 'placeholder' => '', 'maxlength' => '500', "id" => "txtLongitude")); ?>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage; ?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+					<?php if ($isDefault) : ?>
+					<div class="form-group" >
+						<div class="col-md-9 col-md-offset-3 divControl">							
+							<p class="form-control-static">
+								<button type="button" class="btn btn-primary" id="btnMapManage"><em class="fa fa-map-marker"></em> กำหนดตำแหน่งจากแผนที่</button>
+								<button type="button" class="btn btn-primary" id="btnMapConfirm" style="display: none;"><em class="fa fa-check-circle-o"></em> เสร็จสิ้น</button>
+								<button type="button" class="btn btn-warning" id="btnMapCurrent" style="display: none;"><em class="fa fa-map-marker"></em> ไปยังตำแหน่งปัจจุบัน</button>
+								<button type="button" class="btn btn-danger" id="btnMapCancel" style="display: none;"><em class="fa fa-times-circle-o"></em> ยกเลิก</button>
+								<button type="button" class="btn btn-primary" id="btnMapManagePlace"><em class="fa fa-map-marker"></em> กำหนดตำแหน่งจากชื่อสถานที่</button>
+							</p>
+							<div id='mapCanvas' style="width: 100%; height: 350px;"></div>
+						</div>
+					</div>
+					<?php endif; ?>
+
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="">รูปแบบการแสดงผล</label> 
+						<div class="col-md-9 divControl tt-selector">
+							<?php if ($isDefault) : ?>
+							<input id="TemplateType-1" type="radio" name="TemplateType" value="1" <?php echo $dataDetail->TemplateType == 1 ? "checked='checked'" : ""; ?>/>
+					        <label class="template-type" for="TemplateType-1" style="background-image:url(<?php echo $this->baseUrl("assets/calendar/layouts/layout1.png"); ?>);"></label>
+					        <input id="TemplateType-2" type="radio" name="TemplateType" value="2" <?php echo $dataDetail->TemplateType == 2 ? "checked='checked'" : ""; ?>/>
+					        <label class="template-type"for="TemplateType-2" style="background-image:url(<?php echo $this->baseUrl("assets/calendar/layouts/layout2.png"); ?>);"></label>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>					
+					<div class="form-group">
+						<div class="col-md-12 divControl">
+							<?php echo $this->formTextarea("params[{$langCode}][Detail]", $dataDetail->Detail, array('class' => 'form-control txtDetail')); ?>
+						</div>
+					</div>
+					
+					<div class="title-label">ไฟล์ประกอบ</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="">รูปภาพแกลอรี่</label>
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->UploadHtmlControl("FileImages", "FileImages", $this->dataFileImages, array('multi' => true,  "maxsize" => "10", 'exts' => array('png', 'jpg', 'gif', 'jpeg'))); ?>
+							<div class="help-block">ขนาดไฟล์ไม่เกิน 10 MB<br>เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png</div>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="">ไฟล์เอกสาร</label>
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->UploadHtmlControl("FileDocuments", "FileDocuments", $this->dataFileDocuments, array('multi' => true,  "maxsize" => "10", 'exts' => array('pdf'))); ?>
+							<div class="help-block">ขนาดไฟล์ไม่เกิน 10 MB<br>เฉพาะไฟล์นามสกุล: .pdf</div>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="">ไฟล์มัลติมีเดีย</label>
+						<div class="col-md-9 divControl">
+							<?php if ($isDefault) : ?>
+							<?php echo $this->UploadHtmlControl("FileMultiMedias", "FileMultiMedias", $this->dataFileMultiMedias, array('multi' => true, 'exts' => array('mp4'), "maxsize" => "25")); ?>
+							<div class="help-block">ขนาดไฟล์ไม่เกิน 25 MB<br>เฉพาะไฟล์นามสกุล: .mp4</div>
+							<?php else : ?>
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+							<?php endif; ?>
+						</div>
+					</div>
+					
+					<div class="title-label">การเผยแพร่</div>
+					<?php if ($isDefault) : ?>
+					<div class="form-group has-feedback">
+            			<label class="col-md-3 labelRequest control-label" for="PublishDate">วันที่ประกาศ</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][PublishDate]", Emwork_Utility_DateTime::MSSqlToDateThai($dataDetail->PublishDate), array('class' => 'form-control required', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+        					<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+            			</div>
+            			<label class="col-md-3 labelRequest control-label" for="">เวลา</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][PublishDateTime]", $dataDetail->PublishDate != null ? $dataDetail->PublishDate->format('H:i') : '0:00', array('class' => 'form-control required', 'id' => 'PublishDateTime')); ?>
+            			</div>
+            		</div>	
+					<div class="form-group has-feedback">
+            			<label class="col-md-3 control-label" for="PublishDown">วันที่ปิดประกาศ</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][PublishDown]", Emwork_Utility_DateTime::MSSqlToDateThai($dataDetail->PublishDown), array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+            				<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+            				<span id="<?php echo "params-{$langCode}-PublishDownClose"; ?>" class="fa fa-times-circle" style="right: 50px; top: 10px; position: absolute; cursor: pointer; <?php echo ($dataDetail->PublishDown == null ? 'display: none;' : '');?>"></span>
+            			</div>
+            			<label class="col-md-3 control-label" for="">เวลา</label>
+            			<div class="col-md-3 divControl">
+            				<?php echo $this->formText("params[{$langCode}][PublishDownTime]", $dataDetail->PublishDown != null ? $dataDetail->PublishDown->format('H:i') : '0:00', array('class' => 'form-control', 'id' => 'PublishDownTime')); ?>
+            			</div>
+            		</div>
+					<?php else : ?>
+					<div class="form-group">
+						<label class="col-md-3 control-label" >วันที่ประกาศ</label>
+						<div class="col-md-3 divControl">
+							<p class="form-control-static">
+									<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+						<label class="col-md-3 control-label" >วันที่ปิดประกาศ</label>
+						<div class="col-md-3 divControl">
+							<p class="form-control-static">
+									<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+					</div>
+					<?php endif; ?>
+					<?php if ($isDefault) : ?>
+					<div class="form-group">
+						<label class="col-md-3 control-label labelRequest" >สถานะ</label>
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">
+								<?php echo $this->formRadio("params[{$langCode}][IsEnable]", $this->data->IsEnable, array('class' => 'required', 'label_class' => 'radio-inline'), $this->publishOption, " "); ?>
+							</div>						
+						</div>
+					</div>
+					<?php else : ?>
+					<div class="form-group">
+						<label class="col-md-3 control-label" >สถานะ</label>
+						<div class="col-md-9 divControl">
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+					</div>
+					<?php endif; ?>	
+					
+					<div class="title-label">ความคิดเห็น</div>
+					<?php if ($isDefault) : ?>
+					<div class="form-group">
+						<label class="col-md-3 control-label labelRequest" >อนุญาตให้แสดงความคิดเห็น</label>
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">
+								<?php echo $this->formRadio("params[{$langCode}][CanCommentType]", ($this->data->CanComment <> 'D' ? 'C' : "D"), array('class' => 'required', 'label_class' => 'radio-inline', 'id' => 'canCommentType'), $this->canCommentTypeOption, " "); ?>
+							</div>
+							<div class="radio with-icheck" id="canComment" style="border: 1px solid #ccc; padding: 5px; margin-top: 15px; <?php echo $this->data->CanComment <> 'D' ? "" : "display: none;"; ?> background-color: #eee;">
+								<?php echo $this->formRadio("params[{$langCode}][CanComment]", ($this->data->CanComment <> 'D' ? $this->data->CanComment : $this->defaultCanComment), array('class' => 'required', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+							</div>
+						</div>
+					</div>
+					<?php else : ?>
+					<div class="form-group">
+						<label class="col-md-3 control-label" >อนุญาตให้แสดงความคิดเห็น</label>
+						<div class="col-md-9 divControl">
+							<p class="form-control-static">
+								<?php echo $sugguestMessage;?>
+							</p>
+						</div>
+					</div>
+					<?php endif; ?>	
+					
+					<?php if ($isDefault) : ?>
+					<div class="title-label">ข้อมูลเฉพาะ</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="params-<?php echo $langCode; ?>-MetaData">Meta Data</label> 
+						<div class="col-md-9 divControl">
+							<?php echo $this->formTextarea("params[{$langCode}][MetaData]", $dataDetail->MetaData, array('class' => 'form-control', 'rows' => '3', 'cols' => '50', 'maxlength' => '500')); ?>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label"  >แชร์ข้อมูล</label> 
+						<div class="col-md-9 divControl">
+							<div class="checkbox with-icheck">
+								<label for="">
+									<?php echo $this->formCheckbox("params[{$langCode}][SocialNetworkFacebook]", $dataDetail->SocialNetworkFacebook, array('class' => 'form-control'), array('Y', 'N')); ?> 
+									Facebook
+								</label>
+							</div>
+							<div class="checkbox with-icheck">
+								<label for="">
+									<?php echo $this->formCheckbox("params[{$langCode}][SocialNetworkTwitter]", $dataDetail->SocialNetworkTwitter, array('class' => 'form-control'), array('Y', 'N')); ?> 
+									Twitter
+								</label>
+							</div>
+							<div class="checkbox with-icheck">
+								<label for="">
+									<?php echo $this->formCheckbox("params[{$langCode}][SocialNetworkGooglePlus]", $dataDetail->SocialNetworkGooglePlus, array('class' => 'form-control'), array('Y', 'N')); ?> 
+									Google+
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label labelRequest" >แสดง QR Code</label>
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">
+								<?php echo $this->formRadio("params[{$langCode}][ShowQrcode]", $dataDetail->ShowQrcode, array('class' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label labelRequest" >แสดงปุ่มพิมพ์</label>
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">
+								<?php echo $this->formRadio("params[{$langCode}][ShowPrint]", $dataDetail->ShowPrint, array('class' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+							</div>
+						</div>
+					</div>					
+					<?php endif; ?>
+			
+					<?php endif;?>
+				</div>
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</div>
+		</div>	
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<!-- <button type="button" class="btn btn-success" id="btnPreview"><em class="fa fa-search"></em> ชมตัวอย่างข้อมูล</button> -->
+				<?php endif ; ?>
+				<?php if ($this->canDelete) : ?>
+				<button type="button" class="btn btn-danger" id="btnDelete"><em class="fa fa-trash"></em> ลบข้อมูล</button>
+				<?php endif ; ?>
+				<button type="button" class="btn btn-default" id="btnBack">กลับ</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+<script>
+$(function () {
+
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+    
+	<?php if($this->isiOS) : ?>
+	$("input[type=text][id$=StartDate],input[type=text][id$=EndDate]").removeAttr("readonly");
+	$("input[type=text][id$=PublishDate],input[type=text][id$=PublishDown]").removeAttr("readonly");
+	<?php endif; ?>
+	$("input[type=text][id$=StartDateTime]").wickedpicker({twentyFour: true, title : 'เวลา', now : '<?php echo $this->data->StartDate != null ? $this->data->StartDate->format("H:i") : "0:00"; ?>'});
+	$("input[type=text][id$=EndDateTime]").wickedpicker({twentyFour: true, title : 'เวลา', now : '<?php echo $this->data->EndDate != null ? $this->data->EndDate->format("H:i") : "0:00"; ?>'});
+	$("input[type=text][id$=PublishDateTime]").wickedpicker({twentyFour: true, title : 'เวลา', now : '<?php echo $this->data->PublishDate != null ? $this->data->PublishDate->format("H:i") : "0:00"; ?>'});
+	$("input[type=text][id$=PublishDownTime]").wickedpicker({twentyFour: true, title : 'เวลา', now : '<?php echo $this->data->PublishDown != null ? $this->data->PublishDown->format("H:i") : "0:00"; ?>'});
+
+	$('select[name^=CategoryIds]').select2();
+	$("#formData input[type=checkbox], #formData input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	var roxyFileman = '<?php echo $this->baseUrl('/fileman/index.html'); ?>';	
+	$( '.txtDetail' ).ckeditor({
+		language: 'th',
+		height: 400,
+		toolbar: [
+		          {name : 'basicstyles', items : ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']},
+		          {name: 'colors', items: [ 'FontSize', 'TextColor', 'BGColor' ] },
+		          {name : 'paragraph', items : ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+		          {name : 'links', items : ['Link', 'Unlink', 'Anchor']},
+		          {name : 'inserts', items : ['Image', 'Table', 'HorizontalRule']},
+		          {name: 'document', items: ['Source']},
+		          {name: 'video', items: ['Video']}
+		],
+		extraPlugins : 'uploadimage,justify,video,font,panelbutton,colorbutton',
+		filebrowserBrowseUrl: roxyFileman+'?integration=ckeditor',
+		filebrowserImageBrowseUrl:roxyFileman+'?integration=ckeditor&type=image',
+		filebrowserVideoBrowseUrl:roxyFileman+'?integration=ckeditor&type=video',
+		extraAllowedContent : 'video [*]{*}(*);source [*]{*}(*);iframe [*]{*}(*);'
+	});
+
+	function toggleCanComment(val) {
+		if (val == 'C') {
+			$("#canComment").css("display", "");
+		} else {
+			$("#canComment").css("display", "none");
+		}
+	}
+	$("input[id^=canCommentType]").on('ifChecked' , function(event){
+		toggleCanComment($(this).val());
+	});
+	
+	<?php if ($this->canEdit) : ?> 
+	// Save
+	$("#btnSave").click(function(){
+		<?php foreach ($this->languages as $lang) :?>
+		$("li[data-tab-lang=<?php echo $lang["Code"]; ?>]").removeClass("warning");
+		<?php endforeach;?>
+		var valid = $("#formData").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'calendar', 'controller' => 'article', 'action' => 'update'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'calendar', 'controller' => 'article', 'action' => 'edit', "itemid" => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		} else {
+			<?php foreach ($this->languages as $lang) :?>
+			if ($("#detail-<?php echo $lang["Code"]; ?>").find("input.error,select.error,textarea.error").length > 0) {$("li[data-tab-lang=<?php echo $lang["Code"]; ?>]").addClass("warning");}
+			<?php endforeach;?>
+		}
+	});
+	// Preview
+	$("#btnPreview").click(function(){
+		<?php foreach ($this->languages as $lang) :?>
+		$("li[data-tab-lang=<?php echo $lang["Code"]; ?>]").removeClass("warning");
+		<?php endforeach;?>
+		var valid = $("#formData").valid();
+		if (valid) {
+			var dialogPreview = BootstrapDialog.show({
+				title: 'ตัวอย่างข้อมูล',
+				message: $('<div id="dialogdialogPreview"></div>').load("<?php echo $this->url(array('module' => 'calendar', 'controller' => 'article', 'action' => 'preview'), null, true); ?>", $("#formData").serializeArray()),
+				closable: true,
+	            closeByBackdrop: false,
+	            closeByKeyboard: false,
+	            autodestroy: true,
+	            size: BootstrapDialog.SIZE_WIDE,
+	            cssClass: "divPreview",
+				buttons : [{
+					label: ' ปิด',
+					icon: 'fa fa-times',
+					action: function(dialog) {
+						dialog.close();
+					}
+				}]
+			});
+			dialogPreview.open();
+		} else {
+			<?php foreach ($this->languages as $lang) :?>
+			if ($("#detail-<?php echo $lang["Code"]; ?>").find("input.error,select.error,textarea.error").length > 0) {$("li[data-tab-lang=<?php echo $lang["Code"]; ?>]").addClass("warning");}
+			<?php endforeach;?>
+		}
+	});
+	<?php endif; ?>
+	<?php if ($this->canDelete) : ?>
+	// Delete
+	$("#btnDelete").click(function(){
+		DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+			$.post("<?php echo $this->url(array("module" => 'calendar', "controller" => 'article', 'action' => 'delete'), null, true); ?>", {'id' : '<?php echo $this->data->ID?>', 'title' : '<?php echo $this->dataDetails[$this->defaultLanguage]->Title; ?>'}, function(data){
+				if (data.result) {
+					DialogComplete('ลบสำเร็จ');
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'calendar', 'controller' => 'article', 'action' => 'index'), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		});
+	});
+	<?php endif ; ?>
+
+	// Back
+	$("#btnBack").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'calendar', 'controller' => 'article', 'action' => 'index'), null, true); ?>";
+	});
+
+});
+
+//--------------------------- Date picker -------------------------- //
+<?php 
+if (count($this->languages) > 0) :
+$i = 0;
+	foreach ($this->languages as $lang) :
+	$langCode = $lang['Code'];
+	?>
+    $('#<?php echo  "params-{$langCode}-PublishDate" ?>').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+    $('#<?php echo  "params-{$langCode}-PublishDown" ?>').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+    $('#<?php echo  "params-{$langCode}-PublishDown" ?>').change(function(){
+		if ($(this).val() != "") {
+			$("#<?php  echo "params-{$langCode}-PublishDownClose"; ?>").css("display", "block");
+		}
+	});
+    $("#<?php  echo "params-{$langCode}-PublishDownClose"; ?>").click(function(){
+    	$('#<?php echo  "params-{$langCode}-PublishDown" ?>').val('');
+    	$("#<?php  echo "params-{$langCode}-PublishDownClose"; ?>").css("display", "none");
+    });
+
+	$('#<?php echo  "params-{$langCode}-StartDate" ?>').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	$('#<?php echo  "params-{$langCode}-EndDate" ?>').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+<?php 
+	endforeach;
+endif;
+?>
+
+//--------------------------- Google Map -------------------------- //
+var state = 'view';
+var tempLat = null;
+var tempLng = null;
+var map = null;
+var placeService = null;
+var mapMarker = null; 
+
+// Manage Map
+$("#btnMapManage").click(function(){
+	tempLat = $("#txtLatitude").val();
+	tempLng = $("#txtLongitude").val();
+	$("#btnMapManage").css('display', 'none');
+	$("#btnMapManagePlace").css('display', 'none');
+	$("#btnMapConfirm").css('display', '');
+	$("#btnMapCurrent").css('display', '');
+	$("#btnMapCancel").css('display', '');
+	$("#txtLatitude").attr('disabled', 'disabled');
+	$("#txtLongitude").attr('disabled', 'disabled');
+	mapMarker.setOptions({draggable: true});
+	map.setOptions({draggable: true});
+	if (tempLat != null && tempLat != "" && tempLng != null && tempLng != '') {
+		mapMarker.setPosition(new google.maps.LatLng(tempLat, tempLng));
+		map.setCenter(mapMarker.position);
+	}
+	state = 'edit';
+});
+// Manage Place
+$("#btnMapManagePlace").click(function(){
+	var dialogPreview = BootstrapDialog.show({
+		title: 'ค้นหาตำแหน่งจากชื่อสถานที่',
+		message: "<div id='divSearchPlace' class='form-horizontal' ><div class='form-group'><label class='col-md-3 control-label'>ชื่อสถานที่</label><div class='col-md-9 divControl'><input type='text' id='txtSearchPlace' class='form-control' /><div class='help-block'>เมื่อค้นหาพบแล้ว โปรดตรวจสอบตำแหน่งบนแผนที่ว่าถูกต้องหรือไม่</div></div></div></div>",
+		closable: true,
+        closeByBackdrop: false,
+        closeByKeyboard: false,
+        autodestroy: true,
+        cssClass: "divPreview",
+		buttons : [{
+			label: ' ค้นหา',
+			icon: 'fa fa-search',
+			cssClass: 'btn-primary',
+			action: function(dialog) {
+				var address = $("#txtSearchPlace").val();
+				if (address != '') {
+					var request = {query:address};
+					placeService.textSearch(request, function(results, status){
+						if (status == google.maps.places.PlacesServiceStatus.OK) {
+							var placeResult = results[0];
+							var lat = placeResult.geometry.location.lat();
+							var lng = placeResult.geometry.location.lng();
+							mapMarker.setPosition(new google.maps.LatLng(lat, lng));
+							map.setCenter(mapMarker.position);
+							map.setZoom(16);
+							$("#txtLatitude").val(lat);
+							$("#txtLongitude").val(lng);
+							dialog.close();
+						} else {
+							DialogWarning("ไม่พบข้อมูล โปรดกรอกชื่อสถานที่ใหม่ <br />หรือกำหนดตำแหน่งจากแผนที");
+						}
+					});
+				} else {
+					DialogWarning("โปรดกรอกชื่อสถานที่");
+				}
+			}
+		},{
+			label: ' ปิด',
+			icon: 'fa fa-times',
+			action: function(dialog) {
+				dialog.close();
+			}
+		}]
+	});
+	dialogPreview.open();
+});
+$("#btnMapConfirm").click(function(){
+	$("#btnMapManage").css('display', '');
+	$("#btnMapManagePlace").css('display', '');
+	$("#btnMapConfirm").css('display', 'none');
+	$("#btnMapCurrent").css('display', 'none');
+	$("#btnMapCancel").css('display', 'none');
+	$("#txtLatitude").removeAttr('disabled');
+	$("#txtLongitude").removeAttr('disabled');
+	mapMarker.setOptions({draggable: false});
+	map.setOptions({draggable: false});
+	var lat = $("#txtLatitude").val();
+	var lng = $("#txtLongitude").val();
+	if (lat != null && lat != "" && lng != null && lng != '') {
+		mapMarker.setPosition(new google.maps.LatLng(lat, lng));
+		map.setCenter(mapMarker.position);
+	}
+	state = 'view';
+});
+$("#btnMapCurrent").click(function(){
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var pos = {
+					lat: position.coords.latitude,
+					lng: position.coords.longitude
+			};
+			map.setCenter(pos);
+			mapMarker.setPosition(pos);
+			$('#txtLatitude').val(position.coords.latitude);
+			$('#txtLongitude').val(position.coords.longitude);
+		}, function(error) {
+		});
+	} 
+});
+$("#btnMapCancel").click(function(){
+	$("#txtLatitude").val(tempLat);
+	$("#txtLongitude").val(tempLng);
+	$("#btnMapManage").css('display', '');
+	$("#btnMapManagePlace").css('display', '');
+	$("#btnMapConfirm").css('display', 'none');
+	$("#btnMapCurrent").css('display', 'none');
+	$("#btnMapCancel").css('display', 'none');
+	$("#txtLatitude").removeAttr('disabled');
+	$("#txtLongitude").removeAttr('disabled');
+	mapMarker.setOptions({draggable: false});
+	map.setOptions({draggable: false});
+	if (tempLat != null && tempLat != "" && tempLng != null && tempLng != '') {
+		mapMarker.setPosition(new google.maps.LatLng(tempLat, tempLng));
+		map.setCenter(mapMarker.position);
+	}
+	state = 'view';
+});
+
+
+function initMap() {	
+	// Set Map
+	map = new google.maps.Map(document.getElementById('mapCanvas'), {
+	    zoom: 16,
+	    center: new google.maps.LatLng(13.736717, 100.523186), // Bangkok Position
+	    mapTypeId: google.maps.MapTypeId.ROADMAP,
+	    draggable: false
+	});
+	google.maps.event.addListener(map, 'click', function(event){
+		if (state == 'edit') {
+			var pos = {lat: event.latLng.lat(), lng: event.latLng.lng()};
+			mapMarker.setPosition(pos);
+			$('#txtLatitude').val(event.latLng.lat());
+			$('#txtLongitude').val(event.latLng.lng());
+		}
+	});
+
+	// Set Marker
+	mapMarker = new google.maps.Marker({draggable: false, map: map});	
+	google.maps.event.addListener(mapMarker, 'dragend', function (event) {
+		if (state == 'edit') {
+			$('#txtLatitude').val(event.latLng.lat());
+			$('#txtLongitude').val(event.latLng.lng());
+		}
+	});
+	google.maps.event.addListener(mapMarker, 'dragstart', function (event) {
+		if (state == 'edit') {
+			$('#txtLatitude').val(event.latLng.lat());
+			$('#txtLongitude').val(event.latLng.lng());
+		}
+	});
+
+	// Set PlaceService
+	placeService = new google.maps.places.PlacesService(map);
+
+	<?php if (!empty($defaultDataDetail->Latitude) && !empty($defaultDataDetail->Longitude)) : ?>
+	mapMarker.setPosition(new google.maps.LatLng(<?php echo $defaultDataDetail->Latitude; ?>, <?php echo $defaultDataDetail->Longitude; ?>));
+	map.setCenter(mapMarker.position);
+	<?php endif; ?>
+}
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcmeHFxJo70hGineJoUp-gFaXEzcSjQnY&callback=initMap&libraries=places"></script>

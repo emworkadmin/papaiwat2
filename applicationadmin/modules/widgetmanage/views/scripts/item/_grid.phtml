@@ -1,0 +1,187 @@
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+		<?php echo $this->formHidden("hdfWidgetType", $this->data->WidgetType, null, null); ?>
+        <?php echo $this->formHidden("hdfUpdateType", 'D', null, null); ?>
+
+		<div class="title-label">ตั้งค่าการแสดงผล</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingShowColumn">จำนวนข้อมูลที่แสดงต่อหน้า</label> 
+			<div class="col-md-9 divControl">
+                <?php echo $this->formSelect('settingShowColumn', $this->dataDisplay->settingShowColumn, array('class' => 'form-control', 'placeholder' => ''), $this->columnAmountOption); ?>
+			</div>
+		</div>
+		<hr />
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingImageAspectRatio">อัตราส่วนรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('settingImageAspectRatio', $this->dataDisplay->settingImageAspectRatio, array('class' => 'form-control', 'placeholder' => ''), $this->aspectRatioOption); ?>
+			</div>
+		</div>
+        <hr />	
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingShowImage">แสดงรูปภาพหน้าปก</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingShowImage', (empty($this->dataDisplay->settingShowImage) ? 'Y' : $this->dataDisplay->settingShowImage), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingImageShowLink">แสดงลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">	
+					<?php echo $this->formRadio('settingImageShowLink', (empty($this->dataDisplay->settingImageShowLink) ? 'Y' : $this->dataDisplay->settingImageShowLink), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingImageTarget">ลิงค์ Target</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('settingImageTarget', $this->dataDisplay->settingImageTarget, array('class' => 'form-control', 'placeholder' => ''), $this->targetOption); ?>
+			</div>
+		</div>
+        <hr />
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingShowTitle">แสดงชื่อ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingShowTitle', (empty($this->dataDisplay->settingShowTitle) ? 'Y' : $this->dataDisplay->settingShowTitle), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingTitleShowLink">แสดงลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingTitleShowLink', (empty($this->dataDisplay->settingTitleShowLink) ? 'Y' : $this->dataDisplay->settingTitleShowLink), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingTitleTarget">ลิงค์ Target</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('settingTitleTarget', $this->dataDisplay->settingTitleTarget, array('class' => 'form-control', 'placeholder' => ''), $this->targetOption); ?>
+			</div>
+		</div>
+        <hr />
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingShowIntroText">แสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingShowIntroText', (empty($this->dataDisplay->settingShowIntroText) ? 'Y' : $this->dataDisplay->settingShowIntroText), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingIntroTextShowLink">แสดงลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingIntroTextShowLink', (empty($this->dataDisplay->settingIntroTextShowLink) ? 'Y' : $this->dataDisplay->settingIntroTextShowLink), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingIntroTextTarget">ลิงค์ Target</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('settingIntroTextTarget', $this->dataDisplay->settingIntroTextTarget, array('class' => 'form-control', 'placeholder' => ''), $this->targetOption); ?>
+			</div>
+		</div>
+        <hr />
+
+		<?php
+			if($this->data->DataType == 'weblink') :
+				?>
+				<div class="form-group">
+					<label class="col-md-3 control-label" for="settingWeblinkbuttonShowLink">แสดงปุ่มลิงค์</label> 
+					<div class="col-md-9 divControl">
+						<div class="radio with-icheck">
+							<?php echo $this->formRadio('settingWeblinkbuttonShowLink', empty($this->dataDisplay->settingWeblinkbuttonShowLink) ? 'Y' : $this->dataDisplay->settingWeblinkbuttonShowLink, array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+						</div>
+					</div>
+				</div>
+				<hr />
+				<?php
+			endif;
+		?>
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingShowOverlay">Overlay</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingShowOverlay', (empty($this->dataDisplay->settingShowOverlay) ? 'Y' : $this->dataDisplay->settingShowOverlay), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+        <hr />
+        
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingHtmlClass">Html Class</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('settingHtmlClass', $this->dataDisplay->settingHtmlClass, array('class' => 'form-control', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingCustomCSS">CSS</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formTextarea('settingCustomCSS', $this->dataDisplay->settingCustomCSS, array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<?php endif ; ?>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+    
+	$("#formData input[type=checkbox], #formData input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	<?php if ($this->canEdit) : ?> 
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'update'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'displaysetting', "itemid" => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif ; ?>
+
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'WDG-MGT-13'); ?>

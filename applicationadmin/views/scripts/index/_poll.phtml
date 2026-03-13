@@ -1,0 +1,68 @@
+<style>
+    #dashboard_poll .title {
+        color: #ffffff;
+        font-size: 18px;
+        padding: 10px 10px;
+        border-bottom: none;
+        font-weight: bold;
+        background: #3a8adc;        
+    }
+    #dashboard_poll td:first-child
+    {
+        width: 10%;
+        text-align: center;
+    }
+    #dashboard_poll td:last-child
+    {
+        width: 10%;
+        text-align: center;
+    }
+    #dashboard_poll th
+    {
+        white-space: nowrap;
+    }
+</style>
+
+<div id="dashboard_poll">
+    <div class="table">
+        <table id="tblData_poll" class="table table-bordered table-hover">
+            <caption>รายการแบบสำรวจ
+            <a class="viewall" href="<?php echo $this->url(array("module" => "poll", "controller" => "item", "action" => "index")); ?>"><em class="fa fa-arrow-circle-o-right"></em></a>
+            </caption>
+            <thead>
+                <tr>
+                    <th>ลำดับ</th>
+                    <th>รายการแบบสำรวจ</th>
+                    <th>จำนวนผู้ตอบกลับ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                    foreach($this->poll as $k => $v) {
+                        echo '<tr>';
+                        echo '  <td>' . ($k+1) . '</td>';
+                        echo '  <td><a href="'.$this->url(array("module" => "poll", "controller" => "item", "action" => "edit")).'/itemid/'.$v['ID'].'" target="_blank">' . $v['Title'] . '</a></td>';
+                        echo '  <td><a href="'.$this->url(array("module" => "poll", "controller" => "item", "action" => "edit")).'/itemid/'.$v['ID'].'" target="_blank">' . $v['Amount'] . '</a></td>';
+                        echo '</tr>';
+                    }
+                ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery(function(){
+    	var tblData = $('#tblData_poll').DataTable({
+            paging: false,
+            searching: false,
+            info: false,
+            ordering: true,
+            order: [[ 0, "asc" ]],
+            scrollCollapse: true,
+			scrollX: true,
+    	    language : {
+				url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+    	    }
+        });
+    });
+</script>

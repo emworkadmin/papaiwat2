@@ -1,0 +1,150 @@
+<div class="">
+	<div class="row">
+        <?php 
+        if (count($this->issues) > 0) :
+        foreach ($this->issues as $issueID => $issueObj) :
+        
+        	$issueID = $issueObj->ID;
+        	$issueName = $issueObj->Name;
+        	$issueSourceUrl = $issueObj->SourceUrl;
+        	$licenses = $issueObj->Licenses;
+        ?>
+		<div class="col-md-12">
+			<div class="issue-box" id="iss<?php echo $issueID; ?>">
+				<div class="issue-title">
+					<?php echo Emwork_Translate::text($this->lang, "license", "info_issue_text_label"); ?> : <?php echo $issueName;?>
+					<?php if (!empty($issueSourceUrl)) : ?>
+					<a href="<?php echo $issueSourceUrl; ?>" target="_blank" class="pull-right issue-title-sourcelink"><?php echo Emwork_Translate::text($this->lang, "license", "info_issue_sourceurl_text_label"); ?></a> 
+					<?php endif; ?>
+					<div class="icon-toggle">
+						<em class="fa fa-chevron-down issue-fa-chevron-down"></em>
+						<em class="fa fa-chevron-up issue-fa-chevron-up" style="display: none;"></em>
+					</div>
+				</div>
+				<div class="issue-body">
+					<?php 
+					foreach ($licenses as $item) :
+					
+						$id = $item["ID"];
+						$title = $item["Title"];
+						$procedures = $item["Procedures"];
+					?>
+					<div class="license-box">
+						<div class="license-title">
+							<?php echo $title;?>
+							<div class="icon-toggle">
+								<em class="fa fa-chevron-down license-fa-chevron-down"></em>
+								<em class="fa fa-chevron-up license-fa-chevron-up" style="display: none;"></em>
+							</div>
+						</div>
+						<div class="license-body" >
+							<table>
+								<thead>
+									<tr>
+										<th class="topic">
+											<?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_topic"); ?> 
+											<span class="topic-desc"><?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_topic_desc"); ?></span>
+										</th>
+										<th class="comment hidden-xs"><?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_review"); ?></th>
+										<th class="period hidden-xs"><?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_period"); ?></th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php 
+									if (count($procedures)) :
+										foreach ($procedures as $procedure) :
+										$procedureTitle = $procedure['Title'];
+										$procedureIconType = $procedure['IconType'];
+										$procedureDepartment = $procedure['DepartmentName'];
+										$procedureUrl = $procedure['Url'];
+										$procedureUrlComment = $procedure['UrlComment'];
+										$procedureStartDate = $procedure['StartDate'];
+										$procedureEndDate = $procedure['EndDate'];
+										$procedureDate = '';
+										if ($procedureStartDate != null && $procedureEndDate != null) {
+											if ($procedureStartDate->format('Y') == $procedureEndDate->format('Y')) {
+												if ($procedureStartDate->format('m') == $procedureEndDate->format('m')) {
+													if ($procedureStartDate->format('d') == $procedureEndDate->format('d')) { 
+														$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_same_all");
+													} else {
+														$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_diff_day");
+													}
+												} else {
+													$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_diff_month");
+												}
+											} else {
+												$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_diff_all");
+											}
+											
+											$procedureDate = str_replace("{syear}", $procedureStartDate->format('Y') + ($this->lang == 'th' ? 543 : 0), $procedureDate);
+											$procedureDate = str_replace("{smonth}", Emwork_Translate::text($this->lang, "license", "date_month_short_" . $procedureStartDate->format('m')), $procedureDate);
+											$procedureDate = str_replace("{sday}", $procedureStartDate->format('j'), $procedureDate);
+											$procedureDate = str_replace("{eyear}", $procedureEndDate->format('Y') + ($this->lang == 'th' ? 543 : 0), $procedureDate);
+											$procedureDate = str_replace("{emonth}", Emwork_Translate::text($this->lang, "license", "date_month_short_" . $procedureEndDate->format('m')), $procedureDate);
+											$procedureDate = str_replace("{eday}", $procedureEndDate->format('j'), $procedureDate);
+										} elseif ($procedureStartDate != null) {
+											$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_same_all");
+											$procedureDate = str_replace("{eyear}", $procedureStartDate->format('Y') + ($this->lang == 'th' ? 543 : 0), $procedureDate);
+											$procedureDate = str_replace("{emonth}", Emwork_Translate::text($this->lang, "license", "date_month_short_" . $procedureStartDate->format('m')), $procedureDate);
+											$procedureDate = str_replace("{eday}", $procedureStartDate->format('j'), $procedureDate);
+										} elseif ($procedureEndDate != null) {
+											$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_same_all");
+											$procedureDate = str_replace("{eyear}", $procedureEndDate->format('Y') + ($this->lang == 'th' ? 543 : 0), $procedureDate);
+											$procedureDate = str_replace("{emonth}", Emwork_Translate::text($this->lang, "license", "date_month_short_" . $procedureEndDate->format('m')), $procedureDate);
+											$procedureDate = str_replace("{eday}", $procedureEndDate->format('j'), $procedureDate);
+										} else {
+											$procedureDate = "-";
+										}
+									?>
+									<tr>
+										<td class="topic">
+											<?php if ($procedureIconType == 'L') : ?>
+											<img src="<?php echo $this->baseUrl('assets/license/img/l.png'); ?>" alt="" class="icon-type" />
+											<?php elseif ($procedureIconType == 'S') : ?>
+											<img src="<?php echo $this->baseUrl('assets/license/img/s.png'); ?>" alt=""  class="icon-type" />
+											<?php endif;?>
+											
+											<?php if (!empty($procedureUrl)) : ?>
+											<a class="lnk-procedure-title" href="<?php echo $procedureUrl; ?>" target="_blank"><?php echo $procedureTitle; ?></a>
+											<?php else : ?>
+											<span class="span-procedure-title"><?php echo $procedureTitle; ?></span>
+											<?php endif; ?>
+											<?php if (!empty($procedureDepartment)) : ?><span class="span-department-title"><?php echo $procedureDepartment; ?></span><?php endif; ?>
+											<?php if (!empty($this->commentUrl) || !empty($procedureUrlComment)) { ?>
+											<span class="visible-xs span-comment"><a href="<?php echo empty($procedureUrlComment) ? $this->commentUrl : $procedureUrlComment; ?>" target="_blank"><?php echo Emwork_Translate::text($this->lang, "license", "info_comment_text_label"); ?></a></span>
+											<?php }else{ ?>
+											<span class="visible-xs span-comment"><?php echo Emwork_Translate::text($this->lang, "license", "info_comment_text_label"); ?></span>
+											<?php } ?>
+											<span class="visible-xs span-period"><?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_period"); ?> : <?php echo $procedureDate; ?></span>
+										</td>
+										<td class="comment hidden-xs">
+											<?php if (!empty($this->commentUrl) || !empty($procedureUrlComment)) { ?>
+											<a href="<?php echo empty($procedureUrlComment) ? $this->commentUrl : $procedureUrlComment; ?>" target="_blank"><?php echo Emwork_Translate::text($this->lang, "license", "info_comment_text_label"); ?></a>
+											<?php }else{ ?>
+											<span><?php echo Emwork_Translate::text($this->lang, "license", "info_comment_text_label"); ?></span>
+											<?php } ?>
+										</td>
+										<td class="period hidden-xs">
+											<?php echo $procedureDate; ?>
+										</td>
+									</tr>
+									<?php 
+										endforeach;
+									endif;
+									?>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<?php 
+					endforeach;
+					?>
+				</div>			
+			</div>
+		</div>
+        <?php 
+        	endforeach;
+        endif;
+        ?>
+	</div>
+</div>

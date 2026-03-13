@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<?php 
+
+$config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', 'init');
+
+// TODO: Icon & Logo from Setting.
+$appFaviconPath = $this->baseUrl("images/logos/favicon.ico");
+$appD2MSPath = $this->baseUrl("images/logos/d2ms-logo.png");
+$appLogoPath = $this->baseUrl($config->app->logopath);
+
+$appSystemName = $config->app->name;
+$appStartYear = $config->app->copyrightstartyear;
+$appEndYear = date('Y');
+$appCompanyName = $config->app->brand;
+$appCompanyUrl = $config->app->brandUrl;
+
+$breadcrumbs = count($this->breadcrumb) == 0 ? array(array('name' => 'หน้าแรก')) : $this->breadcrumb;
+$pageName = empty($this->pageName) ? "Page Name" : $this->pageName;
+$pageSubName = empty($this->pageSubName) ? "" : $this->pageSubName;
+$pageIcon = empty($this->pageIcon) ? "" : $this->pageIcon;
+$subMenus = count($this->subMenus) == 0 ? null : $this->subMenus;
+$pageResponseTime = "-";
+$pageScreenId = "-";
+
+$auth = Zend_Auth::getInstance();
+$isLogin = $auth->getIdentity();
+$authData = $auth->getIdentity();
+
+$_moduleName = Zend_Controller_Front::getInstance()->getRequest()->getModuleName();
+$_controllerName = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+$_actionName = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+
+$profilePicturePath = empty($authData->profile_picture_hash_name) ? 
+	$this->baseUrl('images/logos/user.png') : 
+	$this->url(array('module' => 'default', 'controller' => 'file', 'action' => 'get', 'file' => $authData->profile_picture_hash_name), null, true);
+
+// File Model
+$fileModel = new System_Model_Fileinfo();
+if (!empty(System_Model_Setting::getValue("Logo", "Site"))) :
+	$logoFileInfoID = System_Model_Setting::getValue("Logo", "Site");
+	$fileData = $fileModel->item($logoFileInfoID);
+	if ($fileData->ID) :
+		$appLogoPath = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "type" => "thumbnail", "file" => $fileData->HashName), null, true);
+	endif;
+endif;
+
+$rights = $this->rights($authData->UserGroupID);
+$sUser = System_Model_SUser::getInstance();
+?>
+<html  xmlns="http://www.w3.org/1999/xhtml" xml:lang="th" lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title><?php echo $appSystemName;?></title>
+  <link type="image/x-icon" href="<?php echo $appFaviconPath; ?>"
+	rel="shortcut icon" />
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('bootstrap/css/bootstrap.min.css'); ?>">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/font-awesome.min.css'); ?>">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/ionicons.min.css'); ?>">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/AdminLTE.min.css'); ?>">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
+  <?php if (false) : ?><link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/skins/_all-skins.min.css'); ?>"><?php endif;?>
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/skins/_all-skins.css'); ?>">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/iCheck/minimal/blue.css'); ?>">
+  <!-- Date Picker -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datepicker/datepicker3.css'); ?>">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css'); ?>">
+  <!-- lightbox -->
+  <link href="<?php echo $this->baseUrl('plugins/lightbox/css/lightbox.css'); ?>" rel="stylesheet">
+  <!-- bootstrap dialog -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/bootstrap-dialog/bootstrap-dialog.min.css'); ?>">
+  <!-- EMWORK -->
+  <link rel="stylesheet" href="<?php echo $this->baseUrl('dist/css/emwork.css'); ?>">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  
+	<!-- jQuery 2.2.0 -->
+	<script src="<?php echo $this->baseUrl('plugins/jQuery/jQuery-2.2.0.min.js'); ?>"></script>
+	<!-- jQuery UI 1.11.4 
+	<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script> -->
+	<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip
+	<script>
+	  $.widget.bridge('uibutton', $.ui.button);
+	</script> -->
+	<!-- Bootstrap 3.3.6 -->
+	<script src="<?php echo $this->baseUrl('bootstrap/js/bootstrap.min.js'); ?>"></script>
+	<!-- datepicker -->
+	<script src="<?php echo $this->baseUrl('plugins/datepicker/bootstrap-datepicker-th.min.js'); ?>"></script>
+	<script src="<?php echo $this->baseUrl('plugins/datepicker/locales/bootstrap-datepicker.th.js'); ?>"></script>
+	<!-- Bootstrap WYSIHTML5 -->
+	<script src="<?php echo $this->baseUrl('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js'); ?>"></script>
+	<!-- Slimscroll -->
+	<script src="<?php echo $this->baseUrl('plugins/slimScroll/jquery.slimscroll.min.js'); ?>"></script>
+	<!-- FastClick -->
+	<script src="<?php echo $this->baseUrl('plugins/fastclick/fastclick.js'); ?>"></script>
+	<!-- iCheck -->
+	<script src="<?php echo $this->baseUrl('plugins/iCheck/icheck.min.js'); ?>"></script>
+	<!-- Bootpag -->
+	<script src="<?php echo $this->baseUrl('plugins/bootpag/jquery.bootpag.min.js'); ?>"></script>
+	<!-- Noty -->
+	<script src="<?php echo $this->baseUrl('plugins/noty/packaged/jquery.noty.packaged.min.js'); ?>"></script>
+	<!-- jQueryAutocomplete -->
+	<script type="text/javascript" src="<?php echo $this->baseUrl("plugins/jQueryAutocomplete/jquery.mockjax.js"); ?>" ></script>
+  	<script type="text/javascript" src="<?php echo $this->baseUrl("plugins/jQueryAutocomplete/jquery.autocomplete.js"); ?>" ></script>
+  	<!-- bootstrap dialog -->
+	<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/bootstrap-dialog/bootstrap-dialog.min.js'); ?>"></script>
+	<!-- AdminLTE App -->
+	<script src="<?php echo $this->baseUrl('dist/js/app.min.js'); ?>"></script>
+	<script src="<?php echo $this->baseUrl('dist/js/common.js'); ?>"></script>
+	<script type="text/javascript">
+	$.ajaxSetup({cache: false, global: false});
+	</script>
+	
+	<style>
+	.bootstrap-dialog .modal-header {
+		border-top-left-radius: 0px;
+		border-top-right-radius: 0px;
+	}
+	</style>
+	
+	<!-- Start CSS INLINE -->
+	<style type="text/css">
+	.main-header {border-bottom: none;}
+	.main-header .logo-mini strong {color: #ffffff;font-size: 14px;}
+	.logo-mini {background: #3399ff;}
+	.logo-lg strong {color: #797979;font-weight: 900;font-size: 20px;}
+	.main-header .logo .logo-lg img {margin-right: 10px;}
+	.skin-smart .user-panel {background-color: #ffffff;}
+	.skin-smart .main-header .logo {background: #ffffff;}
+	.skin-smart .main-header .logo:hover {background: #ffffff;}
+	.skin-smart .main-header .navbar {background: #ffffff;}
+	.skin-smart .main-header .navbar .sidebar-toggle {color: #333333;}
+	.box-page > .box-header {background: #ffffff;}
+	.box-page > .box-header .box-title {color: #2D529A;}
+	.sidebar .user-panel {padding: 15px 10px 5px;}
+	.skin-smart .sidebar {background-color: #ffffff;}
+	.skin-smart .user-panel .user-panel-img .img-logo {padding-bottom: 15px;}
+	.skin-smart .user-panel .user-panel-img {border-bottom: 1px solid #0099CC;}
+	.skin-smart .sidebar-menu li * {color: #666666;}
+	.skin-smart .sidebar-menu > li:hover > a, .skin-smart .sidebar-menu > li.active > a {background: #ecedee;}
+	.skin-smart .sidebar-menu>li>a>.fa, .sidebar-menu>li>a>.glyphicon, .sidebar-menu>li>a>.ion 
+	{width: initial;border: 1px solid #cbcbcb;border-radius: 50%;padding: 8px;font-size: 18px;float: left;}
+	.skin-smart .sidebar-menu li * {font-size: 23px;}
+	.skin-smart .sidebar-menu li a span {padding-left: 15px;}
+	.sidebar-menu>li>a {padding: 9px 5px 9px 15px;}
+	.skin-smart .main-header .navbar .nav > li > a {color: #333333;}
+	.main-header .nav .notifications-menu .label-warning {background-color: #FF3300!important;border-radius: 50%;right: 0px!important;}
+	.navbar-nav>.user-menu>.dropdown-menu {width:auto;}
+	.sidebar-menu li>a>.pull-right.arrow{border: none;padding: 0;}
+	.skin-smart .sidebar-menu > li > .treeview-menu {background-color: #3399ff;padding-top: 5px;padding-bottom: 5px;}
+	.skin-smart .sidebar-menu > li > .treeview-menu .fa {font-size: 17px;color: #fff;padding-left: 8px;}
+	.skin-smart .sidebar-menu > li > .treeview-menu.menu-open span {color: #fff;font-size: 14px;font-family: tahoma;}
+	.sidebar-collapse .main-sidebar .slimScrollDiv .sidebar .sidebar-menu>li>a {padding: 5px;}
+	.sidebar-collapse .main-sidebar .slimScrollDiv .sidebar .sidebar-menu>li {margin-bottom: 5px;float:left;}
+	.skin-smart .box.box-primary {border-top: 3px solid #d2d6de;}
+	.skin-smart .box-primary .box-title {font-family: 'ThaiSans Neue';font-size: 21px;font-weight: bold;}
+
+	.skin-smart .sidebar-menu>li>a>.fa{width: 37px;text-align: center;}
+	/*icon*/
+	.skin-smart .sidebar-menu>li>a>.dashboard {border: 1px solid #668DE5 !important;color: #668DE5;}
+	.skin-smart .sidebar-menu>li>a>.article {border: 1px solid #FF3333 !important;color: #FF3333;}
+	.skin-smart .sidebar-menu>li>a>.gallery {border: 1px solid #f8b516 !important;color: #f8b516;}
+	.skin-smart .sidebar-menu>li>a>.calendar {border: 1px solid #13b3c3 !important;color: #13b3c3;}	
+	.skin-smart .sidebar-menu>li>a>.banner {border: 1px solid #f62e79 !important;color: #f62e79;}	
+	.skin-smart .sidebar-menu>li>a>.link {border: 1px solid #719dd3 !important;color: #719dd3;}	
+	.skin-smart .sidebar-menu>li>a>.faq {border: 1px solid #32ff7e !important;color: #32ff7e;}	
+	.skin-smart .sidebar-menu>li>a>.form {border: 1px solid #5606f4 !important;color: #5606f4;}	
+	.skin-smart .sidebar-menu>li>a>.poll {border: 1px solid #cb5151 !important;color: #cb5151;}	
+	.skin-smart .sidebar-menu>li>a>.newletters {border: 1px solid #f86f0d !important;color: #f86f0d;}
+	.skin-smart .sidebar-menu>li>a>.statistics {border: 1px solid #1e962c !important;color: #1e962c;}
+	.skin-smart .sidebar-menu>li>a>.menu {border: 1px solid #FF3333 !important;color: #FF3333;}
+	.skin-smart .sidebar-menu>li>a>.templates {border: 1px solid #668DE5 !important;color: #668DE5;}	
+	.skin-smart .sidebar-menu>li>a>.c1FA67A {border: 1px solid #1FA67A !important;color: #1FA67A;}	
+	.skin-smart .sidebar-menu>li>a>.cFFAE00 {border: 1px solid #FFAE00 !important;color: #FFAE00;}	
+	.skin-smart .sidebar-menu>li>a>.cF9DB3F {border: 1px solid #f9db3f !important;color: #f9db3f;}	
+	.skin-smart .sidebar-menu>li>a>.cFF9F1A {border: 1px solid #ff9f1a !important;color: #ff9f1a;}	
+	.skin-smart .sidebar-menu>li>a>.cCD84F1 {border: 1px solid #cd84f1 !important;color: #cd84f1 ;}	
+	.skin-smart .sidebar-menu>li>a>.c17C0EB {border: 1px solid #17c0eb !important;color: #17c0eb ;}
+	.skin-smart .sidebar-menu>li>a>.cFFB8B8 {border: 1px solid #ffb8b8 !important;color: #ffb8b8 ;}	
+	.skin-smart .sidebar-menu>li>a>.c2DE270 {border: 1px solid #2de270 !important;color: #2de270 ;}	
+	.skin-smart .sidebar-menu>li>a>.c7D5FFF {border: 1px solid #7d5fff !important;color: #7d5fff ;}		
+	.skin-smart .sidebar-menu .treeview-menu > li > a {color:#ffffff;}
+	.skin-smart .sidebar-menu > li > .treeview-menu li em {color:#ffffff;font-size: 18px;}
+	.skin-smart .sidebar-menu > li > .treeview-menu .fa {margin-right: 5px;}
+	.box-page .box-title-submenu .box-title-submenu-active {color: #29A0D9;}
+	.tt-selector input:checked +.template-type {border: 2px solid #00c0ef;border-radius: 50%;padding: 75px;}
+	.template-type {border: 2px solid #00c0ef;border-radius: 50%;padding: 75px;}
+	.select2-container--default .select2-selection--multiple .select2-selection__choice {background-color: #00c0ef !important;border: 1px solid #00c0ef !important;}
+	.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {color: #fff !important;}
+	
+	</style>
+	<!-- END CSS INLINE -->
+</head>
+<?php if (false) : ?><body class="hold-transition skin-blue-light sidebar-mini fixed"><?php endif; ?>
+<body class="hold-transition skin-smart sidebar-mini fixed">
+<div class="wrapper">
+
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), null, true);?>" class="logo">
+    	
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><strong>D2MS</strong></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><img src="<?php echo $appD2MSPath; ?>" /> <strong>D2MS</strong></span>
+    </a>
+    
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+      
+      <?php if (false) : ?>
+      <div class="navbar-custom-menu-left">
+	  	<ul class="nav navbar-nav">
+		  	<!-- Notifications: style can be found in dropdown.less -->
+	          <li class="dropdown notifications-menu">
+	            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+	              <i class="fa fa-bell-o"></i>
+	              <span class="label label-warning">10</span>
+	            </a>
+	            <ul class="dropdown-menu">
+	              <li>
+	                <!-- inner menu: contains the actual data -->
+	                <ul class="menu">
+	                  <li>
+	                    <a href="#">
+	                      <i class="fa fa-users text-aqua"></i> 2 คำถามใหม่จากระบบ FAQ
+	                    </a>
+	                  </li>
+	                  <li>
+	                    <a href="#">
+	                      <i class="fa fa-warning text-yellow"></i> 3 เรื่องร้องเรียนเข้ามาในระบบ
+	                    </a>
+	                  </li>
+					  <li>
+	                    <a href="#">
+	                      <i class="fa fa-user text-red"></i> 3 สมาชิกใหม่สมัครเข้าใช้งาน
+	                    </a>
+	                  </li>
+	                  <li>
+	                    <a href="#">
+	                      <i class="fa fa-users text-red"></i> สรุปแบบสำรวจออนไลน์ประจำวัน
+	                    </a>
+	                  </li>
+	                  <li>
+	                    <a href="#">
+	                      <i class="fa fa-shopping-cart text-green"></i> สถิติการเยี่ยมชมเว็บไซต์ประจำวัน
+	                    </a>
+	                  </li>
+	                </ul>
+	              </li>
+	            </ul>
+	          </li>		  
+		  </ul>
+	  </div>
+	  <?php endif; ?>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+        
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-top: 8px;padding-bottom: 2px;">
+              <img src="<?php echo $profilePicturePath; ?>" class="user-image" alt="User Image" style="margin-top: 5px;">
+              <span class="hidden-xs" style="display: block;float: left;font-size: 11px;color: #2598d0;"><?php echo $authData->FullName ?></span>
+              <span class="hidden-xs" style="display: block;font-size: 11px;">ผู้ดูแลระบบ</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="<?php echo $this->url(array('module' => 'profile', 'controller' => 'index', 'action' => 'index'), null, true); ?>"><em class="fa fa-user"></em>ข้อมูลส่วนตัว</a></li>
+              <li><a href="<?php echo $this->url(array('module' => 'profile', 'controller' => 'password', 'action' => 'index'), null, true); ?>"><em class="fa fa-key"></em>เปลี่ยนรหัสผ่าน</a></li>
+            </ul>
+          </li>
+          <?php if (false) :?>
+		  <li>
+            <a href="#" id="panel-fullscreen" data-toggle="control-sidebar"><i class="fa fa-expand"></i></a>
+          </li>
+          <?php endif; ?>
+          <?php if ($sUser->isAllow("setting.system.manage")) :?>
+		  <li>
+            <a href="<?php echo $this->url(array("module" => "system", "controller" => "manage", "action" => "index"), null, true); ?>" ><i class="fa fa-cog"></i></a>
+          </li>
+		  <?php endif; ?>
+		  <li>
+		  	<a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'auth', 'action' => 'logout'), null, true); ?>"><em class="fa fa-power-off"></em></a>
+		  </li>
+          
+          
+        </ul>
+      </div>
+    </nav>
+  </header>
+  
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- Sidebar System -->
+      <div class="user-panel">
+        
+        <div class="user-panel-img">
+        	<img src="<?php echo $appLogoPath; ?>" class="img-logo" alt="Logo">
+        </div>
+        
+      </div>
+      
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu">
+               
+        <li class="<?php echo ($_moduleName == 'default' && $_controllerName == 'index' && $_actionName == 'index') ? "active" : ""; ?>">
+          <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), null, true); ?>">
+            <em class="fa fa-home dashboard"></em> <span>หน้าหลัก</span>
+          </a>
+        </li>
+        
+        <?php
+        // Init MenuGroup/Menu
+        $menuDatas = $this->MenuDatas();
+        $menuGroups = array();
+        if (count($menuDatas) > 0) :
+        foreach ($menuDatas as $menuData) : 
+        		$actionCode = $menuData["ActionCode"];
+        		if (!empty($actionCode) && !$sUser->isAllow($actionCode)) :
+        			continue;
+        		endif;
+        		
+        		// MenuGroup
+        		$menuGroupID = $menuData["MenuGroupID"];
+        		if (!isset($menuGroups[$menuGroupID])) :
+        			$menuGroups[$menuGroupID] = array("ID" => $menuGroupID, "Name" => $menuData["MenuGroupName"], "ModuleName" => $menuData["ModuleName"], "Icon" => $menuData["MenuGroupIcon"], "Menus" => array());
+        		endif;
+        		
+        		// Menu
+        		$menuGroups[$menuGroupID]["Menus"][] = array("ID" => $menuData["MenuID"], "Name" => $menuData["MenuName"], "ControllerName" => $menuData["ControllerName"], "ActionName" => $menuData["ActionName"], "Icon" => $menuData["MenuIcon"]);
+        		
+        	endforeach;
+        endif;
+        
+        
+        // Display 
+        if (count($menuGroups) > 0) :
+        	foreach ($menuGroups as $menuGroup) :
+        		$icon = empty($menuGroup["Icon"]) ? 'fa fa-cogs' : $menuGroup["Icon"];
+        		$active = $_moduleName == $menuGroup["ModuleName"] ? " active" : "";
+        		echo "<li class='treeview{$active}'>";
+        		echo "<a href='#'><em class='" . $icon . "'></em> <span>" . $menuGroup["Name"] . "</span><span class='fa fa-angle-left pull-right arrow'></span></a>";
+        		if (count($menuGroup["Menus"]) > 0) :
+        			echo "<ul class='treeview-menu'>";
+        			foreach ($menuGroup["Menus"] as $menu) :
+        				$menuActive = $_moduleName == $menuGroup["ModuleName"] && $_controllerName == $menu["ControllerName"] ? " active" : "";
+        				$menuIcon = empty($menu["Icon"]) ? 'fa fa-circle-o' : $menu["Icon"];
+        				$menuName = $menu["Name"];
+        				$menuUrl = $this->url(array('module' => $menuGroup["ModuleName"], 'controller' => $menu["ControllerName"], 'action' => $menu["ActionName"]), null, true);
+        				echo "<li class='{$menuActive}'>";
+        				echo "<a href='{$menuUrl}'><em class='{$menuIcon}'></em> {$menuName}</a>";
+        				echo "</li>";
+        			endforeach;
+        			echo "</ul>";
+        		endif;
+        		echo "</li>";
+        	endforeach;
+        endif;
+        ?>
+        
+        <?php 
+        // Form Generator
+        if (false) : // if ($rights->isAllow('content_category_view') || $rights->isAllow('content_view')) :
+        ?>
+        <li class="treeview<?php echo ($_moduleName == 'eform') ? " active" : "";?>">
+          <a href="#">
+            <em class="fa fa-file-text-o form"></em> <span>Form</span>
+            <span class="fa fa-angle-left pull-right arrow"></span>
+          </a>
+          <ul class="treeview-menu">
+          	<?php if (true) : // if ($rights->isAllow('content_category_view')) :?>
+            <li class="<?php echo ($_moduleName == 'eform' && $_controllerName == 'category') ? "active" : ""; ?>">
+            	<a href="<?php echo $this->url(array('module' => 'eform', 'controller' => 'category', 'action' => 'index'), null, true); ?>">
+            		<em class="fa fa-circle-o"></em> จัดการหมวดหมู่
+            	</a>
+            </li>
+            <?php endif; ?>
+          	<?php if (true) : // if ($rights->isAllow('content_view')) :?>
+            <li class="<?php echo ($_moduleName == 'eform' && $_controllerName == 'article') ? "active" : ""; ?>">
+            	<a href="<?php echo $this->url(array('module' => 'eform', 'controller' => 'article', 'action' => 'index'), null, true); ?>">
+            		<em class="fa fa-circle-o"></em> จัดการเนื้อหาข้อมูล
+            	</a>
+            </li>
+            <?php endif; ?>
+            <?php if (true) : // if ($rights->isAllow('content_export')) :?>
+            <li class="<?php echo ($_moduleName == 'eform' && $_controllerName == 'setting') ? "active" : ""; ?>">
+            	<a href="<?php echo $this->url(array('module' => 'eform', 'controller' => 'setting', 'action' => 'index'), null, true); ?>">
+            		<em class="fa fa-circle-o"></em> ตั้งค่า
+            	</a>
+            </li>
+            <?php endif; ?>
+          </ul>
+        </li>
+        <?php endif; ?>
+        
+        
+        <?php 
+        // Poll
+        if (false) : // if ($rights->isAllow('content_category_view') || $rights->isAllow('content_view')) :
+        ?>
+        <li class="treeview<?php echo ($_moduleName == 'poll') ? " active" : "";?>">
+          <a href="#">
+            <em class="fa fa-pie-chart poll"></em> <span>Poll</span>
+            <span class="fa fa-angle-left pull-right arrow"></span>
+          </a>
+          <ul class="treeview-menu">
+          	<?php if (true) : // if ($rights->isAllow('content_category_view')) :?>
+            <li class="<?php echo ($_moduleName == 'poll' && $_controllerName == 'category') ? "active" : ""; ?>">
+            	<a href="<?php echo $this->url(array('module' => 'poll', 'controller' => 'category', 'action' => 'index'), null, true); ?>">
+            		<em class="fa fa-circle-o"></em> จัดการหมวดหมู่
+            	</a>
+            </li>
+            <?php endif; ?>
+          	<?php if (true) : // if ($rights->isAllow('content_view')) :?>
+            <li class="<?php echo ($_moduleName == 'poll' && $_controllerName == 'article') ? "active" : ""; ?>">
+            	<a href="<?php echo $this->url(array('module' => 'poll', 'controller' => 'article', 'action' => 'index'), null, true); ?>">
+            		<em class="fa fa-circle-o"></em> จัดการเนื้อหาข้อมูล
+            	</a>
+            </li>
+            <?php endif; ?>
+            <?php if (true) : // if ($rights->isAllow('content_export')) :?>
+            <li class="<?php echo ($_moduleName == 'poll' && $_controllerName == 'setting') ? "active" : ""; ?>">
+            	<a href="<?php echo $this->url(array('module' => 'poll', 'controller' => 'setting', 'action' => 'index'), null, true); ?>">
+            		<em class="fa fa-circle-o"></em> ตั้งค่า
+            	</a>
+            </li>
+            <?php endif; ?>
+          </ul>
+        </li>
+        <?php endif; ?>
+        
+        
+        <?php 
+        // Newletters
+        if (false) : // if ($rights->isAllow('content_category_view') || $rights->isAllow('content_view')) :
+        ?>
+        <li class="treeview<?php echo ($_moduleName == 'newletters') ? " active" : "";?>">
+          <a href="#">
+            <em class="fa fa-envelope-o newletters"></em> <span>Newletters</span>
+            <span class="fa fa-angle-left pull-right arrow"></span>
+          </a>
+          <ul class="treeview-menu">
+          	<?php if (true) : // if ($rights->isAllow('content_category_view')) :?>
+            <li class="<?php echo ($_moduleName == 'newletters' && $_controllerName == 'category') ? "active" : ""; ?>">
+            	<a href="<?php echo $this->url(array('module' => 'newletters', 'controller' => 'category', 'action' => 'index'), null, true); ?>">
+            		<em class="fa fa-circle-o"></em> จัดการหมวดหมู่
+            	</a>
+            </li>
+            <?php endif; ?>
+          	<?php if (true) : // if ($rights->isAllow('content_view')) :?>
+            <li class="<?php echo ($_moduleName == 'newletters' && $_controllerName == 'article') ? "active" : ""; ?>">
+            	<a href="<?php echo $this->url(array('module' => 'newletters', 'controller' => 'article', 'action' => 'index'), null, true); ?>">
+            		<em class="fa fa-circle-o"></em> จัดการเนื้อหาข้อมูล
+            	</a>
+            </li>
+            <?php endif; ?>
+            <?php if (true) : // if ($rights->isAllow('content_export')) :?>
+            <li class="<?php echo ($_moduleName == 'newletters' && $_controllerName == 'setting') ? "active" : ""; ?>">
+            	<a href="<?php echo $this->url(array('module' => 'newletters', 'controller' => 'setting', 'action' => 'index'), null, true); ?>">
+            		<em class="fa fa-circle-o"></em> ตั้งค่า
+            	</a>
+            </li>
+            <?php endif; ?>
+          </ul>
+        </li>
+        <?php endif; ?>
+        
+        
+        <?php 
+        // Statistics
+        if (false) : // if ($rights->isAllow('content_category_view') || $rights->isAllow('content_view')) :
+        ?>
+        <li class="treeview<?php echo ($_moduleName == 'statistics') ? " active" : "";?>">
+          <a href="#">
+            <em class="fa fa-bar-chart statistics"></em> <span>Statistics</span>
+            <span class="fa fa-angle-left pull-right arrow"></span>
+          </a>
+          <ul class="treeview-menu">
+          	<?php if (true) : // if ($rights->isAllow('content_category_view')) :?>
+            <li class="<?php echo ($_moduleName == 'statistics' && $_controllerName == 'category') ? "active" : ""; ?>">
+            	<a href="<?php echo $this->url(array('module' => 'statistics', 'controller' => 'category', 'action' => 'index'), null, true); ?>">
+            		<em class="fa fa-circle-o"></em> จัดการหมวดหมู่
+            	</a>
+            </li>
+            <?php endif; ?>
+          	<?php if (true) : // if ($rights->isAllow('content_view')) :?>
+            <li class="<?php echo ($_moduleName == 'statistics' && $_controllerName == 'article') ? "active" : ""; ?>">
+            	<a href="<?php echo $this->url(array('module' => 'statistics', 'controller' => 'article', 'action' => 'index'), null, true); ?>">
+            		<em class="fa fa-circle-o"></em> จัดการเนื้อหาข้อมูล
+            	</a>
+            </li>
+            <?php endif; ?>
+            <?php if (true) : // if ($rights->isAllow('content_export')) :?>
+            <li class="<?php echo ($_moduleName == 'statistics' && $_controllerName == 'setting') ? "active" : ""; ?>">
+            	<a href="<?php echo $this->url(array('module' => 'statistics', 'controller' => 'setting', 'action' => 'index'), null, true); ?>">
+            		<em class="fa fa-circle-o"></em> ตั้งค่า
+            	</a>
+            </li>
+            <?php endif; ?>
+          </ul>
+        </li>
+        <?php endif; ?>
+        
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+	<!-- Content Wrapper. Contains page content -->
+	<div class="content-wrapper">
+		<!-- Content Header (Page header) -->
+		<section class="content-header">
+	        <ol class="breadcrumb">
+	        	<?php 
+	        	$breadcrumbTotal = count($breadcrumbs);
+	        	$breadcrumbIndex = 0;
+	        	foreach ($breadcrumbs as $breadcrumb) :
+	        		$breadcrumbIndex++;
+	        		if ($breadcrumbIndex == $breadcrumbTotal) :
+	        			echo '<li class="active">' . $breadcrumb['name'] . '</li>';
+	        		else :
+	        			echo '<li>' . (empty($breadcrumb['url']) ? $breadcrumb['name'] : '<a href="' . $breadcrumb['url'] . '">' . $breadcrumb['name'] . '</a>' ) . '</li>';
+	        		endif;
+	        	endforeach;
+	        	?>
+	        </ol>
+		</section>
+
+		<!-- Main content -->
+		<section class="content">
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="box box-widget box-page">
+						<div class="box-header with-border">
+							<h3 class="box-title">
+								<?php if (!empty($pageIcon)) : ?><em class="<?php echo $pageIcon; ?>"></em><?php endif;?> 
+								<?php echo $pageName;?>
+								<?php if (!empty($pageSubName)) : ?><small><?php echo $pageSubName; ?></small><?php endif; ?>
+							</h3>
+							<?php if ($subMenus != null) : ?>
+							<div class="box-title-submenu">
+								<?php 
+								foreach ($subMenus as $subMenu) :
+									if ($subMenu['active']) :
+										echo '<div class="box-title-submenu-item box-title-submenu-active">' . $subMenu['name'] . '</div>';
+									else : 
+										echo '<div class="box-title-submenu-item"><a href="' . $subMenu['url'] . '">' . $subMenu['name'] . '</a></div>';
+									endif;
+								?>
+								<?php 
+								endforeach;
+								?>
+							</div>
+							<?php endif; ?>
+						</div>
+						<div class="box-body">
+							<?php echo $this->layout()->content; ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+			
+		</section>
+		<!-- /.content -->
+	</div>
+	<!-- /.content-wrapper -->
+  
+	<footer class="main-footer">
+		<div class="row">
+			<div class="col-md-6">
+				<strong>Copyright &copy; <?php echo ($appStartYear == $appEndYear) ? $appEndYear : $appStartYear . "-" . $appEndYear; ?> <?php if (!empty($appCompanyUrl)) : ?><a href="<?php echo $appCompanyUrl;?>" target="_blank"><?php echo $appCompanyName?></a><?php else : ?><span><?php echo $appCompanyName?></span><?php endif; ?>.</strong> All rights reserved.  <br />
+				<small>Contact Email : customer@emworkgroup.com / Tel. 0-2276-3699 </small>
+			</div>
+			
+			<div class="col-md-6 text-right">
+				<div>
+					<!-- <strong>คู่มือการใช้งาน</strong> | <strong>แจ้งปัญหา</strong> -->
+				</div>
+				<div>
+					<!-- Response Time: <?php echo $pageResponseTime; ?> | Screen ID: <?php echo $pageScreenId; ?> -->
+				</div>
+			</div>
+		</div>
+	</footer>
+	
+	<?php  
+	// EM Support Assist
+	//echo $this->partial("_emsa.phtml", $this); 
+	?>
+</div>
+<!-- ./wrapper -->
+
+</body>
+</html>

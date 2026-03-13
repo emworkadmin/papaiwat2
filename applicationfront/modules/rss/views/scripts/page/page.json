@@ -1,0 +1,20 @@
+{
+	"name" : "หมวดหมู่ RSS",
+	"controller" : "page",
+	"description" : "แสดงรายการ RSS ในหมวดหมู่ที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "page",
+			"type" : "select",
+			"size" : "",
+			"label" : "หมวดหมู่ RSS",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Rss_Service_Category",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}
+	]
+}

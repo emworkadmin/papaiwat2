@@ -1,0 +1,20 @@
+{
+	"name" : "รายการข้อมูลตามจังหวัด",
+	"controller" : "province",
+	"description" : "แสดงรายการข้อมูลภายใต้จังหวัดที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "province",
+			"type" : "select",
+			"size" : "",
+			"label" : "จังหวัด",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Wat_Service_Province",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : false
+		}	
+	]
+}

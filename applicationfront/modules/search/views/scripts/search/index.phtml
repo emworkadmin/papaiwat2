@@ -1,0 +1,242 @@
+<style>
+	div#formSearch {
+		font-family: Mitr Light;
+		font-size: 15px;
+		color: #7a7a7a;
+	}
+
+	.btn-primary-search {
+		background-color: #8bc43f;
+		border-color: #8bc43f;
+		color: white;
+	}
+	button#btnSearch {
+		margin-left: 10px;
+	}
+
+	button#btnAdvance {
+		background: none;
+	}
+
+	.title.input-group {
+		font-size: 25px;
+	}
+
+	.help {
+		padding-bottom: 35px;
+	}
+
+	input#txtSendDateFrom {
+		background: none;
+	}
+
+	input#txtSendDateTo {
+		background: none;
+	}
+
+	.form-control {
+		border-radius: 0;
+		box-shadow: none;
+		border-color: #d2d6de;
+		background: #f9fafc;
+		color: #999999;
+	}
+
+	b {
+		color: black;
+		font-weight: bold;
+	}
+
+	#formSearch .inforow-search {
+		border-bottom: 1px solid;
+    	margin-bottom: 15px;
+	}
+
+</style>
+<link rel="stylesheet"
+	href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+<div class="search-data-d2ms form-horizontal" id="formSearch">
+
+	<div class="form-group">
+		<div class="col-md-12">
+			<div class="title input-group">
+				<p class="form-control-static"><?php echo Emwork_Translate::text($this->lang, 'search', 'search_insite'); ?></p>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-md-8">
+			<div class="input-group">
+
+					<?php echo $this->formText('textsearch', $this->text, array('class' => 'form-control', 'placeholder' => Emwork_Translate::text($this->lang, 'general', 'button_search')));?>
+					<span class="input-group-btn">
+					<button type="button" class="btn btn-primary-search" id="btnfind">
+						<span class="hidden-xs"><?php echo Emwork_Translate::text($this->lang, 'general', 'button_search'); ?> <em class="fa fa-search"></em> </span>
+					</button>
+
+					<button type="button" class="btn btn-default-seacrch" id="btnAdvance">
+						<em class="fa fa-bars"></em> <span class="hidden-xs"><?php echo Emwork_Translate::text($this->lang, 'search', 'advance_search'); ?></span>
+					</button>
+				</span>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="help" >
+		<?php echo Emwork_Translate::text($this->lang, 'search', 'help_search'); ?>
+		<br>
+	</div>
+
+	<div id="AdvanceSearch">
+
+		<?php echo $this->formHidden('hdfAdvanceSearch', 'H', null, null); ?>
+		
+		<div class="form-group has-feedback">
+			<!-- <label for="status" class="control-label col-md-2">ตั้งแต่วันที่
+			</label> -->
+			<div class="col-md-3">
+                    <?php echo $this->formText('txtSendDateFrom', base64_decode($this->start), array('class' => 'form-control','placeholder' => Emwork_Translate::text($this->lang, 'search', 'placeholder_startdate'), 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+                    <span class="fa fa-calendar form-control-feedback"
+					aria-hidden="true"></span>
+			</div>
+			<!-- <label for="status" class="control-label col-md-2">ถึงวันที่ </label> -->
+			<div class="col-md-3">
+                    <?php echo $this->formText('txtSendDateTo', base64_decode($this->end), array('class' => 'form-control','placeholder' => Emwork_Translate::text($this->lang, 'search', 'placeholder_enddate'), 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+                    <span class="fa fa-calendar form-control-feedback"
+					aria-hidden="true"></span>
+			</div>
+
+			<div class="form-group">
+				<label for="status" class="control-label col-md-2"><?php echo Emwork_Translate::text($this->lang, 'search', 'search_range'); ?></label>
+				<div class="col-md-4">
+					<?php echo $this->formSelect('lstPeriod', $this->period, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->periodOption, Emwork_Translate::text($this->lang, 'general', 'emptyoption'))); ?>
+				</div>
+			</div>	
+		</div>
+
+		<div class="form-group">
+			<label for="status" class="control-label col-md-2"><?php echo Emwork_Translate::text($this->lang, 'search', 'search_category'); ?></label>
+			<div class="col-md-3">
+				<?php echo $this->formSelect('lstType', $this->type, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->typeOption, Emwork_Translate::text($this->lang, 'general', 'emptyoption'))); ?>
+			</div>
+		</div>	
+	</div>
+
+		<div class="book-title title-panel">
+		 <span class="title">
+				<?php echo Emwork_Translate::text($this->lang, 'search', 'result_title'); ?> <b><?php echo $this->text; ?></b> <?php echo Emwork_Translate::text($this->lang, 'search', 'result_total'); ?> <span id="total"></span> <?php echo Emwork_Translate::text($this->lang, 'search', 'result_list'); ?>
+		 </span>
+		 <hr />
+	 	</div>
+
+	</br>
+		 <div class="result-list1-panel">
+		 <div class="result-list1" id="result-list1"></div>
+		 <div class="result-paging1" style="display: none;">
+			 <p class="paging1 text-right"></p>
+		 </div>
+	 </div>
+
+</div>
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+
+<script>
+jQuery(function(){
+
+	$("#btnfind").click(function(e) {
+		// if ($("#formSearch #textsearch").val() || $("#formSearch #lstPeriod").val() || $("#formSearch #txtSendDateTo").val() || $("#formSearch #txtSendDateFrom").val()){ 
+		// 	window.location = "<?php echo $this->url(array('module' => 'search', 'controller' => 'search', 'action' => 'index'), null, true); ?>?text="+$("#formSearch #textsearch").val()+"&period="+$("#formSearch #lstPeriod").val()+"&start="+$("#formSearch #txtSendDateFrom").val()+"&end="+$("#formSearch #txtSendDateTo").val()+"&type="+$("#formSearch #lstType").val();
+		// }
+		reloadResultList1(1);
+	});
+
+
+	// --------------- Toogle Advance Search ---------------
+	$("#AdvanceSearch").slideUp(0, "swing");
+	$("#btnAdvance").click(function(e) {
+		var val = $('#hdfAdvanceSearch').val();
+		if(val == 'S') {
+			$("#AdvanceSearch").slideUp(600, "swing");
+			$("#hdfAdvanceSearch").val('H');
+		} else {
+			$("#AdvanceSearch").slideDown(600, "swing");
+			$("#hdfAdvanceSearch").val('S');
+		}
+	});
+	 $('#txtSendDateFrom').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	 $('#txtSendDateTo').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+
+	reloadResultList1(1);
+
+	function reloadResultList1(pageIndex) {
+
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		sendData.text = $("#formSearch #textsearch").val();
+		sendData.type = $("#formSearch #lstType").val();
+		sendData.period = $("#formSearch #lstPeriod").val();
+		sendData.start = $("#formSearch #txtSendDateFrom").val();
+		sendData.end = $("#formSearch #txtSendDateTo").val();
+		
+			$.post("<?php echo $this->url(array('module' => 'search', 'controller' => 'search', 'action' => 'getlist'), null, true); ?>", sendData, function(data){
+			$("span#total").html(data.total);
+			if (data.total > 0) {
+				$("#result-list1").html(data.html);
+				$('.result-paging1').css('display', '');
+				$('.paging1').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+					leaps: false,
+					firstLastUse: true,
+					first: '<<',
+					last: '>>',
+					next: '>',
+					prev: '<',
+					wrapClass: 'pagination',
+					activeClass: 'active',
+					disabledClass: 'disabled',
+					nextClass: 'next',
+					prevClass: 'prev',
+					lastClass: 'last',
+					firstClass: 'first'
+				});
+
+			} else {
+				
+				$('#result-paging1').css('display', 'none');
+				$('.result-list1').html(data.html);
+				$('.paging1').bootpag({total : 0});
+			}
+		}, 'json');
+	}
+
+	$('.paging1').bootpag({
+		
+		total: 0,
+		maxVisible: 5,
+		leaps: false,
+		firstLastUse: true,
+		first: '<<',
+		last: '>>',
+		next: '>',
+		prev: '<',
+		wrapClass: 'pagination',
+		activeClass: 'active',
+		disabledClass: 'disabled',
+		nextClass: 'next',
+		prevClass: 'prev',
+		lastClass: 'last',
+		firstClass: 'first'
+	}).on("page", function(event, num){
+		
+		reloadResultList1(num);
+
+	}); 
+
+});
+</script>

@@ -1,0 +1,834 @@
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formDialog" name="formDialog">
+        <?php echo $this->formHidden("hdfFormID", $this->id); ?>
+        <?php $id = $this->id; ?>
+
+                <!-- ****************************************** TEXTBOX ****************************************** -->
+
+            <?php
+                if ($id == 1) :
+            ?>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label labelRequest">ชื่อกล่องข้อความ</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Name", $this->dataObj['NAME'], array("class" => "form-control required alpha")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">ป้ายกำกับ</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Label", $this->dataObj['LABEL'], array("class" => "form-control")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">คำแนะนำการกรอกข้อมูล</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Placeholder", $this->dataObj['PLACEHOLDER'], array("class" => "form-control")); ?>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-3 control-label">รายละเอียด</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Description", $this->dataObj['DESCRIPTION'], array("class" => "form-control")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label" >จำเป็นต้องกรอกข้อมูล</label>
+                    <div class="col-md-9 divControl">
+                        <div class="radio with-icheck">
+                            <?php echo $this->formRadio("Required", empty($this->dataObj['REQUIRED']) ? 'N' : $this->dataObj['REQUIRED'], array('class' => 'required', 'label_class' => 'radio-inline'), array("Y" => "ใช่", "N" => "ไม่ใช่"), " "); ?>
+                        </div>						
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">ข้อความแจ้งเตือนเมื่อไม่กรอกข้อมูล</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Validate", $this->dataObj['VALIDATE'], array("class" => "form-control")); ?>
+                    </div>
+                </div>                
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">กฎ</label>
+                    <div class="col-md-9 divControl">
+                        <select name="Validationrule" id="Validationrule" class="form-control">
+                            <option value="none" <?php if($this->dataObj['VALIDATIONRULE']=='none') { echo 'selected'; } ?>>ไม่กำหนดเงื่อนไข</option>
+                            <option value="alpha" <?php if($this->dataObj['VALIDATIONRULE']=='alpha') { echo 'selected'; } ?>>ตัวอักษร</option>
+                            <option value="digits" <?php if($this->dataObj['VALIDATIONRULE']=='digits') { echo 'selected'; } ?>>ตัวเลข</option>
+                            <option value="email" <?php if($this->dataObj['VALIDATIONRULE']=='email') { echo 'selected'; } ?>>อีเมล์</option>
+                            <option value="url" <?php if($this->dataObj['VALIDATIONRULE']=='url') { echo 'selected'; } ?>>มีรููปแบบ URL ที่ถูกต้อง</option>
+                        </select> 
+                    </div>                   
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">ขนาด</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Size", empty($this->dataObj['SIZE']) ? 10 : $this->dataObj['SIZE'], array("class" => "form-control digits")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">จำนวนตัวอักษรที่รองรับได้สูงสุด</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Maxlength", empty($this->dataObj['MAXLENGTH']) ? 10 : $this->dataObj['MAXLENGTH'], array("class" => "form-control digits")); ?>
+                    </div>
+                </div>                
+
+                <!-- ****************************************** TEXTAREA ****************************************** -->
+            
+            <?php
+                elseif ($id == 2) :
+            ?>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label labelRequest">ชื่อกล่องข้อความ</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Name", $this->dataObj['NAME'], array("class" => "form-control required alpha")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">ป้ายกำกับ</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Label", $this->dataObj['LABEL'], array("class" => "form-control")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">คำแนะนำการกรอกข้อมูล</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Placeholder", $this->dataObj['PLACEHOLDER'], array("class" => "form-control")); ?>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-3 control-label">รายละเอียด</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Description", $this->dataObj['DESCRIPTION'], array("class" => "form-control")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label" >จำเป็นต้องกรอกข้อมูล</label>
+                    <div class="col-md-9 divControl">
+                        <div class="radio with-icheck">
+                            <?php echo $this->formRadio("Required", empty($this->dataObj['REQUIRED']) ? 'N' : $this->dataObj['REQUIRED'], array('class' => 'required', 'label_class' => 'radio-inline'), array("Y" => "ใช่", "N" => "ไม่ใช่"), " "); ?>
+                        </div>						
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">ข้อความแจ้งเตือนเมื่อไม่กรอกข้อมูล</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Validate", $this->dataObj['VALIDATE'], array("class" => "form-control")); ?>
+                    </div>
+                </div>                
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">กฎ</label>
+                    <div class="col-md-9 divControl">
+                        <select name="Validationrule" id="Validationrule" class="form-control">
+                            <option value="none" <?php if($this->dataObj['VALIDATIONRULE']=='none') { echo 'selected'; } ?>>ไม่กำหนดเงื่อนไข</option>
+                            <option value="alpha" <?php if($this->dataObj['VALIDATIONRULE']=='alpha') { echo 'selected'; } ?>>ตัวอักษร</option>
+                            <option value="digits" <?php if($this->dataObj['VALIDATIONRULE']=='digits') { echo 'selected'; } ?>>ตัวเลข</option>
+                            <option value="email" <?php if($this->dataObj['VALIDATIONRULE']=='email') { echo 'selected'; } ?>>อีเมล์</option>
+                            <option value="url" <?php if($this->dataObj['VALIDATIONRULE']=='url') { echo 'selected'; } ?>>มีรููปแบบ URL ที่ถูกต้อง</option>
+                        </select> 
+                    </div>                   
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">คอลัมน์</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Cols", empty($this->dataObj['COLS']) ? 50 : $this->dataObj['COLS'], array("class" => "form-control digits")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">แถว</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Rows", empty($this->dataObj['ROWS']) ? 4 : $this->dataObj['ROWS'], array("class" => "form-control digits")); ?>
+                    </div>
+                </div>                                
+
+            <?php
+                elseif ($id == 3) :
+            ?>
+
+                <!-- ***************************************** DROPDOWN ****************************************** -->
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label labelRequest">ชื่อกล่องข้อความ</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Name", $this->dataObj['NAME'], array("class" => "form-control required alpha")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">ป้ายกำกับ</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Label", $this->dataObj['LABEL'], array("class" => "form-control")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">รายละเอียด</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Description", $this->dataObj['DESCRIPTION'], array("class" => "form-control")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label" >จำเป็นต้องกรอกข้อมูล</label>
+                    <div class="col-md-9 divControl">
+                        <div class="radio with-icheck">
+                            <?php echo $this->formRadio("Required", empty($this->dataObj['REQUIRED']) ? 'N' : $this->dataObj['REQUIRED'], array('class' => 'required', 'label_class' => 'radio-inline'), array("Y" => "ใช่", "N" => "ไม่ใช่"), " "); ?>
+                        </div>						
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">ข้อความแจ้งเตือนเมื่อไม่กรอกข้อมูล</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Validate", $this->dataObj['VALIDATE'], array("class" => "form-control")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">ขนาด</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Size", empty($this->dataObj['SIZE']) ? 1 : $this->dataObj['SIZE'], array("class" => "form-control digits")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label" >เลือกได้หลายตัวเลือก</label>
+                    <div class="col-md-9 divControl">
+                        <div class="radio with-icheck">
+                            <?php echo $this->formRadio("Multiple", empty($this->dataObj['MULTIPLE']) ? 'N' : $this->dataObj['MULTIPLE'], array('class' => 'required', 'label_class' => 'radio-inline'), array("Y" => "ใช่", "N" => "ไม่ใช่"), " "); ?>
+                        </div>						
+                    </div>
+                </div>
+
+                <div class="title-label">
+                    <label for="DropdownList">รายการตัวเลือก</label>
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-md-12 divControl" id="divDropdown">
+                        <?php
+                            if(count($this->dataObj['DROPDOWN']) > 0) {
+                                $index = 0;
+                                foreach ($this->dataObj['DROPDOWN'] as $k) {
+                                    ?>
+
+                                        <div class="row">
+                                            <div class="col-md-12 divControl" style="margin-bottom: 10px;">
+                                                <label class="dropdownNo col-md-1 control-label"><?php echo ($index+1) . '.'; ?></label>
+                                                <label class="col-md-2 control-label">หัวข้อ </label>
+                                                <div class="col-md-5 divControl">
+                                                    <input type="text" name="Dropdown[<?php echo $index; ?>][value]" id="Dropdown-<?php echo $index; ?>-value" value="<?php echo $k['value']; ?>" alt="value" class=" form-control" maxlength="50" >
+                                                </div>
+                                                <label class="col-md-2 control-label"> รายการที่เลือก</label>
+                                                <div class="col-md-1 divControl">
+                                                    <div class="checkbox with-icheck">
+                                                        <input type="checkbox" name="Dropdown[<?php echo $index; ?>][check]" id="Dropdown-<?php echo $index; ?>-check" alt="check" <?php if($k['check']) { echo "checked"; }; ?> >
+                                                    </div>
+                                                </div>
+                                                <em class="col-md-1 fa fa-trash-o lnkDeleteDropdown"></em>
+                                            </div>
+                                        </div>                                    
+                                                                            
+                                    <?php
+                                    $index++;
+                                }
+                            } else {
+                            ?>
+
+                                <div class="row">
+                                    <div class="col-md-12 divControl" style="margin-bottom: 10px;">
+                                        <label class="dropdownNo col-md-1 control-label">1.</label>
+                                        <label class="col-md-2 control-label">หัวข้อ </label>
+                                        <div class="col-md-5 divControl">
+                                            <input type="text" name="Dropdown[0][value]" id="Dropdown-0-value" value="" alt="value" class=" form-control" maxlength="50" >
+                                        </div>
+                                        <label class="col-md-2 control-label"> รายการที่เลือก</label>
+                                        <div class="col-md-1 divControl">
+                                            <div class="checkbox with-icheck">
+                                                <input type="checkbox" name="Dropdown[0][check]" id="Dropdown-0-check" alt="check">
+                                            </div>
+                                        </div>
+                                        <em class="col-md-1 fa fa-trash-o lnkDeleteDropdown"></em>
+                                    </div>
+                                </div>
+
+                            <?php
+                            }
+                        ?>
+                    </div>
+
+                    <div class="col-md-8 col-md-offset-4">
+                        <a class="btn btn-primary" id="lnkAddDropdown">
+                            <em class="fa fa-plus-circle"></em> เพิ่มหัวข้อ
+                        </a>
+                    </div>
+
+                </div>                
+
+            <?php
+                elseif ($id == 4 || $id == 5) :
+            ?>
+
+                <!-- ************************************* CHECKBOX * && RADIO ************************************* -->
+                <?php if($id == 4) : ?>
+                <div class="form-group">
+                    <label class="col-md-3 control-label labelRequest">ชื่อตัวเลือก Checkbox</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Name", $this->dataObj['NAME'], array("class" => "form-control required alpha")); ?>
+                    </div>
+                </div>
+                <?php elseif($id == 5) : ?>
+                <div class="form-group">
+                    <label class="col-md-3 control-label labelRequest">ชื่อตัวเลือก Radio</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Name", $this->dataObj['NAME'], array("class" => "form-control required alpha")); ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">ป้ายกำกับ</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Label", $this->dataObj['LABEL'], array("class" => "form-control")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">รายละเอียด</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Description", $this->dataObj['DESCRIPTION'], array("class" => "form-control")); ?>
+                    </div>
+                </div>                
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label" >จำเป็นต้องกรอกข้อมูล</label>
+                    <div class="col-md-9 divControl">
+                        <div class="radio with-icheck">
+                            <?php echo $this->formRadio("Required", empty($this->dataObj['REQUIRED']) ? 'N' : $this->dataObj['REQUIRED'], array('class' => 'required', 'label_class' => 'radio-inline'), array("Y" => "ใช่", "N" => "ไม่ใช่"), " "); ?>
+                        </div>						
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">ข้อความแจ้งเตือนเมื่อไม่กรอกข้อมูล</label>
+                    <div class="col-md-9 divControl">
+                        <?php echo $this->formText("Validate", $this->dataObj['VALIDATE'], array("class" => "form-control")); ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label" >รูปแบบการแสดงผล</label>
+                    <div class="col-md-9 divControl">
+                        <div class="radio with-icheck">
+                            <?php echo $this->formRadio("Flow", empty($this->dataObj['FLOW']) ? 'V' : $this->dataObj['FLOW'], array('class' => 'required', 'label_class' => 'radio-inline'), array("V" => "คนละบรรทัด", "H" => "บรรทัดเดียวกัน"), " "); ?>
+                        </div>						
+                    </div>
+                </div>
+
+                <div class="title-label">
+                    <label for="OptionList">รายการตัวเลือก</label>
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-md-12 divControl" id="divOption">
+                        <?php
+                            if(count($this->dataObj['OPTION']) > 0) {
+                                $index = 0;
+                                foreach ($this->dataObj['OPTION'] as $k) {
+                                    ?>
+
+                                        <div class="row">
+                                            <div class="col-md-12 divControl" style="margin-bottom: 10px;">
+                                                <label class="optionNo col-md-1 control-label"><?php echo ($index+1) . '.'; ?></label>
+                                                <label class="col-md-2 control-label">หัวข้อ </label>
+                                                <div class="col-md-5 divControl">
+                                                    <input type="text" name="Option[<?php echo $index; ?>][value]" id="Option-<?php echo $index; ?>-value" value="<?php echo $k['value']; ?>" alt="value" class=" form-control" maxlength="50" >
+                                                </div>
+                                                <label class="col-md-2 control-label">รายการที่เลือก </label>
+                                                <div class="col-md-1 divControl">
+                                                    <div class="checkbox with-icheck">
+                                                        <input type="checkbox" name="Option[<?php echo $index; ?>][check]" id="Option-<?php echo $index; ?>-check" alt="check" <?php if($k['check']) { echo "checked"; }; ?> >
+                                                    </div>
+                                                </div>
+                                                <em class="col-md-1 fa fa-trash-o lnkDeleteOption"></em>
+                                            </div>
+                                        </div>                                    
+                                                                            
+                                    <?php
+                                    $index++;
+                                }
+                            } else {
+                            ?>
+
+                                <div class="row">
+                                    <div class="col-md-12 divControl" style="margin-bottom: 10px;">
+                                        <label class="optionNo col-md-1 control-label">1.</label>
+                                        <label class="col-md-2 control-label">หัวข้อ </label>
+                                        <div class="col-md-5 divControl">
+                                            <input type="text" name="Option[0][value]" id="Option-0-value" value="" alt="value" class=" form-control" maxlength="50" >
+                                        </div>
+                                        <label class="col-md-2 control-label">รายการที่เลือก </label>
+                                        <div class="col-md-1 divControl">
+                                            <div class="checkbox with-icheck">
+                                                <input type="checkbox" name="Option[0][check]" id="Option-0-check" alt="check">
+                                            </div>
+                                        </div>
+                                        <em class="col-md-1 fa fa-trash-o lnkDeleteOption"></em>
+                                    </div>
+                                </div>
+
+                            <?php
+                            }
+                        ?>
+                    </div>
+
+                    <div class="col-md-8 col-md-offset-4">
+                        <a class="btn btn-primary" id="lnkAddOption">
+                            <em class="fa fa-plus-circle"></em> เพิ่มหัวข้อ
+                        </a>
+                    </div>
+
+                </div>
+
+
+        <?php
+            elseif ($id == 6):
+        ?>
+
+        <!-- ******************************************* PASSWORD ******************************************* -->
+
+            <div class="form-group">
+                <label class="col-md-3 control-label labelRequest">ชื่อกล่องข้อความ</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Name", $this->dataObj['NAME'], array("class" => "form-control required alpha")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">ป้ายกำกับ</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Label", $this->dataObj['LABEL'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">คำแนะนำการกรอกข้อมูล</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Placeholder", $this->dataObj['PLACEHOLDER'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-md-3 control-label">รายละเอียด</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Description", $this->dataObj['DESCRIPTION'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label" >จำเป็นต้องกรอกข้อมูล</label>
+                <div class="col-md-9 divControl">
+                    <div class="radio with-icheck">
+                        <?php echo $this->formRadio("Required", empty($this->dataObj['REQUIRED']) ? 'N' : $this->dataObj['REQUIRED'], array('class' => 'required', 'label_class' => 'radio-inline'), array("Y" => "ใช่", "N" => "ไม่ใช่"), " "); ?>
+                    </div>						
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">ข้อความแจ้งเตือนเมื่อไม่กรอกข้อมูล</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Validate", $this->dataObj['VALIDATE'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">ขนาด</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Size", empty($this->dataObj['SIZE']) ? 10 : $this->dataObj['SIZE'], array("class" => "form-control digits")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">จำนวนตัวอักษรที่รองรับได้สูงสุด</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Maxlength", empty($this->dataObj['MAXLENGTH']) ? 10 : $this->dataObj['MAXLENGTH'], array("class" => "form-control digits")); ?>
+                </div>
+            </div>
+
+
+        <?php
+            elseif ($id == 7) :
+        ?>
+
+            <!-- ********************************************* FILE ******************************************** -->
+            <div class="form-group">
+                <label class="col-md-3 control-label labelRequest">ชื่อไฟล์</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Name", $this->dataObj['NAME'], array("class" => "form-control required alpha")); ?>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-md-3 control-label">ป้ายกำกับ</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Label", $this->dataObj['LABEL'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">รายละเอียด</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Description", $this->dataObj['DESCRIPTION'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label" >จำเป็นต้องแนบไฟล์</label>
+                <div class="col-md-9 divControl">
+                    <div class="radio with-icheck">
+                        <?php echo $this->formRadio("Required", empty($this->dataObj['REQUIRED']) ? 'N' : $this->dataObj['REQUIRED'], array('class' => 'required', 'label_class' => 'radio-inline'), array("Y" => "ใช่", "N" => "ไม่ใช่"), " "); ?>
+                    </div>						
+                </div>
+            </div>            
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">ข้อความแจ้งเตือนเมื่อไม่กรอกข้อมูล</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Validate", $this->dataObj['VALIDATE'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">ขนาดของไฟล์ที่กำหนด (MB)</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Filesize", empty($this->dataObj['FILESIZE']) ? 10 : $this->dataObj['FILESIZE'], array("class" => "form-control digits")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label" >ประเภทของไฟล์</label>
+                <div class="col-md-9 divControl">
+                    <div class="radio with-icheck">
+                        <?php echo $this->formRadio("Filetype", empty($this->dataObj['FILETYPE']) ? 'I' : $this->dataObj['FILETYPE'], array('class' => 'required', 'label_class' => 'radio-inline'), array("I" => ".jpg, .jpeg, .gif, .png", "V" => ".mp4", "F" => ".pdf"), " "); ?>
+                    </div>						
+                </div>
+            </div>
+
+            <div class="form-group" style="display: none;">
+                <label class="col-md-3 control-label" >เลือกได้หลายตัวเลือก</label>
+                <div class="col-md-9 divControl">
+                    <div class="radio with-icheck">
+                        <?php echo $this->formRadio("Multiple", empty($this->dataObj['MULTIPLE']) ? 'N' : $this->dataObj['MULTIPLE'], array('class' => 'required', 'label_class' => 'radio-inline'), array("N" => "ไม่ใช่"), " "); ?>
+                    </div>						
+                </div>
+            </div>    
+
+
+        <?php
+            elseif ($id == 8) :
+        ?>
+
+            <!-- ******************************************* CALENDAR ******************************************* -->
+
+            <div class="form-group">
+                <label class="col-md-3 control-label labelRequest">ชื่อ</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Name", $this->dataObj['NAME'], array("class" => "form-control required alpha")); ?>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-md-3 control-label">ป้ายกำกับ</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Label", $this->dataObj['LABEL'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">คำแนะนำการกรอกข้อมูล</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Placeholder", $this->dataObj['PLACEHOLDER'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-md-3 control-label">รายละเอียด</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Description", $this->dataObj['DESCRIPTION'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label" >จำเป็นต้องกรอกข้อมูล</label>
+                <div class="col-md-9 divControl">
+                    <div class="radio with-icheck">
+                        <?php echo $this->formRadio("Required", empty($this->dataObj['REQUIRED']) ? 'N' : $this->dataObj['REQUIRED'], array('class' => 'required', 'label_class' => 'radio-inline'), array("Y" => "ใช่", "N" => "ไม่ใช่"), " "); ?>
+                    </div>						
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">ข้อความแจ้งเตือนเมื่อไม่กรอกข้อมูล</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Validate", $this->dataObj['VALIDATE'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+
+        <?php
+            elseif ($id == 9) :
+        ?>
+
+            <!-- ******************************************** BUTTON Submit ******************************************** -->
+            <div class="form-group">
+                <label class="col-md-3 control-label labelRequest">ชื่อปุ่ม</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Name", $this->dataObj['NAME'], array("class" => "form-control required alpha")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">ป้ายกำกับ</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Label", $this->dataObj['LABEL'], array("class" => "form-control")); ?>
+                </div>
+            </div>            
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">รายละเอียด</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Description", $this->dataObj['DESCRIPTION'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-md-3 control-label" >เริ่มใหม่</label>
+                <div class="col-md-9 divControl">
+                    <div class="radio with-icheck">
+                        <?php echo $this->formRadio("Resetbutton", empty($this->dataObj['RESETBUTTON']) ? 'N' : $this->dataObj['RESETBUTTON'], array('class' => 'required', 'label_class' => 'radio-inline'), array("Y" => "Yes", "N" => "No"), " "); ?>
+                    </div>						
+                </div>
+            </div>
+
+            <div class="form-group" id="divResetLabel">
+                <label class="col-md-3 control-label">ป้ายกำกับปุ่มเริ่มใหม่</label>
+                <div class="col-md-9 divControl">
+                <?php echo $this->formText("Resetlabel", $this->dataObj['RESETLABEL'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+            <script>
+                $(function() {
+                    $("#formDialog").on('ifClicked', "input[name='Resetbutton']", function() {
+                        toggleApprovalStatus($(this).val());
+                    });
+                    toggleApprovalStatus($("input[name='Resetbutton']:checked").val());
+                    function toggleApprovalStatus(val) {
+                        if(val == 'Y'){
+                            $("#divResetLabel").css('display', '');
+                        } else {
+                            $("#divResetLabel").css('display', 'none');
+                        }
+                    }
+                });
+            </script>
+
+        <?php
+            elseif ($id == 10):
+        ?>            
+
+            <!-- ******************************************* ReCaptcha ****************************************** -->
+            <div class="form-group">
+                <label class="col-md-3 control-label">ป้ายกำกับ</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Label", $this->dataObj['LABEL'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">รายละเอียด</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Description", $this->dataObj['DESCRIPTION'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">ข้อความแจ้งเตือนเมื่อไม่กรอกข้อมูล</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Validate", $this->dataObj['VALIDATE'], array("class" => "form-control")); ?>
+                </div>
+            </div>            
+
+        <?php
+            elseif ($id == 11):
+        ?>  
+
+            <!-- ******************************************* Free Text ****************************************** -->
+            <div class="form-group">
+                <label class="col-md-3 control-label labelRequest">ชื่อกล่องข้อความ</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Name", $this->dataObj['NAME'], array("class" => "form-control required alpha")); ?>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">ข้อความ</label>
+                <div class="col-md-9 divControl">
+                    <?php echo $this->formText("Message", $this->dataObj['MESSAGE'], array("class" => "form-control")); ?>
+                </div>
+            </div>
+
+        <?php
+            endif; 
+        ?>
+
+    </form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script type="text/javascript">
+$(function () {
+
+	$.fn.alphabetonly = function(options) {
+		var opts = $.extend( {}, $.fn.alphabetonly.defaults, options );
+		msg = opts.message;
+		color = opts.color;
+		size = opts.size;
+		fontstyle = opts.fontstyle;
+		var letters = /^[A-Za-z]+$/;
+		$.each($(this), function(i,e) {
+			var id = $(e).attr("id");
+			$(e).parent().append("<span class='pattern-validate-txt' id='"+id+"' style='display:none;color:"+color+";font-size:"+size+";font-style:"+fontstyle+";'>" + msg + "</span>");
+			$(this).keyup(function() {
+				if($(this).val().length>0) {
+					if( letters.test($(this).val()) ) {
+						$("span#"+id).css({"display":"none"});
+                        alphabetcheck = true;
+					} else {
+						$("span#"+id).css({"display":"block"});
+                        alphabetcheck = false;
+					}
+				} else {
+					$("span#"+id).css({"display":"none"});
+                    alphabetcheck = true;
+				}
+			});
+		});
+	}
+	$.fn.alphabetonly.defaults = {
+		message: "โปรดระบุเฉพาะตัวอักษรภาษาอังกฤษ",
+		color: "red",
+		size: '12px',
+        fontstyle: 'italic'
+	};
+
+	$('.alpha').alphabetonly();
+
+
+    $("#formDialog input[type=checkbox], #formDialog input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	$("#formDialog").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+    /* Check && Radio */
+    $("#lnkAddOption").click(function() {
+        var index =  $("#divOption div.row").length ; 
+        
+        var html = "";
+        html += '<div class="row">' + '\n';
+        html += '    <div class="col-md-12 divControl" style="margin-bottom: 10px;">' + '\n';
+        html += '        <label class="optionNo col-md-1 control-label">' + (index+1) + '.</label>' + '\n';
+        html += '        <label class="col-md-2 control-label">หัวข้อ </label>' + '\n';
+        html += '        <div class="col-md-5 divControl">' + '\n';
+        html += '            <input type="text" name="Option[' + index + '][value]" id="Option-' + index + '-value" value="" alt="value" class=" form-control" maxlength="50" >' + '\n';
+        html += '        </div>' + '\n';
+        html += '        <label class="col-md-2 control-label">รายการที่เลือก </label>' + '\n';
+        html += '        <div class="col-md-1 divControl">' + '\n';
+        html += '            <div class="checkbox with-icheck">' + '\n';
+        html += '            <input type="checkbox" name="Option[' + index + '][check]" id="Option-' + index + '-check">' + '\n';
+        html += '            </div>' + '\n';
+        html += '        </div>' + '\n';
+        html += '        <em class="col-md-1 fa fa-trash-o lnkDeleteOption"></em>' + '\n';
+        html += '    </div>' + '\n';
+        html += '</div>' + '\n';
+        $("#divOption").append(html); 
+        $("#formDialog input[type=checkbox], #formDialog input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+    });
+    $("#divOption").bind('click', function(e) {
+        var target = $(e.target);
+        if (target.hasClass("lnkDeleteOption")) { 
+            target.parent("div.divControl").parent("div.row").fadeOut('fast', function(){
+                $(this).remove();
+                // reindex
+                $("#divOption div.row").each(function(i, e){ 
+                    $(e).find('label.optionNo').html((i+1) + '.');   
+                    $(e).find('input[alt=value]').attr("name", "Option[" + i + "][value]").attr("id", "Option-" + i + "-value"); 
+                    $(e).find('input[alt=check]').attr("name", "Option[" + i + "][check]").attr("id", "Option-" + i + "-check"); 
+                });  
+            });  
+        } 
+    });
+
+    /* Dropdown */
+    $("#lnkAddDropdown").click(function() {
+        var index =  $("#divDropdown div.row").length ; 
+        
+        var html = "";
+        html += '<div class="row">' + '\n';
+        html += '    <div class="col-md-12 divControl" style="margin-bottom: 10px;">' + '\n';
+        html += '        <label class="dropdownNo col-md-1 control-label">' + (index+1) + '.</label>' + '\n';
+        html += '        <label class="col-md-2 control-label">หัวข้อ </label>' + '\n';
+        html += '        <div class="col-md-5 divControl">' + '\n';
+        html += '            <input type="text" name="Dropdown[' + index + '][value]" id="Dropdown-' + index + '-value" value="" alt="value" class=" form-control" maxlength="50" >' + '\n';
+        html += '        </div>' + '\n';
+        html += '        <label class="col-md-2 control-label"> รายการที่เลือก</label>' + '\n';
+        html += '        <div class="col-md-1 divControl">' + '\n';
+        html += '            <div class="checkbox with-icheck">' + '\n';
+        html += '            <input type="checkbox" name="Dropdown[' + index + '][check]" id="Dropdown-' + index + '-check">' + '\n';
+        html += '            </div>' + '\n';
+        html += '        </div>' + '\n';
+        html += '        <em class="col-md-1 fa fa-trash-o lnkDeleteDropdown"></em>' + '\n';
+        html += '    </div>' + '\n';
+        html += '</div>' + '\n';
+        $("#divDropdown").append(html); 
+        $("#formDialog input[type=checkbox], #formDialog input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+    });
+    $("#divDropdown").bind('click', function(e) {
+        var target = $(e.target);
+        if (target.hasClass("lnkDeleteDropdown")) { 
+            target.parent("div.divControl").parent("div.row").fadeOut('fast', function(){
+                $(this).remove();
+                // reindex
+                $("#divDropdown div.row").each(function(i, e){ 
+                    $(e).find('label.dropdownNo').html((i+1) + '.');   
+                    $(e).find('input[alt=value]').attr("name", "Dropdown[" + i + "][value]").attr("id", "Dropdown-" + i + "-value"); 
+                    $(e).find('input[alt=check]').attr("name", "Dropdown[" + i + "][check]").attr("id", "Dropdown-" + i + "-check"); 
+                });  
+            });  
+        } 
+    });
+
+});
+</script>

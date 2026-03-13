@@ -1,0 +1,650 @@
+<?php
+
+class Vrv_ItemController extends Zend_Controller_Action
+{
+	protected $statusOption = array('Y' => 'ใช้งาน', 'N' => 'ไม่ใช้งาน');
+	protected $publishOption = array ('Y' => 'เผยแพร่', 'N' => 'ไม่เผยแพร่');
+	protected $commentStatusOption = array ('Y' => 'เผยแพร่', 'N' => 'ไม่เผยแพร่', 'S' => 'สแปม');
+	protected $canCommentTypeOption = array ('D' => 'ค่าพื้นฐาน', 'C' => 'กำหนดเอง');
+	protected $yesNoOption = array ('Y' => 'ใช่', 'N' => 'ไม่ใช่');
+    
+    public function init()
+    {
+        $loader = new Zend_Loader_PluginLoader();
+        $loader->addPrefixPath('Zend_View_Helper', 'Zend/View/Helper/')
+               ->addPrefixPath('Vrv_View_Helper', APPLICATION_PATH."/modules/vrv/views/helpers");
+    }
+    
+    public function indexAction()
+    {
+        // Log Access
+        System_Model_Log::access();
+        
+
+        $sUser = System_Model_SUser::getInstance();
+        if (!$sUser->hasData()) {
+            $this->_helper->redirector('index', 'index', 'default');
+        }
+        if ($sUser->getInfo()->UserType != "B") {
+            $this->_helper->redirector('index', 'index', 'default');
+        }
+        
+        // Check Action Rights
+        $canView = $sUser->isAllow('vrv.item.view');
+        $canAdd = $sUser->isAllow('vrv.item.manage');
+        if (!$canView) {
+            $this->_helper->redirector('index', 'index', 'default');
+        }
+        
+        $InfoSearch = new stdClass();
+        if (Zend_Session::namespaceIsset("VrvItemSearch")) {
+        	$infoSearchNamespace = new Zend_Session_Namespace("VrvItemSearch");
+        	$InfoSearch->textsearch = $infoSearchNamespace->textsearch;
+        	$InfoSearch->category= $infoSearchNamespace->category;
+        	$InfoSearch->isenable= $infoSearchNamespace->isenable;
+        	$InfoSearch->tblPage = $infoSearchNamespace->tblPage;
+        	$InfoSearch->tblRow = $infoSearchNamespace->tblRow;
+        	$InfoSearch->tblOrderCol = $infoSearchNamespace->tblOrderCol;
+        	$InfoSearch->tblOrderDir = $infoSearchNamespace->tblOrderDir;
+        	
+        	$this->view->InfoSearch = $InfoSearch;
+        	Zend_Session::namespaceUnset("VrvItemSearch");
+        }
+        
+        $languages = System_Model_Setting::getLanguages();
+        $defaultLanguage = System_Model_Setting::getDefaultLanguage();
+        
+        // Get Option
+        $modelOption = new Vrv_Model_Category();
+        $vrvCategoryOption = $modelOption->getOption($defaultLanguage["Code"]);
+        
+        // Send To View
+        $this->view->statusOption = $this->statusOption;
+        $this->view->publishOption = $this->publishOption;
+        $this->view->vrvCategoryOption = $vrvCategoryOption;
+        
+        // Set View
+        $this->view->canAdd = $canAdd;
+        $this->view->pageName = "รายการ Virtual Reality";
+        $this->view->pageIcon = "fa fa-newspaper-o";
+        $this->view->subMenus = array();
+        $this->view->breadcrumb = array(
+            array('name' => 'หน้าแรก', 'url' => $this->view->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), null, true)),
+            array('name' => 'รายการ Virtual Reality')
+            
+        );
+    }
+    
+    public function getlistAction()
+    {
+        $filterInt = new Zend_Filter_Int();
+        $responce = array();
+        $responce['draw'] = $_draw;
+        $responce['recordsTotal'] = 0;
+        $responce['recordsFiltered'] = 0;
+        $responce['data'] = array();
+        
+        $sUser = System_Model_SUser::getInstance();
+        if (!$sUser->hasData()) {
+            $this->_helper->json($responce);
+        }
+        if ($sUser->getInfo()->UserType != "B") {
+            $this->_helper->json($responce);
+        }
+        
+        $canView = $sUser->isAllow('vrv.item.view');
+        
+        // Init
+        $_draw = $this->getRequest()->getParam('draw');
+        $_start = $this->getRequest()->getParam('start');
+        $_length = $this->getRequest()->getParam('length');
+        $_order = $this->getRequest()->getParam('order');
+        $_columns = $this->getRequest()->getParam('columns');
+        $orderIndex = $_order[0]['column'];
+        $sidx = $_columns[$orderIndex]['data'];
+        $sord = $_order[0]['dir'];
+        $rows = $_length;
+        $page = ($_start / $rows) + 1;
+        
+        // Basic Search
+        $textstr = $this->getRequest()->getParam('textstr');
+        $textstr = $textstr;
+        $filter = '';
+        
+        //Advance Search
+        $advancesearch['searchText'] = $textstr;
+        $advancesearch['type'] = $this->getRequest()->getParam('type');
+        $advancesearch['isEnable'] = $this->getRequest()->getParam('isEnable');
+        $advancesearch['isCat'] = $this->getRequest()->getParam('isCat');
+        
+        $infoSearchNamespace = new Zend_Session_Namespace("VrvItemSearch");
+        $infoSearchNamespace->textsearch = $advancesearch['textsearch'];
+        $infoSearchNamespace->category= $advancesearch['isCat'];
+        $infoSearchNamespace->isenable= $advancesearch['isEnable'];
+        $infoSearchNamespace->tblPage = $_start;
+        $infoSearchNamespace->tblRow = $_length;
+        $infoSearchNamespace->tblOrderCol = $_order[0]['column'];
+        $infoSearchNamespace->tblOrderDir = $_order[0]['dir'];
+        
+        if($canView):
+        $model = new Vrv_Model_Item();
+        $data = $model->getList($sidx, $sord, $rows, $page, $textstr, $filter, $advancesearch);
+        endif;
+        
+        $i = $_start;
+        if ($data) {
+            $responce['recordsTotal'] = $data[0]["RECORD"];
+            $responce['recordsFiltered'] = $data[0]["RECORD"];
+            
+            foreach($data as $item){
+                $i++;
+                $d = array();
+                $d['DT_RowId'] = $item["ID"];
+                $d['NO'] = $i;
+                $d['Title'] = Emwork_Utility::notShowNull($item["Title"]);
+                $d['ViewAmount'] = $item["ViewAmount"];
+                $d['Ordering'] = Emwork_Utility::notShowNull($item["Ordering"], '-');
+                $d['CategoryTitle'] = Emwork_Utility::notShowNull($item["CategoryTitle"]);
+                $d['AuthorName'] = Emwork_Utility::notShowNull($item["AuthorName"]);
+                $d['Created'] = Emwork_Utility::notShowNull(Emwork_Utility_DateTime::MSSqlToDateThai($item["Created"], 'DT'));
+                $d['IsEnableCode'] = $item["IsEnable"];
+                $d['IsEnable'] = Emwork_Utility::notShowNull($this->publishOption[$item["IsEnable"]]);
+                $responce['data'][] = $d;
+            }
+        }
+        $this->_helper->json($responce);
+    }
+    
+    public function addAction()
+    {
+        // Log Access
+        System_Model_Log::access();
+        
+        $sUser = System_Model_SUser::getInstance();
+        if (!$sUser->hasData()) {
+            $this->_helper->redirector('index', 'index', 'default');
+        }
+        if ($sUser->getInfo()->UserType != "B") {
+            $this->_helper->redirector('index', 'index', 'default');
+        }
+        $canAdd = $sUser->isAllow('vrv.item.manage');
+        
+        if (!$canAdd) {
+            $this->_helper->redirector('index', 'item', 'vrv');
+        }
+
+        $languages = System_Model_Setting::getLanguages();
+        $defaultLanguage = System_Model_Setting::getDefaultLanguage();
+        
+        // Get Option
+        $vrCategoryModel = new Vrv_Model_Category();
+        $vrvCategoryOption = $vrCategoryModel->getRecursiveOption($defaultLanguage["Code"]);
+        
+        // Mobile Detect
+        $detect = new Mobile_Detect();
+        $this->view->isiOS = $detect->isiOS();
+        
+        // Send Option and lookup To View
+        $this->view->defaultLanguage = $defaultLanguage['Code'];
+        $this->view->defaultLanguageName = $defaultLanguage['Name'];
+        $this->view->languages = $languages;
+        $this->view->publishOption = $this->publishOption;
+        $this->view->yesNoOption = $this->yesNoOption;
+        $this->view->vrvCategoryOption = $vrvCategoryOption;
+        
+        // Set View
+        $this->view->pageName = "เพิ่ม Virtual Reality";
+        $this->view->pageIcon = "fa fa-newspaper-o";
+        $this->view->subMenus = array();
+        $this->view->breadcrumb = array(
+            array('name' => 'หน้าแรก', 'url' => $this->view->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), null, true)),
+            array('name' => 'รายการ Virtual Reality', 'url' => $this->view->url(array('module' => 'vrv', 'controller' => 'item', 'action' => 'index'), null, true)),
+            array('name' => 'เพิ่ม Virtual Reality')
+        );
+    }
+    
+    public function saveAction()
+    {
+        // Init
+        $result = array();
+        $result['result'] = false;
+        $result['id'] = null;
+        $result['message'] = '';
+        
+        $sUser = System_Model_SUser::getInstance();
+        if (!$sUser->hasData()) {
+            $result['message'] = 'ไม่สามารถบันทึกได้';
+            $this->_helper->json($result);
+        }
+        if ($sUser->getInfo()->UserType != "B") {
+            $result['message'] = 'ไม่สามารถบันทึกได้';
+            $this->_helper->json($result);
+        }
+        $canAdd = $sUser->isAllow('vrv.item.manage');
+        if (!$canAdd) {
+            $result['message'] = 'ไม่สามารถบันทึกได้';
+            $this->_helper->json($result);
+        }
+        
+        $defaultLanguage = System_Model_Setting::getDefaultLanguage();
+        $defaultLanguageCode = $defaultLanguage["Code"];
+        
+        $model = new Vrv_Model_Item();
+        $fileModel = new System_Model_Fileinfo();
+        $params = $this->getRequest()->getParams();
+        $params['DefaultLanguageCode'] = $defaultLanguage['Code'];
+        
+        // IntroImage
+        $introImageID = null;
+        if (count($params['hdfIntroImage'])>0) {
+        	$fileData = $fileModel->itemByHashName($params['hdfIntroImage'][0]);
+        	if ($fileData->ID != null) {
+        		$introImageID = $fileData->ID;
+            }
+        }
+        $params['IntroImageID'] = $introImageID;
+
+        // VirtualRealityFile
+        $virtualRealityFileID = null;
+        if (count($params['hdfVirtualRealityFile'])>0) {
+        	$fileData = $fileModel->itemByHashName($params['hdfVirtualRealityFile'][0]);
+        	if ($fileData->ID != null) {
+        		$virtualRealityFileID = $fileData->ID;
+            }
+        }
+        $params['VirtualRealityFileID'] = $virtualRealityFileID;
+
+        // Save
+        $data = $model->save($params);
+        
+        // Set Result
+        if ($data->result) {
+            $result['result'] = true;
+            $result['message'] = '';
+            $result['id'] = $data->id;
+            
+            // Log Acion
+            System_Model_Log::action("vrv.item", "save", $params['params'][$defaultLanguageCode]['Title'], $data->id);
+        } else {
+            $result['result'] = false;
+            $result['message'] = 'บันทึกไม่สำเร็จ';
+        }
+        
+        $this->_helper->json($result);
+    }
+    
+    public function editAction()
+    {
+        // Log Access
+        System_Model_Log::access();
+        
+        $sUser = System_Model_SUser::getInstance();
+        if (!$sUser->hasData()) {
+            $this->_helper->redirector('index', 'index', 'default');
+        }
+        if ($sUser->getInfo()->UserType != "B") {
+            $this->_helper->redirector('index', 'index', 'default');
+        }
+        $canDelete = $sUser->isAllow('vrv.item.manage');
+        $canEdit = $sUser->isAllow('vrv.item.manage');
+        $canView = $sUser->isAllow('vrv.item.view');
+        if (!$canView) {
+            $this->_helper->redirector('index', 'item', 'vrv');
+        }
+
+        // Get Param
+        $itemID = $this->_request->getParam('itemid');
+        
+        // Model
+        if (!$itemID) {
+        	$this->_helper->redirector('index', 'item', 'vrv');
+        }
+        
+        $languages = System_Model_Setting::getLanguages();
+        $defaultLanguage = System_Model_Setting::getDefaultLanguage();
+        
+        // Get Option
+        $vrCategoryModel = new Vrv_Model_Category();
+        $vrvCategoryOption = $vrCategoryModel->getRecursiveOption($defaultLanguage["Code"]);
+        
+        $model = new Vrv_Model_Item();
+        
+        // Get Data
+        $data = $model->getInfo($itemID);      
+        
+        if(!$data->ID || $data->IsDeleted=='Y'){
+            $this->_helper->redirector('index', 'item', 'vrv');
+        }
+        
+        $dataDetails = array();
+        if (count($languages) > 0) {
+        	foreach ($languages as $lang) {
+        		$langCode = $lang['Code'];
+        		$detail = $model->getDataByLanguage($data->ID, $langCode);
+        		if (!empty($detail->Lang)) {
+        			$dataDetails[$langCode] = $detail;
+        		}
+        	}
+        }
+
+        $dataCategories = $model->getCategories($data->ID);
+        $dataCategoryIds = array();
+        if (count($dataCategories) > 0) {
+        	foreach ($dataCategories as $dataCategory) {
+        		$dataCategoryIds[] = $dataCategory['VrvCategoryID'];
+        	}
+        }
+        
+        // Intro Image
+        $dataIntroImages = array();
+        if(!empty($data->IntroImageID)) {
+        	$dataIntroImages[] = array('file_name'=> $data->IntroImageFileName, 'size'=> $data->IntroImageFileSize, 'type'=> $data->IntroImageFileType, 'hash_name'=> $data->IntroImageHashName);
+        }
+
+        // Virtual Reality File
+        $dataVirtualReality = array();
+        if(!empty($data->IntroImageID)) {
+        	$dataVirtualReality[] = array('file_name'=> $data->VirtualRealityFileName, 'size'=> $data->VirtualRealityFileSize, 'type'=> $data->VirtualRealityFileType, 'hash_name'=> $data->VirtualRealityHashName);
+        }
+
+        // Send Rights to View
+        $this->view->canDelete = $canDelete;
+        $this->view->canEdit = $canEdit;
+        
+        // Mobile Detect
+        $detect = new Mobile_Detect();
+        $this->view->isiOS = $detect->isiOS();
+        
+        // Send To View
+        $this->view->data = $data;
+        $this->view->dataCategoryIds = $dataCategoryIds;
+        $this->view->dataDetails = $dataDetails;
+        $this->view->dataIntroImages = $dataIntroImages;
+        $this->view->dataVirtualReality = $dataVirtualReality;
+        
+        $this->view->languages = $languages;
+        $this->view->defaultLanguage = $defaultLanguage['Code'];
+        $this->view->defaultLanguageName = $defaultLanguage['Name'];
+        $this->view->statusOption = $this->statusOption;
+        $this->view->publishOption = $this->publishOption;
+        $this->view->vrvCategoryOption = $vrvCategoryOption;
+        $this->view->yesNoOption = $this->yesNoOption;
+        
+        // Set View
+        $this->view->pageName = "ปรับปรุง Virtual Reality";
+        $this->view->pageIcon= "fa fa-newspaper-o";
+        $this->view->subMenus = array();
+        $this->view->breadcrumb = array(
+            array('name' => 'หน้าแรก', 'url' => $this->view->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), null, true)),
+            array('name' => 'รายการ Virtual Reality', 'url' => $this->view->url(array('module' => 'vrv', 'controller' => 'item', 'action' => 'index'), null, true)),
+            array('name' => 'ปรับปรุง Virtual Reality')
+        );
+        
+        // Log Acion
+        System_Model_Log::action("vrv.item", "view", $dataDetails[$defaultLanguage["Code"]]->Title, $itemID);
+    }
+
+    public function previewAction()
+    {
+        // Log Access
+        System_Model_Log::access();
+        
+        $sUser = System_Model_SUser::getInstance();
+        if (!$sUser->hasData()) {
+            $this->_helper->redirector('index', 'index', 'default');
+        }
+        if ($sUser->getInfo()->UserType != "B") {
+            $this->_helper->redirector('index', 'index', 'default');
+        }
+        $canDelete = $sUser->isAllow('vrv.item.manage');
+        $canEdit = $sUser->isAllow('vrv.item.manage');
+        $canView = $sUser->isAllow('vrv.item.view');
+        if (!$canView) {
+            $this->_helper->redirector('index', 'item', 'vrv');
+        }
+
+        // Get Param
+        $itemID = $this->_request->getParam('itemid');
+        
+        // Model
+        if (!$itemID) {
+        	$this->_helper->redirector('index', 'item', 'vrv');
+        }
+        
+        // Get Data
+        $model = new Vrv_Model_Item();
+        $data = $model->getInfo($itemID);
+
+        if(!$data->ID || $data->IsDeleted=='Y'){
+            $this->_helper->redirector('index', 'item', 'vrv');
+        }
+
+        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', 'init');
+        $this->view->appSystemName = $config->app->name;
+        $this->view->appFaviconPath = $this->view->baseUrl($config->app->faviconpath);
+        $this->view->pageName = "Virtual Reality";
+        $this->view->pageIcon= "fa fa-exclamation-triangle";
+        $this->view->breadcrumb = array(
+            array('name' => 'หน้าแรก', 'url' => $this->view->url(array('module' => 'default', 'controller' => 'index', 'action' => 'index'), null, true)),
+            array('name' => 'รายการ Virtual Reality', 'url' => $this->view->url(array('module' => 'vrv', 'controller' => 'item', 'action' => 'index'), null, true)),
+            array('name' => 'Virtual Reality')
+        );
+
+        if($data->VirtualRealityHashName){
+            $folder = str_replace('.zip','',$data->VirtualRealityHashName);
+            $path = '/vrv/'.$folder.'/index.html';
+            if(file_exists(APPLICATION_ROOT.'/public'.$path)){
+                $this->view->path = $path;
+                $this->_helper->layout()->disableLayout();
+            }else{
+				$this->renderScript('item/_alertpreview.phtml');
+				return;
+            }
+        }else{
+            $this->_helper->redirector('index', 'item', 'vrv');
+            return;
+        }
+    }
+    
+    public function updateAction()
+    {
+        // Init
+        $result = array();
+        $result['result'] = false;
+        $result['id'] = null;
+        $result['message'] = '';
+        
+        $sUser = System_Model_SUser::getInstance();
+        if (!$sUser->hasData()) {
+            $result['message'] = 'ไม่สามารถบันทึกได้';
+            $this->_helper->json($result);
+        }
+        if ($sUser->getInfo()->UserType != "B") {
+            $result['message'] = 'ไม่สามารถบันทึกได้';
+            $this->_helper->json($result);
+        }
+        $canSave = $sUser->isAllow('vrv.item.manage');
+        if (!$canSave) {
+            $result['message'] = 'ไม่สามารถบันทึกได้';
+            $this->_helper->json($result);
+        }
+        
+        $defaultLanguage = System_Model_Setting::getDefaultLanguage();
+        $defaultLanguageCode = $defaultLanguage["Code"];
+        
+        $model = new Vrv_Model_Item();
+        $fileModel = new System_Model_Fileinfo();
+        $params = $this->getRequest()->getParams();
+        $params['DefaultLanguageCode'] = $defaultLanguage['Code'];
+        
+        // IntroImage
+        $introImageID = null;
+        if (count($params['hdfIntroImage'])>0) {
+        	$fileData = $fileModel->itemByHashName($params['hdfIntroImage'][0]);
+        	if ($fileData->ID != null) {
+        		$introImageID = $fileData->ID;
+        	}
+        }
+        $params['IntroImageID'] = $introImageID;
+
+        // VirtualRealityFile
+        $virtualRealityFileID = null;
+        if (count($params['hdfVirtualRealityFile'])>0) {
+        	$fileData = $fileModel->itemByHashName($params['hdfVirtualRealityFile'][0]);
+        	if ($fileData->ID != null) {
+        		$virtualRealityFileID = $fileData->ID;
+            }
+        }
+        $params['VirtualRealityFileID'] = $virtualRealityFileID;
+
+        $data = $model->update($params);
+        
+        // Set Result
+        if ($data->result) {
+            $result['result'] = true;
+            $result['message'] = '';
+            $result['id'] = $data->id;
+            
+            // Log Acion
+            System_Model_Log::action("vrv.item", "update", $params['params'][$defaultLanguageCode]['Title'], $data->id);
+        } else {
+            $result['result'] = false;
+            $result['message'] = 'บันทึกไม่สำเร็จ';
+        }
+        
+        $this->_helper->json($result);
+    }
+    
+    public function deleteAction()
+    {
+        // Init
+        $result = array();
+        $result['result'] = false;
+        $result['message'] = '';
+        
+        $sUser = System_Model_SUser::getInstance();
+        if (!$sUser->hasData()) {
+            $result['message'] = 'ไม่สามารถลบได้';
+            $this->_helper->json($result);
+        }
+        if ($sUser->getInfo()->UserType != "B") {
+            $result['message'] = 'ไม่สามารถลบได้';
+            $this->_helper->json($result);
+        }
+        $canSave = $sUser->isAllow('vrv.item.manage');
+        if (!$canSave) {
+            $result['message'] = 'ไม่สามารถลบได้';
+            $this->_helper->json($result);
+        }
+        
+        // Param
+        $params = $this->getRequest()->getParams();
+        
+        // Update
+        $model = new Vrv_Model_Item();
+        
+        $defaultLanguage = System_Model_Setting::getDefaultLanguage();
+        $defaultLanguageCode = $defaultLanguage["Code"];
+        $dataOld = $model->getDataByLanguage($params["id"], $defaultLanguageCode);
+        $title = $dataOld->Title;
+        
+        $data = $model->delete($params);
+        
+        // Set Result
+        if ($data->result) {
+            $result['result'] = true;
+            $result['message'] = '';
+            
+            // Log Acion
+            System_Model_Log::action("vrv.item", "delete", $title, $params["id"]);
+        } else {
+            $result['result'] = false;
+            $result['message'] = 'ลบไม่สำเร็จ';
+        }
+        
+        $this->_helper->json($result);
+    }
+    
+    public function listpublishAction()
+    {
+    	// Init
+    	$result = array();
+    	$result['result'] = false;
+    	$result['message'] = '';
+    	
+		$sUser = System_Model_SUser::getInstance();
+		if (!$sUser->hasData()) {
+			$result['message'] = 'ไม่สามารถบันทึกได้';
+			$this->_helper->json($result);
+		}
+		if ($sUser->getInfo()->UserType != "B") {
+			$result['message'] = 'ไม่สามารถบันทึกได้';
+			$this->_helper->json($result);
+		}
+		$canSave = $sUser->isAllow('vrv.item.manage');
+		if (!$canSave) {
+			$result['message'] = 'ไม่สามารถบันทึกได้';
+			$this->_helper->json($result);
+		}
+    	
+    	// Param
+        $params = $this->getRequest()->getParams();
+
+    	// Update
+    	$model = new Vrv_Model_Item();
+    	$data = $model->listPublish($params);
+    	
+    	// Set Result
+    	if ($data->result) {
+    		$result['result'] = true;
+			$result['message'] = '';
+    	} else {
+    		$result['result'] = false;
+    		$result['message'] = 'ปรับปรุงสถานะไม่สำเร็จ';
+    	}
+    	
+    	$this->_helper->json($result);
+    }
+
+	public function listdeleteAction()
+    {
+    	// Init
+    	$result = array();
+    	$result['result'] = false;
+    	$result['message'] = '';
+    	
+		$sUser = System_Model_SUser::getInstance();
+		if (!$sUser->hasData()) {
+			$result['message'] = 'ไม่สามารถลบได้';
+			$this->_helper->json($result);
+		}
+		if ($sUser->getInfo()->UserType != "B") {
+			$result['message'] = 'ไม่สามารถลบได้';
+			$this->_helper->json($result);
+		}
+		$canSave = $sUser->isAllow('vrv.item.manage');
+		if (!$canSave) {
+			$result['message'] = 'ไม่สามารถลบได้';
+			$this->_helper->json($result);
+		}
+    	
+    	// Param
+        $params = $this->getRequest()->getParams();
+
+    	// Update
+    	$model = new Vrv_Model_Item();
+    	$data = $model->listDelete($params);
+    	
+    	// Set Result
+    	if ($data->result) {
+    		$result['result'] = true;
+			$result['message'] = '';
+    	} else {
+    		$result['result'] = false;
+    		$result['message'] = 'ลบข้อมูลไม่สำเร็จ';
+    	}
+    	
+    	$this->_helper->json($result);
+    }
+}
+

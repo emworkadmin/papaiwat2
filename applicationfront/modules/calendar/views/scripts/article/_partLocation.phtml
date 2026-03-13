@@ -1,0 +1,47 @@
+<div class="article-location">
+	<div id='mapCanvas' style="width: 100%; height: 350px;"></div>
+</div>
+
+<script>
+function initMap() {	
+	// Set Map
+	map = new google.maps.Map(document.getElementById('mapCanvas'), {
+	    zoom: 16,
+	    center: new google.maps.LatLng(13.736717, 100.523186), // Bangkok Position
+	    mapTypeId: google.maps.MapTypeId.ROADMAP,
+	    draggable: false
+	});
+	google.maps.event.addListener(map, 'click', function(event){
+		if (state == 'edit') {
+			var pos = {lat: event.latLng.lat(), lng: event.latLng.lng()};
+			mapMarker.setPosition(pos);
+			$('#txtLatitude').val(event.latLng.lat());
+			$('#txtLongitude').val(event.latLng.lng());
+		}
+	});
+
+	// Set Marker
+	mapMarker = new google.maps.Marker({draggable: false, map: map});	
+	google.maps.event.addListener(mapMarker, 'dragend', function (event) {
+		if (state == 'edit') {
+			$('#txtLatitude').val(event.latLng.lat());
+			$('#txtLongitude').val(event.latLng.lng());
+		}
+	});
+	google.maps.event.addListener(mapMarker, 'dragstart', function (event) {
+		if (state == 'edit') {
+			$('#txtLatitude').val(event.latLng.lat());
+			$('#txtLongitude').val(event.latLng.lng());
+		}
+	});
+
+	// Set PlaceService
+	placeService = new google.maps.places.PlacesService(map);
+
+	<?php if (!empty($this->data->Latitude) && !empty($this->data->Longitude)) : ?>
+	mapMarker.setPosition(new google.maps.LatLng(<?php echo $this->data->Latitude; ?>, <?php echo $this->data->Longitude; ?>));
+	map.setCenter(mapMarker.position);
+	<?php endif; ?>
+}
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcmeHFxJo70hGineJoUp-gFaXEzcSjQnY&callback=initMap&libraries=places"></script>

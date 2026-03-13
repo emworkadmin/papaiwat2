@@ -1,0 +1,41 @@
+.widget-kit-slideshow .jssorl-009-spin img {
+	animation-name: jssorl-009-spin;
+	animation-duration: 1.6s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+@keyframes jssorl-009-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.widget-kit-slideshow .jssorb032 {position:absolute;}
+.widget-kit-slideshow .jssorb032 .i {position:absolute;cursor:pointer;}
+.widget-kit-slideshow .jssorb032 .i .b {fill:#fff;fill-opacity:0.7;stroke:#000;stroke-width:1200;stroke-miterlimit:10;stroke-opacity:0.25;}
+.widget-kit-slideshow .jssorb032 .i:hover .b {fill:#000;fill-opacity:.6;stroke:#fff;stroke-opacity:.35;}
+.widget-kit-slideshow .jssorb032 .iav .b {fill:#000;fill-opacity:1;stroke:#fff;stroke-opacity:.35;}
+.widget-kit-slideshow .jssorb032 .i.idn {opacity:.3;}
+
+.widget-kit-slideshow .jssora051 {display:block;position:absolute;cursor:pointer;}
+.widget-kit-slideshow .jssora051 .a {fill:none;stroke:#ffffff;stroke-width:360;stroke-miterlimit:10;}
+.widget-kit-slideshow .jssora051:hover {opacity:.8;}
+.widget-kit-slideshow .jssora051.jssora051dn {opacity:.5;}
+.widget-kit-slideshow .jssora051.jssora051ds {opacity:.3;pointer-events:none;}
+
+.widget-kit-slideshow .divTitle { position: absolute; top: 110px; left: 90px; right: 90px; height: 250px; z-index: 0; line-height: 30px; text-align: center; padding: 10px; box-sizing: border-box; }
+.widget-kit-slideshow .title-hilight-01 { color: #ffffff; font-weight: bold; text-shadow: 1px 1px 1px #636161; }
+.widget-kit-slideshow .title-hilight-02 { color: #fff; font-weight: bold; margin-top: 45px; margin-bottom: 35px; text-shadow: 1px 1px 1px #636161; }
+.widget-kit-slideshow .title-hilight-01.h1, .title-hilight-02.h1 { font-size: 2em; }
+.widget-kit-slideshow .title-hilight-01.h2, .title-hilight-02.h2 { font-size: 1.5em; }
+.widget-kit-slideshow .title-hilight-01.h3, .title-hilight-02.h3 { font-size: 1.17em; }
+.widget-kit-slideshow .title-hilight-01.h4, .title-hilight-02.h4 { font-size: 1.12em; }
+.widget-kit-slideshow .title-hilight-01.h5, .title-hilight-02.h5 { font-size: .83em; }
+.widget-kit-slideshow .title-hilight-01.h6, .title-hilight-02.h6 { font-size: .75em; }
+.widget-kit-slideshow .title-hilight-01.text-center, .title-hilight-02.text-center { text-align: center; }
+.widget-kit-slideshow .title-hilight-01.text-left, .title-hilight-02.text-left { text-align: left; }
+.widget-kit-slideshow .title-hilight-01.text-right, .title-hilight-02.text-right { text-align: right; }

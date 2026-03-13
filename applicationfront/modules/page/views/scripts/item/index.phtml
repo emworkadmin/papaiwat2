@@ -1,0 +1,209 @@
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl("assets/page/css/animate.min.css"); ?>" />
+
+<?php 
+$options = json_decode($this->data->Options);
+$params = array();
+
+// Prepare
+if (count($options) > 0) :
+	foreach ($options as $rowGuid => $rowOption) :
+		
+		$rowSetting = $rowOption->setting;
+		$cols = $rowOption->cols;
+		if (count($cols) > 0) :
+			foreach ($cols as $colGuid => $colOption) : 
+				
+				$colSetting = $colOption->setting;
+				$widgets = $colOption->widgets;
+				if (count($widgets) > 0) :
+					foreach ($widgets as $widgetGuid => $widgetOption) :
+					
+						$widgetSetting = $widgetOption->setting;
+					
+					endforeach;
+				endif;
+			
+			endforeach;
+		endif;
+	
+	endforeach;
+endif;
+
+// Css
+
+// Display
+if (count($options) > 0) :
+	foreach ($options as $rowGuid => $rowOption) :
+		
+		$rowSetting =  json_decode($rowOption->setting);
+		$rowTitle = $rowSetting->Title;
+		$rowTitleHeader = empty($rowSetting->TitleHeader) ? "span" : $rowSetting->TitleHeader;
+		$rowTitleColor = $rowSetting->TitleColor;
+		$rowTitleFontSize = $rowSetting->TitleFontSize;
+		$rowTitleFontWeight = $rowSetting->TitleFontWeight;
+		$rowTitleMarginTop = $rowSetting->TitleMarginTop;
+		$rowTitleMarginBottom = $rowSetting->TitleMarginBottom;
+		$rowSubTitle = $rowSetting->SubTitle;
+		$rowSubTitleFontSize = $rowSetting->SubTitleFontSize;
+		$rowTitleAlign = $rowSetting->TitleAlign;
+		$rowBackgroundColor = $rowSetting->BackgroundColor;
+		
+		$rowRowID = $rowSetting->RowID;
+		$rowCssClass = $rowSetting->CssClass;
+		$rowFontColor = $rowSeting->FontColor;
+		$rowPadding = $rowSetting->Padding;
+		$rowMargin = $rowSetting->Margin;
+		$rowFluid = $rowSetting->Fluid;
+		$cols = $rowOption->cols;
+		
+		$rowStyle = '';
+		$rowStyle .= empty($rowBackgroundColor) ? '' : 'background-color: ' . $rowBackgroundColor . ';';
+		$rowStyle .= empty($rowPadding) ? '' : 'padding: ' . $rowPadding . ';';
+		$rowStyle .= empty($rowMargin) ? '' : 'margin: ' . $rowMargin . ';';
+		$rowStyle .= empty($rowFontColor) ? '' : 'color: ' . $rowFontColor . ';';
+		
+		echo '<div ' . (empty($rowCssClass) ? '' : 'class="page-row ' . $rowCssClass . '"') . ' ' . (empty($rowRowID) ? '' : 'id="' . $rowRowID . '"') . ' ' . (empty($rowStyle) ? '' : 'style="' . $rowStyle . '"') . '>';
+		
+		// Container (if)
+		if (!$rowFluid) :
+			echo "<div class='container'>"; 
+		endif;		
+		
+		// Titile & Sub Title
+		if (!empty($rowTitle)) :
+			$rowTitleStyle = '';
+			$rowTitleStyle .= empty($rowTitleAlign) ? '' : 'text-align:' . $rowTitleAlign . ';';
+			$rowTitleStyle .= empty($rowTitleMarginTop) ? '' : 'margin-top:' . $rowTitleMarginTop . 'px;';
+			$rowTitleStyle .= empty($rowTitleMarginBottom) ? '' : 'margin-bottom:' . $rowTitleMarginBottom . 'px;';
+			$rowTitleLabelStyle = '';
+			$rowTitleLabelStyle .= empty($rowTitleColor) ? '' : 'color:' . $rowTitleColor . ';';
+			$rowTitleLabelStyle .= empty($rowTitleFontSize) ? '' : 'font-size:' . $rowTitleFontSize . 'px;line-height:' . $rowTitleFontSize . 'px;';
+			$rowTitleLabelStyle .= empty($rowTitleFontWeight) ? '' : 'font-weight:' . $rowTitleFontWeight . ';';
+			$rowSubTitleLabelStyle = '';
+			$rowSubTitleLabelStyle .= empty($rowSubTitleFontSize) ? '' : 'font-size:' . $rowSubTitleFontSize . 'px;';
+		
+			echo "<div class='page-row-title' style='" . $rowTitleStyle . "'>";			
+			echo "<" . $rowTitleHeader . " style='" . $rowTitleLabelStyle . "'>" . $rowTitle . "</" . $rowTitleHeader . ">";
+			if (!empty($rowSubTitle)) :
+				echo "<p style='" . $rowSubTitleLabelStyle . "'>" . nl2br($rowSubTitle) . "</p>";
+			endif;
+			echo "</div>";
+		endif; 
+		
+		
+		echo '<div class="row">';
+		
+		if (count($cols) > 0) :
+			foreach ($cols as $colGuid => $colOption) :
+				$colSetting = json_decode($colOption->setting);
+				$colBackgroundColor = $colSetting->BackgroundColor;
+				$colFontColor = $colSetting->FontColor;
+				$colCssClass = $colSetting->CssClass;
+				$colPadding = $colSetting->Padding;
+				$colAnimationType = $colSetting->AnimationType;
+				$colAnimationDuration = empty($colSetting->AnimationDuration) ? 500 :  $colSetting->AnimationDuration;
+				$colAnimationDelay = empty($colSetting->AnimationDelay) ? 300 : $colSetting->AnimationDelay;				
+				$colColSize = empty($colSetting->ColSize) ? 12 :  $colSetting->ColSize;
+				$widgets = $colOption->widgets;
+				
+				$colStyle = '';
+				$colStyle .= empty($colBackgroundColor) ? '' : 'background-color: ' . $colBackgroundColor . ';';
+				$colStyle .= empty($colPadding) ? '' : 'padding: ' . $colPadding . ';';
+				$colStyle .= empty($colFontColor) ? '' : 'color: ' . $colFontColor . ';';
+				
+				$animateStyle = '';
+				if (!empty($colAnimationType)) {
+					$animateStyle .= "visibility:visible;";
+					$animateStyle .= "animation-duration:" . $colAnimationDuration . "ms;";
+					$animateStyle .= "animation-delay:" . $colAnimationDelay . "ms;";
+					$animateStyle .= "animation-name:" . $colAnimationType . ";";
+					$colStyle .= $animateStyle;
+				}
+								
+				echo '<div class="col-sm-' . $colColSize . '' . '" >';
+				
+				echo '<div class="page-col ' . (empty($colCssClass) ? '' : ' ' . $colCssClass) . '" ' . (empty($colStyle) ? '' : 'style="' . $colStyle . '"') . '>';
+				
+				if (count($widgets) > 0) :
+					foreach ($widgets as $widgetGuid => $widgetOption) :
+					
+					$widgetSetting = json_decode($widgetOption->setting);
+					$widgetTitle = $widgetSetting->Title;
+					$widgetTitleHeader = empty($widgetSetting->TitleHeader) ? "span" : $widgetSetting->TitleHeader;
+					$widgetTitleFontSize = $widgetSetting->TitleFontSize;
+					$widgetTitleFontWeight = $widgetSetting->TitleFontWeight;
+					$widgetTitleFontColor = $widgetSetting->TitleColor;
+					$widgetTitleMarginTop = $widgetSetting->TitleMarginTop;
+					$widgetTitleMarginBottom = $widgetSetting->TitleMarginBottom;
+					$widgetCssClass = $widgetSetting->CssClass; 
+					$widgetDataObj = Page_Model_Widget::getDetailByLaguage($widgetSetting->WidgetType, $this->lang);
+										
+					// Check
+					$widgetPrefix = "Widget";
+					$widgetType = ucfirst($widgetDataObj->Widget);
+					$widgetParams = json_decode($widgetDataObj->Params, true);
+					$widgetClass = "{$widgetPrefix}_{$widgetType}_{$widgetType}";
+					
+					if (empty($widgetType)) {
+						continue;
+					}
+					
+					// Page Widget
+					echo "<div class='page-widget " . (empty($widgetCssClass) ? "" : " " . $widgetCssClass) . "'>";
+					if (!empty($widgetTitle)) :
+						$widgetTitleStyle = '';
+						$widgetTitleStyle .= empty($widgetTitleMarginTop) ? '' : 'margin-top:' . $widgetTitleMarginTop . 'px;';
+						$widgetTitleStyle .= empty($widgetTitleMarginBottom) ? '' : 'margin-bottom:' . $widgetTitleMarginBottom . 'px;';
+						$widgetTitleLabelStyle = '';
+						$widgetTitleLabelStyle .= empty($widgetTitleFontSize) ? '' : 'font-size:' . $widgetTitleFontSize . 'px;line-height:' . $widgetTitleFontSize . 'px;';
+						$widgetTitleLabelStyle .= empty($widgetTitleFontWeight) ? '' : 'font-weight:' . $widgetTitleFontWeight . ';';
+						$widgetTitleLabelStyle .= empty($widgetTitleFontColor) ? '' : 'color:' . $widgetTitleFontColor . ';';
+						
+						echo "<div class='page-widget-title' style='" . $widgetTitleStyle . "'>";
+						echo "<" . $widgetTitleHeader . " style='" . $widgetTitleLabelStyle . "'>" . $widgetTitle . "</" . $widgetTitleHeader . ">";
+						echo "</div>";
+					endif;
+					
+					echo "<div class='d2ms-widget'> ";
+					
+					if ($widgetDataObj->ShowTitle == 'Y') :
+						echo "<div class='d2ms-widget-title'>" . $widgetDataObj->Title . "</div>";
+					endif;
+					
+					echo "<div class='d2ms-widget-body'>";
+					$widgetObj = $this->$widgetClass($widgetParams);
+					if ($widgetObj != null && method_exists($widgetObj, "display")) :
+						$widgetObj->display();
+					endif;
+					echo "</div>";
+					
+					echo "</div>";
+					
+					// End - Page Widget
+					echo "</div>";
+					
+					endforeach;
+				endif;
+				
+				echo '</div>';
+				
+				echo '</div>';
+			
+			endforeach;
+		endif;
+		
+		echo '</div>'; // end class row
+		
+		// End Container (if)
+		if (!$rowFluid) :
+			echo "</div>";
+		endif;	
+		
+		echo '</div>';
+	
+	endforeach;
+endif;
+
+
+
+?>

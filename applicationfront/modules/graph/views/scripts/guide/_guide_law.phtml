@@ -1,0 +1,487 @@
+<style>
+    .graph-box.with-color.Law_travel { background-color: #cce3f1; }
+    .Law_travel .form-control { padding: 0px 0px; }
+
+    .Law_travel .charttop { background-color: white; font-size: 17px; text-align: center; color: #0071bd; border: 1px solid; padding: 10px 10px 10px 10px; }
+    .Law_travel .number-group { font-size: 45px; color: black; }
+    .Law_travel .number { font-family: 'Kanit'; }
+    .Law_travel .header-guide-law {background-color: #df8f4a;}
+</style>
+
+	<div class="graph-box with-color Law_travel" id="Law_travel">
+    
+        <div class="graph-box-title">
+            <div class="row">
+                <div class="col-md-9">
+                </div>
+                <div class="export col-md-3 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <div class="col-sm-6">
+                        	<?php echo $this->isGuideDummy ? "" : $this->formSelect("guide_law_year", $this->guide_law_year, array('class' => 'form-control', 'placeholder' => ''), $this->years); ?>
+                        </div>
+                        <div class="col-sm-6">
+                            <?php echo $this->formSelect("guide_law_Export", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+                        </div>
+                    </div>
+                </div>	
+            </div>
+        </div>
+
+        <div class="row mb-15">
+
+            <div class="col-md-6">
+                <div class="col-md-8 col-md-offset-4">
+                    <div class="charttop" style="">
+	                	<div class="img-icon">
+	                		<img src="<?php echo $this->baseUrl("assets/graph/img/icon_amount/03_police.png"); ?>" alt="icon" />
+	                	</div>
+                    	จำนวนตำรวจท่องเที่ยว
+                        <div class="number-group"  style="">
+                            <span class="number"><?php echo number_format($this->guideAmount); ?></span>
+                            <span class="txt">ราย</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="col-md-8">
+                    <div class="charttop" style="">
+	                	<div class="img-icon">
+	                		<img src="<?php echo $this->baseUrl("assets/graph/img/icon_amount/03_arrest.png"); ?>" alt="icon" />
+	                	</div>
+                    	จำนวนมัคคุเทศก์ที่ถูกจับกุม 
+                        <div class="number-group"  style="">
+                            <span class="number"><?php echo number_format($this->guidearrest); ?></span>
+                            <span class="txt">ราย</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row mb-15">
+        
+        </div>
+
+        <div class="row mb-15">
+            <div class="col-md-12">
+                <div class="graph-box-subbox" >
+                    <div class="graph-box-subbox-title header-guide-law">
+                    หัวข้อการกระทำความผิด ของมัคคุเทศก์ที่ถูกจับกุม (ราย)
+                    </div>
+                    <div class="graph-box-subbox-body">
+                        <canvas id="myChart3" ></canvas>	
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="GUIDE_LAW TIC-footer">ที่มา : กองบัญชาการตำรวจท่องเที่ยว</div>
+        <?php if (!empty($this->guideLatestYear)) :?><div class="GUIDE_LAW TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->guideLatestYear + 543; ?></div><?php endif; ?>
+    </div>
+
+<div id="previewImage_guide_law" style="display: none;"></div>
+<a id="downloadImage_guide_law" href="#" style="display: none;"></a>
+
+<div class="graph-button-zone">
+    <a href="<?php echo $this->url(array("module"=>"graph", "controller" => "guide", "action" => "law"), null, true);?>" target="_blank" style="background: linear-gradient(to top, #3388BE, #27A8E2); ">
+        ดูข้อมูลสถิติทั้งหมด
+    </a>
+</div>
+<div class="mb-15"></div>
+
+<script>
+jQuery(function(){
+
+    var ctx1 = document.getElementById('myChart3');
+    var myBarChart  = new Chart(ctx1, {
+        type: 'horizontalBar',
+        data: {
+            labels: [
+                <?php
+                if(count($this->topicguidearrest)>0) {
+                    foreach($this->topicguidearrest as $k => $v) {
+                        echo "'" . $v['AllegationDetailTH'] . "'";
+                        if($k != count($this->topicguidearrest) -1)
+                            echo ",";
+                    }
+                } else {
+                }
+                ?>
+            ],
+            datasets: [{
+                label: "",
+                backgroundColor: '#fea1a2',
+                data: [
+                    <?php
+                    if(count($this->topicguidearrest)>0) {
+                        foreach($this->topicguidearrest as $k => $v) {
+                            echo $v['Amount'];
+                            if($k != count($this->topicguidearrest) -1)
+                                echo ",";
+                        }
+                    } else {
+                    }
+                    ?>
+                ],
+            }]
+        },
+        options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                    
+                    ctx.textAlign = 'center';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    ctx.textBaseline = 'bottom';
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x - data.length * 4, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+                legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        // display: false,
+                        beginAtZero:true,
+                        fontSize: 14
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        // display : false
+                    },
+                    ticks: {
+                        beginAtZero:true,
+                        fontSize: 14
+                    }
+                }]
+            },
+            responsive: true
+        }
+    });
+
+    function setCanvas_law_travel(val) {
+        html2canvas(document.querySelector("#Law_travel")).then(function(canvas) {
+            $("#previewImage_guide_law").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_guide_law").attr("download", "จำนวนมัคคุเทศก์ที่ถูกจับกุม.png").attr("href", newData);
+                $("#downloadImage_guide_law")[0].click();
+                $("#guide_law_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_guide_law canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนมัคคุเทศก์ที่ถูกจับกุม.pdf");
+                $("#guide_law_Export").val('export');
+            }
+        });
+    }
+
+    $("#guide_law_Export").change(function() {
+        setCanvas_law_travel($(this).val());
+    });
+
+
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php if(false): ?>
+
+<style>
+
+.law_travel { margin-bottom: 15px;  margin-top: 30px; background: #cce3f1; padding: 30px 5px 35px; display: inline-block; width: 100%; }
+.law_travel .export { display: inline-block; width: 100%; font-family: 'Kanit Medium';    margin-bottom: 15px; }
+.law_travel .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+.law_travel .export #guide_law_year { margin-right: 4%; }
+.law_travel .static {font-size: 45px;color: black;}
+.law_travel .travel {background-color: white;font-size: 14px;text-align: center;color: #00c0ef;border: 1px solid;    padding: 10px 10px 10px 10px;}
+.law_travel .header-guide-law {background-color: #df8f4a;border: 1px solid;border-color: #df8f4a;margin-top: 15px;color: white;text-align: center;font-size: 15px;    padding-top: 5px;padding-bottom: 5px;}
+.law_travel .chart-police {background-color: white;}
+.law_travel .form-control{ padding: 0px 0px; }
+.law_travel span.law {font-size: 18px;}
+.law_travel .chart-guide-bottom {padding: 30px;}
+.Situation_seeAll_guide_bottom a {color: white;}
+
+.Situation_seeAll_guide_bottom {
+    display: inline-block;
+    font-family: 'Mitr Light';
+    font-size: 17px;
+    padding: 12px 30px 12px;
+    margin-bottom: 35px;
+    color: white;
+    background: linear-gradient(to left, #1994d0, #1892d1);
+    border-radius: 7px;
+    border: 1px solid white;
+}
+</style>
+
+
+<div class="law_travel" id="law_travel">
+    <div class="export">
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            <!-- <?php echo $this->formSelect("guide_law_year", $this->guide_law_year, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?> -->
+            <?php echo $this->formSelect("guide_law_Export", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6 col-md-offset-6 col-sm-offset-6 col-xs-offset-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+
+    <div class="charttoplaw col-md-6 "style="">
+        <div class=" col-md-4"></div>
+            <div class="travel col-md-8" style="">
+                    จำนวนมัคคุเทศก์ที่ถูกตรวจสอบ
+                <br>
+                <div class = "static" style="">
+                    <?php echo number_format($this->guideAmount); ?>
+                    <span class="law">ราย</span>
+                </div>
+            </div>
+        </div>
+
+    <div class="charttop col-md-6"style=" text-align:  center;">
+        <div class="travel col-md-8" style="border:  1px solid;color: #00c0ef;background-color:  white;">
+                จำนวนมัคคุเทศก์ที่ถูกจับกุม
+                <br>
+            <div class = "static" style="">
+                <?php echo number_format($this->guidearrest); ?>
+                <span class="law">ราย</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-guide-bottom">
+        <div class="header-guide-law col-md-12" style="">
+            หัวข้อการกระทำความผิด ของมัคคุเทศก์ที่ถูกจับกุม (ราย)
+        </div>
+
+        
+        <div class="col-md-12" style="border:  1px solid;background-color:  white; border-color: white;">
+            <canvas id="myChart3"></canvas>
+        </div>
+    </div>
+    
+</div>
+
+<div class="col-md-12" style="text-align: center;">
+        <a href="<?php echo $this->url(array("module"=>"graph", "controller" => "guide", "action" => "law"), null, true);?>" target="_blank">
+            <div class="Situation_seeAll_guide_bottom">ดูข้อมูลสถิติทั้งหมด</div>
+        </a>
+</div>
+
+<div id="previewImage_guide_law" style="display: none;"></div>
+<a id="downloadImage_guide_law" href="#In_Out" style="display: none;"></a>
+
+<script>
+jQuery(function(){
+
+    var ctx1 = document.getElementById('myChart3');
+    var myBarChart  = new Chart(ctx1, {
+        type: 'horizontalBar',
+        data: {
+            labels: [
+                <?php
+                if(count($this->topicguidearrest)>0) {
+                    foreach($this->topicguidearrest as $k => $v) {
+                        echo "'" . $v['AllegationDetailTH'] . "'";
+                        if($k != count($this->topicguidearrest) -1)
+                            echo ",";
+                    }
+                } else {
+                }
+                ?>
+            ],
+            datasets: [{
+                label: "",
+                backgroundColor: '#fea1a2',
+                data: [
+                    <?php
+                    if(count($this->topicguidearrest)>0) {
+                        foreach($this->topicguidearrest as $k => $v) {
+                            echo $v['Amount'];
+                            if($k != count($this->topicguidearrest) -1)
+                                echo ",";
+                        }
+                    } else {
+                    }
+                    ?>
+                ],
+            }]
+        },
+        options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                    
+                    ctx.textAlign = 'center';
+                    ctx.font = Chart.helpers.fontString(10, 'normal', 'Tahoma');
+                    ctx.textBaseline = 'bottom';
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x - data.length * 4, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+                legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        // display: false,
+                        beginAtZero:true
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        // display : false
+                    },
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            responsive: true
+        }
+    });
+
+    function setCanvas_law_travel(val) {
+        html2canvas(document.querySelector("#law_travel")).then(function(canvas) {
+            $("#previewImage_guide_law").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_guide_law").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage_guide_law")[0].click();
+                $("#guide_law_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_guide_law canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#guide_law_Export").val('export');
+            }
+        });
+    }
+
+    $("#guide_law_Export").change(function() {
+        setCanvas_law_travel($(this).val());
+    });
+
+
+});
+</script>
+<?php endif; ?>

@@ -1,0 +1,22 @@
+		<?php 
+		if(count($this->dataWatTagList) > 0) {
+		?>
+		<div class="wat-detail-tag">
+			<hr />
+			<div class="title-label">
+				<em class="fa fa-key"></em> <?php echo Emwork_Translate::text($this->lang, "wat", "detail_main_title_keyword"); ?>
+			</div>
+			<div class="tag">
+				<?php	
+				foreach($this->dataWatTagList as $keyword) {	
+				?>
+				<span class="keyword"><?php echo $keyword['Title']; ?></span>
+				<?php
+				}
+				?>				
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<?php 
+		}
+		?>

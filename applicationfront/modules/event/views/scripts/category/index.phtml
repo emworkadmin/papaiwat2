@@ -1,0 +1,114 @@
+<div class="info infopage">
+ 	
+ 	<div>
+    	<div class="event-title-main title-panel">
+			<span class="title">
+				<?php 
+				if(empty($this->pageTitle)){
+					$this->pageTitle = Emwork_Translate::text($this->lang, 'event', 'list_category');
+				}
+				echo $this->pageTitle; 
+				?>
+			</span>
+			<hr />
+		</div>
+    </div>
+ 
+    <div class="result-list-panel">
+    	<div class="result-list" id="result-list"></div>
+    </div>
+	
+	<?php if(!empty($this->id)): ?>
+	
+		<div>
+			<div class="event-title-sub title-panel">
+				<span class="title"><?php echo Emwork_Translate::text($this->lang, 'event', 'list_title'); ?>
+				</span>
+				<hr />
+			</div>
+		</div>
+
+		<div class="result-list-panel">
+			<div class="result-list-evt" id="result-list-evt"></div>
+			<div class="result-paging-evt" style="display: none;">
+				<p class="paging text-right"></p>
+			</div>
+		</div>
+	<?php endif; ?>
+
+</div>
+<script>
+jQuery(function(){
+
+	reloadResultListparent(1);
+	reloadResultList(1);
+
+	function reloadResultList(pageIndex) {
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		$.post("<?php echo $this->url(array('module' => 'event', 'controller' => 'category', 'action' => 'getlist', 'id' => $this->id), null, true); ?>", sendData, function(data){
+			if (data.total > 0) {
+				$("#result-list").html(data.html);
+			} else {
+				$('#result-list').html('');
+				$("#result-list").parent().css("display", "none");
+			}
+		}, 'json');
+	}
+
+	function reloadResultListparent(pageIndex) {
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		$.post("<?php echo $this->url(array('module' => 'event', 'controller' => 'category', 'action' => 'getevents', 'id' => $this->id, 'cid' => $this->cid), null, true); ?>", sendData, function(data){
+			if (data.total > 0) {
+				$("#result-list-evt").html(data.html);
+				$('#result-list-evt .paging').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+			        leaps: false,
+			        firstLastUse: true,
+			        first: '<<',
+			        last: '>>',
+			        next: '>',
+			        prev: '<',
+			        wrapClass: 'pagination',
+			        activeClass: 'active',
+			        disabledClass: 'disabled',
+			        nextClass: 'next',
+			        prevClass: 'prev',
+			        lastClass: 'last',
+			        firstClass: 'first'
+				});
+
+			} else {
+				var html = '';
+				// var html = '';
+				$('#result-list-evt').html(html);
+				$('.paging').bootpag({total : 0});
+			}
+		}, 'json');
+	}
+
+	$('.paging').bootpag({
+        total: 0,
+        maxVisible: 5,
+        leaps: false,
+        firstLastUse: true,
+        first: '<<',
+        last: '>>',
+        next: '>',
+        prev: '<',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+    	reloadResultListparent(num);
+    }); 
+	
+});
+</script>

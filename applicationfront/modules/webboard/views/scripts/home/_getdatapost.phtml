@@ -1,0 +1,82 @@
+<?php 
+	if (count($this->itemData) > 0) :
+		foreach ($this->itemData as $item) :
+			// print_r($this->mainid);exit;
+			// $mainid = $item['MainID'];
+			$id = $item["ID"];
+			$title = $item["Title"];
+			$name = $item["FirstName"]." ".$item["LastName"];
+			$amount = $item["Amount"];
+			$detail = $item["Detail"];
+			$iconid = $item["IconID"];
+			$viewAmount = $item["ViewAmount"];
+			$date = Emwork_Utility_DateTime::MSSqlToDateThai($item['Created'], 'DT_Nd').' '.$item['Created']->format("H:i");
+			$url = $this->url(array("module" => "webboard", "controller" => "home", "action" => "topic", "id" => $this->mainid, "iid" => $id), null, true);
+
+			if($this->filter) :
+				foreach ($this->filter as $item) :
+					$title = str_replace($item['Detail'],'<s>'.$item['Replace'].'</s>', $title);
+					$detail = str_replace($item['Detail'],'<s>'.$item['Replace'].'</s>', $detail);
+				endforeach;
+			endif;
+
+			
+			// print_r( $date);exit;
+
+	?>
+				<div class="inforowData">
+
+					<div class="col-md-2 image"style="padding-top: 15px;">
+						<div class="image-inner">
+							<a href="<?php echo $url; ?>">
+							<img alt="image" src="<?php echo $this->baseUrl("assets/webboard/p".$iconid.".png"); ?>" style="width: 35%;margin: auto auto;display: block;"/>
+							</a>
+						</div>
+					</div>
+
+					<div class="col-md-10 detail"style="padding-top: 15px;">
+
+						<div class="detail-intro" >
+							<a href="<?php echo $url; ?>" style="color:  black;    font-size: 25px;"><?php echo $title; ?></a>
+						</div>
+					
+						<div class="detail-title"style="float:  left;">
+							<span class = 'text'>
+								<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_by'); ?> : 
+							</span>
+							<a href="<?php echo $url; ?>" style="color:  red;"><?php echo $name; ?></a>
+						</div>		
+
+						<div class="detail-title"style="float: left;margin-left: 10px;">
+							<span class = 'text'>
+								<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_created_post'); ?>
+							</span>
+							<a href="<?php echo $url; ?>"  style="color:  black;"><?php echo $date; ?></a>
+						</div>	
+
+						<div class=" detail-title" style="float:  right;">
+							<em class="fa fa-eye"></em><a href="<?php echo $url; ?>"  style="color:  black;margin-right: 5px;"><?php echo $viewAmount == null ? '0' : $viewAmount  ?></a>
+							<span class = 'text' style="float:  right;">
+								<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_amount'); ?>
+							</span>
+						</div>		
+
+						<div class=" detail-title" style="float:  right;">
+							<em class="fa fa-comment"></em><a href="<?php echo $url; ?>"  style="color:  black; margin-right: 5px;"><?php echo $amount; ?></a>
+							<span class = ' text' style="float:  right;">
+								<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_response'); ?>
+							</span>	
+						</div>	
+
+					</div>
+					<div class="clearfix"></div>
+				</div>
+
+	<?php 
+
+
+		endforeach;
+	endif;
+	?>
+
+

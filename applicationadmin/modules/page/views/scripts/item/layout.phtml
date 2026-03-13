@@ -1,0 +1,798 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/colorpicker/css/bootstrap-colorpicker.min.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/colorpicker/js/bootstrap-colorpicker.min.js"); ?>'></script>
+
+<!-- jQuery UI 1.11.4 -->
+<script src="<?php echo $this->baseUrl("plugins/jQueryUI/jquery-ui.min.js"); ?>"></script>
+
+<style>
+.section {border: 1px solid #000; margin-top: 15px;}
+.section .section-header {background-color: #000; padding: 5px 10px; color: #fff;}
+.section .section-header em.handle {cursor: move;}
+.section .section-header .pull-right em {cursor: pointer;}
+.section .section-body {padding: 5px 10px;}
+
+.section-box {border: 1px solid #ccc; margin-top: 15px;}
+.section-box .section-box-header {background-color: #666; padding: 5px 10px; color: #fff;}
+.section-box .section-box-header .pull-right em{cursor: pointer;}
+.section-box .section-box-body {padding: 5px 10px;}
+
+.section-widget {border: 1px solid #ccc; margin-top: 15px;}
+.section-widget .section-widget-header {background-color: #ccc; padding: 5px 10px; color: #fff;}
+.section-widget .section-widget-header .pull-right em{cursor: pointer;}
+.section-widget .section-widget-body {padding: 5px 10px;}
+
+.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; }
+
+.section-dialog {display: none;}
+.divRowSetting .section-dialog {display: block;}
+
+.section-box-dialog {display: none;}
+.divColSetting .section-box-dialog {display: block;}
+
+.section-widget-dialog {display: none;}
+.divWidgetSetting .section-widget-dialog {display: block;}
+
+.row .ui-sortable-placeholder {margin-right: 15px; margin-left: 15px;}
+</style>
+
+
+<div class="panel-detail">
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden('hdfID', $this->data->ID, null, null); ?>
+		
+		<div class="title-label">ปรับโครงสร้าง</div>		
+		<?php // Button Add Row ?>
+		<div class="text-right">
+			<button type="button" class="btn btn-primary btn-add-section"  id="btnAddSection">
+				<em class="fa fa-plus"></em> เพิ่ม Row
+			</button>
+		</div>
+		
+		<div id="section-manage">
+			<?php 
+			$options = json_decode($this->data->Options);
+			if (count($options) > 0) :
+				foreach ($options as $rowGuid => $rowOption) : 
+					$rowOptionSetting = json_decode($rowOption->setting);
+					$rowOptionSettingName = $rowOptionSetting->Name;
+			?>
+			<div class="section" >
+				<div class="section-header">
+					<em class="fa fa-bars handle"></em>
+					<span class="title"><strong>Row</strong> <span class="section-header-title" data-rguid="<?php echo $rowGuid; ?>"><?php echo (empty($rowOptionSettingName) ? "" : " : " . $rowOptionSettingName)?></span></span>
+					<span class="pull-right">
+						<em class="fa fa-gear setting" data-rguid="<?php echo $rowGuid; ?>"></em>
+						<em class="fa fa-trash remove" data-rguid="<?php echo $rowGuid; ?>"></em>
+					</span>
+				</div>
+				<div class="section-body">
+					<?php echo $this->formHidden('row[' . $rowGuid . '][setting]', ($rowOption->setting)); ?>
+				
+					<div class="section-box-part" data-rguid="<?php echo $rowGuid; ?>">
+						<div class="text-right">
+							<button type="button" class="btn btn-primary btn-add-box" >
+								<em class="fa fa-plus"></em> เพิ่ม Column
+							</button>
+						</div>
+						<div class="section-box-part-list">
+							<div class="row">			
+								<?php 
+								$cols = $rowOption->cols;
+								if (count($cols) > 0) : 
+									foreach($cols as $colGuid => $colOption) : 
+										$colOptionSetting = json_decode($colOption->setting); 
+										$colOptionSettingColSize = empty($colOptionSetting->ColSize) ? "6" : $colOptionSetting->ColSize;
+										$colOptionSettingName = $colOptionSetting->Name;
+								?>
+								<div class="col-md-<?php echo $colOptionSettingColSize; ?>">
+									<div class="section-box" >
+										<div class="section-box-header">
+											<em class="fa fa-bars handle-box"></em>
+											<span class="title"><strong>Column</strong> <span class="section-box-header-title" data-cguid="<?php echo $colGuid; ?>" data-rguid="<?php echo $rowGuid; ?>"><?php echo (empty($colOptionSettingName) ? "" : " : " . $colOptionSettingName)?></span></span>
+											<span class="pull-right">
+												<em class="fa fa-gear setting-box" data-cguid="<?php echo $colGuid; ?>" data-rguid="<?php echo $rowGuid; ?>"></em>
+												<em class="fa fa-trash remove-box" data-cguid="<?php echo $colGuid; ?>" data-rguid="<?php echo $rowGuid; ?>"></em>
+											</span>
+										</div>
+										<div class="section-box-body">
+											<?php echo $this->formHidden('row[' . $rowGuid . '][cols][' . $colGuid . '][setting]', ($colOption->setting)); ?>
+											
+											<div class="section-widget-part" data-cguid="<?php echo $colGuid; ?>" data-rguid="<?php echo $rowGuid; ?>">
+												<div class="text-right">
+													<button type="button" class="btn btn-primary btn-add-widget" >
+														<em class="fa fa-plus"></em> เพิ่ม Widget
+													</button>
+												</div>
+												<div class="section-widget-part-list">
+													<?php 
+													$widgets = $colOption->widgets;
+													if (count($widgets) > 0) : 
+														foreach($widgets as $widgetGuid => $widgetOption) :
+															$widgetOptionSetting = json_decode($widgetOption->setting);
+															$widgetOptionSettingName = $widgetOptionSetting->Name;
+													?>
+													<div class="section-widget">
+														<div class="section-widget-header">
+															<em class="fa fa-bars handle-widget"></em>
+															<span class="title"><strong>Widget</strong> <span class="section-widget-header-title" data-cguid="<?php echo $colGuid; ?>" data-rguid="<?php echo $rowGuid; ?>" data-wguid="<?php echo $widgetGuid; ?>"><?php echo (empty($widgetOptionSettingName) ? "" : " : " . $widgetOptionSettingName)?></span></span>
+															<span class="pull-right">
+																<em class="fa fa-gear setting-widget" data-cguid="<?php echo $colGuid; ?>" data-rguid="<?php echo $rowGuid; ?>" data-wguid="<?php echo $widgetGuid; ?>"></em>
+																<em class="fa fa-trash remove-widget" data-cguid="<?php echo $colGuid; ?>" data-rguid="<?php echo $rowGuid; ?>" data-wguid="<?php echo $widgetGuid; ?>"></em>
+															</span>
+															<?php echo $this->formHidden('row[' . $rowGuid . '][cols][' . $colGuid . '][widgets][' . $widgetGuid . '][setting]', ($widgetOption->setting)); ?>
+														</div>
+													</div>
+													<?php 
+														endforeach;
+													endif;
+													?>
+												</div>
+											</div>									
+										</div>
+									</div>
+								</div>
+								<?php 
+									endforeach;
+								endif;
+								?>
+							</div>
+						</div>
+					</div>		
+				</div>
+			</div>
+			<?php 
+				endforeach;
+			endif;
+			?>		
+		</div>
+		
+		
+		<hr />
+		
+		<?php // Button Zone ?>
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canManage) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+				<?php endif ; ?>
+
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<div id="section-temp" style="display: none;" >
+	<div class="section-header">
+		<em class="fa fa-bars handle"></em>
+		<span class="title"><strong>Row</strong> <span class="section-header-title" data-rguid="row_guid"></span></span>
+		<span class="pull-right">
+			<em class="fa fa-gear setting" data-rguid="row_guid"></em>
+			<em class="fa fa-trash remove" data-rguid="row_guid"></em>
+		</span>
+	</div>
+	<div class="section-body">
+		<?php echo $this->formHidden('row[row_guid][setting]', "{}"); ?>
+	
+		<div class="section-box-part" data-rguid="row_guid">
+			<div class="text-right">
+				<button type="button" class="btn btn-primary btn-add-box" >
+					<em class="fa fa-plus"></em> เพิ่ม Column
+				</button>
+			</div>
+			<div class="section-box-part-list"><div class="row"></div></div>
+		</div>		
+	</div>
+</div>
+
+<div id="section-box-temp" style="display: none;">
+	<div class="section-box-header">
+		<em class="fa fa-bars handle-box"></em>
+		<span class="title"><strong>Column</strong> <span class="section-box-header-title" data-cguid="col_guid" data-rguid="row_guid"></span></span>
+		<span class="pull-right">
+			<em class="fa fa-gear setting-box" data-cguid="col_guid" data-rguid="row_guid"></em>
+			<em class="fa fa-trash remove-box" data-cguid="col_guid" data-rguid="row_guid"></em>
+		</span>
+	</div>
+	<div class="section-box-body">
+		<?php echo $this->formHidden('row[row_guid][cols][col_guid][setting]', '{"ColSize" : "6"}'); ?>
+		
+		<div class="section-widget-part" data-cguid="col_guid" data-rguid="row_guid">
+			<div class="text-right">
+				<button type="button" class="btn btn-primary btn-add-widget" >
+					<em class="fa fa-plus"></em> เพิ่ม Widget
+				</button>
+			</div>
+			<div class="section-widget-part-list"></div>
+		</div>
+		
+	</div>
+</div>
+
+
+<div id="section-widget-temp" style="display: none;">
+	<div class="section-widget-header">
+		<em class="fa fa-bars handle-widget"></em>
+		<span class="title"><strong>Widget</strong> <span class="section-widget-header-title" data-cguid="col_guid" data-rguid="row_guid" data-wguid="widget_guid"></span></span>
+		<span class="pull-right">
+			<em class="fa fa-gear setting-widget" data-cguid="col_guid" data-rguid="row_guid" data-wguid="widget_guid"></em>
+			<em class="fa fa-trash remove-widget" data-cguid="col_guid" data-rguid="row_guid" data-wguid="widget_guid"></em>
+		</span>
+		<?php echo $this->formHidden('row[row_guid][cols][col_guid][widgets][widget_guid][setting]', "{}"); ?>
+	</div>
+</div>
+
+<div id="section-dialog" class="section-dialog">
+	<form class="" id="formSectionDialog" name="formSectionDialog">
+		<div class="form-group">
+			<label for="txtName">Name</label>
+			<?php echo $this->formText('txtName', null, array('class' => 'form-control')); ?>
+			<div class="help-block">สำหรับกำหนดเป็นชื่อ Row และควรตั้งชื่อเป็นภาษาอังกฤษ</div>
+		</div>
+		<div class="form-group">
+			<label for="txtTitle">Title</label>
+			<?php echo $this->formText('txtTitle', null, array('class' => 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<label for="lstTitleHeader">Title Header</label>
+			<?php echo $this->formSelect('lstTitleHeader', null, array('class' => 'form-control'), $this->titleHeaderOption); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtTitleFontSize">Title Font Size</label>
+			<?php echo $this->formText('txtTitleFontSize', null, array('class' => 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<label for="lstTitleFontWeight" >Title Font Weight</label>
+			<?php echo $this->formSelect('lstTitleFontWeight', null, array('class' => 'form-control'), $this->fontWeightOption); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtTitleColor">Title Color</label>
+			<div class="input-group colorpicker-group">
+				<?php echo $this->formText('txtTitleColor', null, array('class' => 'form-control')); ?>
+				<div class="input-group-addon">
+					<i></i>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="txtTitleMarginTop">Title Margin Top</label>
+			<?php echo $this->formText('txtTitleMarginTop', null, array('class' => 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtTitleMarginBottom">Title Margin Bottom</label>
+			<?php echo $this->formText('txtTitleMarginBottom', null, array('class' => 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtSubTitle">Sub Title</label>
+			<?php echo $this->formTextarea('txtSubTitle', null, array('class' => 'form-control', "rows" => '5')); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtSubTitleFontSize">Sub Title Font Size</label>
+			<?php echo $this->formText('txtSubTitleFontSize', null, array('class' => 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<label for="lstTitleAlign">Title Align</label>
+			<?php echo $this->formSelect('lstTitleAlign', null, array('class' => 'form-control'), $this->alignOption); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtFontColor">Font Color</label>
+			<div class="input-group colorpicker-group">
+				<?php echo $this->formText('txtFontColor', null, array('class' => 'form-control')); ?>
+				<div class="input-group-addon">
+					<i></i>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="txtBackgroundColor">Background Color</label>
+			<div class="input-group colorpicker-group">
+				<?php echo $this->formText('txtBackgroundColor', null, array('class' => 'form-control')); ?>
+				<div class="input-group-addon">
+					<i></i>
+				</div>
+			</div>
+		</div>
+		<div class="form-group" style="display: none;">
+			<label for="lstTitleAlign">Background Image</label>
+		</div>
+		<div class="form-group" style="display: none;">
+			<label for="lstBackgroundRepeat">Background Repeat</label>
+			<?php echo $this->formSelect('lstBackgroundRepeat', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgRepeatOption)); ?>
+		</div>
+		<div class="form-group" style="display: none;">
+			<label for="lstBackgroundSize">Background Size</label>
+			<?php echo $this->formSelect('lstBackgroundSize', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgSizeOption)); ?>
+		</div>
+		<div class="form-group" style="display: none;">
+			<label for="lstBackgroundAttachment">Background Attachment</label>
+			<?php echo $this->formSelect('lstBackgroundAttachment', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgAttachmentOption)); ?>
+		</div>
+		<div class="form-group" style="display: none;">
+			<label for="lstBackgroundPosition">Background Position</label>
+			<?php echo $this->formSelect('lstBackgroundPosition', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgPositionOption)); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtPadding">Padding</label>
+			<?php echo $this->formText('txtPadding', null, array('class' => 'form-control', 'maxlength' => '100')); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtMargin">Margin</label>
+			<?php echo $this->formText('txtMargin', null, array('class' => 'form-control', 'maxlength' => '100')); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtRowID">Row ID</label>
+			<?php echo $this->formText('txtRowID', null, array('class' => 'form-control', 'maxlength' => '100')); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtCssClass">Css Class</label>
+			<?php echo $this->formText('txtCssClass', null, array('class' => 'form-control', 'maxlength' => '100')); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtCssClass">Fluid Width</label>
+			<div class="radio">
+				<?php echo $this->formCheckbox('chkFluid', null, array('class' => '')); ?> Yes
+			</div>
+		</div>
+	</form>
+</div>
+
+<div id="section-box-dialog" class="section-box-dialog">
+	<form class="" id="formSectionBoxDialog" name="formSectionBoxDialog">
+		<div class="form-group">
+			<label for="txtName">Name</label>
+			<?php echo $this->formText('txtName', null, array('class' => 'form-control')); ?>
+			<div class="help-block">สำหรับกำหนดเป็นชื่อ Column และควรตั้งชื่อเป็นภาษาอังกฤษ</div>
+		</div>
+		<div class="form-group">
+			<label for="txtFontColor">Font Color</label>
+			<div class="input-group colorpicker-group">
+				<?php echo $this->formText('txtFontColor', null, array('class' => 'form-control')); ?>
+				<div class="input-group-addon">
+					<i></i>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="txtBackgroundColor">Background Color</label>
+			<div class="input-group colorpicker-group">
+				<?php echo $this->formText('txtBackgroundColor', null, array('class' => 'form-control')); ?>
+				<div class="input-group-addon">
+					<i></i>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="txtPadding">Padding</label>
+			<?php echo $this->formText('txtPadding', null, array('class' => 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<label for="lstAnimationType">Animation Type</label>
+			<?php echo $this->formSelect('lstAnimationType', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->animateOption)); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtAnimationDuration">Animation Duration (ms)</label>
+			<?php echo $this->formText('txtAnimationDuration', null, array('class' => 'form-control', 'maxlength' => '100')); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtAnimationDelay">Animation Delay (ms)</label>
+			<?php echo $this->formText('txtAnimationDelay', null, array('class' => 'form-control', 'maxlength' => '100')); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtCssClass">Css Class</label>
+			<?php echo $this->formText('txtCssClass', null, array('class' => 'form-control', 'maxlength' => '100')); ?>
+		</div>
+		<div class="form-group" >
+			<label for="lstColSize">ขนาดของกล่อง</label>
+			<?php echo $this->formSelect('lstColSize', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->layoutBoxSizeOption)); ?>
+		</div>
+	</form>
+</div>
+
+<div id="section-widget-dialog" class="section-widget-dialog">
+	<form class="" id="formSectionWidgetDialog" name="formSectionWidgetDialog">
+		<div class="form-group">
+			<label for="txtName">Name</label>
+			<?php echo $this->formText('txtName', null, array('class' => 'form-control')); ?>
+			<div class="help-block">สำหรับกำหนดเป็นชื่อ Widget และควรตั้งชื่อเป็นภาษาอังกฤษ</div>
+		</div>
+		<div class="form-group">
+			<label for="txtTitle">Title</label>
+			<?php echo $this->formText('txtTitle', null, array('class' => 'form-control', 'maxlength' => '250')); ?>
+		</div>
+		<div class="form-group">
+			<label for="lstTitleHeader">Title Header</label>
+			<?php echo $this->formSelect('lstTitleHeader', null, array('class' => 'form-control'), $this->titleHeaderOption); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtTitleFontSize">Title Font Size</label>
+			<?php echo $this->formText('txtTitleFontSize', null, array('class' => 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<label for="lstTitleFontWeight" >Title Font Weight</label>
+			<?php echo $this->formSelect('lstTitleFontWeight', null, array('class' => 'form-control'), $this->fontWeightOption); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtTitleMarginTop">Title Margin Top</label>
+			<?php echo $this->formText('txtTitleMarginTop', null, array('class' => 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtTitleMarginBottom">Title Margin Bottom</label>
+			<?php echo $this->formText('txtTitleMarginBottom', null, array('class' => 'form-control')); ?>
+		</div>
+		<div class="form-group">
+			<label for="txtTitleColor">Title Color</label>
+			<div class="input-group colorpicker-group">
+				<?php echo $this->formText('txtTitleColor', null, array('class' => 'form-control')); ?>
+				<div class="input-group-addon">
+					<i></i>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="txtCssClass">Css Class</label>
+			<?php echo $this->formText('txtCssClass', null, array('class' => 'form-control', 'maxlength' => '100')); ?>
+		</div>
+		<div class="form-group">
+			<label for="lstWidgetType">Widget Type</label>
+			<?php echo $this->formSelect('lstWidgetType', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->widgetTypeOption)); ?>
+		</div>
+	</form>
+</div>
+
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+
+<script>
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });    
+	//$('#formData .colorpicker-group').colorpicker({autoInputFallback: false, useAlpha: false});
+	//$('.colorpicker-group').colorpicker({autoInputFallback: false, useAlpha: false});
+
+	$( "#section-manage" ).sortable({handle: '.handle',cursor: 'move', update: function ( event, ui ){ }, start: function ( event, ui ){ $("#section-manage .section-body").css("display", "none"); ui.item.css("height", $(".section-header", ui.item).height()); ui.placeholder.height(ui.item.height()); $("#section-manage").sortable( "refreshPositions" ); }, stop: function ( event, ui ){ $("#section-manage .section-body").css("display", "");  }}).disableSelection();
+	$( "#section-manage .section-box-part-list .row" ).sortable({
+		handle: '.handle-box',
+		cursor: 'move', 
+		update: function ( event, ui ){  }, 
+		start: function ( event, ui ){  }, 
+		start: function ( event, ui ){ 
+			$(ui.item).parents(".section-box-part-list .row").find("[class^=col-md]").css("width", "100%"); 
+			$(ui.item).parents(".section-box-part-list .row").find(".section-box-body").css("display", "none"); 
+			ui.item.height($(".section-box-header", ui.item).height()); 
+			ui.placeholder.height(ui.item.height()); 
+			ui.placeholder.width(ui.item.width() - 50 + 5); 
+			$(ui.item).parents(".section-box-part-list .row").sortable( "refreshPositions" ); 
+		}, 
+		stop: function ( event, ui ){ 
+			$(ui.item).parents(".section-box-part-list .row").find("[class^=col-md]").css("width", "");
+			$(ui.item).parents(".section-box-part-list .row").find(".section-box-body").css("display", "");  
+		}
+	}).disableSelection();
+	$( "#section-manage .section-box-part-list .section-widget-part-list").sortable({
+		handle: '.handle-widget',
+		cursor: 'move', 
+		update: function ( event, ui ){ }, 
+		start: function ( event, ui ){ }, 
+		stop: function ( event, ui ){ }
+	}).disableSelection();
+	
+	$("#btnAddSection").click(function(){
+		var rguid = uuidv4();
+		var html = $("#section-temp").html();
+		html = html.replace(/row_guid/g , rguid);
+		var section = $("<div class='section'></div>").append(html);
+		section.find(".section-box-part-list .row").sortable({
+			handle: '.handle-box',
+			cursor: 'move', 
+			update: function ( event, ui ){ }, 
+			start: function ( event, ui ){ 
+				$(ui.item).parents(".section-box-part-list .row").find("[class^=col-md]").css("width", "100%"); 
+				$(ui.item).parents(".section-box-part-list .row").find(".section-box-body").css("display", "none"); 
+				ui.item.height($(".section-box-header", ui.item).height()); 
+				ui.placeholder.height(ui.item.height()); 
+				ui.placeholder.width(ui.item.width() - 50 + 5); 
+				console.log(ui.placeholder);
+				$(ui.item).parents(".section-box-part-list .row").sortable( "refreshPositions" ); 
+			}, 
+			stop: function ( event, ui ){ 
+				$(ui.item).parents(".section-box-part-list .row").find("[class^=col-md]").css("width", "");
+				$(ui.item).parents(".section-box-part-list .row").find(".section-box-body").css("display", "");  
+			}
+		}).disableSelection();
+		$("#section-manage").append(section);
+	});
+
+	$("#section-manage")
+	.on("click", ".btn-add-box", function(){
+		var rguid = $(this).parents(".section-box-part").data('rguid');
+		var cguid = uuidv4();
+		var html = $("#section-box-temp").html();
+		html = html.replace(/row_guid/g , rguid);
+		html = html.replace(/col_guid/g , cguid);
+		var sectionBox = $("<div class='section-box'></div>").append(html);
+		var sectionBoxCol = $("<div class='col-md-6'></div>").append(sectionBox);
+		sectionBoxCol.find(".section-widget-part-list").sortable({
+			handle: '.handle-widget',
+			cursor: 'move', 
+			update: function ( event, ui ){ }, 
+			start: function ( event, ui ){ }, 
+			stop: function ( event, ui ){ }
+		}).disableSelection();
+		$(this).parents(".section-box-part").find(".section-box-part-list .row").append(sectionBoxCol);
+	})
+	.on("click", ".setting", function(){
+		var rguid = $(this).data('rguid');
+		// parse json 
+		var data = $("#row-" + rguid + "-setting").val();
+		var dataObj = JSON.parse(data);
+		//var formHtml = $("#section-dialog").html();
+		//var form = $(formHtml);
+		var form = $("#section-dialog").clone();
+		$("#txtName", form).val(dataObj.Name);
+		$("#txtTitle", form).val(dataObj.Title);
+		$("#lstTitleHeader", form).val(dataObj.TitleHeader);
+		$("#txtTitleFontSize", form).val(dataObj.TitleFontSize);
+		$("#lstTitleFontWeight", form).val(dataObj.TitleFontWeight);
+		$("#txtTitleColor", form).val(dataObj.TitleColor);
+		$("#txtTitleMarginTop", form).val(dataObj.TitleMarginTop);
+		$("#txtTitleMarginBottom", form).val(dataObj.TitleMarginBottom);
+		$("#txtSubTitle", form).val(dataObj.SubTitle);
+		$("#txtSubTitleFontSize", form).val(dataObj.SubTitleFontSize);
+		$("#lstTitleAlign", form).val(dataObj.TitleAlign);
+		$("#txtFontColor", form).val(dataObj.FontColor);
+		$("#txtBackgroundColor", form).val(dataObj.BackgroundColor);
+		$("#lstBackgroundRepeat", form).val(dataObj.BackgroundRepeat);
+		$("#lstBackgroundSize", form).val(dataObj.BackgroundSize);
+		$("#lstBackgroundAttachment", form).val(dataObj.BackgroundAttachment);
+		$("#lstBackgroundPosition", form).val(dataObj.BackgroundPosition);
+		$("#txtPadding", form).val(dataObj.Padding);
+		$("#txtMargin", form).val(dataObj.Margin);
+		$("#txtRowID", form).val(dataObj.RowID);
+		$("#txtCssClass", form).val(dataObj.CssClass);
+		$("#chkFluid", form).prop("checked", dataObj.Fluid == 1);
+		$('.colorpicker-group', form).colorpicker({autoInputFallback: false, useAlpha: false});
+		var dialogRowSetting = BootstrapDialog.show({
+			title: 'ตั้งค่า Row',
+			message: form,
+			closable: true,
+            closeByBackdrop: false,
+            closeByKeyboard: false,
+            autodestroy: true,
+            size: BootstrapDialog.SIZE_WIDE,
+            cssClass: "divRowSetting",
+			buttons : [{
+				label: ' บันทึก',
+				icon: 'fa fa-save',
+				cssClass: 'btn-primary',
+				action: function(dialog) {
+					var obj = {};
+					obj.Name = $("#txtName", ".divRowSetting").val();
+					obj.Title = $("#txtTitle", ".divRowSetting").val();
+					obj.TitleHeader = $("#lstTitleHeader", ".divRowSetting").val();
+					obj.TitleFontSize = $("#txtTitleFontSize", ".divRowSetting").val();
+					obj.TitleFontWeight = $("#lstTitleFontWeight", ".divRowSetting").val();
+					obj.TitleColor = $("#txtTitleColor", ".divRowSetting").val();
+					obj.TitleMarginTop = $("#txtTitleMarginTop", ".divRowSetting").val();
+					obj.TitleMarginBottom = $("#txtTitleMarginBottom", ".divRowSetting").val();
+					obj.SubTitle = $("#txtSubTitle", ".divRowSetting").val();
+					obj.SubTitleFontSize = $("#txtSubTitleFontSize", ".divRowSetting").val();
+					obj.TitleAlign = $("#lstTitleAlign", ".divRowSetting").val();
+					obj.FontColor = $("#txtFontColor", ".divRowSetting").val();
+					obj.BackgroundColor = $("#txtBackgroundColor", ".divRowSetting").val();
+					obj.BackgroundRepeat = $("#lstBackgroundRepeat", ".divRowSetting").val();
+					obj.BackgroundSize = $("#lstBackgroundSize", ".divRowSetting").val();
+					obj.BackgroundAttachment = $("#lstBackgroundAttachment", ".divRowSetting").val();
+					obj.BackgroundPosition = $("#lstBackgroundPosition", ".divRowSetting").val();
+					obj.Padding = $("#txtPadding", ".divRowSetting").val();
+					obj.Margin = $("#txtMargin", ".divRowSetting").val();
+					obj.RowID = $("#txtRowID", ".divRowSetting").val();
+					obj.CssClass = $("#txtCssClass", ".divRowSetting").val();
+					obj.Fluid = $("#chkFluid", ".divRowSetting").is(':checked') ? 1 : 0;
+					$("#row-" + rguid + "-setting").val(JSON.stringify(obj));
+					$(".section-header-title[data-rguid='" + rguid + "']").text((obj.Name == "") ? "" : " : " + obj.Name);
+					dialog.close();
+				}
+			}, {
+				label: ' ปิด',
+				icon: 'fa fa-times',
+				action: function(dialog) {
+					dialog.close();
+				}
+			}]
+		});
+		dialogRowSetting.open();
+	})
+	.on("click", ".remove", function(){
+		$(this).parents(".section").remove();
+	})
+	.on("click", ".setting-box", function(){
+		var rguid = $(this).data('rguid');
+		var cguid = $(this).data('cguid');
+		// parse json 
+		var data = $("#row-" + rguid + "-cols-" + cguid + "-setting").val();
+		var dataObj = JSON.parse(data);
+		var form = $("#section-box-dialog").clone();
+		$("#txtName", form).val(dataObj.Name);
+		$("#txtFontColor", form).val(dataObj.FontColor);
+		$("#txtPadding", form).val(dataObj.Padding);
+		$("#txtCssClass", form).val(dataObj.CssClass);
+		$("#txtBackgroundColor", form).val(dataObj.BackgroundColor);
+		$("#lstAnimationType", form).val(dataObj.AnimationType);
+		$("#txtAnimationDuration", form).val(dataObj.AnimationDuration);
+		$("#txtAnimationDelay", form).val(dataObj.AnimationDelay);
+		$("#lstColSize", form).val(dataObj.ColSize);
+		$('.colorpicker-group', form).colorpicker({autoInputFallback: false, useAlpha: false});
+		var dialogColSetting = BootstrapDialog.show({
+			title: 'ตั้งค่า Column',
+			message: form,
+			closable: true,
+            closeByBackdrop: false,
+            closeByKeyboard: false,
+            autodestroy: true,
+            size: BootstrapDialog.SIZE_WIDE,
+            cssClass: "divColSetting",
+			buttons : [{
+				label: ' บันทึก',
+				icon: 'fa fa-save',
+				cssClass: 'btn-primary',
+				action: function(dialog) {
+					var obj = {};
+					obj.Name = $("#txtName", ".divColSetting").val();
+					obj.FontColor = $("#txtFontColor", ".divColSetting").val();
+					obj.Padding = $("#txtPadding", ".divColSetting").val();
+					obj.CssClass = $("#txtCssClass", ".divColSetting").val();
+					obj.BackgroundColor = $("#txtBackgroundColor", ".divColSetting").val();
+					obj.AnimationType = $("#lstAnimationType", ".divColSetting").val();
+					obj.AnimationDuration = $("#txtAnimationDuration", ".divColSetting").val();
+					obj.AnimationDelay = $("#txtAnimationDelay", ".divColSetting").val();
+					obj.ColSize = $("#lstColSize", ".divColSetting").val();
+					$("#row-" + rguid + "-cols-" + cguid + "-setting").val(JSON.stringify(obj));
+					$("#row-" + rguid + "-cols-" + cguid + "-setting").parents(".section-box").parent().attr("class", "col-md-" + obj.ColSize);
+					$(".section-box-header-title[data-rguid='" + rguid + "'][data-cguid='" + cguid + "']").text((obj.Name == "") ? "" : " : " + obj.Name);
+					dialog.close();
+				}
+			}, {
+				label: ' ปิด',
+				icon: 'fa fa-times',
+				action: function(dialog) {
+					dialog.close();
+				}
+			}]
+		});
+		dialogColSetting.open();
+	})
+	.on("click", ".remove-box", function(){
+		$(this).parents(".section-box").remove();
+	})
+	.on("click", ".btn-add-widget", function(){
+		var rguid = $(this).parents(".section-widget-part").data('rguid');
+		var cguid = $(this).parents(".section-widget-part").data('cguid');
+		var wguid = uuidv4();
+		var html = $("#section-widget-temp").html();
+		html = html.replace(/row_guid/g , rguid);
+		html = html.replace(/col_guid/g , cguid);
+		html = html.replace(/widget_guid/g , wguid);
+		var sectionWidget = $("<div class='section-widget'></div>").append(html);
+		$(this).parents(".section-widget-part").find(".section-widget-part-list").append(sectionWidget);
+	})
+	.on("click", ".setting-widget", function(){
+		var rguid = $(this).data('rguid');
+		var cguid = $(this).data('cguid');
+		var wguid = $(this).data('wguid');
+		// parse json 
+		var data = $("#row-" + rguid + "-cols-" + cguid + "-widgets-" + wguid + "-setting").val();console.log("#row-" + rguid + "-cols-" + cguid + "-widgets-" + wguid + "-setting");
+		var dataObj = JSON.parse(data);
+		var form = $("#section-widget-dialog").clone();
+		$("#txtName", form).val(dataObj.Name);
+		$("#txtTitle", form).val(dataObj.Title);
+		$("#lstTitleHeader", form).val(dataObj.TitleHeader);
+		$("#txtTitleFontSize", form).val(dataObj.TitleFontSize);
+		$("#lstTitleFontWeight", form).val(dataObj.TitleFontWeight);
+		$("#txtTitleColor", form).val(dataObj.TitleColor);
+		$("#txtTitleMarginTop", form).val(dataObj.TitleMarginTop);
+		$("#txtTitleMarginBottom", form).val(dataObj.TitleMarginBottom);
+		$("#lstWidgetType", form).val(dataObj.WidgetType);
+		$("#txtCssClass", form).val(dataObj.CssClass);		
+		$('.colorpicker-group', form).colorpicker({autoInputFallback: false, useAlpha: false});
+		var dialogWidgetSetting = BootstrapDialog.show({
+			title: 'ตั้งค่า Widget',
+			message: form,
+			closable: true,
+            closeByBackdrop: false,
+            closeByKeyboard: false,
+            autodestroy: true,
+            size: BootstrapDialog.SIZE_WIDE,
+            cssClass: "divWidgetSetting",
+			buttons : [{
+				label: ' บันทึก',
+				icon: 'fa fa-save',
+				cssClass: 'btn-primary',
+				action: function(dialog) {
+					var obj = {};
+					obj.Name = $("#txtName", ".divWidgetSetting").val();
+					obj.Title = $("#txtTitle", ".divWidgetSetting").val();
+					obj.TitleHeader = $("#lstTitleHeader", ".divWidgetSetting").val();
+					obj.TitleFontSize = $("#txtTitleFontSize", ".divWidgetSetting").val();
+					obj.TitleFontWeight = $("#lstTitleFontWeight", ".divWidgetSetting").val();
+					obj.TitleColor = $("#txtTitleColor", ".divWidgetSetting").val();
+					obj.TitleMarginTop = $("#txtTitleMarginTop", ".divWidgetSetting").val();
+					obj.TitleMarginBottom = $("#txtTitleMarginBottom", ".divWidgetSetting").val();
+					obj.WidgetType = $("#lstWidgetType", ".divWidgetSetting").val();
+					obj.CssClass = $("#txtCssClass", ".divWidgetSetting").val();
+					$("#row-" + rguid + "-cols-" + cguid + "-widgets-" + wguid + "-setting").val(JSON.stringify(obj));
+					$(".section-widget-header-title[data-rguid='" + rguid + "'][data-cguid='" + cguid + "'][data-wguid='" + wguid + "']").text((obj.Name == "") ? "" : " : " + obj.Name);
+					dialog.close();
+				}
+			}, {
+				label: ' ปิด',
+				icon: 'fa fa-times',
+				action: function(dialog) {
+					dialog.close();
+				}
+			}]
+		});
+		dialogWidgetSetting.open();
+	})
+	.on("click", ".remove-widget", function(){
+		$(this).parents(".section-widget").remove();
+	})
+	.on("change", ".section-name-ctrl", function(){
+		$(this).parents(".section").find(".section-header-title").text(": " + $(this).val());
+	})
+	;
+
+    <?php if ($this->canManage) : ?>
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'page', 'controller' => 'item', 'action' => 'updatelayout'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'page', 'controller' => 'item', 'action' => 'layout', 'itemid' => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif; ?>
+
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'page', 'controller' => 'item', 'action' => 'edit', 'itemid' => $this->data->ID), null, true); ?>";
+	});
+
+});
+
+</script>
+
+
+
+
+
+

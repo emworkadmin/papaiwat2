@@ -1,0 +1,19 @@
+		<?php 
+		$introText = $this->data->IntroText;
+		if (trim(str_replace("\n", "", str_replace("\r", "", $introText)))) :
+		?>
+		<div class="wat-detail-intro">
+			<div class="row">
+				<div class="col-md-3">
+					<div class="introimage">
+						<img src="<?php echo $this->data->IntroImage; ?>" />
+					</div>
+				</div>
+				<div class="col-md-9">
+					<div class="introtext">
+						<?php echo $this->data->IntroText; ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>

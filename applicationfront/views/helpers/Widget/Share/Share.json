@@ -1,0 +1,13 @@
+{
+	"name" : "share",
+	"fields" : [
+		{
+			"name" : "addtihsID",
+			"type" : "textbox",
+			"size" : "",
+			"label" : "แชร์",
+			"description" : "แชร์ AddThis",
+			"required" : true
+		}
+	]
+}

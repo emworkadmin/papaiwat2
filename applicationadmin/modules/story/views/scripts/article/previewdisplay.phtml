@@ -1,0 +1,249 @@
+<style>
+.divPreview .modal-dialog { width: 90% !important; }
+
+#detail-zone { width: 100%; padding-top: 10px; background: white; padding-bottom: 20px;}
+
+/* Header */
+.detail-header { text-align: center; margin: 15px 0 30px; }
+.detail-header h2 { font-family: ThaiSans Neue,tahoma,geneva,sans-serif; font-size: 50px; color: #205891; margin-bottom: 25px; }
+.detail-header h4 { font-family: ThaiSans Neue,tahoma,geneva,sans-serif; font-size: 27px; margin-bottom: 35px; }
+
+/* Intro Image */
+.detail-img { height: 400px; text-align: center; position: relative; overflow: hidden; }
+.detail-img img { width: auto; max-width: 100%; object-fit: fill; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+/* Description */
+.description { float:left; width: 100%; padding: 15px; margin-top: 25px; font-size: 25px; }
+
+/* Gallery */ 
+.gallery { text-align:center; float:left; width: 100%; margin-top: 40px; }
+.gallery div { float:left; padding: 5px;  height: 300px; }
+.gallery div img { width: 100%; height: 100%; object-fit: cover; }
+
+.gallery.image-1 div { width: 100%; height: 100%; }
+
+.gallery.image-2 div { width: 50%; }
+
+.gallery.image-3 div { width: 33.33%; }
+
+.gallery.image-4 div { width: 50%; }
+
+.gallery.image-5 { position: relative; height: 600px; }
+.gallery.image-5 div { width: 33.33%; }
+.gallery.image-5 div:nth-child(1) { position: absolute; left: 0px; top: 0px; }
+.gallery.image-5 div:nth-child(2) { position: absolute; left: 33%; top: 0px; height: 600px; }
+.gallery.image-5 div:nth-child(3) { position: absolute; left: 66%; top: 0px; }
+.gallery.image-5 div:nth-child(4) { position: absolute; left: 0px; top: 300px; }
+.gallery.image-5 div:nth-child(5) { position: absolute; left: 66%; top: 300px; }
+
+.gallery.image-6 div { width: 50%; }
+
+.gallery.image-7 { position: relative; height: 900px; }
+.gallery.image-7 div { width: 33.33%; }
+.gallery.image-7 div:nth-child(1) { position: absolute; left: 0px; top: 0px; }
+.gallery.image-7 div:nth-child(2) { position: absolute; left: 33%; top: 0px; height: 600px; }
+.gallery.image-7 div:nth-child(3) { position: absolute; left: 66%; top: 0px; }
+.gallery.image-7 div:nth-child(4) { position: absolute; left: 0px; top: 300px; }
+.gallery.image-7 div:nth-child(5) { position: absolute; left: 66%; top: 300px; }
+.gallery.image-7 div:nth-child(6) { position: absolute; left: 0px; top: 600px; width: 50%; }
+.gallery.image-7 div:nth-child(7) { position: absolute; left: 50%; top: 600px; width: 50%; }
+
+.gallery.image-8 div { width: 50%; }
+
+.gallery.image-9 div { width: 33.33%; }
+
+.gallery.image-10 { position: relative; height: 1200px; }
+.gallery.image-10 div { width: 33.33%; }
+.gallery.image-10 div:nth-child(1) { position: absolute; left: 0px; top: 0px; }
+.gallery.image-10 div:nth-child(2) { position: absolute; left: 33%; top: 0px; height: 600px; }
+.gallery.image-10 div:nth-child(3) { position: absolute; left: 66%; top: 0px; }
+.gallery.image-10 div:nth-child(4) { position: absolute; left: 0px; top: 300px; }
+.gallery.image-10 div:nth-child(5) { position: absolute; left: 66%; top: 300px; }
+.gallery.image-10 div:nth-child(6) { position: absolute; left: 0px; top: 600px; }
+.gallery.image-10 div:nth-child(7) { position: absolute; left: 33%; top: 600px; height: 600px; }
+.gallery.image-10 div:nth-child(8) { position: absolute; left: 66%; top: 600px; }
+.gallery.image-10 div:nth-child(9) { position: absolute; left: 0px; top: 900px; }
+.gallery.image-10 div:nth-child(10) { position: absolute; left: 66%; top: 900px; }    
+
+/* MultiMedia */
+.multimedia { float:left; width: 100%; text-align:center; padding: 15px; margin-top: 25px; }
+.multimedia>iframe, .multimedia>video {  width: 100%; height: 500px;  }
+
+/* Content By */
+.content-by { text-align: right; float: left; width: 100%; margin-top: 40px; font-size: 25px; }
+
+.button-back { float: left; margin-top: 15px;  font-family: ThaiSans Neue,tahoma,geneva,sans-serif; box-shadow: -5px 5px 5px rgba(125, 125, 125, 0.34); }
+.button-back a { background-color: #555555; border: none; color: white; padding: 12px 30px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; }
+.button-back { position: fixed; left: 0; bottom: 70px; z-index: 1 }
+.button-back a { padding: 12px 30px 12px 20px; }
+
+@media screen and (max-width: 768px) {
+    .multimedia>iframe, .multimedia>video { height: 400px;  }
+}    
+@media screen and (max-width: 575px) {
+    .multimedia>iframe, .multimedia>video { height: 300px;  }
+}
+@media screen and (max-width: 425px) {
+    .multimedia>iframe, .multimedia>video { height: 200px;  }
+}
+</style>
+
+<link rel="stylesheet" href="/dist/css/d2ms.css">
+<link rel="stylesheet" href="/dist/css/d2ms.responsive.css">
+
+<?php 
+	if(count($this->dataCover)>0){ 
+		echo $this->partial("page/_partKenburns.phtml", $this); 
+	}
+?>
+
+
+<?php 
+switch ($this->TemplateType) : 
+	case "2" : 
+?>
+
+	<div class="infodetail infopage">
+		<div class="information-panel printable">
+			<div class="book-title title-panel">
+				<span class="title">
+					<?php echo $this->partial("page/_partTitle.phtml", $this); ?>
+				</span>
+				<hr />
+			</div>
+			<?php echo $this->partial("page/_partDate.phtml", $this); ?>
+		</div>
+	</div>
+
+	<div id="detail-zone">
+		<div class="">
+			<div class="detail-header">
+				<h2><?php echo $this->partial("page/_partTitle.phtml", $this); ?></h2>
+				<?php echo $this->partial("page/_partIntrotext.phtml", $this); ?>
+				<?php echo $this->partial("page/_partIntroimage.phtml", $this); ?>
+			</div>
+			<?php echo $this->partial("page/_partSocial.phtml", $this); ?>
+			<?php echo $this->partial("page/_partDetail.phtml", $this); ?>
+			<?php echo $this->partial("page/_partDocument.phtml", $this); ?>
+			<!-- Comment -->
+			<?php if (false) { // if($this->dataInfo['CanComment']=='Y') { ?>
+			<div class="information-comment-panel printable">
+				<?php echo $this->partial("page/_partComment.phtml", $this); ?>
+			</div>
+			<?php } ?>
+		</div>
+	</div>
+
+<?php 
+		break;
+	case "3" : 
+?>
+
+	<div id="detail-zone">
+		<div class="">
+			<div class="detail-header">
+				<h2><?php echo $this->partial("page/_partTitle.phtml", $this); ?></h2>
+				<?php echo $this->partial("page/_partIntrotext.phtml", $this); ?>
+				<?php echo $this->partial("page/_partIntroimage.phtml", $this); ?>
+			</div>
+			<div class="infodetail infopage">
+				<div class="information-panel printable">
+					<div class="book-title title-panel">
+						<span class="title">
+							<?php echo $this->partial("page/_partTitle.phtml", $this); ?>
+						</span>
+						<hr />
+					</div>
+					<?php echo $this->partial("page/_partDate.phtml", $this); ?>
+				</div>
+			</div>			
+			<?php echo $this->partial("page/_partDetail.phtml", $this); ?>
+			<?php echo $this->partial("page/_partDocument.phtml", $this); ?>
+			<?php echo $this->partial("page/_partSocial.phtml", $this); ?>
+			<!-- Comment -->
+			<?php if (false) { // if($this->dataInfo['CanComment']=='Y') { ?>
+			<div class="information-comment-panel printable">
+				<?php echo $this->partial("page/_partComment.phtml", $this); ?>
+			</div>
+			<?php } ?>
+		</div>
+	</div>
+
+<?php 
+		break;
+	case "4" : 
+?>
+
+	<div class="infodetail infopage">
+		<div class="information-panel printable">
+			<div class="book-title title-panel">
+				<span class="title">
+					<?php echo $this->partial("page/_partTitle.phtml", $this); ?>
+				</span>
+				<hr />
+			</div>
+			<?php echo $this->partial("page/_partDate.phtml", $this); ?>
+			<?php echo $this->partial("page/_partSocial.phtml", $this); ?>
+		</div>
+	</div>
+	<div id="detail-zone">
+		<div class="">
+			<div class="detail-header">
+				<h2><?php echo $this->partial("page/_partTitle.phtml", $this); ?></h2>
+				<?php echo $this->partial("page/_partIntrotext.phtml", $this); ?>
+				<?php echo $this->partial("page/_partIntroimage.phtml", $this); ?>
+			</div>
+			<?php echo $this->partial("page/_partDetail.phtml", $this); ?>
+			<?php echo $this->partial("page/_partDocument.phtml", $this); ?>
+			<!-- Comment -->
+			<?php if (false) { // if($this->dataInfo['CanComment']=='Y') { ?>
+			<div class="information-comment-panel printable">
+				<?php echo $this->partial("page/_partComment.phtml", $this); ?>
+			</div>
+			<?php } ?>
+		</div>
+	</div>
+
+	<?php 
+		break;
+	default :
+	case "1" : 
+?>
+
+	<div class="infodetail infopage">
+		<div class="information-panel printable">
+			<div class="book-title title-panel">
+				<span class="title">
+					<?php echo $this->partial("page/_partTitle.phtml", $this); ?>
+				</span>
+				<hr />
+			</div>
+			<?php echo $this->partial("page/_partDate.phtml", $this); ?>
+		</div>
+	</div>
+
+	<div id="detail-zone">
+		<div class="">
+			<div class="detail-header">
+				<h2><?php echo $this->partial("page/_partTitle.phtml", $this); ?></h2>
+				<?php echo $this->partial("page/_partIntrotext.phtml", $this); ?>
+				<?php echo $this->partial("page/_partIntroimage.phtml", $this); ?>
+			</div>
+			<?php echo $this->partial("page/_partDetail.phtml", $this); ?>
+			<?php echo $this->partial("page/_partDocument.phtml", $this); ?>
+			<?php echo $this->partial("page/_partSocial.phtml", $this); ?>
+			<!-- Comment -->
+			<?php if (false) { // if($this->dataInfo['CanComment']=='Y') { ?>
+			<div class="information-comment-panel printable">
+				<?php echo $this->partial("page/_partComment.phtml", $this); ?>
+			</div>
+			<?php } ?>
+		</div>
+	</div>
+
+	<?php 
+		break;
+?>
+<?php 
+endswitch;
+?>

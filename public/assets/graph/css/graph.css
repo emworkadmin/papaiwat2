@@ -1,0 +1,41 @@
+.Graph-list {font-family: 'Mitr Light'; padding-bottom: 15px;}
+.Graph-title, .Graph-title-rank {font-size: 30px; padding: 10px 0px 0px;}
+.Graph-subtitle { position: relative; display: inline-block; width: 100%; }
+.Graph-subtitle .borderHead { float: left; background: linear-gradient(to right, #29a2db,#2e4f97); width: 153px; height: 5px; position: absolute; top: 50%; }
+
+.powerBI {margin-top: 15px;}
+
+.sec-img-amount {margin-top: 15px;}
+.sec-img-amount .sec-img-amount-box01 {float: left; width: 29%; margin-right: 5px;}
+.sec-img-amount .sec-img-amount-box02 {float: left; width: 31%; margin-right: 5px;}
+.sec-img-amount .sec-img-amount-box03 {float: left; width: 15%; margin-right: 5px;}
+.sec-img-amount .sec-img-amount-box04 {float: left; width: 23.4%;}
+
+.sec-img-amount .sec-img-amount-box {background: linear-gradient(to right, #70c6ea,#3b5398); padding: 1px;}
+.sec-img-amount .sec-img-amount-box-inner {background-color: #fff; padding: 15px 10px;}
+.sec-img-amount .sec-img-amount-img {float: left; width: 50px;}
+.sec-img-amount .sec-img-amount-img img {width: 100%;}
+.sec-img-amount .sec-img-amount-info {margin-left: 60px; text-align: center; }
+.sec-img-amount .sec-img-amount-info .sec-img-amount-title {font-size: 1.6rem; color: #0d78be; font-weight: bold; padding-bottom: 10px;}
+.sec-img-amount .sec-img-amount-info .sec-img-amount-amount {font-size: 3rem; color: #000; font-weight: bold; }
+.sec-img-amount .sec-img-amount-info .sec-img-amount-amount .amount-amount {font-family: "Kanit"; }
+.sec-img-amount .sec-img-amount-info .sec-img-amount-amount .anount-unit {font-size: 2rem; }
+
+.sec-img-amount .sec-img-amount-box03 .sec-img-amount-info {margin-left: 0px;}
+
+.graph-box {margin-top: 15px;}
+.graph-box.with-color {padding: 25px;}
+.graph-box .graph-box-title {padding-bottom: 15px;}
+.graph-box .graph-box-title span {font-size: 2.5rem; font-weight: bold;}
+.graph-box .export { display: inline-block; }
+.graph-box .export select { border-radius: 5px; background: transparent; border-color: grey; height: auto; padding-top: 3px; padding-bottom: 3px;}
+.graph-box .graph-box-body {padding: 25px; background-color: #fff;}
+
+.graph-button-zone {margin-top: 15px; text-align: center;}
+.graph-button-zone a {color: #fff; background: linear-gradient(to top, #43B74A, #90C34A); padding: 10px 20px; font-size: 1.8rem; border-radius: 7px; display: inline-block;}
+
+.graph-box-subbox {}
+.graph-box-subbox .graph-box-subbox-title {padding: 10px 15px; text-align: center; color: #fff; background-color: #FBB03B;}
+.graph-box-subbox .graph-box-subbox-body {padding: 15px; background-color: #fff;}
+.graph-box-subtitle {text-align: center; font-size: 1.8rem; padding: 10px 0 20px;}
+

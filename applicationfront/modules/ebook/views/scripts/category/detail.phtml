@@ -1,0 +1,157 @@
+<style>
+
+div#OneBook3d_NewConfig_stage {
+    text-align: center;
+}
+
+/* .section.red { background:#282828; margin-bottom: 30px; } */
+.red { padding:15px; background: #0a0a0a;margin-bottom: 30px; }
+/* .unselectable { top: 900px !important; } */
+.book-detail { margin-bottom: 50px; }
+.author-panel { position: absolute; right: 0; bottom: 0; }
+.author-panel-img { float: right; display: inline-block; }
+.author-panel-img img { width: 80px; height: 80px; border-radius: 100%; margin-right: 10px; }
+.author-panel-detail { float: right; display: inline-block;}
+.author-panel-detail .author-title { font-size: 0.8em; font-weight: bold; }
+.author-panel-detail .author-name { font-size: 0.8em; background: #ccc; padding: 0px 10px; border-radius: 10px;}
+.author-panel-detail .date-of-creation { font-size: 0.8em; }
+</style>
+
+<?php 
+if($this->SizeType == 'C') {
+	// $height_top =  $this->Height+500;
+	if($this->Width > 1100 ){
+		$this->Width = 1100;
+	}
+
+	$style = '<style> 
+	
+	   canvas {
+		   width:'.$this->Width.'px !important;
+		   height:'. $this->Height.'px !important;
+	   }
+
+	
+	</style>';
+	
+	 echo $style;
+}
+
+?>
+
+<div class="infodetail infopage">
+	<div class="information-panel printable">
+		<div class="book-title title-panel">
+			<span class="title">
+				<?php echo $this->data->Title; ?>
+			</span>
+			<hr />
+		</div> 
+	</div>
+</div>
+
+<?php if(count($this->dataFileImages)>0){ ?>
+<div class="section red">
+	<div class="emwork">
+		<div id="photobook"></div> 
+	</div>
+</div>
+<?php } ?>
+
+<div class="infodetail infopage">
+	<div class="information-panel printable">
+
+		<div class="book-date">
+			<em class="fa fa-calendar"></em> <?php echo $this->data->Created == null ? '' : $this->lang == 'th' ? Emwork_Utility_DateTime::MSSqlToDateThai($this->data->Created) : Emwork_Utility_DateTime::MSSqlToDateEng($this->data->Created); ?>
+			|
+			<em class="fa fa-eye"></em> <?php echo number_format($this->data->ViewAmount); ?> 
+		</div>
+
+		<div class="book-detail">
+			<?php echo Emwork_Utility::notShowNull ($this->data->Detail); ?>
+		</div>
+
+		<div class="infodetail infopage">
+			<div class="information-panel printable" style="position:relative;">
+				<?php 
+				if ($this->dataInfo->SocialNetworkFacebook == 'Y' || $this->dataInfo->SocialNetworkTwitter == 'Y' || $this->dataInfo->SocialNetworkGoogleplus == 'Y' || $this->dataInfo->ShowQrcode == 'Y') :
+				?>
+					<div>
+						<?php if ($this->dataInfo->SocialNetworkFacebook == 'Y') : ?>
+						<a class="btn btn-social-icon btn-facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $this->currentUrl; ?>" onclick="window.open(this.href, 'facebook-share','width=500,height=300');return false;">
+							<em class="fa fa-facebook"></em>
+						</a>
+						<?php endif; ?>
+						<?php if ($this->dataInfo->SocialNetworkTwitter == 'Y') : ?>
+						<a class="btn btn-social-icon btn-twitter" href="http://twitter.com/share?text=<?php echo $this->data->Title; ?>&url=<?php echo $this->currentUrl; ?>&via=Devahoy" onclick="window.open(this.href, 'twitter-share', 'width=500,height=300');return false;">
+							<em class="fa fa-twitter"></em>
+						</a>
+						<?php endif; ?>
+						<?php if ($this->dataInfo->SocialNetworkGoogleplus == 'Y') : ?>
+						<a class="btn btn-social-icon btn-google" href="https://plus.google.com/share?url=<?php echo $this->currentUrl; ?>" onclick="window.open(this.href, 'google-plus-share', 'width=500,height=300');return false;">
+							<em class="fa fa-google-plus"></em>
+						</a> 
+						<?php endif; ?>
+						<?php if ($this->dataInfo->ShowQrcode == 'Y') : ?>
+						<a class="btn btn-social-icon btn-default" href="<?php echo $this->currentUrlQrCodeUrl; ?>" data-lightbox="image-1" data-title="" >
+							<em class="fa fa-qrcode"></em>
+						</a>
+						<?php endif; ?>
+					</div>
+				<?php 
+				endif;
+				?>
+
+				<div class="author-panel">
+					<?php if(!empty($this->data->AuthorName)){ ?>
+					<div class="author-panel-detail">
+						<div class="author-title"><?php echo Emwork_Translate::text($this->lang, 'ebook', 'authorname'); ?></div>
+						<div class="author-name"><?php echo $this->data->AuthorName; ?></div>
+						<div class="date-of-creation"><?php echo $this->data->DateOfCreation ? $this->lang == 'th' ? Emwork_Utility_DateTime::MSSqlToDateThai($this->data->DateOfCreation) : Emwork_Utility_DateTime::MSSqlToDateEng($this->data->DateOfCreation) : ''; ?></div>
+					</div>
+					<?php } ?>
+					<?php if(!empty($this->dataInfo->AuthorImageHashName)){ ?>
+					<div class="author-panel-img">
+						<img alt="image" class="author-image" src="<?php echo $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $this->dataInfo->AuthorImageHashName), null, true); ?>">
+					</div>
+					<?php } ?>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- Comment -->
+		<?php if($this->CanComment=='Y'){ ?>
+		<div class="information-comment-panel">
+			<?php echo $this->partial("book/_partComment.phtml", $this); ?> 
+		</div>
+		<?php } ?>
+
+	</div>
+</div>
+
+<?php if(count($this->dataFileImages)>0){ ?>
+<script type="text/javascript" src="<?php echo $this->baseUrl("assets/ebook/js/jquery.mousewheel.min.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl("assets/ebook/js/three.min.js"); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl("assets/ebook/js/jquery.onebook3d-2.33.js"); ?>"></script>
+<script>
+$(function(){
+	var arr = [];
+	arr[0] = [	
+		<?php
+		$index = 1;
+		$loop = count($this->dataFileImages);
+		foreach ( $this->dataFileImages as $img ) {
+			$imgUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $img["hash_name"]), "default", true);
+			echo '"'.$imgUrl.'"';
+			if($index!=$loop){
+				echo ',';
+			}
+			$index++;
+		}
+		?>
+	];	
+	$('#photobook').onebook(arr[0]);
+});
+</script>
+<?php } ?>

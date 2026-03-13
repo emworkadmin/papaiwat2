@@ -1,0 +1,39 @@
+<?php 
+/**
+ * EM D2MS
+ *
+ * @copyright  Copyright (c) 2018 EMWORK Group
+ * @license	EMWORK Group
+ * @version	1.0.0 applicationadmin/modules/system/views/scripts/menu/components.phtml 
+ * @author	EMWORK Group
+ */
+?>
+<style type="text/css">
+.module-box {border: 1px solid #ccc; border-radius: 5px; margin-bottom: 15px;}
+.module-box .module-header {border-bottom: 1px solid #ccc; padding: 10px 10px; } 
+.module-box .module-body .module-item {border-bottom: 1px solid #ccc; padding: 5px 5px 5px 25px;}
+.module-box .module-body .module-item:last-child {border-bottom: none;}
+</style>
+<div id="components">
+<?php
+if ($this->components) : 
+	foreach ($this->components as $component) : 
+		echo "<div class='module-box'>";
+		echo "<div class='module-header'><strong>" . $component["Name"] . "</strong></div>";
+		echo "<div class='module-body'>";
+			foreach ($component["Controllers"] as  $controller) : 
+			echo "<div class='module-item'><a class='component-select' href='javascript:void(0);' data-module='" . $component["Module"] . "' data-controller='" . $controller["Controller"] . "' data-modulename='" . $component["Name"] . "' data-controllername='" . $controller["Name"] . "' >" . $controller["Name"] . "</a> <small>" . $controller["Description"] . "</small></div>";
+			endforeach;
+		echo "</div>";
+		echo "</div>";
+	endforeach;
+endif;
+?>
+</div>
+<script>
+$(function () {
+	$("#components .component-select").click(function(){
+		componentSelect($(this).data("modulename"), $(this).data("controllername"), $(this).data("module"), $(this).data("controller"));
+	});
+});
+</script>

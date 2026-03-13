@@ -1,0 +1,44 @@
+<style>
+#rss-section { margin: 15px 0px; }
+#rss-section .intro-text { margin: 15px 0px 30px; }
+#rss-section .item-list { padding: 15px 0px; border-bottom: solid 1px #ccc; }
+#rss-section .item-list-title { font-size: 1em; }
+#rss-section .item-list-title img { width: 25px; height: 25px; }
+#rss-section .item-header { font-family: 'ThaiSans Neue'; font-weight: bold; padding: 10px 0px; border-top: solid 1px #CCC; border-bottom: solid 2px #CCC; }
+</style>
+
+<?php echo '<style>'.$this->setting->ItemCustomCSS.'</style>'; ?>
+
+<div class="<?php echo $this->setting->ItemHtmlClass; ?>" id="rss-section">
+	
+	<div class="title-panel">
+		<span class="title">
+			<?php echo $this->data->Title; ?>
+		</span>
+		<hr>
+	</div>
+	<div class="intro-text">
+		<?php echo nl2br($this->data->IntroText); ?>
+	</div>
+
+	<div class="item-header">RSS Feeds</div>
+	<?php
+	if(count($this->dataItem)>0){
+		foreach($this->dataItem as $k=>$v){
+			$url = $this->url(array('module' => 'rss', 'controller' => 'page', 'action' => $v['DataType'], 'id' => $v['ID'], 'cid' => $v['DataCategoryID']), null, true);
+	?>
+	<div class="item-list">
+		<div class="item-list-title">
+			<span><?php echo $v['Title'] ?></span>
+			<a href="<?php echo $url; ?>" target="_blank">
+				<img alt="image" class="pull-right" src="/assets/rss/images/rss.png" title="RSS Logo">
+			</a>
+		</div>
+	</div>
+	<?php
+		}
+	}
+	?>
+
+</div>
+

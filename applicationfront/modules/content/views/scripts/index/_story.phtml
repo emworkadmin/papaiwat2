@@ -1,0 +1,227 @@
+<!-- lightslider -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightslider-master/css/lightslider.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightslider-master/js/lightslider.min.js'); ?>"></script>
+
+<!-- lightgallery -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightgallery-master/css/lightgallery.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery-master/js/lightgallery.min.js'); ?>"></script>
+
+<!-- lightgallery Ext -->
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery-master/js/lg-fullscreen.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery-master/js/lg-thumbnail.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery-master/js/lg-video.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery-master/js/lg-autoplay.min.js'); ?>"></script>
+
+ <div class="infodetail infopage">
+	<div class="hilight-panel">
+    	<img alt="image" src="<?php echo $this->hilightImageUrl; ?>" />
+    	<div class="hilight-inner-top">
+    		<div class="container">
+	    		<div class="title">
+	    			<?php echo $this->fullSlogan; ?>
+	    		</div>
+    		</div>
+    	</div>
+    </div>
+    <div class="intro-panel">
+    	<div class="breadcrumbs-panel">
+        	<div class="container">
+        		<ol class="breadcrumb">
+        			<li>
+            			<a href="<?php echo $this->url(array("module" => "default", "controller" => "home", "action" => "index"), null, true); ?>" ><?php echo Emwork_Translate::text($this->lang, "menu", "menu_main_home"); ?></a>
+            		</li>
+            		<li>
+            			<a href="<?php echo $this->url(array("module" => "info", "controller" => $this->controllerName, "action" => "list"), null, true); ?>" ><?php echo $this->parentTitle; ?></a>
+            		</li>
+	        		<li class="active">
+	        			<?php echo $this->data->ContentTitle; ?>
+	        		</li>
+            	</ol>
+        	</div>
+        </div>
+	</div>
+    <div class="title-panel">
+    	<div class="container">
+    		<span class="title">
+    			<?php echo $this->data->ContentTitle; ?>
+    		</span>
+    		<?php 
+    		$address = (empty($this->data->ProvinceName)) ? "" : $this->data->ProvinceName;
+    		if (!empty($address)) :
+    			$address .= (empty($this->data->DistrictName)) ? "" : ", " . $this->data->DistrictName;
+    		endif;
+    		if (!empty($address)) :
+    		?>
+    		<small>
+    			<img alt="image" src="<?php echo $this->baseUrl("images/icons/icon_pin2.png"); ?>" /> <?php echo $address; ?>
+    		</small>
+    		<?php endif; ?>
+    		<hr >
+    	</div>
+    </div>
+	<div class="information-panel">
+		<div class="container">
+			<div>
+				<?php echo Emwork_Utility::notShowNull ($this->data->ContentDetail); ?>
+			</div>
+			
+			<?php if (!empty($this->data->infoUrl)) : ?>
+			<hr />
+			<div class="more-info">
+				<a href="<?php echo $this->data->infoUrl; ?>" class="btn btn-default" target="_blank"><?php echo Emwork_Translate::text($this->lang, "general", "button_more_info")?></a>
+			</div>
+			<?php endif; ?>
+			
+    		<?php
+    		// <!---------------------------------------- รูปภาพแกลอรี่ ----------------------------------------------->
+			if (count ( $this->data->contentImage ) > 0) {
+			?>
+			<hr />
+			<div class="title-label">
+				<img alt="image" src="<?php echo $this->baseUrl("images/icons/icon_gallery.png"); ?>" /> <?php echo Emwork_Translate::text($this->lang, "general", "infodetail_image_title"); ?>
+			</div>
+			<div class="row" id="lightGallery">
+				<?php 
+					$index = 1;
+					foreach ( $this->data->contentImage as $img ) {
+				?>
+	            <div class="effect-box col-md-3" data-src="<?php echo $img['pictureURL']; ?>">
+					<div class="item-img resize" style="background-image: url(&quot;<?php echo $img['pictureURL']; ?>&quot;);">
+						<a href="<?php echo $img['pictureURL']; ?>">
+							<img alt="image" src="<?php echo $img['pictureURL']; ?>">
+						</a>
+					</div>
+				</div>
+	    	    <?php
+						$index ++;
+					}
+				?>
+		    </div>
+			<?php 
+			}
+			?>
+			
+			<?php
+			//<!----------------------------------------- ไฟล์เอกสาร ------------------------------------------------>
+			if (count ( $this->data->contentDocument ) > 0) {
+			?>
+			<hr />
+			<div class="title-label">
+				<img alt="image" src="<?php echo $this->baseUrl("images/icons/icon_document.png"); ?>" /> <?php echo Emwork_Translate::text($this->lang, "general", "infodetail_document_title"); ?>
+			</div>
+				<?php
+				foreach ( $this->data->contentDocument as $doc ) {
+				?>
+				<div class="">
+					<em class="glyphicon glyphicon-download-alt"></em> <a href="<?php echo $doc['docURL']; ?>" download target="_blank"> <?php echo $doc['docName']; ?></a>
+				</div>
+			<?php
+				}
+			}
+			?>
+			
+			<?php
+			//<!---------------------------------------- ไฟล์มัลติมีเดีย ----------------------------------------------->
+			if (count ( $this->data->contentMedia ) > 0) {
+			?>
+			<hr />
+			<div class="title-label">
+				<img alt="image" src="<?php echo $this->baseUrl("images/icons/icon_youtube.png"); ?>" /> <?php echo Emwork_Translate::text($this->lang, "general", "infodetail_video_title"); ?>
+			</div>
+			<?php
+			foreach ( $this->data->contentMedia as $media ) {
+			?>
+		  	<div style="display: none;" id="videoUpload">
+				<video class="lg-video-object lg-html5" controls preload="none">
+					<source src="<?php echo $media['mediaURL']; ?>" type="video/mp4">
+				</video>
+			</div>
+			<div class="">
+				<ul id="video" class="content-slider">
+					<li
+						data-poster="<?php echo $this->baseUrl('images/icons/video.gif'); ?>"
+						data-sub-html="Video Upload" data-html="#videoUpload"><img alt="image"
+						src="<?php echo $this->baseUrl('images/icons/video.gif'); ?>"
+						class="img-thumbnail" /></li>
+				</ul>
+			</div>
+			<?php
+				}
+			}
+			?>
+			
+			<hr />
+			<div class="title-label">
+				<img alt="image" src="<?php echo $this->baseUrl("images/icons/icon_map.png"); ?>" /> <?php echo Emwork_Translate::text($this->lang, "general", "infodetail_map_title"); ?>
+			</div>
+			<div>
+				<div id="mapCanvas" style="width: 100%; height: 350px;"></div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<script>
+jQuery(function(){
+
+	<?php if (count ( $this->data->contentImage ) > 0) : ?>
+	$("#lightGallery").lightGallery();
+	<?php endif; ?>
+
+	<?php if (count ( $this->data->contentMedia ) > 0) : ?>
+	$("#video").lightSlider({
+        loop:true,
+        keyPress:true,
+        item:3,
+        slideMargin:10,
+        enableDrag: true,
+        thumbnail:true,
+        onSliderLoad: function(el) {
+            el.lightGallery({
+                selector: '#video .lslide'
+            });
+        }
+	});
+	<?php endif; ?>
+
+	// Function Adjust Picture Size
+	adjustHeight();
+	function adjustHeight() {
+    	var myWidth = jQuery('.effect-box .item-img').width();
+    	var myString = myWidth + 'px';
+    	jQuery('.effect-box .item-img').css('height', myString);
+    }
+	jQuery(window).resize(function() {
+		adjustHeight();
+	});
+
+});
+</script>
+
+<?php if (!empty($this->data->Latitude) && !empty($this->data->Longitude)) : ?>
+<script>
+var map;
+var marker;
+function initMap() {		
+	// Set Map
+	map = new google.maps.Map(document.getElementById('mapCanvas'), {
+	    zoom: 15,
+	    center: new google.maps.LatLng(<?php echo $this->data->Latitude; ?>, <?php echo $this->data->Longitude; ?>), 
+	    mapTypeId: google.maps.MapTypeId.ROADMAP,
+	    draggable: true,
+	    fullscreenControl : false,
+	    mapTypeControl: true,
+	    mapTypeControlOptions: {
+	        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+	        position: google.maps.ControlPosition.TOP_RIGHT
+	    }
+	});
+	marker = new google.maps.Marker({
+		position: {lat: <?php echo $this->data->Latitude;?>, lng: <?php echo $this->data->Longitude; ?>},
+		map: map
+	});
+}
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh2SYeAPs7Sfkv_FfupXHDiqti27WMWj4&callback=initMap&language=<?php echo $this->lang; ?>"></script>
+<?php endif;?>

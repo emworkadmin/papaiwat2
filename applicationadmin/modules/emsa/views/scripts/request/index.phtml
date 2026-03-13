@@ -1,0 +1,153 @@
+<!-- jQueryFiler -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("assets/emsa/js/jquery-filer/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("assets/emsa/js/jquery-filer/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("assets/emsa/js/jquery-filer/js/jquery.filer.js"); ?>'></script>
+
+<form class="form-horizontal emsa-form" id="emsa-form">
+	<div class="form-group">
+		<div class="col-md-12">
+			<?php echo $this->formText('emsaTitle', null, array('class' => 'form-control', 'placeholder' => 'เรื่อง', 'maxlangth' => '200')); ?>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-12">
+			<?php echo $this->formTextarea('emsaDetail', null, array('class' => 'form-control', 'rows' => '5', 'placeholder' => 'รายละเอียด', 'maxlangth' => '1900')); ?>
+		</div>
+	</div>
+	<hr />
+	<div class="form-group">
+		<div class="col-md-12">
+			<p class="form-control-static">
+				ข้อมูลเพิ่มเติม (ไม่บังคับ)		
+			</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-2">
+			<p class="form-control-static">
+				URL
+			</p>
+		</div>
+		<div class="col-md-10">
+			<?php echo $this->formText('emsaUrl', null, array('class' => 'form-control')); ?>
+		</div>		
+	</div>
+	<div class="form-group">
+		<div class="col-md-2">
+			<p class="form-control-static">
+				ไฟล์แนบ
+			</p>
+		</div>
+		<div class="col-md-10">
+			<?php echo $this->EMSAUploadControl("emsaReportFile", "emsaReportFile", null, array('multi' => true, 'exts' => array('png', 'jpeg', 'jpg', 'gif', 'doc', 'docx', 'xls', 'xlsx', 'pdf'))); ?>
+			<div class="help-block">ขนาดไฟล์ไม่เกิน 10 MB<br>เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png, .doc, .docx, .xls, .xlsx, .pdf</div>
+		</div>		
+	</div>
+	<div class="form-group">
+		<div class="col-md-12">
+			<p class="form-control-static">
+				<strong>รหัสหน้าจอ: <span id="emsaScreenCodeLabel">-</span></strong>
+			</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-5">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="emsaChkScreen" checked/>
+					รวมภาพหน้าจอนี้
+				</label>
+				<br />
+				<label>
+					<input type="checkbox" name="emsaChkSystem" checked/>
+					ส่งข้อมูลระบบ
+				</label>
+			</div>
+		</div>
+		<div class="col-md-7">
+			<div style="width: 100%; text-align: right;">
+				<img src="" id="emsaScreen" style="width: 200px;" />
+			</div>
+		</div>		
+	</div>
+	<input id="emsaScreenCode" name="emsaScreenCode" value="" type="hidden" />
+	<input id="emsaScreenData" name="emsaScreenData" value="" type="hidden" />
+	<input id="emsaSenderName" name="emsaSenderName" value="<?php echo $this->emsaSenderName . ' (' . $this->emsaSenderUserGroup . ')'; ?>" type="hidden" />
+	<input id="emsaSystemBrowser" name="emsaSystemBrowser" value="" type="hidden" />
+	<input id="emsaSystemVersion" name="emsaSystemVersion" value="" type="hidden" />
+	
+</form>
+
+<hr />
+
+<div class="row emsa-mb15">
+	<div class="col-xs-6"><strong>รหัสโครงการ:</strong> <span class="emsa-label-blue"><?php echo $this->projectCode; ?></span></div>
+	<div class="col-xs-6"><strong>รหัสลูกค้า:</strong> <span class="emsa-label-blue"><?php echo $this->departmentCode; ?></span></div>
+</div>
+<div class="row emsa-mb15">
+	<div class="col-xs-6"><strong>ผู้ใช้งาน:</strong> <span class="emsa-label-blue"><?php echo $this->emsaSenderName; ?></span></div>
+	<div class="col-xs-6"><strong>กลุ่มสิทธิ์:</strong> <span class="emsa-label-blue"><?php echo $this->emsaSenderUserGroup; ?></span></div>
+</div>
+
+<div class="alert alert-danger" id="warningMessage" style="display: none; margin-bottom: 0px;"></div>
+    	
+<script type="text/javascript">
+jQuery(function(){
+	
+	if (emsaDialog != null) {
+
+		$("#emsaScreen").attr("src", emsaParams.screenCanvas.toDataURL("image/png"));
+		$("#emsaScreenData").val(emsaParams.screenCanvas.toDataURL("image/png"));
+		$("#emsaUrl").val(emsaParams.currentUrl);	
+		$("#emsaScreenCode").val(emsaParams.screenCode);		
+		$("#emsaScreenCodeLabel").text(emsaParams.screenCode);
+		
+		emsaDialog.setTitle("<?php echo $this->title; ?>");
+		emsaDialog.setButtons(
+				[{
+                    label: 'ส่ง',
+					action: function(dialog) {
+						var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+						dialog.enableButtons(false);
+	                    dialog.setClosable(false);
+	                    $.post("<?php echo $this->url(array("module" => "emsa", "controller" => "request", "action" => "send"), null, true);?>", $("#emsa-form").serializeArray(), function(data){
+							if (data.result) {
+								dialog.enableButtons(true);
+								emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'request', 'action' => 'result'), null, true); ?>/receiveNo/"+data.receiveNo));
+							} else {
+								dialog.enableButtons(true);
+								$('#warningMessage').html(data.message);
+								$('#warningMessage').show();
+							}
+		                }, "json");
+					}
+                }, {
+                    label: 'ยกเลิก',
+					action: function(dialog) {
+						dialog.close();
+					}
+                }]
+		);
+	}
+
+	// Get browser name and version
+    navigator.sayswho = (function () {
+        var ua = navigator.userAgent, tem, M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+        if (/trident/i.test(M[1])) {
+            tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+            return { name: 'IE ', version: (tem[1] || '') };
+        }
+        if (M[1] === 'Chrome') {
+            tem = ua.match(/\bOPR\/(\d+)/);
+            if (tem != null) { return { name: 'Opera', version: tem[1] }; }
+        }
+        M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+        if ((tem = ua.match(/version\/(\d+)/i)) != null) {
+            M.splice(1, 1, tem[1]);
+        }
+        $('#emsaSystemBrowser').val(M[0]);
+	    $('#emsaSystemVersion').val(M[1]);
+    })();
+    
+});    
+</script>

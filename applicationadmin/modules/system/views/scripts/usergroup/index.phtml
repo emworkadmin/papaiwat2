@@ -1,0 +1,149 @@
+
+<link rel="stylesheet"
+	href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+
+<div class="searchPanel form-horizontal" id="formSearch">
+	<div class="form-group">
+		<div class="col-md-12">
+			<div class="input-group">
+				<p class="form-control-static">ค้นหาจาก</p>
+					<?php if ($this->canAdd) : ?>
+					<span class="input-group-btn"> <a class="btn btn-primary"
+					title="เพิ่มกลุ่มผู้ใช้งาน"
+					href="<?php echo $this->url(array('module' => 'system', 'controller' => 'usergroup', 'action' => 'add'), null, false); ?>">
+						<em class="fa fa-plus"></em> เพิ่มกลุ่มผู้ใช้งาน
+				</a>
+				</span>
+					<?php endif;?>
+				</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-12">
+			<div class="input-group">
+					<?php echo $this->formText('textsearch', $this->InfoSearch->searchText, array('class' => 'form-control', 'placeholder' => 'ค้นหาจากกลุ่มผู้ใช้งาน'));?>
+					<span class="input-group-btn">
+					<button type="button" class="btn btn-primary" id="btnSearch">
+						<em class="fa fa-search"></em> ค้นหา
+					</button>
+					<button type="button" class="btn btn-warning" id="btnReset">
+						<em class="fa fa-refresh"></em> เริ่มใหม่
+					</button>
+					<button type="button" class="btn btn-default" id="btnAdvance">
+						<em class="fa fa-minus-circle"></em> ลดเงื่อนไขการค้นหา
+					</button>
+				</span>
+			</div>
+
+		</div>
+	</div>
+	<div id="AdvanceSearch">
+			<?php echo $this->formHidden('hdfAdvanceSearch', 'S', null, null); ?>
+			<div class="form-group">
+			<label for="status" class="control-label col-md-2">สถานะ : </label>
+			<div class="col-md-4">
+					<?php echo $this->formSelect('lstStatus', $this->InfoSearch->isEnable, array('class' => 'form-control'), $this->statusOption); ?>
+				</div>
+		</div>
+	</div>
+</div>
+
+<table id="tblData" class="table table-bordered table-hover"
+	style="width: 100%;">
+	<caption>รายการกลุ่มผู้ใช้งาน</caption>
+	<thead>
+		<tr>
+			<th>ลำดับ</th>
+			<th>ชื่อย่อ</th>
+			<th>ชื่อกลุ่มผู้ใช้งาน</th>
+			<th>สถานะ</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+<!-- DataTables -->
+<script
+	src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script
+	src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script type="text/javascript">
+jQuery(function(){
+
+	// --------------- Begin: Table & Search Zone --------------------------
+	
+	function renderColumn ( data, type, row, meta ) {
+		return data;
+	}
+	function renderColumnLink ( data, type, row, meta ) {
+		return '<a href="<?php echo $this->url(array('module' => 'system', 'controller' => 'usergroup', 'action' => 'edit'), null, true);?>/itemid/' + row.DT_RowId + '">' + data + '</a>';
+	}
+	var rows_selected = [];
+	var tblData = $('#tblData').DataTable({
+		processing: true,
+		serverSide: true,
+		responsive: true,
+		<?php
+		if ($this->InfoSearch->tblPage) {
+			echo 'displayStart: ' . $this->InfoSearch->tblPage . ',';
+		}
+		if ($this->InfoSearch->tblRow) {
+			echo 'pageLength: ' . $this->InfoSearch->tblRow . ',';
+		}
+		if ($this->InfoSearch->tblOrderCol && $this->InfoSearch->tblOrderDir) {
+			echo 'order: [[ ' . $this->InfoSearch->tblOrderCol . ', "' . $this->InfoSearch->tblOrderDir . '" ]],';
+		} else {
+			echo 'order: [[ 1, "asc" ]],';
+		}
+		?>
+		ajax: {
+	        url: '<?php echo $this->url(array('module' => 'system', 'controller' => 'usergroup', 'action' => 'getlist'), null, true); ?>',
+	        type: 'POST',
+	        data: function(d) {
+    	        d.textsearch = $("#formSearch #textsearch").val();
+    	        d.enable = $("#formSearch #lstStatus").val();
+	        }
+	    },
+	    language : {
+			url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+	    },
+		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+		"columns": [
+		            { "width": "40px", 'orderable': false, 'data' : 'NO', "class" : "text-center"},
+		            { "width": "20%", 'data' : 'NameAbbr' , 'render' : renderColumnLink, "class" : "ratio"},
+		            {'data' : 'Name', 'render' : renderColumnLink},
+		            { "width": "15%", 'data' : 'IsEnable' , 'render' : renderColumnLink, "class" : "ratio"}
+		          ]
+    });
+
+	$('#btnSearch').click(function(){
+		tblData.ajax.reload();
+	});
+
+	$('#btnReset').click(function(){
+		$(".searchPanel input[type=text]").val('');
+		$(".searchPanel select").val('');
+		tblData.ajax.reload();
+	});
+	        
+	//new $.fn.dataTable.Responsive( tblData );
+	
+	// --------------- End: Table & Search Zone --------------------------
+
+	// --------------- Toogle Advance Search ---------------
+	$("#btnAdvance").click(function(e) {
+		var val = $('#hdfAdvanceSearch').val();
+		if(val == 'H'){
+			$("#AdvanceSearch").slideDown(600, "swing");
+			$("#hdfAdvanceSearch").val('S');
+		}else{
+			$("#AdvanceSearch").slideUp(600, "swing");
+			$("#hdfAdvanceSearch").val('H');
+		}
+	});
+	
+});
+
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'SYS-USG-01'); ?>

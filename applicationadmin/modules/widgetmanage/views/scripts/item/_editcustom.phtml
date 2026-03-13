@@ -1,0 +1,283 @@
+<!-- jQuery UI 1.11.4 -->
+<script src="<?php echo $this->baseUrl("plugins/jQueryUI/jquery-ui.min.js"); ?>"></script>
+
+<style type="text/css">
+.content-herder { margin-bottom: 20px;  }
+.lnkRemove { cursor: pointer; } 
+.handle-box, #lnkAddContent { cursor: pointer; }
+.ui-sortable-placeholder { border: 1px dotted #ccc; visibility: visible !important; }
+</style>
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+		<?php echo $this->formHidden("hdfUpdateType", 'C', null, null); ?>
+
+		<div class="title-label">ตั้งค่าข้อมูล</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="Name">ชื่อ Widget</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText("Name", $this->data->Name, array('class' => 'form-control required', 'maxlength' => '500')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="widgetType">ประเภท Widget</label>
+			<div class="col-md-9 divControl">
+				<div class="form-control-static"><?php echo $this->data->WidgetType; ?></div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="dataType">ประเภทข้อมูล</label>
+			<div class="col-md-9 divControl">
+				<div class="form-control-static"><?php echo $this->data->DataType; ?></div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="IsEnable">สถานะ</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio("IsEnable", $this->data->IsEnable, array('class' => 'required', 'label_class' => 'radio-inline'), $this->publishOption, " "); ?>
+				</div>						
+			</div>
+		</div>
+
+		<div class="title-label">จัดการเนื้อหา<em class="fa fa-plus pull-right" id="lnkAddContent"></em></div>
+		<div id="divContent">
+			<?php
+			if(count($this->dataContent)>0){
+				$index = 1;
+				foreach($this->dataContent as $k=>$v){
+			?>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="content-herder">
+						<em class="fa fa-bars handle-box ui-sortable-handle"></em>
+						<em class="fa fa-trash pull-right lnkRemove"></em>
+						<label id="ContentList-<?php echo $index; ?>-Title-Herder" class="content-title-herder" style="display: none;"><?php echo $v->Title; ?></label>
+					</div>
+					<div class="form-group form-group-content">
+						<label class="col-md-3 control-label" for="ContentList-<?php echo $index; ?>-Title">ชื่อ</label>
+						<div class="col-md-9 divControl">
+							<input type="text" name="ContentList[<?php echo $index; ?>][Title]" id="ContentList-<?php echo $index; ?>-Title" alt=Title value="<?php echo $v->Title; ?>" class="form-control" maxlength="500">
+						</div>
+					</div>
+					<div class="form-group form-group-content">
+						<label class="col-md-3 control-label" for="ContentList-<?php echo $index; ?>-IntroText">ข้อความเกริ่นนำ</label>
+						<div class="col-md-9 divControl">
+							<textarea name="ContentList[<?php echo $index; ?>][IntroText]" id="ContentList-<?php echo $index; ?>-IntroText" alt=IntroText class="form-control" maxlength="2000" rows="3" cols="80"><?php echo $v->IntroText; ?></textarea>
+						</div>
+					</div>
+					<div class="form-group form-group-content">
+						<label class="col-md-3 control-label" for="ContentList-<?php echo $index; ?>-ImageUrl">URL รูปภาพหน้าปก</label>
+						<div class="col-md-9 divControl">
+							<input type="text" name="ContentList[<?php echo $index; ?>][ImageUrl]" id="ContentList-<?php echo $index; ?>-ImageUrl" alt=ImageUrl value="<?php echo $v->ImageUrl; ?>" class="form-control" maxlength="500" placeholder="http://www.emworkgroup.com/image/logo.png">
+						</div>
+					</div>
+					<div class="form-group form-group-content">
+						<label class="col-md-3 control-label" for="ContentList-<?php echo $index; ?>-URL">Link URL</label>
+						<div class="col-md-9 divControl">
+							<input type="text" name="ContentList[<?php echo $index; ?>][Url]" id="ContentList-<?php echo $index; ?>-Url" alt=Url value="<?php echo $v->Url; ?>" class="form-control" maxlength="500" placeholder="http://www.emworkgroup.com/">
+						</div>
+					</div>
+					<script>
+					$(function () {
+						$("#ContentList-<?php echo $index; ?>-Title").keyup(function(){
+							var str = $(this).val();
+							if(str.length>100){
+								str = str.substring(0, 100)+'...';
+							}
+							$("#ContentList-<?php echo $index; ?>-Title-Herder").html(str);
+						});
+						$(".lnkRemove").click(function(){
+							$(this).parent(".content-herder").parent(".panel-body").parent(".panel").remove();
+							reindexContent();
+						});
+					});
+					</script>
+				</div>
+			</div>
+			<?php
+				$index++;
+				}
+			}
+			?>
+		</div>
+
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<?php endif ; ?>
+				<?php if ($this->canDelete) : ?>
+				<button type="button" class="btn btn-danger" id="btnDelete"><em class="fa fa-trash"></em> ลบข้อมูล</button>
+				<?php endif ; ?>
+				<button type="button" class="btn btn-default" id="btnBack">กลับ</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+
+	$("#divContent").sortable({
+		handle: '.handle-box',
+		cursor: 'move', 
+		update: function ( event, ui ){  }, 
+		start: function ( event, ui ){ 
+			$(".form-group-content").css("display", "none");
+			$(".content-title-herder").css("display", "");
+			$(".content-herder").css("margin-bottom", "0px");
+			ui.item.height(55); 
+			ui.placeholder.height(ui.item.height()); 
+			$(ui.item).parents("#divContent").sortable( "refreshPositions" );
+		}, 
+		stop: function ( event, ui ){ 
+			$(".form-group-content").css("display", ""); 
+			$(".content-title-herder").css("display", "none");
+			$(".content-herder").css("margin-bottom", "20px"); 
+		}
+	}).disableSelection();
+
+	$("#formData input[type=checkbox], #formData input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	<?php if ($this->canEdit) : ?> 
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'updatecustom'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'edit', "itemid" => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif ; ?>
+
+	<?php if ($this->canDelete) : ?>
+	// Delete
+	$("#btnDelete").click(function(){
+		DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+			$.post("<?php echo $this->url(array("module" => 'widgetmanage', "controller" => 'Item', 'action' => 'delete'), null, true); ?>", {'id' : '<?php echo $this->data->ID?>'}, function(data){
+				if (data.result) {
+					DialogComplete('ลบสำเร็จ');
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'index'), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		});
+	});
+	<?php endif ; ?>
+
+	// Back
+	$("#btnBack").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'index'), null, true); ?>";
+	});
+
+	$("#lnkAddContent").click(function(){	
+		var index = $("#divContent .panel").length + 1;
+		var html = '';
+		html += '<div class="panel panel-default">' + '\n';
+		html += '	<div class="panel-body">' + '\n';
+		html += '		<div class="content-herder">' + '\n';
+		html += '			<em class="fa fa-bars handle-box ui-sortable-handle"></em>' + '\n';
+		html += '			<em class="fa fa-trash pull-right lnkRemove"></em>' + '\n';
+		html += '			<label id="ContentList-'+index+'-Title-Herder" class="content-title-herder" style="display: none;"></label>' + '\n';
+		html += '		</div>' + '\n';
+		html += '		<div class="form-group form-group-content">' + '\n';
+		html += '			<label class="col-md-3 control-label" for="ContentList-'+index+'-Title">ชื่อ</label>' + '\n';
+		html += '			<div class="col-md-9 divControl">' + '\n';
+		html += '				<input type="text" name="ContentList['+index+'][Title]" id="ContentList-'+index+'-Title" alt=Title value="" class="form-control" maxlength="500">' + '\n';
+		html += '			</div>' + '\n';
+		html += '		</div>' + '\n';
+		html += '		<div class="form-group form-group-content">' + '\n';
+		html += '			<label class="col-md-3 control-label" for="ContentList-'+index+'-IntroText">ข้อความเกริ่นนำ</label>' + '\n';
+		html += '			<div class="col-md-9 divControl">' + '\n';
+		html += '			<textarea name="ContentList['+index+'][IntroText]" id="ContentList-'+index+'-IntroText" alt=IntroText class="form-control" maxlength="2000" rows="3" cols="80"></textarea>' + '\n';
+		html += '			</div>' + '\n';
+		html += '		</div>' + '\n';
+		html += '		<div class="form-group form-group-content">' + '\n';
+		html += '			<label class="col-md-3 control-label" for="ContentList-'+index+'-ImageUrl">URL รูปภาพหน้าปก</label>' + '\n';
+		html += '			<div class="col-md-9 divControl">' + '\n';
+		html += '				<input type="text" name="ContentList['+index+'][ImageUrl]" id="ContentList-'+index+'-ImageUrl" alt=ImageUrl value="" class="form-control" maxlength="500" placeholder="http://www.emworkgroup.com/image/logo.png">' + '\n';
+		html += '			</div>' + '\n';
+		html += '		</div>' + '\n';
+		html += '		<div class="form-group form-group-content">' + '\n';
+		html += '			<label class="col-md-3 control-label" for="ContentList-'+index+'-URL">Link URL</label>' + '\n';
+		html += '			<div class="col-md-9 divControl">' + '\n';
+		html += '				<input type="text" name="ContentList['+index+'][Url]" id="ContentList-'+index+'-Url" alt=Url value="" class="form-control" maxlength="500" placeholder="http://www.emworkgroup.com/">' + '\n';
+		html += '			</div>' + '\n';
+		html += '		</div>' + '\n';
+		html += '	</div>' + '\n';
+		html += '</div>' + '\n';
+		html += '<script>' + '\n';
+		html += '$(function () {' + '\n';
+		html += '	$("#ContentList-'+index+'-Title").keyup(function(){' + '\n';
+		html += '		var str = $(this).val();' + '\n';
+		html += '		if(str.length>100){' + '\n';
+		html += '			str = str.substring(0, 100)+"...";' + '\n';
+		html += '		}' + '\n';
+		html += '		$("#ContentList-'+index+'-Title-Herder").html(str);' + '\n';
+		html += '	});' + '\n';
+		html += '	$(".lnkRemove").click(function(){' + '\n';
+		html += '		$(this).parent(".content-herder").parent(".panel-body").parent(".panel").remove();' + '\n';
+		html += '		reindexContent();' + '\n';
+		html += '	});' + '\n';
+		html += '});' + '\n';
+		html += '<\/script>' + '\n';
+		$('#divContent').append(html);
+	});
+
+	$(".lnkRemove").click(function(){
+		$(this).parent(".content-herder").parent(".panel-body").parent(".panel").remove();
+		reindexContent();
+	});
+
+	<?php if(count($this->dataContent)==0){ ?>
+	$("#lnkAddContent").click();
+	<?php } ?>
+});
+
+function reindexContent() {
+	var idx = 1;
+	$("#divContent .panel").each(function(i, e){ 
+		$(e).find('input[alt=Title]').attr("name", "ContentList[" + idx + "][Title]") ; 			 
+		$(e).find('textarea[alt=IntroText]').attr("name", "ContentList[" + idx + "][IntroText]");   
+		$(e).find('input[alt=ImageUrl]').attr("name", "ContentList[" + idx + "][ImageUrl]") ; 			 
+		$(e).find('input[alt=Url]').attr("name", "ContentList[" + idx + "][Url]") ; 
+		$(e).find('input[alt=Title]').attr("id", "ContentList-" + idx + "-Title") ; 			 
+		$(e).find('textarea[alt=IntroText]').attr("id", "ContentList-" + idx + "-IntroText");   
+		$(e).find('input[alt=ImageUrl]').attr("id", "ContentList-" + idx + "-ImageUrl") ; 			 
+		$(e).find('input[alt=Url]').attr("id", "ContentList-" + idx + "-Url") ; 
+		idx++;			 
+	});
+}
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'WDG-MGT-07'); ?>

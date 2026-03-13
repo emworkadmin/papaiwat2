@@ -1,0 +1,222 @@
+<?php 
+$defaultDataDetail = new stdClass();
+?>
+<div class="panel-detail">
+	<form class="form-horizontal" id="formDialog" name="formDialog">
+		<?php echo $this->formHidden("hdfDialogID", $this->ID); ?>
+		<?php echo $this->formHidden("hdfDialogDefaultLanguage", $this->defaultLanguage); ?>
+		<div class="nav-tabs-custom">
+			<ul class="nav nav-tabs">
+				<?php 
+				if (count($this->languages) > 0) :
+					$i = 0;
+					foreach ($this->languages as $lang) :
+						$i ++;
+				?>
+				<li class="<?php echo $i == 1 ? 'active' : ''; ?>">
+					<a data-toggle="tab" href="#detail-dialog-<?php echo $lang['Code']; ?>" title="<?php echo $lang['Name']; ?>"><?php echo $lang['NameLocal']; ?></a>
+				</li>
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</ul>
+			<div class="tab-content">
+				<?php 
+				if (count($this->languages) > 0) :
+					$i = 0;
+					foreach ($this->languages as $lang) :
+						$langCode = $lang['Code'];
+						$isRequired = $lang["IsRequired"] == "Y";
+						$isDefault = $lang["IsDefault"] == "Y";
+						$requiredLabel = '';
+						$requiredClass = '';
+						if ($isRequired) :
+							$requiredLabel = 'labelRequest';
+							$requiredClass = 'required';
+						endif;
+						$dataDetail = $this->dataDetails[$langCode];
+						if ($isDefault) : 
+							$defaultDataDetail = $dataDetail;
+						endif;
+						$i ++;							
+				?>
+				<div id="detail-dialog-<?php echo $lang['Code']; ?>" class="tab-pane fade <?php echo $i == 1 ? 'in active' : ''; ?>">					
+					<div class="form-group" >
+						<label class="col-md-3 control-label <?php echo $requiredLabel; ?>" for="">ชื่อ</label>		
+						<div class="col-md-9 divControl">
+							<?php echo $this->formText("dialogParams[{$langCode}][ProcedureTitle]", $dataDetail->Title, array('class' => 'form-control ' . $requiredClass, 'placeholder' => '', 'maxlength' => '500')); ?>
+						</div>
+					</div>
+					
+					<?php if($isDefault) : ?>	
+					<div class="form-group">
+						<label class="col-md-3 control-label <?php echo $requiredLabel; ?>" for="">หน่วยงาน</label>
+						<div class="col-md-9 divControl">
+							<?php echo $this->formSelect("dialogParams[{$langCode}][ProcedureDepartment]", $dataDetail->LicenseDepartmentID, array('class' => 'form-control ' . $requiredClass, 'placeholder' => ''), Emwork_Utility::addEmptyOption($this->departmentOption)); ?>
+						</div>
+					</div>				
+					<div class="form-group" >
+						<label class="col-md-3 control-label " >Icon</label>		
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">							
+								<label class="radio-inline" for="dialogParams-<?= $langCode ?>-IconType-L">
+									<input type="radio" name="dialogParams[<?= $langCode ?>][IconType]" id="dialogParams-<?= $langCode ?>-IconType-L" value="L" <?php echo $dataDetail->IconType == 'L' ? 'checked="checked" ' : ''; ?> class="required">
+									<img src="<?php echo $this->baseUrl('assets/license/img/l.png'); ?>" alt="" class="icon-type" />
+								</label> 
+								<label class="radio-inline" for="dialogParams-<?= $langCode ?>-IconType-S">
+									<input type="radio" name="dialogParams[<?= $langCode ?>][IconType]" id="dialogParams-<?= $langCode ?>-IconType-S" value="S" <?php echo $dataDetail->IconType == 'S' ? 'checked="checked" ' : ''; ?> class="required">
+									<img src="<?php echo $this->baseUrl('assets/license/img/s.png'); ?>" alt=""  class="icon-type" />
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group" >
+						<label class="col-md-3 control-label " for="">Url Info</label>	
+						<div class="col-md-9 divControl" >
+							<?php echo $this->formText("dialogParams[{$langCode}][ProcedureUrl]", $dataDetail->Url, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '500')); ?>
+						</div>
+					</div>	
+					<div class="form-group" >
+						<label class="col-md-3 control-label " for="">Url ลิงค์แสดงความคิดเห็น</label>		
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">
+								<?php echo $this->formRadio("dialogParams[{$langCode}][ProcedureUrlType]", empty($dataDetail->UrlType) ? 'D' : $dataDetail->UrlType, array('class' => 'required', 'label_class' => 'radio-inline'), $this->urlTypeOption, " "); ?>
+							</div>
+						</div>
+						<div class="col-md-offset-3 col-md-9 divControl" id="divProcedureUrlComment">
+							<?php echo $this->formText("dialogParams[{$langCode}][ProcedureUrlComment]", $dataDetail->UrlComment, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '500')); ?>
+						</div>
+					</div>
+					<div class="form-group has-feedback">
+            			<label class="col-md-3 control-label" for="">วันที่เปิดรับฟังความคิดเห็น</label>
+            			<div class="col-md-9 divControl">
+            				<?php echo $this->formText("dialogParams[{$langCode}][ProcedureStartDate]", $dataDetail->StartDate, array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+        					<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+        					<span id="<?php echo "params-{$langCode}-ProcedureStartDateClose"; ?>" class="fa fa-times-circle" style="right: 48px; top: 10px; position: absolute; cursor: pointer; <?php echo $dataDetail->StartDate == null ? "display: none;" : ""; ?>"></span>
+            			</div>
+            		</div>
+					<div class="form-group has-feedback">
+            			<label class="col-md-3 control-label" for="">วันที่ปิดรับฟังความคิดเห็น</label>
+            			<div class="col-md-9 divControl">
+            				<?php echo $this->formText("dialogParams[{$langCode}][ProcedureEndDate]", $dataDetail->EndDate, array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+            				<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+            				<span id="<?php echo "params-{$langCode}-ProcedureEndDateClose"; ?>" class="fa fa-times-circle" style="right: 48px; top: 10px; position: absolute; cursor: pointer; <?php echo $dataDetail->EndDate == null ? "display: none;" : ""; ?>"></span>
+            			</div>
+            		</div>
+					<div class="form-group has-feedback">
+            			<label class="col-md-3 labelRequest control-label" for="ProcedurePublishDate">วันที่ประกาศ</label>
+            			<div class="col-md-9 divControl">
+            				<?php echo $this->formText("dialogParams[{$langCode}][ProcedurePublishDate]", $dataDetail->PublishDate, array('class' => 'form-control required', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+        					<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+            			</div>
+            		</div>
+					<div class="form-group has-feedback">
+            			<label class="col-md-3 labelRequest control-label" for="">เวลา</label>
+            			<div class="col-md-9 divControl">
+            				<?php echo $this->formText("dialogParams[{$langCode}][ProcedurePublishDateTime]", $dataDetail->PublishDateTime, array('class' => 'form-control required', 'id' => 'ProcedurePublishDateTime')); ?>
+            			</div>
+            		</div>
+            		<div class="form-group has-feedback">
+            			<label class="col-md-3 control-label" for="ProcedurePublishDown">วันที่ปิดประกาศ</label>
+            			<div class="col-md-9 divControl">
+            				<?php echo $this->formText("dialogParams[{$langCode}][ProcedurePublishDown]", $dataDetail->PublishDown, array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+            				<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+            				<span id="<?php echo "params-{$langCode}-ProcedurePublishDownClose"; ?>" class="fa fa-times-circle" style="right: 48px; top: 10px; position: absolute; cursor: pointer; <?php echo $dataDetail->PublishDown == null ? "display: none;" : ""; ?>"></span>
+            			</div>
+            		</div>
+					<div class="form-group has-feedback">
+            			<label class="col-md-3 control-label" for="">เวลา</label>
+            			<div class="col-md-9 divControl">
+            				<?php echo $this->formText("dialogParams[{$langCode}][ProcedurePublishDownTime]", $dataDetail->PublishDownTime, array('class' => 'form-control', 'id' => 'ProcedurePublishDownTime')); ?>
+            			</div>
+            		</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label labelRequest" >สถานะ</label>
+						<div class="col-md-9 divControl">
+							<div class="radio with-icheck">
+								<?php echo $this->formRadio("dialogParams[{$langCode}][ProcedureIsEnable]", $dataDetail->IsEnable, array('class' => 'required', 'label_class' => 'radio-inline'), $this->publishOption, " "); ?>
+							</div>
+						</div>
+					</div>                    
+					<?php endif; ?>
+				</div>
+				<?php 
+					endforeach;
+				endif;
+				?>
+			</div>
+		</div>	
+	</form>
+</div>
+
+<script type="text/javascript">
+$(function () {
+
+	$("#formDialog").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+    <?php if($this->isiOS) : ?>
+    $("input[type=text][id$=ProcedureStartDate],input[type=text][id$=ProcedureEndDate],input[type=text][id$=ProcedurePublishDate],input[type=text][id$=ProcedurePublishDown]").removeAttr("readonly");
+    <?php endif; ?>
+
+    $('input[type=text][id$=ProcedureStartDate]').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+    $('input[type=text][id$=ProcedureStartDate]').change(function(){
+		if ($(this).val() != "") {
+			$("span[id$=ProcedureStartDateClose]").css("display", "block");
+		}
+	});
+    $("span[id$=ProcedureStartDateClose]").click(function(){
+    	$('input[type=text][id$=ProcedureStartDate]').val('');
+    	$("span[id$=ProcedureStartDateClose]").css("display", "none");
+    });
+    $('input[type=text][id$=ProcedureEndDate]').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+    $('input[type=text][id$=ProcedureEndDate]').change(function(){
+		if ($(this).val() != "") {
+			$("span[id$=ProcedureEndDateClose]").css("display", "block");
+		}
+	});
+    $("span[id$=ProcedureEndDateClose]").click(function(){
+    	$('input[type=text][id$=ProcedureEndDate]').val('');
+    	$("span[id$=ProcedureEndDateClose]").css("display", "none");
+    });
+    $('input[type=text][id$=ProcedurePublishDate]').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+    $('input[type=text][id$=ProcedurePublishDown]').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+    $('input[type=text][id$=ProcedurePublishDown]').change(function(){
+		if ($(this).val() != "") {
+			$("span[id$=ProcedurePublishDownClose]").css("display", "block");
+		}
+	});
+    $("span[id$=ProcedurePublishDownClose]").click(function(){
+    	$('input[type=text][id$=ProcedurePublishDown]').val('');
+    	$("span[id$=ProcedurePublishDownClose]").css("display", "none");
+    });
+    
+    $("input[type=text][id$=ProcedurePublishDateTime]").wickedpicker({twentyFour: true, title : 'เวลา', now : '<?php echo $this->publishDateTime;?>'});
+    $("input[type=text][id$=ProcedurePublishDownTime]").wickedpicker({twentyFour: true, title : 'เวลา', now : '<?php echo $this->publishDownTime;?>'});
+
+    $("#formDialog input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	$("#formDialog").on("ifClicked", "input[name='dialogParams[<?php echo $this->defaultLanguage; ?>][ProcedureUrlType]']", function(){	
+		toggleVdoType($(this).val());
+	});
+	toggleVdoType($("input[name='dialogParams[<?php echo $this->defaultLanguage; ?>][ProcedureUrlType]']:checked").val());
+	function toggleVdoType(val) {
+		$("#divProcedureUrlComment").css('display', 'none');
+		$('#dialogParams-<?php echo $this->defaultLanguage; ?>-ProcedureUrlComment').removeClass('required');
+		$('#dialogParams-<?php echo $this->defaultLanguage; ?>-ProcedureUrlComment').prop('disabled', true);
+		if(val == 'E'){
+			$("#divProcedureUrlComment").css('display', '');
+			$('#dialogParams-<?php echo $this->defaultLanguage; ?>-ProcedureUrlComment').prop('disabled', false);
+		}else{
+			$("#divProcedureUrlComment").css('display', 'none');
+			$('#dialogParams-<?php echo $this->defaultLanguage; ?>-ProcedureUrlComment').prop('disabled', true);
+		}
+	}
+});
+</script>

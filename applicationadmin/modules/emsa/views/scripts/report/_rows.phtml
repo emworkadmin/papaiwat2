@@ -1,0 +1,35 @@
+<?php if (count($this->data) > 0) : ?>
+	<?php foreach($this->data as $d) : ?>
+	<div class="emsa-row">
+		<div class="emsa-row-icon">
+			<em class="fa fa-file"></em>
+		</div>
+		<div class="emsa-row-detail-icon">
+			<div class="emsa-row-link">
+				<a class="lnkDownloadReport" href="<?php echo $d['URL']; ?>" target="_blank" data-id="<?php echo $d['ReportID']; ?>"><?php echo $d['Name']; ?></a>
+			</div>
+			<div class="emsa-row-download">
+				ดาวน์โหลด <?php echo number_format($d["Downloads"]); ?> ครั้ง
+			</div>
+		</div>
+		<div class="emsa-clearfix"></div>
+	</div>
+	<?php endforeach; ?>
+<?php else : ?>
+<div class="emsa-row-nodata">
+	ไม่มีข้อมูล
+</div>
+<?php endif; ?>
+
+<script type="text/javascript">
+jQuery(function(){
+	$('.lnkDownloadReport').click(function(){
+		updateDownloads($(this).data('id'));
+	});
+	function updateDownloads(id) {
+		$.post("<?php echo $this->url(array("module" => "emsa", "controller" => "report", "action" => "updatereportdownloads"), null, true); ?>", {"id" : id}, function(data){
+			// Nothing ...
+		}, "json");
+	}
+});    
+</script>

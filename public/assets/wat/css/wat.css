@@ -1,0 +1,79 @@
+.wat-detail {}
+
+.wat-detail-cover {width: 100%;}
+.wat-detail-cover img {width: 100%;}
+
+.wat-detail-intro {margin-bottom: 15px;}
+.wat-detail-intro .introimage {width: 100%}
+.wat-detail-intro .introimage img {width: 100%}
+.wat-detail-intro .introtext {}
+
+.wat-detail-main {}
+.wat-detail-main .wat-detail-infomation {width: 300px; float: right; display: block; padding: 10px; background-color: #EAEAEA; margin: 0px 0px 10px 10px;}
+.wat-detail-main .wat-detail-infomation .title {font-weight: bold; color: #000; font-size: 3rem; padding: 0px 0px 5px;}
+.wat-detail-main .wat-detail-infomation .body {margin-bottom: 15px;}
+.wat-detail-main .wat-detail-infomation .topic {font-weight: bold;}
+.wat-detail-main .wat-detail-body {}
+.wat-detail-main .wat-detail-body .wat-detail-detail {margin-bottom: 25px;}
+.wat-detail-main .wat-detail-body .wat-detail-detail .title {font-weight: bold; color: #000; padding: 3px 0px 7px; font-size: 3rem;}
+.wat-detail-main .wat-detail-body .wat-detail-detail .datalist {}
+.wat-detail-main .wat-detail-body .wat-detail-detail .datalist .topic {font-weight: bold;}
+
+.wat-detail-gallery {}
+.wat-detail-gallery .img-container {width: 100%; padding-top: 75%; position: relative; cursor: pointer; margin-bottom: 15px;}
+.wat-detail-gallery .img-container .img-inner {position: absolute; top: 0; left: 0; bottom: 0; right: 0;}
+.wat-detail-gallery .img-container .img-inner img {object-fit: cover; width: 100%; height: 100%;}
+
+.wat-detail-social {}
+
+.wat-detail-tag {}
+.wat-detail-tag .keyword { display: block; float: left; border: 1px solid #c58bf1; padding: 2px 7px; border-radius: 5px; margin: 0px 5px 5px 0px; background: #c58bf1; color: #fff;}
+
+.wat-detail-facebookpage {}
+.wat-detail-facebookpage > div {vertical-align: top; margin-bottom: 15px;}
+
+.wat-search-panel {}
+.wat-search-panel .btn, .wat-search-panel .form-control {font-size: 2.1rem; height: 35px; color: #000000;}
+.wat-search-panel .form-group {margin-bottom: 0px;}	
+.wat-search-panel .search-province .select2-selection, 
+.wat-search-panel .search-region .select2-selection , 
+.wat-search-panel .search-type .select2-selection 
+{height: 35px;}
+.wat-search-panel .select2-container--default .select2-selection--single {border-radius: 0px; border-color: #d2d6de;}
+.wat-search-panel .select2-container--default .select2-selection--single .select2-selection__rendered {color: #000000;}
+
+
+.wat-result-empty {text-align: center; color: #999999; background-color: #E4E4E4; border: 1px solid #CCCCCC; padding: 25px 15px 15px;}
+.wat-result-empty div {font-size: 3.6rem; font-weight: bold;}
+
+.wat-result-list {min-height: 75px; position: relative;}
+
+.wat-detail-title .dharma-practice-title  { text-align: center; color: #C7AC5F; font-weight: normal; font-family: 'DBHelvethaicaX'; font-size: 35px; padding-bottom: 5px; line-height: 1.5; }
+
+.section-wat-bank .title-label { color: #C7AC5F; }
+.section-wat-bank .wat-bank-list { margin-bottom: 15px; padding-bottom: 15px; border-bottom: solid 1px #ccc; min-height: 90px; }
+.section-wat-bank .wat-bank-bank-name ,
+.section-wat-bank .wat-bank-account-no ,
+.section-wat-bank .wat-bank-account-name { font-weight: bold; position: relative; top: 20px; font-size: 24px; } 
+.section-wat-bank .wat-bank-bank-logo .img-bank-logo { width: 100px; } 
+.section-wat-bank .wat-bank-qr-code .img-qr-code { width: 60px; cursor: pointer; } 
+@media screen and (max-width: 992px) {
+    .section-wat-bank .wat-bank-bank-name ,
+    .section-wat-bank .wat-bank-account-no ,
+    .section-wat-bank .wat-bank-account-name { top: 0; } 
+	.section-wat-bank .wat-bank-bank-logo { margin-bottom: 10px; } 
+	.section-wat-bank .wat-bank-qr-code { margin-top: 5px; } 
+}
+
+.section-wat-promptpay .title-label { color: #C7AC5F; }
+.section-wat-promptpay .wat-promptpay-list { margin-bottom: 15px; padding-bottom: 15px; border-bottom: solid 1px #ccc; min-height: 90px; }
+.section-wat-promptpay .wat-promptpay-no ,
+.section-wat-promptpay .wat-promptpay-name { font-weight: bold; position: relative; top: 20px; font-size: 24px; } 
+.section-wat-promptpay .wat-promptpay-logo .img-promptpay-logo { width: 100px; margin-top: 15px; } 
+.section-wat-promptpay .wat-promptpay-qr-code .img-qr-code { width: 60px; cursor: pointer; } 
+@media screen and (max-width: 992px) {
+    .section-wat-promptpay .wat-promptpay-no ,
+    .section-wat-promptpay .wat-promptpay-name { top: 0; } 
+	.section-wat-promptpay .wat-promptpay-logo .img-promptpay-logo { margin-top: 0; margin-bottom: 10px; } 
+	.section-wat-promptpay .wat-promptpay-qr-code { margin-top: 10px; } 
+}

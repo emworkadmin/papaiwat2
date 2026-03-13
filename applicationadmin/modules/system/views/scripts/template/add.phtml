@@ -1,0 +1,178 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/colorpicker/css/bootstrap-colorpicker.min.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/colorpicker/js/bootstrap-colorpicker.min.js"); ?>'></script>
+
+<div class="panel-detail">
+	<form class="form-horizontal" id="formData" name="formData">
+		<div class="title-label">ข้อมูลทั่วไป</div>
+		<div class="form-group">
+			<label class="col-md-3  control-label labelRequest" for="name">ชื่อ Template</label>
+			<div class="col-md-5 divControl">
+				<?php echo $this->formText('name', null, array('class' => 'form-control required', "maxlength" => "250")); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3  control-label labelRequest" for="groupMenu">เมนูหลัก</label>
+			<div class="col-md-5 divControl">
+				<?php echo $this->formSelect('groupMenu', null, array('class' => 'form-control required'), $this->groupMenu); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3  control-label labelRequest" for="displayMenuGroup">การแสดงผลเมนูหลัก</label>
+			<div class="col-md-5 divControl">
+				<?php echo $this->formSelect('displayMenuGroup', null, array('class' => 'form-control required'), $this->displayMenuGroupOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="Picture">รูป Favicon </label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->UploadHtmlControl("Favicon", "Favicon", null, array('multi' => false, 'exts' => array('png', 'jpg', 'gif'))); ?>
+				<div class="help-block">เลือกไฟล์ที่ต้องการ</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="Picture">โลโก้เว็บไซต์ </label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->UploadHtmlControl("logo", "logo", null, array('multi' => false, 'exts' => array('png', 'jpg', 'gif'))); ?>
+				<div class="help-block">เลือกไฟล์ที่ต้องการ</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="Picture">รูปพื้นหลัง </label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->UploadHtmlControl("background", "background", null, array('multi' => false, 'exts' => array('png', 'jpg', 'gif'))); ?>
+				<div class="help-block">เลือกไฟล์ที่ต้องการ</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Background Repeat</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('bgRepeat', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgRepeatOption)); ?>
+			</div>
+			<label class="col-md-3 control-label ">Background Size</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('bgSize', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgSizeOption)); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Background Attachment</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('bgAttachment', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgAttachmentOption)); ?>
+			</div>
+			<label class="col-md-3 control-label ">Background Position</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('bgPosition', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->bgPositionOption)); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Background Color</label>
+			<div class="col-md-3 divControl">
+				<div class="input-group colorpicker-group">
+					<?php echo $this->formText('bgColor', null, array('class' => 'form-control', "maxlength" => "50")); ?>
+					<div class="input-group-addon">
+						<i></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<?php if (true) : ?>
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest">ปรับระดับอักษร</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('showFont', "N", array('class' => 'required', 'label_class' => 'radio-inline'), $this->showFontOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest">แสดงจำนวนผู้ชม</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('showVisit', "N", array('class' => 'required', 'label_class' => 'radio-inline'), $this->showVisitOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<?php endif; ?>
+		<div class="form-group">
+			<label class="col-md-3 control-label">กำหนดเป็นค่าพิ้นฐาน</label>
+			<div class="col-md-9 divControl">
+				<div class="checkbox with-icheck">
+					<label for="isDefault">
+						<?php echo $this->formCheckbox("isDefault", null, array('class' => 'form-control'), array('Y', 'N')); ?> 
+						ใช่
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3 button-panel-zone">
+			<?php if ($this->canAdd) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			<?php endif ; ?>
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+	</form>
+</div>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });	
+    
+	$("#formData input[type=checkbox], #formData input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+	$('#formData .colorpicker-group').colorpicker({autoInputFallback: false, useAlpha: false, format: 'hex'});
+
+	function buttonZoneDisabled() {
+		$(".button-panel-zone button").attr("disabled", "disabled");
+		$(".button-panel-zone").append('<em class="fa fa-refresh fa-spin"></em>');
+	}
+	function buttonZoneActive() {
+		$(".button-panel-zone button").removeAttr("disabled");
+		$(".button-panel-zone > em").remove();
+	}
+	
+	// Save
+	<?php if ($this->canAdd) : ?>
+	$("#btnSave").click(function(){
+		buttonZoneDisabled();
+		var valid = $("#formData").valid();
+		if (valid) {			
+			$.post("<?php echo $this->url(array('module' => 'system', 'controller' => 'template', 'action' => 'save'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'template', 'action' => 'edit'), null, true); ?>/itemid/" + data.id;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+				buttonZoneActive();
+			}, 'json');
+		} else {
+			buttonZoneActive();
+		}
+	});
+	<?php endif ; ?>
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'template', 'action' => 'index'), null, true); ?>";
+	});
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'SYS-TMP-02'); ?>

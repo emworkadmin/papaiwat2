@@ -1,0 +1,178 @@
+<?php 
+/**
+ * EM D2MS
+ *
+ * @copyright  Copyright (c) 2018 EMWORK Group
+ * @license	EMWORK Group
+ * @version	1.0.0 applicationadmin/modules/system/views/scripts/menu/index.phtml 2018-02-20
+ * @author	EMWORK Group
+ */
+?>
+<link rel="stylesheet"
+	href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+<div>
+	<form class="searchPanel form-horizontal" id="formSearch">
+		<div class="form-group">
+			<div class="col-md-12">
+				<div class="input-group">
+					<p class="form-control-static">ค้นหาเมนู</p>
+					<?php if ($this->canAdd) : ?>
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-primary" id="btnGoAdd">
+							<em class="fa fa-plus"> </em> เพิ่ม
+						</button>
+					</span>
+					<?php endif ; ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-12">
+				<div class="input-group">
+						<?php echo $this->formText('textsearch', $this->InfoSearch->searchText, array('class' => 'form-control', 'placeholder' => 'ค้นหาจากชื่อเมนู'));?>
+						<span class="input-group-btn">
+						<button type="button" class="btn btn-primary" id="btnSearch">
+							<em class="fa fa-search"></em> ค้นหา
+						</button>
+						<button type="button" class="btn btn-warning" id="btnReset">
+							<em class="fa fa-refresh"></em> เริ่มใหม่
+						</button>
+						<button type="button" class="btn btn-default" id="btnAdvance">
+							<em class="fa fa-minus-circle"></em> ลดเงื่อนไขการค้นหา
+						</button>
+					</span>
+				</div>
+
+			</div>
+		</div>
+		<div id="AdvanceSearch">
+			<?php echo $this->formHidden('hdfAdvanceSearch', 'S', null, null); ?>			
+			<div class="form-group">
+				<label for="menuGroupID" class="control-label col-md-2">กลุ่มเมนู :
+				</label>
+				<div class="col-md-4">
+					<?php echo $this->formSelect('menuGroupID', $this->InfoSearch->GroupMenu, array('class' => 'form-control'), $this->groupMenu); ?>
+				</div>
+				<label for="is_enable" class="control-label col-md-2">สถานะ : </label>
+				<div class="col-md-4">
+					<?php echo $this->formSelect('is_enable', $this->InfoSearch->isEnable, array('class' => 'form-control'), $this->publishOption); ?>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<table id="tblData" class="table table-bordered table-hover">
+	<caption>รายการเมนู</caption>
+	<thead>
+		<tr>
+			<th>ลำดับ</th>
+			<th>ชื่อ</th>
+			<th>กลุ่ม</th>
+			<th>หน้าแรก</th>
+			<th>ลำดับ</th>
+			<th>สถานะ</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script type="text/javascript">
+    jQuery(function(){
+
+    	<?php if ($this->canAdd) : ?>
+    	$("#btnGoAdd").click(function(e) {
+    		window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'menu', 'action' => 'add'), null, true); ?>";
+		});
+		<?php endif ; ?>
+		
+
+    	// ------------------------- Date picker ------------------------- //
+    	
+        $('#txtCreated').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+        $('#txtCreatedTo').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+
+    	// --------------- Begin: Table & Search Zone --------------------------
+    	
+    	function renderColumn ( data, type, row, meta ) {
+    		return data;
+    	}
+    	function renderColumnLink ( data, type, row, meta ) {
+    		return '<a href="<?php echo $this->url(array('module' => 'system', 'controller' => 'menu', 'action' => 'edit'), null, true);?>/itemid/' + row.DT_RowId + '">' + data + '</a>';
+    	}
+    	var rows_selected = [];
+    	
+    	var tblData = $('#tblData').DataTable({
+    		processing: true,
+    		serverSide: true,
+    		responsive: true,
+    		<?php
+			if ($this->InfoSearch->tblPage) {
+				echo 'displayStart: ' . $this->InfoSearch->tblPage . ',';
+			}
+			if ($this->InfoSearch->tblRow) {
+				echo 'pageLength: ' . $this->InfoSearch->tblRow . ',';
+			}
+			if ($this->InfoSearch->tblOrderCol && $this->InfoSearch->tblOrderDir) {
+				echo 'order: [[ ' . $this->InfoSearch->tblOrderCol . ', "' . $this->InfoSearch->tblOrderDir . '" ]],';
+			} else {
+				echo 'order: [[ 4, "asc" ]],';
+			}
+			?>
+    		ajax: {
+    	        url: '<?php echo $this->url(array('module' => 'system', 'controller' => 'menu', 'action' => 'getlist'), null, true); ?>',
+    	        type: 'POST',
+    	        data: function(d) {
+        	        d.textstr = $("#formSearch #textsearch").val();
+        	        d.isEnable = $("#formSearch #is_enable").val();
+        	        d.menuGroupID = $("#formSearch #menuGroupID").val();
+    	        }
+    	    },
+    	    language : {
+				url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+    	    },
+    		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+    		"columns": [
+    		            { "width": "10%", 'orderable': false, 'data' : 'NO', "class" : "text-center"},
+    		            { 'data' : 'MenuName' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "20%", 'data' : 'MenuGroupName' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "10%", 'data' : 'IsHome' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "10%", 'data' : 'Ordering' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "10%", 'data' : 'IsEnable' , 'render' : renderColumnLink, "class" : "ratio"},
+    		          ]
+        });
+        
+
+		$('#btnSearch').click(function(){
+			tblData.ajax.reload();
+		});
+
+		$('#btnReset').click(function(){
+			$(".searchPanel input[type=text]").val('');
+			$(".searchPanel select").val('');
+			tblData.ajax.reload();
+		});
+    	        
+		
+		// --------------- Toogle Advance Search ---------------
+	
+		
+		$("#btnAdvance").click(function(e) {
+			var val = $('#hdfAdvanceSearch').val();
+			if(val == 'H'){
+				$("#AdvanceSearch").slideDown(600, "swing");
+				$("#hdfAdvanceSearch").val('S');
+			}else{
+				$("#AdvanceSearch").slideUp(600, "swing");
+				$("#hdfAdvanceSearch").val('H');
+			}
+		});
+    	
+    });
+    
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'SYS-MNU-01'); ?>

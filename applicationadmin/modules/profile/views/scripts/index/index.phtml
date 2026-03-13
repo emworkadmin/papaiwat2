@@ -1,0 +1,118 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+	
+<div class="panel-detail">	
+<form class="form-horizontal" id="formAdd" name="formAdd">
+<?php echo $this->formHidden('hdfID', $this->data->id, null, null); ?>
+
+		<div class="title-label">ข้อมูลทั่วไป</div>
+		
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="">ชื่อ-นามสกุลผู้ใช้งาน</label>
+			<div class="col-md-1 divControl">
+				<?php echo $this->formText('txtTitle',$this->data->TitleName, array('class' => 'form-control required', 'placeholder' => 'คำนำหน้า', 'maxlength' => '50')); ?>
+			</div>
+			<div class="col-md-4 divControl">
+				<?php echo $this->formText('txtFirstName',$this->data->FirstName, array('class' => 'form-control required', 'placeholder' => 'ชื่อ', 'maxlength' => '50')); ?>
+			</div>
+			<div class="col-md-4 divControl">
+				<?php echo $this->formText('txtLastname',$this->data->LastName, array('class' => 'form-control required', 'placeholder' => 'นามสกุล', 'maxlength' => '50')); ?>
+			</div>
+		</div>
+		<div class="form-group has-feedback">
+			<label class="col-md-3 control-label" for="">เพศ</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formSelect('lstGender', $this->data->Gender, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->genderOption)); ?>
+			</div>
+			<label class="col-md-3 control-label" for="txtTelephone">วันเกิด</label>
+			<div class="col-md-3 divControl ">
+				<?php echo $this->formText('txtBirthDate', Emwork_Utility_DateTime::MSSqlToDateThai($this->data->BirthDate), array('class' => 'form-control', 'placeholder' => '',  'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+				<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+				<span id="txtBirthDateClose" class="fa fa-times-circle" style="right: 50px; top: 10px; position: absolute; cursor: pointer; display: none;"></span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtTelephone">เบอร์โทรศัพท์</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formText('txtTelephone', $this->data->Telephone, array('class' => 'form-control', 'placeholder' => 'เบอร์โทรศัพท์', 'maxlength' => '50')); ?>
+			</div>
+			<label class="col-md-3 control-label" for="txtFax">เบอร์แฟกซ์</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formText('txtFax', $this->data->Fax, array('class' => 'form-control', 'placeholder' => 'เบอร์แฟกซ์', 'maxlength' => '50')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtMobile">เบอร์โทรศัพท์มือถือ</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formText('txtMobile', $this->data->Mobile, array('class' => 'form-control', 'placeholder' => 'เบอร์โทรศัพท์มือถือ', 'maxlength' => '50')); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="txtEmail">อีเมล</label>
+			<div class="col-md-9 divControl">
+			<p class="form-control-static">
+					<?php echo $this->data->Email;?>
+				</p>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> ปรับปรุงข้อมูล</button>
+			</div>
+		</div>
+		
+		
+</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formAdd").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$('#txtBirthDate').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	$('#txtBirthDate').change(function(){
+		if ($(this).val() != "") {
+			$("#txtBirthDateClose").css("display", "block");
+		}
+	});
+	$("#txtBirthDateClose").click(function(){
+		$('#txtBirthDate').val('');
+		$("#txtBirthDateClose").css("display", "none");
+	});
+
+	$("#formAdd input[type=checkbox], #formAdd input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+	
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formAdd").valid();
+		if (valid) {
+		
+			$.post("<?php echo $this->url(array('module' => 'profile', 'controller' => 'index', 'action' => 'update'), null, true);?>", $("#formAdd").serializeArray(), function(data){
+				if (data.result) {
+					//alert(data.id);
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'profile', 'controller' => 'index', 'action' => 'index'), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'PROFILE-01'); ?>

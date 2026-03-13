@@ -1,0 +1,31 @@
+<style>
+.article-tag {
+	display: inline-block;
+	margin-top:10px;
+}
+.article-tag .keyword {
+	display: block;
+    float: left;
+    border: 1px solid #cccccc;
+    padding: 2px 7px;
+    border-radius: 5px;
+    margin: 0px 5px 5px;
+	background: #c58bf1;
+	color: #fff;
+}
+</style>
+<div class="article-tag">
+	<div class="tag">
+		<?php 
+		if($this->datatag){?>
+			<div class="headkeyword"><em class="fa fa-key"><span class="keywordtext"> <?php echo Emwork_Translate::text($this->lang, "content", "keyword"); ?></span></em></div>
+		<?php	foreach($this->datatag as $keyword){	?> 			
+		<a class="keyword" href="<?php echo $this->url(array("module" => "search", "controller" => "search", "action" => "index", "text" => $keyword['Title'], "type" => "tag"), null, true); ?>">
+			<?php echo $keyword['Title']; ?>
+		</a>
+		<?php
+			}
+		}
+		?>
+	</div>
+</div>

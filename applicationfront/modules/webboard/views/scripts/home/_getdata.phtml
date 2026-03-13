@@ -1,0 +1,82 @@
+<?php 
+	if (count($this->itemData) > 0) :
+		foreach ($this->itemData as $item) :
+
+			$id = $item["ID"];
+			$title = $item["Title"];
+			$amount = $item["Amount"];
+			$firstName = $item["FirstName"];
+			$detail = $item["Detail"];
+			$AmountView = $item["AmountView"];
+			$AmountReply = $item["AmountReply"];
+			$date = $item['Created']->format("d/m/y H:i");
+			$iconid = '1';
+
+			$imageUrl = $this->baseUrl("images/other/no-image.jpg");
+			$defaultImageStyle = "opacity:0;";
+			if (!empty($item["IntroImageHashName"])) :
+				$defaultImageStyle = '';
+				$imageUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get","file" => $item["IntroImageHashName"]), null, true);
+			endif;
+
+			if($this->filter) :
+				foreach ($this->filter as $item) :
+					$title = str_replace($item['Detail'],'<s>'.$item['Replace'].'</s>', $title);
+					$detail = str_replace($item['Detail'],'<s>'.$item['Replace'].'</s>', $detail);
+				endforeach;
+			endif;
+
+			$url = $this->url(array("module" => "webboard", "controller" => "home", "action" => "post", "id" => $id), null, true);
+			?>
+				<div class="inforowData">
+				<div class="col-md-3 image" style="padding-top: 15px;">
+					<a href="<?php echo $url; ?>">
+						<div class="image-inner" style="background-color: #3c8dbc;">
+							<img alt="image" src="<?php echo $imageUrl; ?>" style="width: 35%;margin: auto auto;display: block;<?php echo $defaultImageStyle; ?>"/>
+						</div>
+					</a>
+				</div>
+
+				<div class="col-md-9 detail" style="padding-top: 15px;">
+
+					<div class="detail-intro" >
+						<a href="<?php echo $url; ?>"style=" color:  black;font-weight:  bold;font-size: 30px;"><?php echo $title; ?></a>
+					</div>
+
+					<div class=" detail-detail line-clamp">
+						<a href="<?php echo $url; ?>"><?php echo $detail; ?></a>
+					</div>		
+
+					<div class=" detail-admin" style="float:  left;">
+						<span class = 'text' style="float:  left; padding-right: 5px;">
+							<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_admin'); ?> : 
+						</span>
+						<a href="<?php echo $url; ?>" style="float:  left; margin-right: 5px; color: red;"> <?php echo $firstName; ?></a>
+					</div>		
+					<div class=" detail-view" style="float:  right;">
+						<span class = 'text' style="float:  right; padding-right: 5px;">
+							<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_amount'); ?> 
+						</span>
+						<a href="<?php echo $url; ?> " style="float:  right; margin-right: 5px;color: black;"><em class="fa fa-eye"></em><?php echo $AmountView; ?></a> 
+					</div>		
+					<div class=" detail-reply" style="float:  right;">
+						<span class = 'text' style="float:  right; padding-right: 5px;">
+							<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_response'); ?> 
+						</span>
+						<a href="<?php echo $url; ?>" style="float:  right; margin-right: 5px; color: black";><em class="fa fa-comment"></em><?php echo $AmountReply; ?></a> 
+					</div>	
+					<div class=" detail-post" style="float:  right;">
+						<span class = 'text' style="float:  right; padding-right: 5px;">
+							<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_topic'); ?>
+						</span>
+						<a href="<?php echo $url; ?>" style="float:  right; margin-right: 5px;color: black;"><em class="fa fa-calendar"></em><?php echo $amount; ?></a> 
+					</div>
+
+				</div>
+					<div class="clearfix"></div>
+				</div>
+
+			<?php 
+		endforeach;
+	endif;
+?>

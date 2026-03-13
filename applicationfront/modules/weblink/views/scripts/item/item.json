@@ -1,0 +1,20 @@
+{
+	"name" : "รายการเว็บลิงค์",
+	"controller" : "item",
+	"description" : "แสดงรายการเว็บลิงค์ตามหมวดหมู่ที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "category",
+			"type" : "select",
+			"size" : "",
+			"label" : "หมวดหมู่",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Weblink_Service_Category",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

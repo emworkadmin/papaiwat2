@@ -1,0 +1,37 @@
+<?php
+//<!---------------------------------------- ไฟล์มัลติมีเดีย ----------------------------------------------->
+if (count ( $this->dataFileMultiMedias ) > 0) :
+?>
+	<style>
+	.article-multi { position: relative; overflow: hidden; }
+	#multiNext { position: absolute; top: 55%; right: 0px; font-size: 60px; cursor: pointer; color: #FFF; background: rgba(0,0,0,0.8); padding: 0px 5px 0px 10px; }
+	#multiPrev { position: absolute; top: 55%; left: 0px; font-size: 60px; cursor: pointer; color: #FFF; background: rgba(0,0,0,0.8); padding: 0px 10px 0px 5px; }
+	.img-thumbnail { display: inline-block;  object-fit: cover; }
+	.video { display: inline-block; }
+	#videoPlayer { padding-left: 0px; margin-left: 0px !important; }
+	#videoPlayer>div { text-align: center; margin-bottom: 15px;}
+	</style>
+	<div class="article-multi">
+		<hr />
+		<div class="title-label">
+			<img alt="image" src="<?php echo substr($this->baseUrl("images/icons/icon_youtube.png"), $this->subStringAdminLen); ?>" /> วิดีโอ 
+		</div>
+
+		<ul class="row" id="videoPlayer">
+			<?php
+			foreach ( $this->dataFileMultiMedias as $media ) :
+				$mediaUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $media["hash_name"]), null, true);
+			?>
+				<div>
+					<video class="lg-video-object lg-html5" controls >
+						<source src="<?php echo $mediaUrl; ?>" type="video/mp4">
+					</video>
+				</div>
+			<?php
+				endforeach;
+			?>
+		</ul>
+	</div>
+<?php 
+endif;
+?>

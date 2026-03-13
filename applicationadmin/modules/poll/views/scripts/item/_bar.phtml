@@ -1,0 +1,136 @@
+<style>
+/* ------------------ Review Rate Style ----------------- */
+.meter { 
+	height: 5px;
+	position: relative;
+	background: #EFEFEF;
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 25px;
+	border-radius: 25px;
+	padding: 5px;
+	box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
+	margin-bottom: 15px;
+}
+.meter > span {
+	display: block;
+	height: 100%;
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+	border-top-left-radius: 20px;
+	border-bottom-left-radius: 20px;
+	background-color: rgb(43,194,83);
+	background-image: linear-gradient(
+		center bottom,
+		rgb(43,194,83) 37%,
+		rgb(84,240,84) 69%
+	);
+	box-shadow: 
+		inset 0 2px 9px  rgba(255,255,255,0.3),
+		inset 0 -2px 6px rgba(0,0,0,0.4);
+	position: relative;
+	overflow: hidden;
+}
+.blue > span {
+	position: absolute;
+	top: 0;
+	left: 0;
+	border-radius: 20px;
+	background-color: #33b5e6;
+	background-image: linear-gradient(to bottom, #33b5e6, #33b5e6);
+}
+.rateBarTitle { margin-bottom: 10px; }
+.rateBarTitle .rate { width: 65px; display: inline-block; font-size: 1.4rem; color: #9E9E9E; text-align: right; }
+.rateBarTitle .rate span { color: #535259; margin-right: 5px; }
+.rateBarTitle .bar { width: calc(100% - 65px); display: inline-block; float: left; margin-top: 10px; }
+
+/* ---------------------- Poll Style -------------------- */
+.poll-question { position: relative; padding: 10px 0px 10px 50px; font-weight: bold; background: #a6def5; border-radius: 5px; }
+.poll-question .question-index { position: absolute; left: 15px; }
+.poll-question .question-title { }
+.poll-question-desc { padding: 10px 0px 10px 50px; font-size: 1.2rem; background: #f2f2f2; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
+.poll-option { padding: 10px 0px 10px 50px; }
+.poll-option .fa-circle { font-size: 14px; color: #cccccc; }
+.button-panel-zone { margin-bottom: 30px; }
+
+.info.infopage { font-size: 1.4rem; font-family: 'THSarabunNew'; }
+</style>
+
+<div class="info infopage">
+
+	<div class="result-list-panel">
+		<div class="row">
+
+			<form class="form-horizontal" id="formQuestion" name="formQuestion">
+			<input type="hidden" name="hdfID" value="<?php echo $id; ?>">
+		
+			<?php 
+			if(count($this->dataQuestion)>0){
+				$index = 1;
+				foreach($this->dataQuestion as $k1=>$v1){
+			?>
+
+			<div class="col-md-12" data-id="<?php echo $v1['ID']; ?>">
+			
+				<div class="poll-question col-md-12">
+					<span class="question-index"><?php echo $index . ". "; ?></span>
+					<span class="question-title"><?php echo $v1['Question']; ?></span>
+				</div>
+
+				<?php if($this->ShowIntroText && $v1['Description']){ ?>
+				<div class="poll-question-desc col-md-12">
+					<?php echo nl2br($v1['Description']); ?>
+				</div>
+				<?php } ?>
+
+				<div class="divControl">
+
+					<?php 
+					if(count($v1['OptionList'])>0){
+						foreach($v1['OptionList'] as $k2=>$v2){
+					?>
+
+						<div class="poll-option col-md-12">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <em class="fa fa-circle"></em> &nbsp;&nbsp; <?php echo $v2['Name']; ?>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="rateBarTitle">
+                                        <div class="meter blue bar">
+                                            <span style="width : <?php echo empty($v2['Percentage']) ? '0%' : $v2['Percentage']; ?>;" title="<?php echo empty($v2['Percentage']) ? '0%' : $v2['Percentage']; ?>"></span>
+                                        </div>
+                                        <div class="rate">
+                                            <span><?php echo empty($v2['Percentage']) ? '0%' : $v2['Percentage']; ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+
+					<?php
+						}
+					}
+					?>
+
+				</div>
+
+			</div>
+
+			<?php
+				$index++;
+				}
+			}
+			?>
+
+			</form>
+
+		</div>
+	</div>
+	
+</div>
+
+<script>
+jQuery(function(){
+
+});
+</script>

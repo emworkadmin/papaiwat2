@@ -1,0 +1,90 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/slick/slick-theme.css'); ?>">
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/slick/slick-theme.css'); ?>">
+<script src="<?php echo $this->baseUrl('plugins/slick/slick.min.js'); ?>"></script>
+
+<style>
+.recommendpage { position: relative; overflow: hidden; }
+#recommendNext { position: absolute; top: 40%; right: 0px; font-size: 60px; cursor: pointer; color: #FFF; background: rgba(0,0,0,0.8); padding: 0px 5px 0px 10px; }
+#recommendPrev { position: absolute; top: 40%; left: 0px; font-size: 60px; cursor: pointer; color: #FFF; background: rgba(0,0,0,0.8); padding: 0px 10px 0px 5px; }
+</style>
+
+ <div class="info recommendpage">
+
+	<div>
+    	<div class="title-panel">
+			<span class="title">
+				Related Post
+			</span>
+			<hr />
+		</div>
+    </div>
+
+    <div class="result-list-panel">
+    	<div class="result-list" id="result-list">
+		
+		</div>
+    </div>
+
+	<em id="recommendNext" class="fa fa-angle-right"></em>
+	<em id="recommendPrev" class="fa fa-angle-left"></em>
+
+</div>
+
+<script>
+jQuery(function(){
+
+	reloadResultList(1);
+
+	function reloadResultList(pageIndex) {
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		$.post("<?php echo $this->url(array('module' => 'gallery', 'controller' => 'article', 'action' => 'getrecommend', "id" => $this->data->GalleryCategoryID, "iid" => $this->data->ID), null, true); ?>", sendData, function(data){
+			if (data.total > 0) {
+				$("#result-list").html(data.html);
+				recommendSlider();
+			} else {
+				var html = '';
+				$('.result-list').html(html);
+				$('#recommendNext').hide();
+				$('#recommendPrev').hide();
+			}
+		}, 'json');
+	}
+
+	function recommendSlider(){
+		$(".recommendCard").slick({
+			dots: false,
+			arrows: true,
+			nextArrow: $('#recommendNext'),
+			prevArrow: $('#recommendPrev'),
+			speed: 300,
+			slidesToShow: 4,
+			slidesToScroll: 4,
+			responsive: [
+				{
+					breakpoint: 1200,
+					settings: {
+						slidesToShow: 4,
+						slidesToScroll: 4,
+					}
+				},
+				{
+					breakpoint: 992,
+					settings: {
+						slidesToShow: 2,
+						slidesToScroll: 2,
+					}
+				},
+				{
+					breakpoint: 768,
+					settings: {
+						slidesToShow: 1,
+						slidesToScroll: 1,
+					}
+				}
+			]
+		});
+	}
+	
+});
+</script>

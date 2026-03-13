@@ -1,0 +1,104 @@
+
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+<!-- fixedColumns -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datatables/fixedColumns.bootstrap.min.css'); ?>">
+
+<style>
+th, td { white-space: nowrap; }
+</style>
+
+	<div class="form-group">
+		<div class="text-right">
+			<button type="button" class="btn btn-success" id="reportExcel"><em class="fa fa-file-excel-o"></em> Excel</button>
+		</div>
+	</div>
+
+	<table id="tblData" class="table table-bordered table-hover">
+		<caption>รายการแบบฟอร์ม</caption>
+		<thead>
+			<tr>
+				<th>ลำดับ</th>
+				<th>วันที่ตอบแบบฟอร์ม</th>
+				<th>IP Address</th>
+				<?php
+				if(count($this->dataType)>0){
+					foreach($this->dataType as $d){
+						echo '<th>'.$d['LABEL_'].'</th>';
+					}
+				}
+				?>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<!-- fixedColumns -->
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/datatables/dataTables.fixedColumns.min.js'); ?>"></script>
+
+<script type="text/javascript">
+    jQuery(function(){
+
+		$("#reportExcel").click(function() {
+			window.open("<?php echo $this->url(array('module'=>'eform', 'controller'=>'item','action'=>'exportexcelsubmission', 'itemid' => $this->itemid), null, true); ?>");
+		});
+
+    	// --------------- Begin: Table & Search Zone --------------------------    	
+    	function renderColumn ( data, type, row, meta ) {
+    		return data;
+    	}
+    	var rows_selected = [];
+    	
+    	var tblData = $('#tblData').DataTable({
+			scrollX: true,
+			fixedColumns: { leftColumns: 3 },
+    		processing: true,
+    		serverSide: true,
+    		responsive: true,
+    		<?php
+			if ($this->InfoSearch->tblPage) {
+				echo 'displayStart: ' . $this->InfoSearch->tblPage . ',';
+			}
+			if ($this->InfoSearch->tblRow) {
+				echo 'pageLength: ' . $this->InfoSearch->tblRow . ',';
+			}
+			if ($this->InfoSearch->tblOrderCol && $this->InfoSearch->tblOrderDir) {
+				echo 'order: [[ ' . $this->InfoSearch->tblOrderCol . ', "' . $this->InfoSearch->tblOrderDir . '" ]],';
+			} else {
+				echo 'order: [[ 1, "desc" ]],';
+			}
+			?>
+    		ajax: {
+    	        url: '<?php echo $this->url(array('module' => 'eform', 'controller' => 'item', 'action' => 'getsubmissionlist'), null, true); ?>',
+    	        type: 'POST',
+    	        data: function(d) {
+					d.itemid = '<?php echo $this->itemid; ?>';
+    	        }
+    	    },
+    	    language : {
+				url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+    	    },
+    		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+    		"columns": [
+    		            { "width": "40px", 'orderable': false, 'data' : 'NO', "class" : "text-center"},
+    		            { "width": "160px", 'data' : 'SubmitDate' , 'render' : renderColumn, "class" : "ratio"},
+    		            { "width": "120px", 'data' : 'RemoteIP' , 'render' : renderColumn, "class" : "ratio"},
+						<?php
+						if(count($this->dataType)>0){
+							foreach($this->dataType as $d){
+						?>
+    		            { 'orderable': false, 'data' : '<?php echo $d["ID"]; ?>' , 'render' : renderColumn, "class" : "ratio"},
+						<?php
+							}
+						}
+						?>
+						]
+        });
+
+    });
+    
+</script>

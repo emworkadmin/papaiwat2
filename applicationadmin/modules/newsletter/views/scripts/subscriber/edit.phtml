@@ -1,0 +1,114 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formAdd" name="formAdd">
+    <?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+        <div class="title-label">ข้อมูลทั่วไป</div>		
+        <div class="form-group" >
+            <label class="col-md-3 control-label labelRequest" for="">ชื่อผู้สมัคร</label>		
+            <div class="col-md-9 divControl">
+                <?php echo $this->formText("Name", $this->data->Name, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '250')); ?>
+            </div>
+        </div>
+
+        <div class="form-group" >
+            <label class="col-md-3 control-label labelRequest" for="">อีเมล์</label>		
+            <div class="col-md-9 divControl">
+                <?php echo $this->formText("Email", $this->data->Email, array('class' => 'form-control required email', 'placeholder' => '', 'maxlength' => '250')); ?>
+            </div>
+        </div>
+
+		<?php if(count($this->categoryOption)>0) : ?>
+			<div class="title-label">หมวดหมู่</div>
+			<?php foreach($this->categoryOption as $key => $value) : ?>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for=""><?php echo $value['Name']; ?></label>
+				<div class="col-md-9 divControl">
+					<div class="radio with-icheck">
+						<?php echo $this->formRadio("Iscat[{$key}]", $value['Status'] , array('class' => ' ', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+					</div>
+				</div>
+			</div>
+
+		<?php
+			endforeach;
+		endif;
+		?>
+
+		<div class="title-label">สถานะ</div>
+        <div class="form-group">
+            <label class="col-md-3 control-label" for="">สถานะ</label>
+            <div class="col-md-9 divControl">
+                <div class="radio with-icheck">
+                    <?php echo $this->formRadio("IsEnable", $this->data->IsEnable, array('class' => ' ', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+                </div>
+            </div>
+        </div>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<button type="button" class="btn btn-danger" id="btnDelete"><em class="fa fa-trash"></em> ลบข้อมูล</button>
+				<?php endif; ?>
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+	</form>
+</div>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formAdd").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+    
+	$("#formAdd input[type=checkbox], #formAdd input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+    // Save
+	$("#btnSave").click(function(){
+		var valid = $("#formAdd").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'newsletter', 'controller' => 'subscriber', 'action' => 'update'), null, true);?>", $("#formAdd").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'newsletter', 'controller' => 'subscriber', 'action' => 'edit'), null, true); ?>/itemid/" + data.id;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+
+	// Deleted
+	$("#btnDelete").click(function(){
+		DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+			$.post("<?php echo $this->url(array("module" => 'newsletter', "controller" => 'subscriber', 'action' => 'delete'), null, true); ?>", {'id' : '<?php echo $this->data->ID?>','Email' : '<?php echo $this->data->Email?>'}, function(data){
+				if (data.result) {
+					DialogComplete('ลบสำเร็จ');
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'newsletter', 'controller' => 'subscriber', 'action' => 'index'), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		});
+	});
+
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'newsletter', 'controller' => 'subscriber', 'action' => 'index'), null, true); ?>";
+	});
+
+});
+</script>

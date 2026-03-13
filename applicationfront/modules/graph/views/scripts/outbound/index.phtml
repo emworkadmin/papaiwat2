@@ -1,0 +1,722 @@
+<?php echo $this->partial("index/_pluginChartjs.phtml"); ?>
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/graph/css/graph.css'); ?>">
+
+<style>
+
+.TIC-footer {
+    font-size: 12px;
+    padding-top: 15px;
+}
+
+.graph-box.with-color.chart01 {background-color: #d5f0d1;}
+.graph-box.with-color.chart02 {background-color: #a9ddf3;}
+.graph-box.with-color.chart03 {background-color: #ddc1da;}
+
+.text > span{
+	padding-left: 38px;
+}
+.text2{
+    padding: 16px;
+    text-align: center;
+    position: relative;
+}
+.head{
+	padding: 20px 10px 15px 10px;
+}
+.value{
+	font-size:3rem;
+	line-height: 55px;
+	color: #4d4d4d;
+	padding-left: 40px;
+}
+.value2{
+	font-size:3rem;
+	line-height: 55px;
+	color: #4d4d4d;
+}
+.top1{
+	background: linear-gradient(to right, #70c6ea,#3b5398);
+	padding: 1px;
+	margin-right: 5px;
+    width: 29%;
+}
+.top2{width: 14%;}
+.top3{width: 26.2%;}
+.head1{background:#f9fafc;}
+.head2{background:#f9fafc;}
+.text{
+	padding: 15px;
+	text-align: center;
+    position: relative;
+}
+.sec1{
+	margin-top: 2%;
+	margin-bottom: 3%;
+}
+.HeadInbound{color:#0d78be;font-size: 1.5rem;}
+.Icon{
+	position: relative;
+    padding-top: 2px; 
+}
+.Title{
+	padding-top: 15px;
+	font-style: italic;
+}
+.data{    
+	background: #fff;
+    border-radius: 50px;
+	margin-right: 25px;
+    margin-left: 20px;
+	margin-top:10px;
+}
+.button{
+	text-align:center;
+	margin-top:30px;
+	margin-bottom:40px;
+	margin-left: 40%;
+    margin-right: 40%;
+}
+#btview{
+	font-size: 1.5rem;
+    background: linear-gradient(#82c440,#48b848);
+    border: 0px;
+    border-radius: 5px;
+	width:170px;
+	height:45px;
+	padding-top: 11px;
+}
+#btview a{
+	color:#fff;
+}
+.boxL{   
+	background: #fff;
+    padding: 5%;
+}
+.rankWord{font-size: 1.5rem;}
+.rankNum{font-size: 3rem;}
+.chart2{
+	margin-top:20px;
+	padding-bottom:3%;
+	padding-right: 2.5%;
+    padding-left: 2.5%;
+	background-color:#a9ddf3;
+}
+.chart3{
+	margin-top:20px;
+	padding-bottom:3%;
+	padding-right: 2.5%;
+    padding-left: 2.5%;
+	background-color:#ddc1da;
+}
+.chart1{
+	padding-bottom: 3%;
+	padding-right: 2.5%;
+    padding-left: 2.5%;
+	background-color:#d5f0d1;
+}
+.NationIcon{width:58%;position:absolute;margin-top: 5px;margin-left: 10px;}
+.TopIcon{position:absolute;padding-left: 5px;}
+.unit{font-size: 2.5rem;}
+
+.headtop5 .row{margin-left: 5px;}
+.headtop5L .row{text-align:right;margin-right: 5px;}
+.rank{text-align:center;font-style: italic;padding-top: 6%;}
+.Headtop5{
+	margin-top: 20px;
+	font-size: 6rem;
+	color: #0071bc;
+    font-style: italic;
+	margin-left: 60px;
+}
+.Name{
+	text-align:left;
+	padding-top: 0.4%;
+    padding-left: 0.5%;
+}
+.SumPople{
+	font-size: 1rem;
+    margin-bottom: -12px;
+}
+@media only screen and (max-width:1199px) {
+	.NationIcon{width:75%;}
+	.rankNum{font-size: 2.5rem;}
+	.rank{padding-top: 10%;}
+	.text1 {
+		padding-bottom: 25.5px;
+    	padding-top: 25.5px;
+	}
+	.text2 {
+    	padding: 26px 15px 26px 15px;
+	}
+	.top3 {
+    	width:25.85%;
+	}
+}
+@media only screen and (max-width:999px) {
+	.NationIcon{width:65%;top: 3px;}
+	.TopIcon{padding-left: 0px;left: 5px;top:3px}
+	.data {
+		width: 48%;
+		float: left;
+		margin-right: 1%;
+		margin-left: 1%;
+	}
+	.Title{    
+	margin-top: 50px;
+    text-align: center;}
+	.rank{padding-top: 10%;}
+	.inboundSec2 {    
+		float: left;
+    	width: 100%;}
+}
+@media only screen and (max-width:1025px) {
+	.text1 {
+		padding-bottom: 25.5px;
+    	padding-top: 25.5px;
+	}
+	.nameIcon{   margin-left: 110%;}
+}
+@media only screen and (max-width:769px) {
+	.top1 {
+		margin-top: 10px;
+    	width: 100%;
+	}
+	.sec1{
+		padding-left: 0px;
+	}
+	.inboundSec2{    
+		float: left;
+    	width: 100%;
+	}
+	.button{    
+		float: left;
+    	width: 100%;
+		margin-left: 35%;
+	}
+	.chart1{    
+		float: left;
+   		width: 100%;
+	}
+	.chart2{
+		float: left;
+    	width: 100%;
+	}
+	.chart3{
+		float: left;
+    	width: 100%;
+	}
+	.bar{
+		padding-left: 5%;
+    	padding-right: 5%;
+	}
+	#RangTime{width: 100%;margin-top: 5px;}
+	#ExportInbound{margin-top: 5px;width: 100%;}
+	#ExportBudget{margin-top: 5px;width: 100%;}
+	#ExportOutbound{margin-top: 5px;width: 100%;}
+	.TopIcon {
+    padding-left: 0px;
+    left: 5%;
+    top: 15%;
+	}
+	.NationIcon {
+  	  width: 15%;
+		top: 10px;
+		left: 10px;}
+	.nameIcon{		
+		margin-left: 37%;
+		margin-top: 10%;
+	}
+	.rank {
+		padding-top:0%;
+	}
+	.travelIcon {
+		width: 60px;
+	}
+}
+@media only screen and (max-width:426px) {
+	.NationIcon {
+		width: 25%;
+		top: 6px;
+		left: 2px;
+	}
+	.TopIcon{
+		width: 30%;
+	}
+	.button{    
+		margin-left: 25%;
+	}
+}
+/*
+.export { display: inline-block; }
+.export div { padding-right: 0; }
+.export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+.export #InOut_Year { margin-right: 2%; }
+
+.Outbound_seeAll { display: inline-block; font-family: 'Mitr Light'; font-size: 17px; padding: 12px 30px 12px; margin-bottom: 15px; color: white; background: linear-gradient(to top, #43B74A, #90C34A); border-radius: 7px; border: 1px solid white; }
+.Outbound_seeAll a {color: white;}*/
+
+</style>
+<div class="Graph-list Graph-Outbound-Info">
+	<div class="Graph-title">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+    </div>
+    <div class="Graph-subtitle">
+        <div class="borderHead"></div>
+    </div>    
+    
+    <div class="sec-img-amount">
+    
+    	<div class="sec-img-amount-box01">
+    		<div class="sec-img-amount-box">
+	    		<div class="sec-img-amount-box-inner">
+		    		<div class="sec-img-amount-img">
+		    			<img alt="image" src="<?php echo $this->baseUrl('assets/graph/img/icon_web/icon3.png'); ?>">
+		    		</div>
+		    		<div class="sec-img-amount-info">
+		    			<div class="sec-img-amount-title">จำนวนนักท่องเที่ยวชาวไทยขาออก</div>
+		    			<div class="sec-img-amount-amount">
+		    				<span class="amount-amount"><?php echo number_format($this->DepartureAmount['Amount'],2);?></span>
+		    				<span class="anount-unit"><?php echo $this->DepartureAmount['AmountText'] ?>คน</span>
+		    			</div>
+		    		</div>
+		    	</div>
+	    	</div>
+    	</div>
+    
+    	<div class="sec-img-amount-box02">
+    		<div class="sec-img-amount-box">
+	    		<div class="sec-img-amount-box-inner">
+		    		<div class="sec-img-amount-img">
+		    			<img alt="image" src="<?php echo $this->baseUrl('assets/graph/img/icon_web/money.png'); ?>">
+		    		</div>
+		    		<div class="sec-img-amount-info">
+		    			<div class="sec-img-amount-title">รายจ่ายท่องเที่ยวชาวไทยขาออก</div>
+		    			<div class="sec-img-amount-amount">
+		    				<span class="amount-amount"><?php echo number_format($this->RevenueAmount['Amount'],2);?></span>
+		    				<span class="anount-unit"><?php echo $this->RevenueAmount['AmountText'] ?>บาท</span>
+		    			</div>
+		    		</div>
+		    	</div>
+	    	</div>
+    	</div>
+    
+    	<div class="sec-img-amount-box03">
+    		<div class="sec-img-amount-box">
+	    		<div class="sec-img-amount-box-inner">
+		    		<div class="sec-img-amount-info">
+		    			<div class="sec-img-amount-title">ระยะเวลาพำนักเฉลี่ย</div>
+		    			<div class="sec-img-amount-amount">
+		    				<span class="amount-amount"><?php echo number_format($this->StayAvgAmount['Amount'],1);?></span>
+		    				<span class="anount-unit"><?php echo $this->StayAvgAmount['AmountText'] ?>วัน</span>
+		    			</div>
+		    		</div>
+		    	</div>
+	    	</div>
+    	</div>
+    
+    	<div class="sec-img-amount-box04">
+    		<div class="sec-img-amount-box">
+	    		<div class="sec-img-amount-box-inner">
+		    		<div class="sec-img-amount-img">
+		    			<img alt="image" src="<?php echo $this->baseUrl('assets/graph/img/icon_web/icon5.png'); ?>">
+		    		</div>
+		    		<div class="sec-img-amount-info">
+		    			<div class="sec-img-amount-title">ค่าใช้จ่ายเฉลี่ยต่อคนต่อวัน</div>
+		    			<div class="sec-img-amount-amount">
+		    				<span class="amount-amount"><?php echo number_format($this->ExpressPerDayAmount, 2);?></span>
+		    				<span class="anount-unit">บาท</span>
+		    			</div>
+		    		</div>
+		    	</div>
+	    	</div>
+    	</div>
+    
+    	<div class="clearfix"></div>
+    </div>
+    
+    <div class="graph-box with-color chart02" id="chart2">
+		<div class="graph-box-title">
+			<div class="row">
+				<div class="col-md-9">
+					<span>รายจ่ายนักท่องเที่ยวชาวไทยขาออก รายปี (ล้านบาท)</span>
+				</div>
+				<div class="export col-md-3 col-sm-12 col-xs-12">
+					<div class="row">
+						<div class="col-sm-6">
+						</div>
+						<div class="col-sm-6">
+							<?php echo $this->formSelect("ExportBudget", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<div class="graph-box-body">
+			<canvas id="BudgetByyearChart" style="background-color:#ffffff;" width="100%" height="50%"></canvas>
+		</div>
+		<div class="GUIDE_BudgetByyearChart TIC-footer">ที่มา : กองเศรษฐกิจการท่องเที่ยวและกีฬา</div>
+		<div class="GUIDE_BudgetByyearChart TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->latestYear + 543?></div>
+	</div>
+    
+    <div class="graph-box with-color chart01" id="chart1">
+		<div class="graph-box-title">
+			<div class="row">
+				<div class="col-md-9">
+					<span>ประเทศที่นักท่องเที่ยวชาวไทยไปใช้จ่าย (ล้านบาท)</span>
+				</div>
+				<div class="export col-md-3 col-sm-12 col-xs-12">
+					<div class="row">
+						<div class="col-sm-6">
+							<?php echo $this->formSelect("RangTime",  $this->rangtime, array('class' => 'form-control', 'placeholder' => ''), $this->years); ?>
+						</div>
+						<div class="col-sm-6">
+							<?php echo $this->formSelect("ExportInbound", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<div class="graph-box-body">
+			<canvas id="InboundByyearChart" style="background-color:#ffffff;" width="100%" height="50%"></canvas>
+		</div>
+		<div class="GUIDE_InboundByyearChart TIC-footer">ที่มา : กองเศรษฐกิจการท่องเที่ยวและกีฬา</div>
+		<div class="GUIDE_InboundByyearChart TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->latestYear + 543?></div>
+	</div>
+    
+    <div class="graph-box with-color chart03" id="chart3">
+		<div class="graph-box-title">
+			<div class="row">
+				<div class="col-md-9">
+					<span>จำนวนนักท่องเที่ยวชาวไทยขาออก รายปี (ล้านคน)</span>
+				</div>
+				<div class="export col-md-3 col-sm-12 col-xs-12">
+					<div class="row">
+						<div class="col-sm-6">
+						</div>
+						<div class="col-sm-6">
+							<?php echo $this->formSelect("ExportOutbound", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<div class="graph-box-body">
+			<canvas id="ByyearChart" style="background-color:#ffffff;" width="100%" height="50%"></canvas>
+		</div>
+		<div class="GUIDE_ByyearChart TIC-footer">ที่มา : กองเศรษฐกิจการท่องเที่ยวและกีฬา</div>
+		<div class="GUIDE_ByyearChart TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->latestYear + 543?></div>
+	</div>
+	
+	<div class="graph-button-zone">
+		<a href="https://app.powerbi.com/groups/me/reports/67cf4364-a25f-43fe-9b92-a6227457b4cc/ReportSection"  target="_blank">
+			ดูข้อมูลสถิติทั้งหมด
+		</a>
+	</div>
+	
+	<div id="previewImage" style="display: none;"></div>
+	<a id="downloadImage" href="#In_Out" style="display: none;"></a>
+</div>
+
+<script>
+jQuery(function(){
+	var ctx = document.getElementById("InboundByyearChart").getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'horizontalBar',
+		data: {
+			labels: [
+				<?php
+					$countryName =count($this->RevenueByCountry)-1;
+					for($i=0;$i<=$countryName;$i++) {
+						echo '"'.$this->RevenueByCountry[$i]["CountryNameTH"].'"';            
+						if($i != $countryName) {
+							echo ',';
+						}
+					}
+				?>
+			],
+			datasets: [{
+				//label: 'ประเทศที่นักท่องเที่ยวชาวไทยไปใช้จ่าย (บาท)',
+				data: [
+					<?php
+						$countryValue =count($this->RevenueByCountry)-1;
+						for($i=0;$i<=$countryValue;$i++) {
+							echo '"'.$this->RevenueByCountry[$i]["Amount"].'"';            
+							if($i != $countryValue) {
+								echo ',';
+							}
+						}
+					?>
+				],
+				backgroundColor: '#6f9c33',
+				borderWidth: 1
+			}]
+		},
+		options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function() {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;
+                    ctx.font = "14px",
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function(dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            var data = dataset.data[index];
+                            var x = -10;
+                            if(data < 0) {
+                                x = 10;
+                            }
+							data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                            ctx.fillText(data, bar._model.x + x, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        fontSize : 14,
+                        beginAtZero:true
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        // display : false
+                    },
+                    ticks: {
+                        beginAtZero:true,
+						callback: function(value, index, values) {
+							return value.toFixed(0)+'';
+						}
+                    }
+                }]
+            },
+            responsive: true
+        }
+	});
+	var ctx = document.getElementById("BudgetByyearChart").getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: [				
+				<?php
+					$yearValue =count($this->RevenueByYear)-1;
+					for($i=0;$i<=$yearValue;$i++) {
+						echo '"'.$this->RevenueByYear[$i]["Y"].'"';            
+						if($i != $yearValue) {
+							echo ',';
+						}
+					}
+				?>
+				],
+			datasets: [{
+				lineTension : 0,
+				//label: 'ข้อมูลรายได้นักท่องเที่ยวต่างชาติที่เดินทางมาประเทศไทยประจำเดือน',
+				data: [
+					<?php
+						$yearValue =count($this->RevenueByYear)-1;
+						for($i=0;$i<=$yearValue;$i++) {
+							echo '"'.$this->RevenueByYear[$i]["Amount"].'"';            
+							if($i != $yearValue) {
+								echo ',';
+							}
+						}
+					?>
+				],
+				backgroundColor: '#3f94cd',
+				borderColor: '#3f94cd',
+				borderWidth: 1,
+				fill: false
+			}]
+		},
+		options: {
+			showTooltips: {
+                showLabel: false,
+                showValue: true,
+				typeValue: '',
+                fontSize: 14
+            },
+			scales: {
+                yAxes: [{
+                    ticks: {
+                        fontSize: 14,
+                        beginAtZero:true
+                    },
+                }],
+				xAxes: [{
+                    ticks: {
+                        fontSize: 14
+                    },
+                    gridLines: { 
+                        display: false 
+                    }
+                }],
+			},
+			legend: {
+				display: false
+			},
+			responsive: true		
+		}
+	});
+	var ctx = document.getElementById("ByyearChart").getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: [
+				<?php
+					$yearValue =count($this->DepartureByYear)-1;
+					for($i=0;$i<=$yearValue;$i++) {
+						echo '"'.$this->DepartureByYear[$i]["Y"].'"';            
+						if($i != $yearValue) {
+							echo ',';
+						}
+					}
+				?>
+			],
+			datasets: [{
+				lineTension : 0,
+				label: 'ข้อมูลรายได้นักท่องเที่ยวต่างชาติที่เดินทางมาประเทศไทยประจำเดือน',
+				data: [
+					<?php
+						$yearValue =count($this->DepartureByYear)-1;
+						for($i=0;$i<=$yearValue;$i++) {
+							echo '"'.$this->DepartureByYear[$i]["Amount"].'"';            
+							if($i != $yearValue) {
+								echo ',';
+							}
+						}
+					?>
+				],
+				backgroundColor:  '#ddc1da',
+				borderColor: '#ddc1da',
+				borderWidth: 2,
+				fill: false
+			}]
+		},
+		options: {
+			showTooltips: {
+                showLabel: false,
+                showValue: true,
+				typeValue : '',
+                fontSize: 14
+            },
+			scales: {
+                yAxes: [{
+                    ticks: {
+                        fontSize: 14,
+                        beginAtZero:true,
+						callback: function(value, index, values) {
+							return value;
+						}
+                    },
+                }],
+				xAxes: [{
+                    ticks: {
+                        fontSize: 14
+                    },
+                    gridLines: { 
+                        display: false 
+                    }
+                }],
+			},
+			legend: {
+				display: false
+			},
+			responsive: true		
+		}
+	});
+	function setCanvas_ExportInboundZone(val) {
+        html2canvas(document.querySelector("#chart1")).then(function(canvas) {
+            $("#previewImage").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage").attr("download", "ประเทศที่นักท่องเที่ยวชาวไทยไปใช้จ่าย.png").attr("href", newData);
+                $("#downloadImage")[0].click();
+                $("#ExportInbound").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("ประเทศที่นักท่องเที่ยวชาวไทยไปใช้จ่าย.pdf");
+                $("#ExportInbound").val('export');
+            }
+        });
+    }
+    $("#ExportInbound").change(function() {
+        setCanvas_ExportInboundZone($(this).val());
+    });
+	$("#RangTime").change(function() {
+        var rangtime = $('#RangTime').val();
+        window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'outbound', 'action' => 'search'), null, true); ?>/rangtime/"+rangtime;
+    });
+
+    function setCanvas_ExportBudgetZone(val) {
+        html2canvas(document.querySelector("#chart2")).then(function(canvas) {
+            $("#previewImage").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage").attr("download", "รายจ่ายนักท่องเที่ยวชาวไทยขาออกรายปี.png").attr("href", newData);
+                $("#downloadImage")[0].click();
+                $("#ExportBudget").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("รายจ่ายนักท่องเที่ยวชาวไทยขาออกรายปี.pdf");
+                $("#ExportBudget").val('export');
+            }
+        });
+    }
+    $("#ExportBudget").change(function() {
+        setCanvas_ExportBudgetZone($(this).val());
+    });
+	function setCanvas_ExportOutboundZone(val) {
+        html2canvas(document.querySelector("#chart3")).then(function(canvas) {
+            $("#previewImage").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage").attr("download", "จำนวนนักท่องเที่ยวชาวไทยขาออกรายปี.png").attr("href", newData);
+                $("#downloadImage")[0].click();
+                $("#ExportOutbound").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนนักท่องเที่ยวชาวไทยขาออกรายปี.pdf");
+                $("#ExportOutbound").val('export');
+            }
+        });
+    }
+    $("#ExportOutbound").change(function() {
+        setCanvas_ExportOutboundZone($(this).val());
+    });
+
+});
+</script>

@@ -1,0 +1,304 @@
+
+<link rel="stylesheet"href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+
+<style type="text/css">
+.input-group-btn { padding-right: 5px; }
+group-btn:last-child>.btn { border: none; }
+</style>
+
+<div class="searchPanel form-horizontal" id="formSearch">
+
+	<div class="form-group">
+		<div class="col-md-12">
+
+			<div class="input-group">
+				<p class="form-control-static">ค้นหาจาก</p>
+				<?php if($this->canAdd): ?>
+					<span class="input-group-btn">
+						<a class="btn btn-primary" title="เพิ่มข้อมูล" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'filter', 'action' => 'add'), null, false); ?>">
+							<em class="fa fa-plus"></em> <span class="hidden-xs">เพิ่ม</span>
+						</a>
+					</span>
+					<?php if(false){ ?>
+					<!-- <span class="input-group-btn">
+						<button type="button" class="btn btn-default" id="btnCopy" title="คัดลอก">
+							<em class="fa fa-files-o"> </em>
+						</button>
+					</span> -->
+					<?php } ?>
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-success" id="btnPublish" title="เผยแพร่">
+							<em class="fa fa-eye"> </em>
+						</button>
+					</span>
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-warning" id="btnUnpublish" title="ไม่เผยแพร่">
+							<em class="fa fa-eye-slash"> </em>
+						</button>
+					</span>
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-danger" id="btnDelete" title="ลบ">
+							<em class="fa fa-trash"> </em>
+						</button>
+					</span>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="form-group">
+		<div class="col-md-12">
+			<div class="input-group">
+
+					<?php echo $this->formText('textsearch', null, array('class' => 'form-control', 'placeholder' => 'กรอกคำค้นหา'));?>
+					<span class="input-group-btn">
+					<button type="button" class="btn btn-primary" id="btnSearch">
+						<em class="fa fa-search"></em> <span class="hidden-xs">ค้นหา</span>
+					</button>
+					<button type="button" class="btn btn-warning" id="btnReset">
+						<em class="fa fa-refresh"></em> <span class="hidden-xs">เริ่มใหม่</span>
+					</button>
+					<button type="button" class="btn btn-default" id="btnAdvance">
+						<em class="fa fa-minus-circle"></em> <span class="hidden-xs">ลดเงื่อนไขการค้นหา</span>
+					</button>
+				</span>
+			</div>
+		</div>
+	</div>
+
+	<div id="AdvanceSearch">
+
+		<?php echo $this->formHidden('hdfAdvanceSearch', 'S', null, null); ?>
+	
+		<div class="form-group">
+			<label for="status" class="control-label col-md-2">สถานะ</label>
+			<div class="col-md-4">
+				<?php echo $this->formSelect('lstStatus', null, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->statusOption)); ?>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+<table id="tblData" class="table table-bordered table-hover" style="width: 100%;">
+	<caption>รายการคัดกรองคำ</caption>
+	<thead>
+		<tr>
+			<th style="padding:0;">
+                <input type="checkbox" name="chkAll" id="chkAll">
+            </th>
+			<th>ลำดับ</th>
+			<th>ข้อความที่ไม่เหมาะสม</th>
+			<th>ข้อความที่ต้องการแทนที่</th>
+			<th>สถานะ</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+<!-- DataTables -->
+<script
+	src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script
+	src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script type="text/javascript">
+
+jQuery(function(){
+
+	// --------------- Begin: Table & Search Zone --------------------------
+	
+	function renderColumn ( data, type, row, meta ) {
+		return data;
+	}
+	function renderColumnLink ( data, type, row, meta ) {
+		return '<a href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'filter', 'action' => 'edit'), null, true);?>/itemid/' + row.ID + '">' + data + '</a>';
+	}
+
+	function renderColumnStatus ( data, type, row, meta ) {
+		if (row.IsEnableCode == 'Y') {
+			return '<span class="label label-success">' + data + '</span>';
+		} else {
+			return '<span class="label label-danger">' + data + '</span>';
+		}
+	}
+	function renderColumnCheckbox ( data, type, row, meta ) {
+		return '<input type="checkbox" name="ids[]" value="' + row.DT_RowId + '" />';
+	}
+
+	var rows_selected = [];
+	var tblData = $('#tblData').DataTable({
+		processing: true,
+		serverSide: true,
+		responsive: true,
+		pageLength: 10,
+
+		// hold search
+		<?php
+		if ($this->InfoSearch->tblPage) {
+			echo 'displayStart: ' . $this->InfoSearch->tblPage . ',';
+		}
+		if ($this->InfoSearch->tblRow) {
+			echo 'pageLength: ' . $this->InfoSearch->tblRow . ',';
+		}
+		if ($this->InfoSearch->tblOrderCol && $this->InfoSearch->tblOrderDir) {
+			echo 'order: [[ ' . $this->InfoSearch->tblOrderCol . ', "' . $this->InfoSearch->tblOrderDir . '" ]],';
+		} else {
+			echo 'order: [[ 2, "desc" ]],';
+		}
+		
+		?>
+
+		ajax: {
+	        url: '<?php echo $this->url(array('module' => 'webboard', 'controller' => 'filter', 'action' => 'getlist'), null, true); ?>',
+	        type: 'POST',
+	        data: function(d) {
+    	        d.textsearch = $("#formSearch #textsearch").val();
+    	        d.status = $("#formSearch #lstStatus").val();
+	        }
+	    },
+	    language : {
+			url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+	    },
+		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+		"columns": [
+					{ "width": "10px", 'orderable': false, 'data' : 'NO', 'render' : renderColumnCheckbox, "class" : "text-center"},
+		            { "width": "40px", 'orderable': false, 'data' : 'NO', "class" : "text-center"},
+		            {'data' : 'Detail', 'render' : renderColumnLink},
+					{"width": "20%",'data' : 'Replace', 'render' : renderColumnLink},
+		            { "width": "10%", 'data' : 'IsEnable' , 'render' : renderColumnStatus, "class" : "ratio"}
+		          ]
+    });
+
+	$('#btnSearch').click(function(){
+		tblData.ajax.reload();
+	});
+
+	$('#btnReset').click(function(){
+		$(".searchPanel input[type=text]").val('');
+		$(".searchPanel select").val('');
+		tblData.ajax.reload();
+	});
+	        
+	//new $.fn.dataTable.Responsive( tblData );
+	
+	// --------------- End: Table & Search Zone --------------------------
+
+	// --------------- Toogle Advance Search ---------------
+	$("#btnAdvance").click(function(e) {
+		var val = $('#hdfAdvanceSearch').val();
+		if(val == 'H'){
+			$("#AdvanceSearch").slideDown(600, "swing");
+			$("#hdfAdvanceSearch").val('S');
+		}else{
+			$("#AdvanceSearch").slideUp(600, "swing");
+			$("#hdfAdvanceSearch").val('H');
+		}
+	});
+
+	$('#txtSendDateFrom').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	$('#txtSendDateTo').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+
+	$('#btnPublish').click(function(){
+		var ids = [];
+		$.each($('#tblData input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+			ids.push($(e).val());
+		});
+		if (ids.length > 0) {
+			DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการเผยแพร่", function() {
+				$.post("<?php echo $this->url(array("module" => 'webboard', "controller" => 'filter', 'action' => 'listpublish'), null, true); ?>", {"ids" : ids, "status": "Y"}, function(data){
+					if (data.result) {
+						tblData.ajax.reload();
+						DialogComplete("ปรับปรุงสถานะสำเร็จ");
+					} else {
+						DialogWarning(data.message);
+					}
+				}, 'json');
+			});
+		} else {
+			DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+		}
+		$('#chkAll').prop('checked',false);
+	});
+
+	$('#btnUnpublish').click(function(){
+		var ids = [];
+		$.each($('#tblData input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+			ids.push($(e).val());
+		});
+		if (ids.length > 0) {
+			DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการไม่เผยแพร่", function() {
+				$.post("<?php echo $this->url(array("module" => 'webboard', "controller" => 'filter', 'action' => 'listpublish'), null, true); ?>", {"ids" : ids, "status": "N"}, function(data){
+					if (data.result) {
+						tblData.ajax.reload();
+						DialogComplete("ปรับปรุงสถานะสำเร็จ");
+					} else {
+						DialogWarning(data.message);
+					}
+				}, 'json');
+			});
+		} else {
+			DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+		}
+		$('#chkAll').prop('checked',false);
+	});
+
+	<?php if(false){ ?>
+	// $('#btnCopy').click(function(){
+	// 	var ids = [];
+	// 	$.each($('#tblData input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+	// 		ids.push($(e).val());
+	// 	});
+	// 	if (ids.length > 0) {
+	// 		DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการคัดลอกข้อมูล", function() {
+	// 			$.post("<?php echo $this->url(array("module" => 'webboard', "controller" => 'filter', 'action' => 'listcopy'), null, true); ?>", {"ids" : ids}, function(data){
+	// 				if (data.result) {
+	// 					tblData.ajax.reload();
+	// 					DialogComplete("คัดลอกข้อมูลสำเร็จ");
+	// 				} else {
+	// 					DialogWarning(data.message);
+	// 				}
+	// 			}, 'json');
+	// 		});
+	// 	} else {
+	// 		DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+	// 	}
+	// 	$('#chkAll').prop('checked',false);
+	// });
+	<?php } ?>
+		
+	$('#btnDelete').click(function(){
+		var ids = [];
+		$.each($('#tblData input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+			ids.push($(e).val());
+		});
+		if (ids.length > 0) {
+			DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+				$.post("<?php echo $this->url(array("module" => 'webboard', "controller" => 'filter', 'action' => 'listdelete'), null, true); ?>", {"ids" : ids}, function(data){
+					if (data.result) {
+						tblData.ajax.reload();
+						DialogComplete("ลบสำเร็จ");
+					} else {
+						DialogWarning(data.message);
+					}
+				}, 'json');
+			});
+		} else {
+			DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+		}
+		$('#chkAll').prop('checked',false);
+	});
+
+	$('#chkAll').click(function(){
+		var val = $(this).is(":checked");
+		if(val){
+			$('input[name="ids[]"]').prop('checked',true);
+		}else{
+			$('input[name="ids[]"]').prop('checked',false);
+		}
+	});
+
+});
+</script>

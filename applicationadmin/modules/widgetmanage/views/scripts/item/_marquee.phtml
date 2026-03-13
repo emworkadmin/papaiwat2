@@ -1,0 +1,185 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/colorpicker/css/bootstrap-colorpicker.min.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/colorpicker/js/bootstrap-colorpicker.min.js"); ?>'></script>
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+		<?php echo $this->formHidden("hdfWidgetType", $this->data->WidgetType, null, null); ?>
+        <?php echo $this->formHidden("hdfUpdateType", 'D', null, null); ?>
+
+		<div class="title-label">ตั้งค่าการแสดงผล</div>
+		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingShowTitle">แสดงชื่อเรื่อง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingShowTitle', (empty($this->dataDisplay->settingShowTitle) ? 'N' : $this->dataDisplay->settingShowTitle), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingTitle">ชื่อเรื่อง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('settingTitle', $this->dataDisplay->settingTitle, array('class' => 'form-control', 'maxlength' => "100")); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingTitleBackgroundColor">สีพื้นหลัง</label> 
+			<div class="col-md-9 divControl">
+				<div class="input-group colorpicker-group">
+					<?php echo $this->formText("settingTitleBackgroundColor", $this->dataDisplay->settingTitleBackgroundColor, array('class' => 'form-control', "maxlength" => "250")); ?>
+					<div class="input-group-addon">
+						<i></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingTitleFontColor">สีข้อความ</label> 
+			<div class="col-md-9 divControl">
+				<div class="input-group colorpicker-group">
+					<?php echo $this->formText("settingTitleFontColor", $this->dataDisplay->settingTitleFontColor, array('class' => 'form-control', "maxlength" => "250")); ?>
+					<div class="input-group-addon">
+						<i></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingShowLink">แสดงลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingShowLink', (empty($this->dataDisplay->settingShowLink) ? 'Y' : $this->dataDisplay->settingShowLink), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingTarget">ลิงค์ Target</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('settingTarget', $this->dataDisplay->settingTarget, array('class' => 'form-control', 'placeholder' => ''), $this->targetOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingBackgroundColor">สีพื้นหลัง</label> 
+			<div class="col-md-9 divControl">
+				<div class="input-group colorpicker-group">
+					<?php echo $this->formText("settingBackgroundColor", $this->dataDisplay->settingBackgroundColor, array('class' => 'form-control', "maxlength" => "250")); ?>
+					<div class="input-group-addon">
+						<i></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingFontColor">สีข้อความ</label> 
+			<div class="col-md-9 divControl">
+				<div class="input-group colorpicker-group">
+					<?php echo $this->formText("settingFontColor", $this->dataDisplay->settingFontColor, array('class' => 'form-control', "maxlength" => "250")); ?>
+					<div class="input-group-addon">
+						<i></i>
+					</div>
+				</div>
+			</div>
+		</div>
+        <hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingDirection">ทิศทางการแสดงผล</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('settingDirection', (empty($this->dataDisplay->settingDirection) ? 'left' : $this->dataDisplay->settingDirection), array('class' => 'form-control', 'placeholder' => ''), $this->directionOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingDuration">ความเร็ว</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText("settingDuration", empty($this->dataDisplay->settingDuration) ? null : ($this->dataDisplay->settingDuration/1000), array('class' => 'form-control digits', 'style' => 'max-width: 200px; display: inline-block;', "maxlength" => "10")); ?>
+				&nbsp; วินาที
+			</div>
+		</div>
+		<!-- <div class="form-group">
+			<label class="col-md-3 control-label" for="settingDuplicated">แสดงซ้ำ</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingDuplicated', (empty($this->dataDisplay->settingDuplicated) ? 'Y' : $this->dataDisplay->settingDuplicated), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div> -->
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingPauseOnHover">หยุดเมื่อชี้เมาส์</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingPauseOnHover', (empty($this->dataDisplay->settingPauseOnHover) ? 'Y' : $this->dataDisplay->settingPauseOnHover), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingHtmlClass">Html Class</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('settingHtmlClass', $this->dataDisplay->settingHtmlClass, array('class' => 'form-control', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingCustomCSS">CSS</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formTextarea('settingCustomCSS', $this->dataDisplay->settingCustomCSS, array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<?php endif ; ?>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+    
+	$('.colorpicker-group').colorpicker({autoInputFallback: false, format: 'hex', useAlpha: false});
+	
+	$("#formData input[type=checkbox], #formData input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	<?php if ($this->canEdit) : ?> 
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'update'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'displaysetting', "itemid" => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif ; ?>
+
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'WDG-MGT-18'); ?>

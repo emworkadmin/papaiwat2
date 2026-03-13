@@ -1,0 +1,25 @@
+<div>
+	<?php if($this->data->SocialNetworkFacebook  == 'Y') : ?>
+	<a class="btn btn-social-icon btn-facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $this->currentUrl; ?>" onclick="window.open(this.href, 'facebook-share','width=500,height=300');return false;">
+		<em class="fa fa-facebook"></em>
+	</a>
+	<?php endif; ?>
+
+	<?php if($this->data->SocialNetworkTwitter  == 'Y') : ?>	
+	<a class="btn btn-social-icon btn-twitter" href="http://twitter.com/share?text=<?php echo $this->data->Title; ?>&url=<?php echo $this->currentUrl; ?>&via=Devahoy" onclick="window.open(this.href, 'twitter-share', 'width=500,height=300');return false;">
+		<em class="fa fa-twitter"></em>
+	</a>
+	<?php endif; ?>
+
+	<?php if($this->data->SocialNetworkGooglePlus  == 'Y') : ?>
+	<a class="btn btn-social-icon btn-google" href="https://plus.google.com/share?url=<?php echo $this->currentUrl; ?>" onclick="window.open(this.href, 'google-plus-share', 'width=500,height=300');return false;">
+		<em class="fa fa-google-plus"></em>
+	</a> 
+	<?php endif; ?>
+
+	<?php if($this->data->ShowQrcode  == 'Y') : ?>
+	<a class="btn btn-social-icon btn-default" href="<?php echo $this->currentUrlQrCodeUrl; ?>" data-lightbox="image-1" data-title="" >
+		<em class="fa fa-qrcode"></em>
+	</a>
+	<?php endif; ?>
+</div>

@@ -1,0 +1,36 @@
+<?php echo $this->partial("index/_pluginChartjs.phtml", $this); ?>
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/graph/css/graph.css'); ?>">
+
+<style>
+.form-control{padding: 0px 0px; }
+</style>
+
+
+
+<div class="Graph-list Graph-Travelstatistics-Info">
+	<div class="Graph-title">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+    </div>
+    <div class="Graph-subtitle">
+        <div class="borderHead"></div>
+    </div>
+
+	<iframe style="width: 100%; height: 900px;" src="https://app.powerbi.com/view?r=eyJrIjoiZDFiYmVkNzEtNzlmMy00Y2JiLTg0OGEtMjU3ZDQ5ZTQyNDAwIiwidCI6IjE1MzI4OGE4LTc2MDYtNGM1OS05NDAwLTQwZmVmNmQ4N2JiNiIsImMiOjEwfQ%3D%3D"></iframe>
+
+	<?php if(false){ ?>
+
+    <?php echo $this->partial("travelstatistics/_travelstatistics_in_out.phtml", $this); ?>
+
+    <div style="clear:left;"></div>
+
+	<?php echo $this->partial("travelstatistics/_travelstatistics_number_tourists.phtml", $this); ?>
+    
+    <?php echo $this->partial("travelstatistics/_travelstatistics_checkpoint.phtml", $this); ?>
+
+	<?php } ?>
+
+
+</div>
+

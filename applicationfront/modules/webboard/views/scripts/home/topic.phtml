@@ -1,0 +1,399 @@
+<style>
+
+@media screen and (max-width: 768px) {
+	.fa-caret-right:before {
+    content: "\f0da";
+    color: #f3f331;
+    margin: 0 5px 0 0px !important;
+}
+
+.logindate {
+    text-align: left !important;
+    clear: left;
+}
+
+}
+
+@media screen and (max-width: 425px) {
+	.logindate{
+	font-size: 20px;
+	}
+}
+
+@media screen and (max-width: 524px) {
+
+	label.control-label {
+		clear: left;
+	}
+
+	.divControl {
+		width: 100% !important;
+	}
+
+	.btnsub {
+    clear: left;
+	}
+
+}
+
+@media screen and (max-width: 375px) {
+	.logindate{
+	font-size: 15px;
+	}
+
+	.userlogin {
+	float: none;
+    background-color: #ccc;
+    padding: 10px 10px 10px 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    padding-bottom: 0px !important;
+	}
+
+	.btn {
+	font-size: 11px;
+    float: none !important;
+}
+
+}
+
+
+.fa-eye:before {
+    content: "\f06e";
+    margin-right: 10px;
+	color: #3c8dbc;
+	margin-left: 10px;
+}
+
+.fa-comment:before {
+    content: "\f075";
+    margin-right: 10px;
+    color: #b7b716;
+}
+
+.login {
+    background-color: #ccc;
+	border-radius: 10px;
+	font-weight: bold;
+	padding: 10px 10px 10px 10px;
+}
+.userlogin {
+    background-color: #ccc;
+    padding: 10px 10px 10px 10px;
+	border-radius: 10px;
+	font-weight: bold;
+	padding-bottom: 60px;
+}
+
+
+.inforow .detail .detail-title {
+    text-overflow: ellipsis !important;
+    padding-bottom: 15px !important;
+    min-height: 40px !important;
+    overflow: hidden !important;
+}
+
+.detail-intro {
+    background-color: #f17464;
+    float: left;
+    padding: 5px 5px 5px 5px;
+    margin-bottom: 10px;
+}
+
+.inforowData {
+    border: 1px solid #999;
+    padding:10px 10px 10px 10px;
+	margin-bottom: 15px;
+	clear: left;
+}
+
+.detail-title {
+    clear: left;
+}
+
+a.forget-link {
+    color: black;
+}
+
+.fa-caret-right:before {
+    content: "\f0da";
+    color: #f3f331;
+    margin: 0 5px 0 10px;
+}
+
+.created {
+    float: left;
+    padding-bottom: 15px;
+}
+
+.createdright {
+    float: right;
+}
+
+.form-horizontal .form-group {
+    margin: 10px 0 10px 0px;
+    background-color: #ccc;
+}
+
+.form-horizontal .control-label {
+    padding-top: 0px;
+}
+
+
+</style>
+
+
+<?php if ($this->fullname) { ?>
+<div class="userlogin webboard">
+	<div class="name" style="float:  left;">
+		<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_welcome'); ?>, <?php echo $this->fullname ?>
+	</div>
+
+	<div class="logindate" style="text-align: right;">
+		<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_last_login'); ?> : <?php echo $this->date == null ? (Emwork_Translate::text($this->lang, 'webboard', 'home_home_first_login')) : $this->date ?>
+	</div>
+
+	<!-- <em class="fa fa-plus"></em> -->
+
+	<div class="control-label" style="clear: left;margin-top: 10px; float:  left;">
+	<em class="fa fa-caret-right"></em><a class="forget-link" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'profile', 'action' => 'profile'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_my_profile'); ?></a>
+	<em class="fa fa-caret-right"></em><a class="forget-link" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'profile', 'action' => 'createpost'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_created_post_2'); ?></a>
+	<em class="fa fa-caret-right"></em><a class="forget-link" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'profile', 'action' => 'mypost'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_my_post'); ?></a>
+	</div>
+	<div class="btn" style="float:  right;">
+		<a class="btn btn-primary" title="btn" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'home', 'action' => 'logout'), null, false); ?>">
+		<span class=""><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_logout'); ?></span></a>
+	</div>
+</div>
+
+<?php }else{ ?>
+	<div class='login webboard'>
+
+		<label class="control-label" for="NameTH"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_welcome'); ?>, <?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_normal_person'); ?></label>
+
+		<form action="<?php echo $this->url(array('module' => 'webboard', 'action' => 'login', 'controller' => 'home'), null, true); ?>" method="post">
+		
+		<?php if (!empty($this->errorMessage)) : ?>
+			<div class="alert alert-danger">
+				<?php echo $this->errorMessage; ?>
+			</div>
+		<?php endif; ?>
+
+
+			<div class="form-group">
+			<label class=" control-label" style= "float: left;padding-right: 10px;" for="NameTH"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_username'); ?> : </label>
+			
+			<div class="username">
+				<div class="divControl" style="width: calc(100% - 85%); float: left;">
+					<?php echo $this->formText('username', $this->ck_user, array('class' => 'form-control', 'placeholder' => Emwork_Translate::text($this->lang, 'webboard', 'home_home_username'), 'autocomplete' => 'off')); ?>			
+				</div>
+			</div>
+			
+			<label class="control-label" style= "float: left;padding-right: 10px;float: left;margin-left: 15px;" for="NameTH"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_password'); ?> : </label>
+			<div class="password">
+				<div class="divControl" style="width: calc(100% - 85%); float: left;">
+					<input type="password" name="password" id="password" value="<?php echo $this->ck_pass; ?>" class="form-control" placeholder="<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_password'); ?>" autocomplete="off">	
+				</div>
+			</div>
+
+			<div class="form-group">
+				<span class="control-label" style= "float: left;margin-left: 10px;padding-right: 10px;">
+					<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_remember'); ?> <input type="checkbox" name="keep_login"  id="keep_login" value="Y" class=""<?php if(isset($_COOKIE['ck_user'])&&($_COOKIE['ck_user']!='')){ echo "Checked='checked'"; }?> /> 
+				</span>	
+			</div>
+			
+			<div class='btnsub'>
+				<button type="submit" class="btn btn-primary " id="btnSave"> <?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_login'); ?></button>
+			</div>
+
+			<div class="control-label" style="clear: left;margin-top: 10px;">
+			<a class="forget-link" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'forgetpassword', 'action' => 'index'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_forget'); ?></a>
+				<a class="forget-link" href="<?php echo $this->url(array('module' => 'webboard', 'controller' => 'register', 'action' => 'index'), null, true); ?>"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_created_user'); ?></a>
+			</div>
+		</div>
+		</form>
+		
+	</div>
+<?php } ?>
+
+
+<div class="topic webboard">
+    <div class="title-label"style="clear:  left;font-size: 30px;padding-top: 30px;">
+		<span class="title">
+			<?php echo $this->data['Title'] ?>
+		</span>
+	</div>
+	<div class="detail">
+		<span class="title"><?php echo $this->data['Detail'];?></span>
+    </div>
+	<br>
+
+	<?php if($this->imageUrl) :?>
+	<div class='file'>
+		<span class="filetopic"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_file'); ?> : </span><span class="filelink"><a href="<?php echo $this->imageUrl; ?>"> <?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_click_file'); ?> </a></span>
+	</div>
+	<?php endif ?>
+
+	<div class='created'>
+    	<span class="by"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_by'); ?> : </span><span style="color:red;margin-right: 10px;"> <?php echo $this->data['FirstName']?> <?php echo $this->data['LastName']; ?> </span>
+	</div>
+
+	<div class='created'>
+	<?php if($this->lang == 'th') : ?>
+		<span class="createdboard"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_created_post_2'); ?> </span><span class="createddate"><?php echo Emwork_Utility_DateTime::MSSqlToDateThai($this->data['Created'], 'DT_Nd').' '.$this->data['Created']->format("H:i"); ?></span>
+	<?php else : ?>
+		<span class="createdboard"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_created_post_2'); ?> </span><span class="createddate"><?php echo Emwork_Utility_DateTime::MSSqlToDateThai($this->data['Created'], 'DT_Nd').' '.$this->data['Created']->format("H:i"); ?></span>
+	<?php endif; ?>
+	</div>
+	
+	<div class='createdright'>
+		<em class="fa fa-eye"></em><span class="num"><?php echo $this->data['ViewAmount']; ?></span> <span class="unit"><?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_amount'); ?></span>
+	</div>
+
+	<div class='createdright'>
+		<em class="fa fa-comment"></em><?php echo $this->reply; ?><span class="text-reply"> <?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_response'); ?></span>
+	</div>
+
+</div>
+
+<div class="reply webboard">
+	<div class="result-list1-panel">
+	<div class="result-list1" id="result-list1"></div>
+	<div class="result-paging1" style="display: none;">
+		<p class="paging1 text-right"></p>
+	</div>
+</div>
+
+<?php if ($this->fullname) : ?>
+
+
+<form class="form-horizontal" id="reply" name="reply" class="reply webboard">
+	
+    <div class="replytopic" style="background: #d0d0d0;display: inline-block;width: 100%;padding: 14px 0;margin-bottom: 20px;">
+		<div class="title"     style="font-size: 30px;     margin-left: 20px; font-weight: bold";margin-left: 20px;>
+			<?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_comment_title'); ?>
+		</div>
+
+        <label class="col-md-2 control-label" for="txtDetail"><em class="	fa fa-newspaper-o"></em> <?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_text'); ?></label>		
+        <div class="col-md-9 divControl">
+            <textarea name="Detail" id="Detail" class="form-control required" placeholder="" rows="8" maxlength="500" cols="80"></textarea>
+        </div>
+		<div class="col-md-offset-2 col-md-9  divControl"style="padding-top:  10px;">
+		<button type="button" class="btn btn-primary" id="btnSave" style="font-size: 30px;height: 40px;line-height: 30px; width: 110px;"> <?php echo Emwork_Translate::text($this->lang, 'webboard', 'home_home_ok'); ?></button>
+		</div>
+    </div>
+
+</form>
+
+<?php endif ?>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+
+<script>
+jQuery(function(){
+
+	$("#reply").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+			error.appendTo( element.parents("div.divControl"));
+		}
+	});
+
+	reloadResultList1(1);
+
+
+	$("#btnSave").click(function(){
+		var valid = $("#reply").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'webboard', 'controller' => 'home', 'action' => 'savereply','id'=>$this->id,'iid'=>$this->iid), null, true);?>", $("#reply").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'webboard', 'controller' => 'home', 'action' => 'topic','id'=>$this->id,'iid'=>$this->iid), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message, '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_title'); ?>', '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_close'); ?>');
+					$("#btnSave").removeAttr("disabled");
+				}
+				$("#btnSave").attr("disabled", false);
+			}, 'json');
+		} else {
+			$("#btnSave").attr("disabled", false);
+		}
+	});
+
+	function reloadResultList1(pageIndex) {
+
+		var sendData = {};
+		sendData.pageIndex = pageIndex;
+		
+			$.post("<?php echo $this->url(array('module' => 'webboard', 'controller' => 'home', 'action' => 'listreply','iid'=>$this->iid), null, true); ?>", sendData, function(data){
+		
+			// $("span#total").html(data.total);
+			
+			// $("#result-list1")
+			var res = data.html.replace('<?php echo $this->text; ?>' , "<span style='background: yellow;'><?php echo $this->text; ?></span>");
+			var res = data.html.replace('<?php echo $this->text; ?>' , "<span style='background: yellow;'><?php echo $this->text; ?></span>");
+			
+            console.log(data.html);
+
+			if (data.total > 0) {
+				$("#result-list1").html(res);
+				$('.result-paging1').css('display', '');
+				$('.paging1').bootpag({
+					total : data.totalPage,
+					page : data.pageIndex,
+					maxVisible: 5,
+					leaps: false,
+					firstLastUse: true,
+					first: '<<',
+					last: '>>',
+					next: '>',
+					prev: '<',
+					wrapClass: 'pagination',
+					activeClass: 'active',
+					disabledClass: 'disabled',
+					nextClass: 'next',
+					prevClass: 'prev',
+					lastClass: 'last',
+					firstClass: 'first'
+				});
+
+			} else {
+				
+				$('#result-paging1').css('display', 'none');
+				$('.result-list1').html(data.html);
+				$('.paging1').bootpag({total : 0});
+			}
+		}, 'json');
+	}
+
+				$('.paging1').bootpag({
+					
+					total: 0,
+					maxVisible: 5,
+					leaps: false,
+					firstLastUse: true,
+					first: '<<',
+					last: '>>',
+					next: '>',
+					prev: '<',
+					wrapClass: 'pagination',
+					activeClass: 'active',
+					disabledClass: 'disabled',
+					nextClass: 'next',
+					prevClass: 'prev',
+					lastClass: 'last',
+					firstClass: 'first'
+				}).on("page", function(event, num){
+					
+					reloadResultList1(num);
+
+				}); 
+
+});
+</script>
+
+

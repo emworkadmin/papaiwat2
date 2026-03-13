@@ -1,0 +1,20 @@
+{
+	"name" : "แผนผัง",
+	"controller" : "item",
+	"description" : "แสดงรายการแผนผังที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "item",
+			"type" : "select",
+			"size" : "",
+			"label" : "หมวดหมู่",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Orgchart_Service_Item",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

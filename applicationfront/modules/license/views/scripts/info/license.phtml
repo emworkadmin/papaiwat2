@@ -1,0 +1,182 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/license/css/license.css'); ?>">
+<div class="info infopage license-licenses-page">
+	     
+    <div>
+    	<div class="license-search">
+    		<form class="form-horizontal" method="get" action="<?php echo $this->url(array("module" => "license", "controller" => "info", "action" => "search"), null, true); ?>">
+    			<div class="form-group">
+    				<div class="col-md-2">
+    					<?php echo $this->formSelect("category", null, array("class" => "form-control", "title" => Emwork_Translate::text($this->lang, 'license', 'search_category_placeholder')), $this->categoryOption); ?>
+    				</div>
+    				<div class="col-md-2">
+    					<?php echo $this->formSelect("issue", null, array("class" => "form-control", "title" => Emwork_Translate::text($this->lang, 'license', 'search_issue_placeholder')), array()); ?>
+    				</div>
+    				<div class="col-md-2">
+    					<?php echo $this->formSelect("department", null, array("class" => "form-control", "title" => Emwork_Translate::text($this->lang, 'license', 'search_department_placeholder')), Emwork_Utility::addEmptyOption($this->departmentOption, Emwork_Translate::text($this->lang, 'license', 'search_department_placeholder'))); ?>
+    				</div>
+    				<div class="col-md-2">
+    					<?php echo $this->formText("license", null, array("class" => "form-control", "placeholder" => Emwork_Translate::text($this->lang, "license", "search_license_placeholder"), "title" => Emwork_Translate::text($this->lang, "license", "search_license_placeholder"))); ?>
+    				</div>
+    				<div class="col-md-3">
+    					<?php echo $this->formText("procedure", null, array("class" => "form-control", "placeholder" => Emwork_Translate::text($this->lang, "license", "search_procedure_placeholder"), "title" => Emwork_Translate::text($this->lang, "license", "search_procedure_placeholder"))); ?>
+    				</div>
+    				<div class="col-md-1">
+    					<button class="btn btn-block btn-default" type="submit"><?php echo Emwork_Translate::text($this->lang, "license", "search_search_button_label"); ?></button>
+    				</div>
+    			</div>
+    		</form>
+    	</div>
+    </div>
+    <div>
+    	<div class="license-title title-panel">
+			<span class="title">
+				<?php echo $this->categoryData->Title; ?>
+			</span>
+		</div>
+		<?php if (!empty($this->categoryData->Detail)) : ?>
+		<div>
+			<?php echo $this->categoryData->Detail;?>
+		</div>
+		<?php endif; ?>
+    </div>    
+
+	<div class="result-list-panel">
+    	<div class="result-list" id="result-list-info">
+    		<div class="row">
+    		
+	    		<div class="col-md-12">
+	    			<div class="issue-box">
+	    				<div class="issue-title no-toggle">
+							<?php echo Emwork_Translate::text($this->lang, "license", "info_issue_text_label"); ?> : <?php echo $this->itemData->IssueName;?>
+							<?php if (!empty($this->itemData->IssueSourceUrl)) : ?>
+							<a href="<?php echo $this->itemData->IssueSourceUrl; ?>" target="_blank" class="pull-right issue-title-sourcelink"><?php echo Emwork_Translate::text($this->lang, "license", "info_issue_sourceurl_text_label"); ?></a> 
+							<?php endif; ?>
+						</div>
+						<div class="issue-body issue-body-show">
+						
+							<div class="license-box">
+								<div class="license-title no-toggle">
+									<?php echo $this->itemData->Title;?>
+								</div>
+								<div class="license-body license-body-show" >
+									<table>
+										<thead>
+											<tr>
+												<th class="topic">
+													<?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_topic"); ?> 
+													<span class="topic-desc"><?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_topic_desc"); ?></span>
+												</th>
+												<th class="comment hidden-xs"><?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_review"); ?></th>
+												<th class="period hidden-xs"><?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_period"); ?></th>
+											</tr>
+										</thead>
+										<tbody>
+											<?php 
+											if (count($this->procedures)) :
+												foreach ($this->procedures as $procedure) :
+												$procedureTitle = $procedure['Title'];
+												$procedureIconType = $procedure['IconType'];
+												$procedureDepartment = $procedure['DepartmentName'];
+												$procedureUrl = $procedure['Url'];
+												$procedureUrlComment = $procedure['UrlComment'];
+												$procedureStartDate = $procedure['StartDate'];
+												$procedureEndDate = $procedure['EndDate'];
+												$procedureDate = '';
+												if ($procedureStartDate != null && $procedureEndDate != null) {
+													if ($procedureStartDate->format('Y') == $procedureEndDate->format('Y')) {
+														if ($procedureStartDate->format('m') == $procedureEndDate->format('m')) {
+															if ($procedureStartDate->format('d') == $procedureEndDate->format('d')) { 
+																$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_same_all");
+															} else {
+																$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_diff_day");
+															}
+														} else {
+															$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_diff_month");
+														}
+													} else {
+														$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_diff_all");
+													}
+													
+													$procedureDate = str_replace("{syear}", $procedureStartDate->format('Y') + ($this->lang == 'th' ? 543 : 0), $procedureDate);
+													$procedureDate = str_replace("{smonth}", Emwork_Translate::text($this->lang, "license", "date_month_short_" . $procedureStartDate->format('m')), $procedureDate);
+													$procedureDate = str_replace("{sday}", $procedureStartDate->format('j'), $procedureDate);
+													$procedureDate = str_replace("{eyear}", $procedureEndDate->format('Y') + ($this->lang == 'th' ? 543 : 0), $procedureDate);
+													$procedureDate = str_replace("{emonth}", Emwork_Translate::text($this->lang, "license", "date_month_short_" . $procedureEndDate->format('m')), $procedureDate);
+													$procedureDate = str_replace("{eday}", $procedureEndDate->format('j'), $procedureDate);
+												} elseif ($procedureStartDate != null) {
+													$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_same_all");
+													$procedureDate = str_replace("{eyear}", $procedureStartDate->format('Y') + ($this->lang == 'th' ? 543 : 0), $procedureDate);
+													$procedureDate = str_replace("{emonth}", Emwork_Translate::text($this->lang, "license", "date_month_short_" . $procedureStartDate->format('m')), $procedureDate);
+													$procedureDate = str_replace("{eday}", $procedureStartDate->format('j'), $procedureDate);
+												} elseif ($procedureEndDate != null) {
+													$procedureDate = Emwork_Translate::text($this->lang, "license", "date_format_same_all");
+													$procedureDate = str_replace("{eyear}", $procedureEndDate->format('Y') + ($this->lang == 'th' ? 543 : 0), $procedureDate);
+													$procedureDate = str_replace("{emonth}", Emwork_Translate::text($this->lang, "license", "date_month_short_" . $procedureEndDate->format('m')), $procedureDate);
+													$procedureDate = str_replace("{eday}", $procedureEndDate->format('j'), $procedureDate);
+												} else {
+													$procedureDate = "-";
+												}
+											?>
+											<tr>
+												<td class="topic">
+													<?php if ($procedureIconType == 'L') : ?>
+													<img src="<?php echo $this->baseUrl('assets/license/img/l.png'); ?>" alt="" class="icon-type" />
+													<?php elseif ($procedureIconType == 'S') : ?>
+													<img src="<?php echo $this->baseUrl('assets/license/img/s.png'); ?>" alt=""  class="icon-type" />
+													<?php endif;?>
+													
+													<?php if (!empty($procedureUrl)) : ?>
+													<a class="lnk-procedure-title" href="<?php echo $procedureUrl; ?>" target="_blank"><?php echo $procedureTitle; ?></a>
+													<?php else : ?>
+													<span class="span-procedure-title"><?php echo $procedureTitle; ?></span>
+													<?php endif; ?>
+													<?php if (!empty($procedureDepartment)) : ?><span class="span-department-title"><?php echo $procedureDepartment; ?></span><?php endif;?>
+													<?php if (!empty($this->commentUrl) || !empty($procedureUrl)) { ?>
+													<span class="visible-xs span-comment"><a href="<?php echo empty($procedureUrl) ? $this->commentUrl : $procedureUrl; ?>" target="_blank"><?php echo Emwork_Translate::text($this->lang, "license", "info_comment_text_label"); ?></a></span>
+													<?php }else{ ?>
+													<span class="visible-xs span-comment"><?php echo Emwork_Translate::text($this->lang, "license", "info_comment_text_label"); ?></span>
+													<?php } ?>
+													<span class="visible-xs span-period"><?php echo Emwork_Translate::text($this->lang, "license", "procedure_table_header_period"); ?> : <?php echo $procedureDate; ?></span>
+												</td>
+												<td class="comment hidden-xs">
+													<?php if (!empty($this->commentUrl) || !empty($procedureUrlComment)) { ?>
+													<a href="<?php echo empty($procedureUrlComment) ? $this->commentUrl : $procedureUrlComment; ?>" target="_blank"><?php echo Emwork_Translate::text($this->lang, "license", "info_comment_text_label"); ?></a>
+													<?php }else{ ?>
+													<span><?php echo Emwork_Translate::text($this->lang, "license", "info_comment_text_label"); ?></span>
+													<?php } ?>
+												</td>
+												<td class="period hidden-xs">
+													<?php echo $procedureDate; ?>
+												</td>
+											</tr>
+											<?php 
+												endforeach;
+											endif;
+											?>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						
+						</div>
+	    			</div>
+	    		
+					
+				</div>
+		
+    		</div>
+    	</div>
+	</div>
+
+</div>
+<script>
+jQuery(function(){
+
+	getData("<?php echo $this->url(array("module" => "license", "controller" => "info", "action" => "issuelist"), null, true); ?>" + "?id=" + "<?php echo ""; ?>", "#issue", "<?php echo Emwork_Translate::text($this->lang, 'license', 'search_issue_placeholder')?>", "name", "id", "<?php echo ""; ?>"); 
+	$("#category").change(function(){
+		var selectValue = $(this).val();
+		if(selectValue == ''){selectValue = '-1';}
+		getData("<?php echo $this->url(array("module" => "license", "controller" => "info", "action" => "issuelist"), null, true); ?>" + "?id=" + selectValue, "#issue", "<?php echo Emwork_Translate::text($this->lang, 'license', 'search_issue_placeholder')?>", "name", "id", ""); 
+	});
+});
+</script>

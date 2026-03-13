@@ -1,0 +1,122 @@
+<!-- jQueryFiler -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+<!-- lightGallery -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightgallery/css/lightgallery.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery/js/lightgallery.min.js'); ?>"></script>
+<!-- colorPicker -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/colorpicker/css/bootstrap-colorpicker.min.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/colorpicker/js/bootstrap-colorpicker.min.js"); ?>'></script>
+
+<style type="text/css">
+.remark { font-size: 12px; margin-top: 15px;}
+.form-control-static { padding-top: 5px; }
+.form-control-static a { font-weight: bold; }
+</style>
+
+<?php if($this->isiOS) : ?>
+<style>
+.jFiler.jFiler-theme-default { 
+	position: relative !important;
+}
+input[type="file"]{
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 900000 !important;
+    width: 100% !important;
+    max-width: 300px !important;
+    height: 35px !important;
+    opacity: 0 !important;
+}
+</style>
+<?php endif; ?>
+
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formDialogImportFile" name="formDialogImportFile">
+		<?php echo $this->formHidden("hdfID", $this->uid, null, null); ?>
+
+		<div class="form-group">
+			<label class="col-md-4 control-label" >ประเภทกราฟ</label>
+			<div class="col-md-8 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio("Type", 'Bar Chart', array('class' => 'required', 'label_class' => 'radio-inline'), array('Bar Chart'=>'Bar Chart','Line Chart'=>'Line Chart','Pie Chart'=>'Pie Chart'), " "); ?>
+				</div>						
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 control-label labelRequest" for="Title">ชื่อกราฟ</label>
+			<div class="col-md-8 divControl">
+				<?php echo $this->formText("Title", '', array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '500')); ?>
+			</div>
+		</div>
+		<div class="form-group" id="divPieColor">
+			<label class="col-md-4 control-label labelRequest" for="Color">สีกราฟ</label>
+			<div class="col-md-8 divControl">
+				<div class="input-group colorpicker-component" id="ImportColorpicker">
+					<input type="text" name="Color" id="Color" value="" class="form-control" aria-required="true">
+					<div class="input-group-addon">
+						<i></i>
+					</div>
+				</div>
+                <div class="help-block">ท่านไม่จำเป็นต้องกรอกข้อมูลโค๊ดสีใน Excel Template</div>
+				<script>
+					$(function () {
+						$("#ImportColorpicker").colorpicker({
+							autoInputFallback: false, 
+							format: 'hex'
+						});
+						$('#divPieColor').hide();
+					});
+				</script>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-4 control-label labelRequest" for="ImportFile">ไฟล์ข้อมูล</label>
+			<div class="col-md-8">
+				<?php echo $this->UploadHtmlControl("ImportFile", "ImportFile", null, array('multi' => false, 'exts' => array('xlsx'))); ?>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-md-4 control-label" for="Template">Template :</label>
+			<div class="col-md-8">
+				<p class="form-control-static">
+					<a href="/admin/assets/graphdata/template/template.xlsx" download="Excel_Template.xlsx">ดาวน์โหลด Excel Template ที่นี่ !</a>
+				</p>
+			</div>
+		</div>
+		
+		<div class="remark">* กรณีที่ท่านไม่ได้ใช้ไฟล์ Excel Template ที่ดาวน์โหลดจากระบบจะไม่สามารถอัพโหลดข้อมูลเข้าสู่ระบบได้</div>
+
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script type="text/javascript">
+$(function () {
+	$("#formDialogImportFile").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+
+	$('#formDialogImportFile input[type=checkbox], #formDialogImportFile input[type=radio]:not([name=TemplateType])').iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	$('#formDialogImportFile').on('ifClicked', 'input[name=Type]', function(){
+		var val = $(this).val();
+		if(val=='Line Chart'){
+			$('#divPieColor').show();
+			$('#Color').addClass("required");
+		}else{
+			$('#divPieColor').hide();
+			$('#Color').removeClass("required");
+		}
+	});
+});
+</script>

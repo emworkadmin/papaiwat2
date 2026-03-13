@@ -1,0 +1,165 @@
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+		<?php echo $this->formHidden("hdfWidgetType", $this->data->WidgetType, null, null); ?>
+        <?php echo $this->formHidden("hdfUpdateType", 'D', null, null); ?>
+
+		<div class="title-label">ตั้งค่าการแสดงผล</div>
+		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingKenburnDuration">KenburnDuration</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('settingKenburnDuration', (empty($this->dataDisplay->settingKenburnDuration) ? 20 : ($this->dataDisplay->settingKenburnDuration)), array('class' => 'form-control', 'style' => 'max-width: 200px; display: inline-block;')); ?>
+				&nbsp; วินาที
+			</div>
+		</div>		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingHeight">Height</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('settingHeight', (empty($this->dataDisplay->settingHeight) ? '20vw' : ($this->dataDisplay->settingHeight)), array('class' => 'form-control', 'style' => 'max-width: 200px; display: inline-block;')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingAnimation">Animation</label> 
+			<div class="col-md-9 divControl">
+                <?php echo $this->formSelect('settingAnimation', $this->dataDisplay->settingAnimation, array('class' => 'form-control', 'placeholder' => ''), $this->animationKenburnsOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingSlideDuration">Animation Duration</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('settingSlideDuration', (empty($this->dataDisplay->settingSlideDuration) ? 4 : ($this->dataDisplay->settingSlideDuration/1000)), array('class' => 'form-control digits', 'style' => 'max-width: 200px; display: inline-block;')); ?>
+				&nbsp; วินาที
+			</div>
+		</div>
+		<hr />
+		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingTitleShow">แสดงชื่อ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingTitleShow', (empty($this->dataDisplay->settingTitleShow) ? 'Y' : $this->dataDisplay->settingTitleShow), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingTitleSize">ขนาดข้อความ</label> 
+			<div class="col-md-9 divControl">
+                <?php echo $this->formSelect('settingTitleSize', (empty($this->dataDisplay->settingTitleSize) ? 'h1' : $this->dataDisplay->settingTitleSize), array('class' => 'form-control', 'placeholder' => ''), $this->titleSizeOption); ?>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingTextAlign">ตำแหน่งข้อความ</label> 
+			<div class="col-md-9 divControl">
+                <?php echo $this->formSelect('settingTextAlign', (empty($this->dataDisplay->settingTextAlign) ? 'left' : $this->dataDisplay->settingTextAlign), array('class' => 'form-control', 'placeholder' => ''), $this->textAlignOption); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingIntroTextShow">แสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingIntroTextShow', (empty($this->dataDisplay->settingIntroTextShow) ? 'Y' : $this->dataDisplay->settingIntroTextShow), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingIntroTextSize">ขนาดข้อความ</label> 
+			<div class="col-md-9 divControl">
+                <?php echo $this->formSelect('settingIntroTextSize', (empty($this->dataDisplay->settingIntroTextSize) ? 'h4' : $this->dataDisplay->settingIntroTextSize), array('class' => 'form-control', 'placeholder' => ''), $this->titleSizeOption); ?>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingIntroTextTextAlign">ตำแหน่งข้อความ</label> 
+			<div class="col-md-9 divControl">
+                <?php echo $this->formSelect('settingIntroTextTextAlign', (empty($this->dataDisplay->settingIntroTextTextAlign) ? 'left' : $this->dataDisplay->settingIntroTextTextAlign), array('class' => 'form-control', 'placeholder' => ''), $this->textAlignOption); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingShowLink">แสดงลิงค์</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingShowLink', (empty($this->dataDisplay->settingShowLink) ? 'Y' : $this->dataDisplay->settingShowLink), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingTarget">ลิงค์ Target</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('settingTarget', $this->dataDisplay->settingTarget, array('class' => 'form-control', 'placeholder' => ''), $this->targetOption); ?>
+			</div>
+		</div>
+        <hr />
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingHtmlClass">Html Class</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('settingHtmlClass', $this->dataDisplay->settingHtmlClass, array('class' => 'form-control', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingCustomCSS">CSS</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formTextarea('settingCustomCSS', $this->dataDisplay->settingCustomCSS, array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<?php endif ; ?>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+    
+	$("#formData input[type=checkbox], #formData input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	<?php if ($this->canEdit) : ?> 
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'update'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'displaysetting', "itemid" => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif ; ?>
+
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'WDG-MGT-14'); ?>

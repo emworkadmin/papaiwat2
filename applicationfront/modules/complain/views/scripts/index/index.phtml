@@ -1,0 +1,195 @@
+<style>
+	.col-md-9.divControl {
+		margin-top: 10px;
+	}
+
+	label.col-md-3.control-label {
+		text-align: left;
+		font-size: 20px;
+	}
+
+	div#d2ms-section-body-main {
+		font-family: "Mitr Light";
+	}
+
+	.fa-user:before {
+		content: "\f007";
+		color: #cfcfcf;
+		margin-right: 5px;
+	}
+
+	.fa-envelope:before {
+		content: "\f0e0";
+		margin-right: 5px;
+		color: #cfcfcf;
+	}
+
+	.fa-mobile-phone:before, .fa-mobile:before {
+		content: "\f10b";
+		margin-right: 5px;
+		color: #cfcfcf;
+	}
+
+	.fa-caret-right:before {
+		content: "\f0da";
+		margin-right: 5px;
+		color: #cfcfcf;
+	}
+
+	.fa-newspaper-o:before {
+		content: "\f1ea";
+		margin-right: 5px;
+		color: #cfcfcf;
+	}
+
+	label.top-sub.col-md-3 {
+		color: #2670a1;
+	}
+
+	input#Fullname {
+		border-radius: 7px;
+		background: #f2f2f2;
+	}
+
+	input#Email {
+		border-radius: 7px;
+		background: #f2f2f2;
+	}
+
+	input#Telephone {
+		border-radius: 7px;
+		background: #f2f2f2;
+	}
+
+	textarea#Topic {
+		border-radius: 7px;
+		background: #f2f2f2;
+	}
+
+	textarea#Detail {
+		border-radius: 7px;
+		background: #f2f2f2;
+	}
+
+	button#btnComplainSave {
+		background: linear-gradient(to right, #0170b8, #2b5094);
+		color: white;
+	}
+
+</style>
+
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+
+<?php if($this->dataCaptcha['ReCaptchaSiteKey']): ?>
+<!-- recaptcha  -->
+<script src='https://www.google.com/recaptcha/api.js?hl=<?php echo $this->lang; ?>'></script>
+<?php endif; ?>
+	
+<div class="panel-complain">
+	<div class="panel-body">
+
+		<div class="item-title title-panel">
+			<span class="title">
+				<span class="complain-hilight"><?php echo Emwork_Translate::text($this->lang, 'complain', 'title'); ?></span>
+			</span>
+		</div>
+		<br>
+		<form class="form-horizontal" id="formAdd" action="<?php echo $this->url(array('module' => 'complain', 'controller' => 'index', 'action' => 'index'), null, true); ?>" method="post">
+	
+			<?php if (!empty($this->errorMessage)) : ?>
+			<div class="col-md-12" style="padding-left:0px; padding-right:0px;">
+				<div class="alert alert-danger">
+					<?php echo $this->errorMessage; ?>
+				</div>
+			</div>
+			<?php endif; ?>
+			<div class="col-md-12">
+				<label class="top-sub col-md-3 "><?php echo Emwork_Translate::text($this->lang, 'complain', 'person_detail'); ?></label>	
+				<div class="col-md-9"></div>
+			</div>
+			<br>
+			<br>
+
+			<div class="form-group" >
+				<label class="col-md-3 control-label " for="Fullname"><em class="fa fa-user"></em> <?php echo Emwork_Translate::text($this->lang, 'complain', 'input_title'); ?></label>		
+				<div class="col-md-9 divControl">
+					<?php echo $this->formText("Fullname", $this->data->Fullname, array('class' => 'form-control ', 'maxlength' => '350')); ?>
+				</div>
+			</div>
+			
+			<div class="form-group" >
+				<label class="col-md-3 control-label " for="Email"><em class="fa fa-envelope"></em> <?php echo Emwork_Translate::text($this->lang, 'complain', 'input_email'); ?></label>		
+				<div class="col-md-9 divControl">
+					<?php echo $this->formText("Email", $this->data->Email, array('class' => 'form-control email', 'maxlength' => '350')); ?>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="Telephone"><em class="fa fa-mobile"></em> <?php echo Emwork_Translate::text($this->lang, 'complain', 'input_telephone'); ?></label>
+				<div class="col-md-9 divControl">
+					<?php echo $this->formText("Telephone", $this->data->Telephone, array('class' => 'form-control ')); ?>
+				</div>
+			</div> 	
+			
+			<div class="form-group">
+				<label class="col-md-3 control-label" for="Topic"><em class="fa fa-caret-right "></em> <?php echo Emwork_Translate::text($this->lang, 'complain', 'input_topic'); ?></label>
+				<div class="col-md-9 divControl">
+					<?php echo $this->formTextarea("Topic", $this->data->Topic, array("class" => "form-control ",'rows' => '3')); ?>
+				</div>
+			</div> 					
+			
+			<div class="form-group" >
+			<label class="col-md-3 control-label" for="Detail"><em class="fa fa-envelope"></em> <?php echo Emwork_Translate::text($this->lang, 'complain', 'input_detail'); ?></label>		
+				<div class="col-md-9 divControl">
+					<?php echo $this->formTextarea("Detail", $this->data->Detail, array('class' => 'form-control ', 'placeholder' => '', 'maxlength' => '500', 'rows' => '8')); ?>
+				</div>
+			</div>
+
+			<div class="form-group" >
+				<label class="col-md-3 control-label" for="IntroImage"><em class="fa fa-newspaper-o"></em> <?php echo Emwork_Translate::text($this->lang, 'complain', 'input_introimage'); ?></label>		
+				<div class="col-md-9 divControl">
+					<?php echo $this->UploadHtmlControl("IntroImage", "IntroImage", $this->data->IntroImage, array('multi' => false, 'exts' => array('png', 'jpg', 'jpeg', 'gif', 'pdf', 'doc', 'docx'))); ?>
+					<!-- <div class="help-block">ขนาดไฟล์ไม่เกิน 3 MB, เฉพาะไฟล์นามสกุล: .jpg, .jpeg, .gif, .png, .pdf, .doc, .docx</div> -->
+				</div>
+			</div>
+			
+			<?php if($this->dataCaptcha['ReCaptchaSiteKey']): ?>
+				<div class="form-group">
+					<label class="col-md-3 control-label" ><em class=" fa fa-caret-right "></em> captcha</label>		
+					<div class="col-md-9 text-center">
+						<div id="recaptcha" class="g-recaptcha text-center" data-sitekey="<?php echo $this->dataCaptcha['ReCaptchaSiteKey'];?>"></div>
+					</div>
+				</div>
+			<?php endif; ?>
+			
+			<div class="form-group">
+				<div class="col-md-9 col-md-offset-3 button-panel-zone">
+					<button type="submit" class="btn btn-primary-news" id="btnComplainSave">
+						<em class="fa fa-save" style="display: none;"></em> <?php echo Emwork_Translate::text($this->lang, 'complain', 'button_submit'); ?>
+					</button>
+				</div>
+			</div>
+		
+		</form>
+
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+
+<script>
+	$(function () {
+		
+		$("#formAdd").validate({
+			errorElement: "em",
+			errorPlacement: function(error, element) {
+				error.addClass( "help-block" );
+				error.appendTo( element.closest("div.divControl"));
+			}, 
+			ignore: []
+		});	
+
+	});
+</script>

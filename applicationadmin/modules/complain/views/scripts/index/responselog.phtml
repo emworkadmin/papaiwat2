@@ -1,0 +1,64 @@
+
+<link rel="stylesheet"
+	href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+<table id="tblData" class="table table-bordered table-hover"
+	style="width: 100%;">
+	<caption>รายการประวัติการตอบกลับเรื่องร้องเรียน</caption>
+	<thead>
+		<tr>
+			<th>ลำดับ</th>
+			<th>ข้อความตอบกลับ</th>
+            <th>สถานะ</th>
+            <th>วันที่ตอบกลับ</th>
+            <th>ชื่อผู้ตอบกลับ</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+<!-- DataTables -->
+<script
+	src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script
+	src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script type="text/javascript">
+jQuery(function(){
+
+	// --------------- Begin: Table & Search Zone --------------------------
+	function renderColumn ( data, type, row, meta ) {
+		return data;
+	}
+	function renderColumnLink ( data, type, row, meta ) {
+		return '<a href="<?php echo $this->url(array('module' => 'complain', 'controller' => 'index', 'action' => 'edit'), null, true);?>/itemid/' + row.ID + '">' + data + '</a>';
+	}
+	var rows_selected = [];
+	var tblData = $('#tblData').DataTable({
+		processing: true,
+		serverSide: true,
+		responsive: true,
+		pageLength: 10,
+        order: [[3, "desc"]],
+		ajax: {
+	        url: '<?php echo $this->url(array('module' => 'complain', 'controller' => 'index', 'action' => 'getresponseList'), null, true); ?>',
+	        type: 'POST',
+	        data: function(d) {
+                d.ComplainID = '<?php echo $this->itemID; ?>';
+	        }
+	    },
+	    language : {
+			url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+	    },
+		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+		"columns": [
+		            { "width": "40px", 'orderable': false, 'data' : 'NO', "class" : "text-center"},
+		            { 'data' : 'ResponseDetail' , 'render' : renderColumn, "class" : "ratio"},
+                    { 'width' : '80px', 'data' : 'Status' , 'render' : renderColumn, "class" : "ratio"},
+                    { 'data' : 'Created' , 'render' : renderColumn, "class" : "ratio"},
+		            { 'data' : 'FullName' , 'render' : renderColumn, "class" : "ratio"}
+		          ]
+    });
+
+});
+
+</script>

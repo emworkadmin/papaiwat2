@@ -1,0 +1,29 @@
+<style>
+.gallery-search {
+    display: inline-block;
+    width: 100%;
+}
+.gallery-search .search-text {
+    margin-bottom: 5px;
+}
+</style>
+
+<div class='gallery-search'>
+    <div class="row">
+        <div class="col-md-10 col-sm-8 col-xs-12 search-text">
+            <?php echo $this->formText("search", $this->search, array('class' => 'form-control', 'placeholder' => Emwork_Translate::text($this->lang, 'gallery', 'search_placeholder'), 'title' => Emwork_Translate::text($this->lang, 'gallery', 'search_placeholder'), 'maxlength' => '200')); ?>
+        </div>
+        <div class="col-md-2 col-sm-4 col-xs-12 search-category">
+            <button class="btn btn-info btn-block" id="lnkSearchGallery">
+                <em class="fa fa-search"></em> <?php echo Emwork_Translate::text($this->lang, 'general', 'button_search'); ?>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#lnkSearchGallery").click(function() {
+        var search = $("#search").val();
+        window.location = "<?php echo $this->url(array('module' => 'gallery', 'controller' => $this->controllerSearchName, 'action' => 'search'), null, true); ?>/id/" + <?php echo $this->id; ?> + "/cid/" + <?php echo empty($this->cid) ? '-1' : $this->cid; ?> + "/search/" + search;
+    });
+</script>

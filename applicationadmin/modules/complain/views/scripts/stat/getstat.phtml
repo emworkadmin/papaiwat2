@@ -1,0 +1,156 @@
+<style>
+caption {
+	background-color: #3a8adc;
+    color: #ffffff;
+    font-weight: bold;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 16px;
+}
+td:first-child {
+	width: 10%;
+	text-align: center;
+}
+th {
+	background: linear-gradient(#E6E6E6, #FFFFFF);
+}
+</style>
+
+<div class="col-md-12">
+	<table class="table">
+	<tr>
+		<td><canvas id="myChart"></canvas></td>
+	</tr>
+	</table>
+</div>
+
+<div class="col-md-12">
+	<table id="tblData" class="table table-bordered table-hover"
+		style="width: 100%;">
+		<caption>รายการข้อมูลเรื่องร้องเรียน ณ เดือน <?php echo $this->month; ?> ปี <?php echo $this->year; ?> </caption>
+		<thead>
+			<tr>
+				<th>ลำดับ</th>
+				<th>วันที่</th>
+				<th>เรื่องร้องเรียน</th>
+				<th>การตอบกลับ</th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php 
+			if(count($this->data)>0) {
+				foreach($this->data as $k => $v) {
+					?>
+					<tr>
+						<td><?php echo $v['Date']; ?></td>
+						<td>
+						<?php 
+						$date = new DateTime($v['FullDate']);
+						$date = Emwork_Utility::notShowNull(Emwork_Utility_DateTime::MSSqlToDateThai($date, 'D'));
+						echo $date;
+						?>
+						</td>
+						<td><?php echo $v['Amount']; ?></td>
+						<td><?php echo $v['Response']; ?></td>
+					</tr>
+					<?php
+				} 
+			}
+		?>
+		</tbody>
+	</table>
+</div>
+
+ <script type="text/javascript">
+    jQuery(function(){
+		var ctx = document.getElementById('myChart');
+		var chart = new Chart(ctx, {
+		    type: 'line',
+		    data: {
+		        labels: [
+						<?php 
+							$i = '';
+							$l = count($this->data);
+							if($l>0) {
+								foreach($this->data as $item) {
+									echo '"'. $item['Date'] .'"';
+									if($i != $l-1){
+										echo ',';
+									}
+									$i++;
+								} 
+							}
+						?>
+					],
+		        datasets: [
+					{
+						label: "สถิติการแจ้งเรื่องร้องเรียน",
+						backgroundColor: '#007bb5',
+						borderColor: '#007bb5',
+						data: [
+							<?php 
+								$i = 0;
+								$l = count($this->data);
+								if($l>0) {
+									foreach($this->data as $item) {
+										echo $item['Amount'];
+										if($i != $l-1){
+											echo ',';
+										}
+										$i++;
+									} 
+								}
+							?>
+						],
+						fill : false,
+					}, {
+						label: "สถิติการตอบกลับ",
+						backgroundColor: 'red',
+						borderColor: 'red',
+						data: [
+							<?php 
+								$i = 0;
+								$l = count($this->data);
+								if($l>0) {
+									foreach($this->data as $item) {
+										echo $item['Response'];
+										if($i != $l-1){
+											echo ',';
+										}
+										$i++;
+									} 
+								}
+							?>
+						],
+						fill : false,
+					}
+				]
+		    },
+			options: {
+				elements: {
+					line : { 
+						tension : 0 ,
+						borderWidth: 1
+					}
+				},
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero:true,
+							min: 0,
+						},
+					}],
+					xAxes: [{
+						gridLines: { 
+							display: false 
+						}
+					}],
+				},
+				legend: {
+					display: true,
+				},
+				responsive: true
+			}
+		});
+	});
+</script> 

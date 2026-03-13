@@ -1,0 +1,51 @@
+<?php 
+/**
+ * EM D2MS
+ *
+ * @copyright  Copyright (c) 2018 EMWORK Group
+ * @license	EMWORK Group
+ * @version	1.0.0 applicationadmin/modules/system/views/scripts/widget/add.phtml
+ * @author	EMWORK Group
+ */
+?>	
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+
+		<div class="title-label">เลือกประเภท</div>
+		<div class="form-group">
+			<div class="col-md-12 divControl">
+				<ul>
+					<?php 
+					if ($this->widgetTypeList) :
+						foreach ($this->widgetTypeList as $widgetType) : 
+					?>
+					<li>
+						<a href="<?php echo $this->url(array("module" => "system", "controller" => "widget", "action" => "add", "type" => $widgetType["RefTypeName"]), null, true)?>"><?php echo $widgetType["Name"]; ?></a>
+					</li>
+					<?php 
+						endforeach;
+					endif;
+					?>
+				</ul>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script>
+$(function () {
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'widget', 'action' => 'index'), null, true); ?>";
+	});
+
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'SYS-WDG-02'); ?>

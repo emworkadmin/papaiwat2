@@ -1,0 +1,19 @@
+<div class="article-title title-panel wat-detail-title">
+    <span class="title">
+        <?php echo $this->data->Title; ?>
+    </span>
+    <?php if($this->data->IsDharmaPracticePlace=='Y'){ ?>
+    <div class="dharma-practice-title">
+        <?php echo Emwork_Translate::text($this->lang, "wat", "detail_dharma_practice"); ?><?php echo $this->data->WatProvinceName; ?>
+        <?php if($this->data->DharmaPracticePlaceNo){ ?>
+        &nbsp;
+        <?php echo Emwork_Translate::text($this->lang, "wat", "detail_dharma_practice_order"); ?> <?php echo $this->data->DharmaPracticePlaceNo; ?>
+        <?php } ?>
+        <?php if($this->data->DharmaPracticePlaceResolutionNo){ ?>
+        &nbsp;
+        (<?php echo Emwork_Translate::text($this->lang, "wat", "detail_dharma_practice_resolution_no"); ?> <?php echo $this->data->DharmaPracticePlaceResolutionNo; ?>)
+        <?php } ?>
+    </div>
+    <?php } ?>
+    <hr />
+</div>

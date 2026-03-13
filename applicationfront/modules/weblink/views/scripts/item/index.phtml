@@ -1,0 +1,7 @@
+<?php
+if($this->setting->ItemShowType == 'lists'){
+	echo $this->partial("item/_lists.phtml", $this);
+}else{
+	echo $this->partial("item/_cards.phtml", $this);
+}
+?>

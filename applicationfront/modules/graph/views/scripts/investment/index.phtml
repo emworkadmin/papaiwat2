@@ -1,0 +1,60 @@
+<?php echo $this->partial("index/_pluginChartjs.phtml", $this); ?>
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/graph/css/graph.css'); ?>">
+
+<style>
+
+.TIC-footer {
+    font-size: 12px;
+    padding-top: 15px;
+}
+
+.Investment-title { text-align: center; display: inline-block; width: 100%; }
+.Investment-title .border { background: white; border: 1px solid #186E9D; padding: 5px; margin: 15px 0; }
+.Investment-title .text { color: #0071bd; font-family: 'Mitr Light'; font-weight: bold; }
+.Investment-title .number { font-size: 56px; font-family: "Kanit"; font-weight: bold; }
+.form-control{padding: 0px 0px; }
+</style>
+
+<div class="Graph-list Graph-Investment-Info">
+	<div class="Graph-title">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+	</div>
+    <div class="Graph-subtitle">
+		<div class="borderHead"></div>
+    </div>
+
+    <div class="Investment-title">
+        <div class="col-md-12">
+            <div class="col-md-4 col-md-offset-1 col-sm-12 col-xs-12">
+                <div class="border">
+                	<div class="img-icon">
+                		<img src="<?php echo $this->baseUrl("assets/graph/img/icon_amount/04_index.png"); ?>" alt="icon" />
+                	</div>
+                    <div class="text">ดัชนีความเชื่อมั่นการท่องเที่ยว<br>&nbsp;</div>
+                    <div class="number"><?php echo number_format($this->confidenceIndex,1); ?></div>
+                    <div class="TIC-footer">ที่มา : สภาอุตสาหกรรมการท่องเที่ยวแห่งประเทศไทย</div>
+   					<?php if (!empty($this->confidenceIndexLatestYear)) : ?><div class="TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->confidenceIndexLatestYear + 543?></div><?php endif; ?>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="border">
+                	<div class="img-icon">
+                		<img src="<?php echo $this->baseUrl("assets/graph/img/icon_amount/04_rank.png"); ?>" alt="icon" />
+                	</div>
+                    <div class="text">อันดับความสามารถของประเทศไทย<br>ในการแข่งขันด้านการท่องเที่ยวระดับสากล</div>
+                    <div class="number"><?php echo number_format($this->overallRank); ?></div>
+                    <div class="TIC-footer">ที่มา : World Economic Forum</div>
+   					<?php if (!empty($this->overallRankLatestYear)) : ?><div class="TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->overallRankLatestYear + 543?></div><?php endif; ?>
+                </div>
+            </div>            
+        </div>
+    </div>
+
+    
+    <?php echo $this->partial("investment/_investment_situation.phtml", $this); ?>
+	<div class="mb-15" style="margin-bottom: 30px;"></div>
+    <?php echo $this->partial("investment/_investment_exchange.phtml", $this); ?>
+
+</div>

@@ -1,0 +1,20 @@
+{
+	"name" : "เพจ",
+	"controller" : "item",
+	"description" : "แสดงเพจตามที่ได้จัดการ",
+	"fields" : [
+		{
+			"name" : "page",
+			"type" : "select",
+			"size" : "",
+			"label" : "เพจ",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Page_Service_Item",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

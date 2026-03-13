@@ -1,0 +1,58 @@
+
+<div id="emsa-manual">
+	<div class="row emsa-result ">
+		<?php 
+		if(count($this->data)>0){
+			foreach($this->data as $d){
+		?>
+		<div class="col-sm-12">
+			<div class="emsa-row">
+				<div class="emsa-row-img">
+					<img src="<?php echo $d['URL']; ?>" />
+				</div>
+				<div class="emsa-row-detail">
+					<div class="emsa-row-link">
+						<a href="javascript:void(0);" data-id="<?php echo $d['ManualID']; ?>" ><?php echo $d['Name']; ?></a>
+					</div>
+					<div class="emsa-row-download">
+						<em class="fa fa-eye"></em>
+						<?php echo number_format($d['Views']); ?> เข้าชม
+					</div>
+				</div>
+				<div class="emsa-clearfix"></div>
+			</div>
+		</div>
+		<?php 
+			}
+		}
+		?>	
+	</div>
+</div>
+
+<script type="text/javascript">
+jQuery(function(){
+	if (emsaDialog != null) {
+		emsaDialog.setTitle("<?php echo $this->title; ?>");
+		emsaDialog.setButtons(
+				[{
+                    label: 'ปิด',
+					action: function(dialog) {
+						dialog.close();
+					}
+                }]
+		);
+
+		$("#emsa-manual a").click(function(){
+			var id = $(this).data("id");
+			updateViews(id);
+			emsaDialog.setMessage($('<div id="EMSADialogContent"></div>').load("<?php echo $this->url(array('module' => 'emsa', 'controller' => 'manual', 'action' => 'detail'), null, true); ?>/id/" + id));
+		});
+
+		function updateViews(id) {
+			$.post("<?php echo $this->url(array("module" => "emsa", "controller" => "manual", "action" => "updatemanualviews"), null, true); ?>", {"id" : id}, function(data){
+				// Nothing ...
+			}, "json");
+		}
+	}
+});    
+</script>

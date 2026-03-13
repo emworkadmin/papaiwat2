@@ -1,0 +1,128 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/faq/css/theme.css'); ?>">
+
+<div class="info infopage">
+ 	<div class="item-title title-panel">
+		<span class="title">
+			<span class="faq-hilight">คำถาม</span>ที่ถูกถามบ่อย
+		</span>
+		<hr />
+	</div>
+ 
+    <div class="result-list-panel">
+		<div class="row">
+
+			<?php 
+			if(count($this->dataList)>0){
+				foreach($this->dataList as $k1=>$v1){
+			?>
+			
+			<div class="faq-category-box col-md-12">
+				<div class="faq-category faq-text-overflow col-md-12">
+					<?php echo $v1['mainName']; ?>
+					<em class="fa fa-plus faq-icon-swing" id="mainCategoryShow-<?php echo $v1['mainId']; ?>"></em>
+					<em class="fa fa-minus faq-icon-swing" id="mainCategoryHide-<?php echo $v1['mainId']; ?>" style="display:none;"></em>
+				</div>
+
+				<div class="row" id="mainBox-<?php echo $v1['mainId']; ?>">
+					<?php 
+					if(count($v1['subList'])>0){
+						foreach($v1['subList'] as $k2=>$v2){
+					?>
+
+					<div class="faq-sub-category-box col-md-12">
+						<div class="faq-sub-category faq-text-overflow col-md-12">
+							<?php echo $v2['subName']; ?>
+							<em class="fa fa-plus faq-icon-swing" id="subCategoryShow-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>"></em>
+							<em class="fa fa-minus faq-icon-swing" id="subCategoryHide-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>" style="display:none;"></em>
+						</div>
+
+						<div class="row" id="subBox-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>">
+							<?php 
+							if(count($v2['faqList'])>0){
+								foreach($v2['faqList'] as $k3=>$v3){
+							?>
+
+							<div class="faq-description-box col-md-6">
+								<div class="faq-topic faq-text-overflow col-md-12">
+									<?php echo $v3['Topic']; ?>
+									<em class="fa fa-chevron-down faq-icon-swing" id="detailShow-<?php echo $v3['Id']; ?>"></em>
+									<em class="fa fa-chevron-up faq-icon-swing" id="detailHide-<?php echo $v3['Id']; ?>" style="display:none;"></em>
+								</div>
+								<div class="faq-detail faq-scrollbar col-md-12" id="detailBox-<?php echo $v3['Id']; ?>">
+									<?php echo $v3['Detail']; ?>
+								</div>
+							</div>
+							
+							<script type="text/javascript">
+							jQuery(function(){
+								$("#detailShow-<?php echo $v3['Id']; ?>").click(function(e) {
+									$("#detailBox-<?php echo $v3['Id']; ?>").slideDown(600, "swing");
+									$("#detailShow-<?php echo $v3['Id']; ?>").hide();
+									$("#detailHide-<?php echo $v3['Id']; ?>").show();
+								});
+								$("#detailHide-<?php echo $v3['Id']; ?>").click(function(e) {
+									$("#detailBox-<?php echo $v3['Id']; ?>").slideUp(600, "swing");
+									$("#detailShow-<?php echo $v3['Id']; ?>").show();
+									$("#detailHide-<?php echo $v3['Id']; ?>").hide();
+								});
+								$("#detailBox-<?php echo $v3['Id']; ?>").hide();
+							});
+							</script>
+
+							<?php
+								}
+							}
+							?>
+						</div>
+
+					</div>
+					
+					<script type="text/javascript">
+					jQuery(function(){
+						$("#subCategoryShow-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").click(function(e) {
+							$("#subBox-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").slideDown(600, "swing");
+							$("#subCategoryShow-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").hide();
+							$("#subCategoryHide-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").show();
+						});
+						$("#subCategoryHide-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").click(function(e) {
+							$("#subBox-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").slideUp(600, "swing");
+							$("#subCategoryShow-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").show();
+							$("#subCategoryHide-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").hide();
+						});
+						$("#subBox-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").hide();
+					});
+					</script>
+
+					<?php
+						}
+					}
+					?>
+				</div>
+			
+			</div>
+
+			<script type="text/javascript">
+			jQuery(function(){
+				$("#mainCategoryShow-<?php echo $v1['mainId']; ?>").click(function(e) {
+					$("#mainBox-<?php echo $v1['mainId']; ?>").slideDown(600, "swing");
+					$("#mainCategoryShow-<?php echo $v1['mainId']; ?>").hide();
+					$("#mainCategoryHide-<?php echo $v1['mainId']; ?>").show();
+				});
+				$("#mainCategoryHide-<?php echo $v1['mainId']; ?>").click(function(e) {
+					$("#mainBox-<?php echo $v1['mainId']; ?>").slideUp(600, "swing");
+					$("#mainCategoryShow-<?php echo $v1['mainId']; ?>").show();
+					$("#mainCategoryHide-<?php echo $v1['mainId']; ?>").hide();
+				});
+				$("#mainBox-<?php echo $v1['mainId']; ?>").hide();
+			});
+			</script>
+
+			<?php
+				}
+			}
+			?>
+
+		</div>
+    </div>
+
+</div>

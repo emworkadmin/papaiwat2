@@ -1,0 +1,151 @@
+<?php 
+$backgroupColor = $this->introPageData->BackgroundColor;
+$bodyStyle = "";
+$bodyStyle .= empty($backgroupColor) ? "" : "background-color:" . $backgroupColor . ";";
+$showButton = $this->introPageData->ShowButton;
+$buttonTextColor = $this->introPageData->ButtonTextColor;
+$buttonBackgroundColor = $this->introPageData->ButtonBackgroundColor;
+$buttonStyle = "";
+if ($showButton == 'Y') :
+	$buttonStyle .= empty($buttonTextColor) ? "" : "color:" . $buttonTextColor . ";";
+	$buttonStyle .= empty($buttonBackgroundColor) ? "" : "background-color:" . $buttonBackgroundColor . ";";
+	$buttonStyle .= empty($buttonTextColor) ? "" : "border: 1px solid " . $buttonTextColor . ";";
+endif;
+
+$dataDetail = $this->introPageData->Details[$this->lang];
+$html = $dataDetail["Detail"];
+$button = json_decode($dataDetail['Button'], true);
+
+?>
+
+<style>
+body { font-family: 'THSarabunNew'; <?php echo $bodyStyle; ?>}
+.intropage-button {margin-top: 15px;}
+.intropage-button .btn {font-size: 2.2rem; <?php echo $buttonStyle;?>}
+</style>
+
+<?php echo '<style>'. $this->introPageData->Css . '</style>'; ?>
+
+<section class="intropage-body">
+	<?php 
+	// if ($showButton != 'Y') :
+		echo "<a href='" . ($this->isUseLanguageCode ? '/' . $this->lang : '') . $this->menuDefault->Url . "'>";
+	// endif;
+	echo $html;
+	// if ($showButton != 'Y') :
+		echo "</a>";
+	// endif;
+	?>
+</section>
+
+<?php if(false): ?>
+
+	<?php 
+	if ($showButton == 'Y') : 
+	?>
+	<section class="intropage-button">
+		<div class="row">
+			<div class="col-md-12 text-center" style="padding: 15px;">
+
+
+				<?php 
+				if ($this->isUseLanguageCode) : 
+					foreach ($this->languages as $language) :
+						$dataDetail = $this->introPageData->Details[$language["Code"]];
+						if (!empty($dataDetail["ButtonText"])) :
+							$buttonText = $dataDetail["ButtonText"];
+							$url = '/' . $language["Code"] . $this->menuDefault->Url;
+				?>
+				<a class="btn btn-default" href="<?php echo $url; ?>"><?php echo $buttonText; ?></a>
+				<?php 
+						endif; 
+					endforeach;
+				else : 
+					$dataDetail = $this->introPageData->Details[$this->lang];
+					$buttonText = $dataDetail["ButtonText"];
+					$url = $this->menuDefault->Url;
+				?>
+				<a class="btn btn-default" href="<?php echo $url;?>"><?php echo $buttonText; ?></a>
+				<?php 
+				endif;
+				?>
+
+
+			</div>
+		</div>
+	</section>
+	<?php 
+	endif;
+	?>
+<?php endif; ?>
+
+<section class="intropage-button">
+	<div class="row">
+		<div class="col-md-12 text-center" style="padding: 15px;">
+			<?php
+			foreach($button as $k => $v) :
+
+				if($v['ShowButton'] == 'Y') :
+					$btColor = '';
+					if($v['btColor']) {
+						$btColor = 'background: '. $v['btColor'] . ';';
+					}
+					$bttxtColor  = '';
+					if($v['bttxtColor']) {
+						$bttxtColor = 'color: ' . $v['bttxtColor'] . ';';
+					}
+					$Image = '';
+					if(count($v['Image'])>0) {
+						$imgUrl = $this->url(array("module" => "default", "controller" => "file", "action" => "get", "file" => $v['Image'][0]['hash_name']), "default", true);
+						$Image = 'background-image: url('. $imgUrl .')'.';';
+						$Image .= 'background-size: cover;';
+					}
+					
+					if($v['URL']) {
+						$url = $v['URL'];
+						?>
+
+							<a class="btn btn-default" href="<?php echo $url; ?>" style="<?php echo $btColor . $bttxtColor . $Image; ?>"><?php echo $v['btText']; ?></a>
+
+						<?php
+					} else {
+						if ($this->isUseLanguageCode) :
+							foreach ($this->languages as $language) :
+								
+								if (!empty($v["btText"])) :
+									$buttonText = $v["btText"];
+									$url = '/' . $language["Code"] . $this->menuDefault->Url;
+									?>
+
+										<a class="btn btn-default" href="<?php echo $url; ?>" style="<?php echo $btColor . $bttxtColor . $Image; ?>"><?php echo $v['btText']; ?></a>
+
+									<?php
+								endif;
+							endforeach;
+						else :
+							$url = $v['URL'];
+							?>
+
+								<a class="btn btn-default" href="<?php echo $url; ?>" style="<?php echo $btColor . $bttxtColor . $Image; ?>"><?php echo $v['btText']; ?></a>
+
+							<?php
+						endif;
+					}
+
+				endif;
+			endforeach;
+			?>
+
+		</div>
+	</div>
+</section>
+
+<script>
+$(document).ready(function () {
+	
+	$("#btnHome").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'default', 'controller' => 'home', 'action' => 'index'), null, true); ?>";
+	});
+	
+});
+</script>

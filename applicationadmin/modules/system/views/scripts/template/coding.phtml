@@ -1,0 +1,183 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+
+<div class="panel-detail">
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden('hdfID', $this->data->ID, null, null); ?>
+		<div class="title-label">ปรับแต่งโค้ด</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Google Analytics</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('is_use_google_analytic', $this->data->IsUseGoogleAnalytic, array('class' => 'required', 'label_class' => 'radio-inline'), $this->showGoogle, " "); ?>
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3 divControl">
+				<?php echo $this->formTextarea('google_ananlytic_script',$this->data->GoogleAnanlyticScript, array('class' => 'form-control required txtDetail' , 'rows' => 3)); ?>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Truehits</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('is_use_truehit', $this->data->IsUseTruehit, array('class' => 'required', 'label_class' => 'radio-inline'), $this->showTruehits, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3 divControl">
+				<?php echo $this->formTextarea('truehit_script',$this->data->TruehitScript, array('class' => 'form-control required txtDetail' , 'rows' => 3)); ?>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Custom CSS</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('is_use_custom_css', $this->data->IsUseCustomCss, array('class' => 'required', 'label_class' => 'radio-inline'), $this->showCustomCSS, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3 divControl">
+				<?php echo $this->formTextarea('custom_css',$this->data->CustomCss, array('class' => 'form-control required txtDetail' , 'rows' =>3)); ?>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-md-3 control-label ">Custom Javascript</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('is_use_custom_js', $this->data->IsUseCustomJs, array('class' => 'required', 'label_class' => 'radio-inline'), $this->showCustomJavaScript, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3 divControl">
+				<?php echo $this->formTextarea('custom_js',$this->data->CustomJs, array('class' => 'form-control required txtDetail' , 'rows' =>3)); ?>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3 button-panel-zone">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+				<?php endif ; ?>
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+	</form>
+</div>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+
+<script>
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });    
+	$("#formData input[type=checkbox], #formData input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	function buttonZoneDisabled() {
+		$(".button-panel-zone button").attr("disabled", "disabled");
+		$(".button-panel-zone").append('<em class="fa fa-refresh fa-spin"></em>');
+	}
+	function buttonZoneActive() {
+		$(".button-panel-zone button").removeAttr("disabled");
+		$(".button-panel-zone > em").remove();
+	}
+
+    <?php if ($this->canEdit) : ?>
+	// Save
+	$("#btnSave").click(function(){
+		buttonZoneDisabled();
+		var valid = $("#formData").valid();
+		if (valid) {			
+			$.post("<?php echo $this->url(array('module' => 'system', 'controller' => 'template', 'action' => 'updatecoding'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'template', 'action' => 'coding', 'itemid' => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+				buttonZoneActive();
+			}, 'json');
+		} else {
+			buttonZoneActive();
+		}
+	});
+	<?php endif; ?>
+
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'template', 'action' => 'edit', 'itemid' => $this->data->ID), null, true); ?>";
+	});
+
+	$('#formData').on('ifClicked', 'input[name=is_use_google_analytic]', function(){
+		disabledAnalytic($(this).val());
+	});
+	disabledAnalytic('<?php echo $this->data->IsUseGoogleAnalytic ?>');
+	function disabledAnalytic(val){
+		if(val == 'Y'){
+			$('#google_ananlytic_script').prop('disabled', false);
+		}else{
+			$('#google_ananlytic_script').prop('disabled', true);
+		}
+	}
+
+	// set Disabled textArea
+	$('#formData').on('ifClicked', 'input[name=is_use_truehit]', function(){
+		disabledtruehit($(this).val());
+	});
+	disabledtruehit('<?php echo $this->data->IsUseTruehit?>');
+	function disabledtruehit(val){
+		if(val == 'Y'){
+			$('#truehit_script').prop('disabled', false);
+		}else{
+			$('#truehit_script').prop('disabled', true);
+		}
+	}
+
+	$('#formData').on('ifClicked', 'input[name=is_use_custom_css]', function(){
+		disabledCSS($(this).val());
+	});
+	disabledCSS('<?php echo $this->data->IsUseCustomCss?>');
+	function disabledCSS(val){
+		if(val == 'Y'){
+			$('#custom_css').prop('disabled', false);
+		}else{
+			$('#custom_css').prop('disabled', true);
+		}
+	}
+
+	$('#formData').on('ifClicked', 'input[name=is_use_custom_js]', function(){
+		disabledJS($(this).val());
+	});
+	disabledJS('<?php echo $this->data->IsUseCustomJs?>');
+	function disabledJS(val){
+		if(val == 'Y'){
+			$('#custom_js').prop('disabled', false);
+		}else{
+			$('#custom_js').prop('disabled', true);
+		}
+	}
+
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'SYS-TMP-04'); ?>

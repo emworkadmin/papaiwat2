@@ -1,0 +1,188 @@
+
+<style>
+
+.law_travel { margin-bottom: 15px;  margin-top: 30px; background: #cce3f1; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+.law_travel .export { display: inline-block; width: 100%; font-family: 'Kanit Medium';    margin-bottom: 15px; }
+.law_travel .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+.law_travel .export #CheckPoint_Year { margin-right: 4%; }
+.Situation_seeAll { margin-bottom: 15px; margin-top: 15px; color: white; background: linear-gradient(to top, #1b95d4, #1b95d4); padding: 7px 30px 2px; border-radius: 7px; border: 1px solid white; }
+.Situation_seeAll a {color: white;}
+.static {font-size: 30px;color: black;}
+.travel {background-color: white;font-size: 13px;text-align: center;color: #00c0ef;border: 1px solid;    padding: 10px 10px 10px 10px;}
+img {width: 115%;}
+.header-guide-law{background-color: #df8f4a;border: 1px solid;border-color: #df8f4a;margin-top: 15px;color: white;text-align: center;font-size: 15px;}
+.chart-police {background-color: white;}
+.form-control{padding: 0px 0px; }
+span.law {font-size: 15px;}
+@media (max-width: 992px){
+    img {min-width: 90px;width: 25% !important;}
+    .top.col-md-6 {margin-top: 15px;}
+    .charttoplaw {margin-bottom: 10px;}
+}
+
+</style>
+
+
+<div class="law_travel" id="law_travel">
+    <div class="export">
+        <div class="col-md-9"></div>
+        <div class="col-md-3">
+            <?php echo $this->formSelect("CheckPoint_Year", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?>
+            <?php echo $this->formSelect("guide_law_Export", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+
+    <div class="top col-md-12" style="">
+        <div class="charttoplaw col-md-6 "style="">
+            <div class=" col-md-4"></div>
+                <div class="travel col-md-8" style="">
+                        จำนวนมัคคุเทศก์ที่ถูกตรวจ
+                    <br>
+                    <div class = "static" style="">
+                        93,794 
+                        <span class="law">ราย</span>
+                    </div>
+                </div>
+            </div>
+
+        <div class="charttop col-md-6"style=" text-align:  center;">
+            <div class="travel col-md-8" style="border:  1px solid;color: #00c0ef;background-color:  white;">
+                    จำนวนที่ถูกจับกุม ปีปัจจุบัน    
+                    <br>
+                <div class = "static" style="">
+                    195 
+                    <span class="law">ราย</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-guide-law col-md-12" style="">
+        หัวข้อการกระทำผความผิด ของมัคคุเทศก์ที่ถูกจับ
+    </div>
+
+    
+    <div class="col-md-12" style="border:  1px solid;background-color:  white; border-color: white;">
+        <canvas id="myChart3"></canvas>
+    </div>
+</div>
+
+<div class="col-md-12" style="text-align: center;">
+    <button class="Situation_seeAll"><a href="https://app.powerbi.com/view?r=eyJrIjoiMjk0ZTM2Y2EtYzRmOS00NjQ5LTg5MzctMjFlMjI4NjQ2ZjQwIiwidCI6IjdhNTlkMDM0LTEzNGYtNDI1Ny1hNmJiLTllYWZkNzg5NjA2ZCIsImMiOjEwfQ%3D%3D" target="_blank">ดูข้อมูลสถิติทั้งหมด</a></button>
+</div>
+
+<div id="previewImage_guide_law" style="display: none;"></div>
+<a id="downloadImage_guide_law" href="#In_Out" style="display: none;"></a>
+
+
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/html2canvas/html2canvas.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/chartjs/Chart.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('assets/graph/jspdf/jspdf.min.js');?>"></script>
+<script>
+
+jQuery(function(){
+
+var ctx1 = document.getElementById('myChart3').getContext('2d');
+
+var myBarChart  = new Chart(ctx1, {
+    // The type of chart we want to create
+    type: 'horizontalBar',
+
+    // The data for our dataset
+    data: {
+        labels: ["ประกอบอาชีพมัคคุเทศก์โดยมิได้รับอนุญาต", "ประกอบอาชีพธุรกิจนำเที่ยวโดยไม่ได้รับอนุญาตจากนายทะเบียน", "ไม่ติดบัตรประจำตัวมัคคุเทศก์ขณะปฏิบัติหน้าที่", "เป็นมัคคุเทศก์ไม่ปฏิบัติตามระเบียบกำหนด(แต่งกายไม่สุภาพ)", "ไม่แสดงใบอนุญาตประะกอบธุรกิจนำเที่ยวไว้ในที่เปิดเผย", "มัคคุเทศก์แต่ไม่ปฏิบัติตามระเบียบที่คณะกรรมการกำหนด", "ไม่รับผิดชอบงานในหน้าที่มัคคุเทศก์","เป็นบุคคลต่างด้าวประกอบอาชีพมัคคุเทศก์โดยไม่ได้รับอนุญาต"],
+        datasets: [{
+            label: "My First dataset",
+            backgroundColor: '#fea1a2',
+            // borderColor: '#fea1a2',
+            data: [91, 33, 29, 13, 10, 7, 6, 4],
+        }]
+    },
+
+        options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                    
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+                            var x = -10;
+                            if(data < 0) {
+                                x = +10;
+                            }                                                
+                            ctx.fillText(data, bar._model.x + x, bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+                legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+            scales: {
+                yAxes: [{
+                    // display: false,
+                    gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        // display: false,
+                        beginAtZero:true
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        // display : false
+                    },
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            },
+            responsive: true
+        }
+
+});
+
+    function setCanvas_law_travel(val) {
+        html2canvas(document.querySelector("#law_travel")).then(function(canvas) {
+            $("#previewImage_guide_law").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_guide_law").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage_guide_law")[0].click();
+                $("#guide_law_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_guide_law canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#guide_law_Export").val('export');
+            }
+        });
+    }
+
+    $("#guide_law_Export").change(function() {
+        setCanvas_law_travel($(this).val());
+    });
+
+
+});
+</script>

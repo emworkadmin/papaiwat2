@@ -1,0 +1,80 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+	
+		<div class="title-label">ตั้งค่าพื้นฐานข้อความตอบกลับ</div>
+		
+		<div class="form-group">
+			<label class="col-md-3">คำตอบกลับ (ค่าพื้นฐาน)</label>
+			<div class="col-md-9">
+				<?php echo $this->formTextarea('ResponseMessageDefault', $this->data->ResponseMessageDefault, array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+			</div>
+		</div>
+		
+		<?php
+			if(count($this->languages)>0) {
+				foreach($this->languages as $lang) {
+					?>
+						<div class="form-group">
+							<label class="col-md-3">คำตอบกลับ (<?php echo $lang['Name'];?>)</label>
+							<div class="col-md-9">
+								<?php echo $this->formTextarea("ResponseMessage{$lang['Code']}", $this->data->ResponseMessage[$lang['Code']], array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+							</div>
+						</div>
+					<?php
+				}
+			}
+		?>
+
+		<div class="title-label">ตั้งค่าพื้นฐานปุ่มยืนยัน</div>
+
+		<div class="form-group">
+			<label class="col-md-3">ปุ่มยืนยัน (ค่าพื้นฐาน)</label>
+			<div class="col-md-9">
+				<?php echo $this->formText('ButtonResponseMessageDefault', $this->data->ButtonResponseMessageDefault, array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+			</div>
+		</div>
+
+		<?php
+			if(count($this->languages)>0) {
+				foreach($this->languages as $lang) {
+					?>
+						<div class="form-group">
+							<label class="col-md-3">ปุ่มยืนยัน (<?php echo $lang['Name'];?>)</label>
+							<div class="col-md-9">
+								<?php echo $this->formText("ButtonResponseMessage{$lang['Code']}", $this->data->ButtonResponseMessage[$lang['Code']], array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+							</div>
+						</div>
+					<?php
+				}
+			}
+		?>		
+
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script type="text/javascript">
+$(function () {
+
+	$("#btnSave").click(function() {
+		$.post("<?php echo $this->url(array('module' => 'complain', 'controller' => 'setting', 'action' => 'update'), null, true);?>", $("#formEdit").serializeArray(), function(data) {
+			if (data.result) {
+				DialogComplete();
+				setTimeout(function() {
+					window.location = "<?php echo $this->url(array('module' => 'complain', 'controller' => 'setting', 'action' => 'index'), null, true); ?>";
+				}, 500);
+			} else {
+				DialogWarning(data.message);
+			}
+		});
+	});
+
+});
+</script>

@@ -1,0 +1,197 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+<style>
+@media only screen and (max-width: 991px) {
+    .panel-detail .form-control {
+        margin-top: 10px;
+    }
+}
+input#txtFirstName {
+    float: left;
+    width: calc(50% - 5px);
+    margin-right: 10px;
+}
+input#txtLastName {
+    float: left;
+    width: calc(50% - 5px);
+}
+#profile-edit { margin-top: 20px; }
+</style>
+<div class="container" id="profile-edit">
+	<div class="panel panel-default panel-detail">
+		<div class="panel-body">
+			
+            <form class="form-horizontal" id="formAdd" name="formAdd">
+            
+            		<div class="title-label"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_title'); ?></div>
+            		
+					<div class="form-group">
+						<label class="col-md-4 labelRequest control-label"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_name'); ?></label>
+
+            			<div class="col-md-8">
+                			<div class="divControl" style="width: 80px; display: inline-block; float: left; margin-right: 10px;">
+                				<?php echo $this->formText('txtTitle', $this->data->TitleName, array('class' => 'form-control required', 'placeholder' => Emwork_Translate::text($this->lang, 'profile', 'edit_title_name'), 'maxlength' => '50')); ?>
+                			</div>
+                			<div class="divControl" style="width: calc(100% - 90px); float: left;">
+                				<?php echo $this->formText('txtFirstName', $this->data->FirstName, array('class' => 'form-control required', 'placeholder' => Emwork_Translate::text($this->lang, 'profile', 'edit_first_name'), 'maxlength' => '50')); ?>
+                				<?php echo $this->formText('txtLastName', $this->data->LastName, array('class' => 'form-control required', 'placeholder' => Emwork_Translate::text($this->lang, 'profile', 'edit_last_name'), 'maxlength' => '50')); ?>
+                			</div>
+            			</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="lstGender"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_gender'); ?></label>
+						<div class="col-md-8 divControl">
+							<?php echo $this->formSelect('lstGender', $this->data->Gender, array('class' => 'form-control'), $this->genderOption); ?>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="txtBirthDate"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_birthdate'); ?></label>
+						<div class="col-md-8 divControl">
+							<?php echo $this->formText('txtBirthDate', $this->data->BirthDate, array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+							<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+						</div>
+					</div>
+
+            		<div class="form-group">
+            			<label class="col-md-4 control-label" for="txtTelephone"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_telephone'); ?></label>
+            			<div class="col-md-8 divControl">
+            				<?php echo $this->formText('txtTelephone', $this->data->Telephone, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '50')); ?>
+            			</div>
+            		</div>
+
+            		<div class="form-group">
+            			<label class="col-md-4 control-label" for="txtFax"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_fax'); ?></label>
+            			<div class="col-md-8 divControl">
+            				<?php echo $this->formText('txtFax', $this->data->Fax, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '50')); ?>
+            			</div>
+            		</div>	
+
+            		<div class="form-group">
+            			<label class="col-md-4 control-label" for="txtMobile"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_mobile'); ?></label>
+            			<div class="col-md-8 divControl">
+            				<?php echo $this->formText('txtMobile', $this->data->Mobile, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '50')); ?>
+            			</div>
+            		</div>											
+
+            		<div class="form-group">
+            			<label class="col-md-4 control-label" for="txtEmail"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_email'); ?></label>
+            			<div class="col-md-8 divControl">
+            				<p class="form-control-static">
+            					<?php echo Emwork_Utility::notShowNull($this->data->Email);?>
+            				</p>
+            			</div>
+            		</div>					
+
+        		</form>
+        		
+        		<form class="form-horizontal" id="formPassword" name="formPassword">
+            		<div class="title-label"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_password_title'); ?></div>
+            		
+            		<div class="form-group">
+            			<label class="col-md-4 control-label" for="txtEmail"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_old_password'); ?></label>
+            			<div class="col-md-8 divControl">
+            				<?php echo $this->formPassword('txtOldPassword', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '20')); ?>
+            			</div>
+            		</div>
+            		
+            		<div class="form-group">
+            			<label class="col-md-4 control-label" for="txtEmail"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_new_password'); ?></label>
+            			<div class="col-md-8 divControl">
+            				<?php echo $this->formPassword('txtNewPasswordFirst', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '20')); ?>
+            			</div>
+            		</div>
+            		
+            		<div class="form-group">
+            			<label class="col-md-4 control-label" for="txtEmail"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_confirm_password'); ?></label>
+            			<div class="col-md-8 divControl">
+            				<?php echo $this->formPassword('txtNewPasswordSecond', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '20')); ?>
+            				<div class="help-block" style="margin-top: 15px;"><span style="text-decoration: underline;"><?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_remark'); ?></span> : <?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_remark_detail'); ?></div> 
+            			</div>
+            		</div>
+            		
+            		<div class="form-group">
+            			<div class="col-md-8 col-md-offset-4">
+            				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> <?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_button_update'); ?></button>
+            				<button type="button" class="btn btn-default" id="btnCancel"> <?php echo Emwork_Translate::text($this->lang, 'profile', 'edit_back'); ?></button>
+            			</div>
+            		</div>
+            		
+        		</form>
+    	</div>
+    </div>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+
+	<?php if ($this->isiOS) : ?>
+	$('#txtBirthDate').removeAttr("readonly");
+	<?php endif;?>
+
+	$('#txtBirthDate').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+    
+	$("#formAdd").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formAdd input[type=checkbox], #formAdd input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+	
+	// Save
+	$("#btnSave").click(function() {
+    		var OldPassword = $('#txtOldPassword').val();
+    		var NewPasswordFirst = $('#txtNewPasswordFirst').val();
+    		var NewPasswordSecond = $('#txtNewPasswordSecond').val();
+    		if(OldPassword) {
+        		if(NewPasswordFirst.length < 8){
+					DialogWarning('<?php echo Emwork_Translate::text($this->lang, 'profile', 'dialog_new_password_length'); ?>', '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_title'); ?>', '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_close'); ?>');
+        			return;
+        		}
+        		if(NewPasswordFirst != NewPasswordSecond) {
+					DialogWarning('<?php echo Emwork_Translate::text($this->lang, 'profile', 'dialog_duplication_password'); ?>', '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_title'); ?>', '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_close'); ?>');
+            		return;
+        		}
+    			$.post("<?php echo $this->url(array('module' => 'profile', 'controller' => 'index', 'action' => 'updatepassword'), null, true);?>", $("#formPassword").serializeArray(), function(data) {
+    				if (data.result) {
+    					save();
+    				} else {
+    					DialogWarning(data.message, '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_title'); ?>', '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_close'); ?>');
+    					return;
+    				}
+    			}, 'json');
+    		} else {
+    			save();
+    		}
+	});
+	function save() {
+		var valid = $("#formAdd").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'profile', 'controller' => 'index', 'action' => 'update'), null, true);?>", $("#formAdd").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'profile', 'controller' => 'index', 'action' => 'index'), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message, '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_title'); ?>', '<?php echo Emwork_Translate::text($this->lang, 'general', 'dialog_warning_close'); ?>');
+				}
+			}, 'json');
+		}
+	}
+
+	// Cancel
+	$("#btnCancel").click(function() {
+		window.location = "<?php echo $this->url(array("module" => "profile" , "controller" => "index", "action" => "index"), null, true); ?>";
+	});
+
+});
+</script>

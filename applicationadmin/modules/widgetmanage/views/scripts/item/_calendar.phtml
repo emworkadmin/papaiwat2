@@ -1,0 +1,138 @@
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+		<?php echo $this->formHidden("hdfWidgetType", $this->data->WidgetType, null, null); ?>
+        <?php echo $this->formHidden("hdfUpdateType", 'D', null, null); ?>
+
+		<div class="title-label">ตั้งค่าการแสดงผล</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="settingTemplate">รูปแบบการแสดงผล</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('settingTemplate', (empty($this->dataDisplay->settingTemplate) ? 'C' : $this->dataDisplay->settingTemplate), array('class' => 'form-control', 'label_class' => 'radio-inline'), array('C'=>'ปฎิทิน','L'=>'รายการ'), " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group divDateRange">
+			<label class="col-md-3 control-label" for="settingStartDate">วันที่เริ่มต้น</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText("settingStartDate", (empty($this->dataDisplay->settingStartDate) ? null : Emwork_Utility_DateTime::MySqlToDateThai($this->dataDisplay->settingStartDate)), array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+        		<span class="fa fa-calendar form-control-feedback" aria-hidden="true" style="right: 15px"></span>
+				<span id="<?php echo "settingStartClose"; ?>" class="fa fa-times-circle" style="right: 50px; top: 10px; position: absolute; cursor: pointer; <?php echo (empty($this->dataDisplay->settingStartDate) ? 'display: none;' : '');?>"></span>
+			</div>
+		</div>
+		<div class="form-group divDateRange">
+			<label class="col-md-3 control-label" for="settingEndDate">วันที่สิ้นสุด</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText("settingEndDate", (empty($this->dataDisplay->settingEndDate) ? null : Emwork_Utility_DateTime::MySqlToDateThai($this->dataDisplay->settingEndDate)), array('class' => 'form-control', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+        		<span class="fa fa-calendar form-control-feedback" aria-hidden="true" style="right: 15px"></span>
+				<span id="<?php echo "settingEndClose"; ?>" class="fa fa-times-circle" style="right: 50px; top: 10px; position: absolute; cursor: pointer; <?php echo (empty($this->dataDisplay->settingEndDate) ? 'display: none;' : '');?>"></span>
+			</div>
+		</div>
+		<hr class="divDateRange" />
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingHtmlClass">Html Class</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('settingHtmlClass', $this->dataDisplay->settingHtmlClass, array('class' => 'form-control', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+
+        <div class="form-group">
+			<label class="col-md-3 control-label" for="settingCustomCSS">CSS</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formTextarea('settingCustomCSS', $this->dataDisplay->settingCustomCSS, array('class' => 'form-control', 'placeholder' => '', 'rows' => '5')); ?>
+			</div>
+		</div>
+		<hr />
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<?php endif ; ?>
+			</div>
+		</div>
+		
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.closest("div.divControl"));
+        }, 
+        ignore: []
+    });
+
+	$("#formData input[type=checkbox], #formData input[type=radio]:not([name=TemplateType])").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	<?php if ($this->canEdit) : ?> 
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formData").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'update'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'widgetmanage', 'controller' => 'item', 'action' => 'displaysetting', "itemid" => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	<?php endif ; ?>
+
+	// Datapicker
+	$('#settingStartDate').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	$('#settingEndDate').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+	$('#settingStartDate').change(function(){
+		if ($(this).val() != "") {
+			$("#settingStartClose").css("display", "block");
+		}
+	});
+	$('#settingEndDate').change(function(){
+		if ($(this).val() != "") {
+			$("#settingEndClose").css("display", "block");
+		}
+	});
+	$("#settingStartClose").click(function(){
+    	$('#settingStartDate').val('');
+    	$("#settingStartClose").css("display", "none");
+    });
+    $("#settingEndClose").click(function(){
+    	$('#settingEndDate').val('');
+    	$("#settingEndClose").css("display", "none");
+    });
+
+
+	<?php if($this->dataDisplay->settingTemplate=='L'){ ?>
+		$('.divDateRange').css("display","");
+	<?php }else{ ?>
+		$('.divDateRange').css("display","none");
+	<?php } ?>
+	$('input[name="settingTemplate"]').on('ifClicked', function (event) {
+		if(this.value=='C'){
+			$('.divDateRange').css("display","none");
+		}else{
+			$('.divDateRange').css("display","");
+		}
+    });
+
+
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'WDG-MGT-11'); ?>

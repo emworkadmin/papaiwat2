@@ -1,0 +1,318 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+		<?php echo $this->formHidden("hdfID", $this->dataInfo->ID); ?>
+				
+		<div class="title-label">ตั้งค่าการแสดงผลหน้ารายการ</div>					
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าจำนวนข้อมูลที่แสดงต่อหน้า</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticlePerPageSetting', (isset($this->data["ArticlePerPageSetting"]) ? $this->data["ArticlePerPageSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customArticlePerPageSetting" style="<?php echo (isset($this->data["ArticlePerPageSetting"]) ? $this->data["ArticlePerPageSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ArticlePerPage">จำนวนข้อมูลที่แสดงต่อหน้า</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('ArticlePerPage', (isset($this->data["ArticlePerPage"]) ? $this->data["ArticlePerPage"] : $this->dataDefault->articlePerPage), array('class' => 'form-control digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />			
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าเงื่อนไขการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleSortSetting', (isset($this->data["ArticleSortSetting"]) ? $this->data["ArticleSortSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customArticleSortSetting" style="<?php echo  (isset($this->data["ArticleSortSetting"]) ? $this->data["ArticleSortSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ArticleSortType">เงื่อนไขการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ArticleSortType', (isset($this->data["ArticleSortType"]) ? $this->data["ArticleSortType"] : $this->dataDefault->articleSortType), array('class' => 'form-control', 'placeholder' => ''), $this->sortTypeOption); ?>
+			</div>
+		</div>
+		<div class="form-group customArticleSortSetting" style="<?php echo  (isset($this->data["ArticleSortSetting"]) ? $this->data["ArticleSortSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ArticleSortDirection">รูปแบบการจัดเรียง</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('ArticleSortDirection', (isset($this->data["ArticleSortDirection"]) ? $this->data["ArticleSortDirection"] : $this->dataDefault->articleSortDirection), array('class' => 'form-control', 'placeholder' => ''), $this->sortDirectionOption); ?>
+			</div>
+		</div>
+		<hr />		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าการแสดงหมวดหมู่ที่ไม่มีข้อมูล</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowNoDataCategorySetting', (isset($this->data["ArticleShowNoDataCategorySetting"]) ? $this->data["ArticleShowNoDataCategorySetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customArticleShowNoDataCategorySetting" style="<?php echo  (isset($this->data["ArticleShowNoDataCategorySetting"]) ? $this->data["ArticleShowNoDataCategorySetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ArticleShowNoDataCategory">ต้องการแสดงหมวดหมู่ที่ไม่มีข้อมูลหรือไม่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowNoDataCategory', (isset($this->data["ArticleShowNoDataCategory"]) ? $this->data["ArticleShowNoDataCategory"] : $this->dataDefault->articleShowNoDataCategory), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<?php if(false) : ?>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าอนุญาตให้แสดงความคิดเห็น</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleCanCommentSetting', (isset($this->data["ArticleCanCommentSetting"]) ? $this->data["ArticleCanCommentSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customArticleCanCommentSetting" style="<?php echo  (isset($this->data["ArticleCanCommentSetting"]) ? $this->data["ArticleCanCommentSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ArticleCanComment">อนุญาตให้แสดงความคิดเห็น</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleCanComment', (isset($this->data["ArticleCanComment"]) ? $this->data["ArticleCanComment"] : $this->dataDefault->articleCanComment), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าการแผยแพร่ความคิดเห็น</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticlePublicCommentSetting', (isset($this->data["ArticlePublicCommentSetting"]) ? $this->data["ArticlePublicCommentSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customArticlePublicCommentSetting" style="<?php echo  (isset($this->data["ArticlePublicCommentSetting"]) ? $this->data["ArticlePublicCommentSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ArticlePublicComment">การแผยแพร่ความคิดเห็น</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticlePublicComment', (isset($this->data["ArticlePublicComment"]) ? $this->data["ArticlePublicComment"] : $this->dataDefault->articlePublicComment), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->publicCommentOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<?php endif; ?>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าจำนวนคอลัมน์ที่แสดง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleAmountColumnSetting', (isset($this->data["ArticleAmountColumnSetting"]) ? $this->data["ArticleAmountColumnSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customArticleAmountColumnSetting" style="<?php echo  (isset($this->data["ArticleAmountColumnSetting"]) ? $this->data["ArticleAmountColumnSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ArticleAmountColumn">จำนวนคอลัมน์ที่แสดง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formSelect('ArticleAmountColumn', (isset($this->data["ArticleAmountColumn"]) ? $this->data["ArticleAmountColumn"] : $this->dataDefault->articleAmountColumn), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->columnAmountOption); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowImageSetting', (isset($this->data["ArticleShowImageSetting"]) ? $this->data["ArticleShowImageSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customArticleShowImageSetting" style="<?php echo  (isset($this->data["ArticleShowImageSetting"]) ? $this->data["ArticleShowImageSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ArticleShowImage">แสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowImage', (isset($this->data["ArticleShowImage"]) ? $this->data["ArticleShowImage"] : $this->dataDefault->articleShowImage), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงชื่อหมวดหมู่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowCategorySetting', (isset($this->data["ArticleShowCategorySetting"]) ? $this->data["ArticleShowCategorySetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customArticleShowCategorySetting" style="<?php echo  (isset($this->data["ArticleShowCategorySetting"]) ? $this->data["ArticleShowCategorySetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ArticleShowCategory">แสดงชื่อหมวดหมู่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowCategory', (isset($this->data["ArticleShowCategory"]) ? $this->data["ArticleShowCategory"] : $this->dataDefault->articleShowCategory), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowIntroTextSetting', (isset($this->data["ArticleShowIntroTextSetting"]) ? $this->data["ArticleShowIntroTextSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customArticleShowIntroTextSetting" style="<?php echo  (isset($this->data["ArticleShowIntroTextSetting"]) ? $this->data["ArticleShowIntroTextSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ArticleShowIntroText">แสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowIntroText', (isset($this->data["ArticleShowIntroText"]) ? $this->data["ArticleShowIntroText"] : $this->dataDefault->articleShowIntroText), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงจำนวนข้อมูลในหมวดหมู่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowAmountSetting', (isset($this->data["ArticleShowAmountSetting"]) ? $this->data["ArticleShowAmountSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<div class="form-group customArticleShowAmountSetting" style="<?php echo  (isset($this->data["ArticleShowAmountSetting"]) ? $this->data["ArticleShowAmountSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="ArticleShowAmount">แสดงจำนวนข้อมูลในหมวดหมู่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('ArticleShowAmount', (isset($this->data["ArticleShowAmount"]) ? $this->data["ArticleShowAmount"] : $this->dataDefault->articleShowAmount), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+					
+		<div class="title-label">ตั้งค่าการแสดงผลหมวดหมู่หลัก</div>		
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าจำนวนข้อมูลที่แสดงต่อหน้า</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryPerPageSetting', (isset($this->data["CategoryPerPageSetting"]) ? $this->data["CategoryPerPageSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>	
+		<div class="form-group customCategoryPerPageSetting" style="<?php echo  (isset($this->data["CategoryPerPageSetting"]) ? $this->data["CategoryPerPageSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="CategoryPerPage">จำนวนข้อมูลที่แสดงต่อหน้า</label> 
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('CategoryPerPage', (isset($this->data["CategoryPerPage"]) ? $this->data["CategoryPerPage"] : $this->dataDefault->categoryPerPage), array('class' => 'form-control digits', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าจำนวนคอลัมน์ที่แสดง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryAmountColumnSetting', (isset($this->data["CategoryAmountColumnSetting"]) ? $this->data["CategoryAmountColumnSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>	
+		<div class="form-group customCategoryAmountColumnSetting" style="<?php echo  (isset($this->data["CategoryAmountColumnSetting"]) ? $this->data["CategoryAmountColumnSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="CategoryAmountColumn">จำนวนคอลัมน์ที่แสดง</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formSelect('CategoryAmountColumn', (isset($this->data["CategoryAmountColumn"]) ? $this->data["CategoryAmountColumn"] : $this->dataDefault->categoryAmountColumn), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->columnAmountOption); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryShowImageSetting', (isset($this->data["CategoryShowImageSetting"]) ? $this->data["CategoryShowImageSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>	
+		<div class="form-group customCategoryShowImageSetting" style="<?php echo  (isset($this->data["CategoryShowImageSetting"]) ? $this->data["CategoryShowImageSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="CategoryShowImage">แสดงรูปภาพ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryShowImage', (isset($this->data["CategoryShowImage"]) ? $this->data["CategoryShowImage"] : $this->dataDefault->categoryShowImage), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงชื่อหมวดหมู่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryShowCategorySetting', (isset($this->data["CategoryShowCategorySetting"]) ? $this->data["CategoryShowCategorySetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>	
+		<div class="form-group customCategoryShowCategorySetting" style="<?php echo  (isset($this->data["CategoryShowCategorySetting"]) ? $this->data["CategoryShowCategorySetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="CategoryShowCategory">แสดงชื่อหมวดหมู่</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryShowCategory', (isset($this->data["CategoryShowCategory"]) ? $this->data["CategoryShowCategory"] : $this->dataDefault->categoryShowCategory), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">ตั้งค่าแสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryShowIntroTextSetting', (isset($this->data["CategoryShowIntroTextSetting"]) ? $this->data["CategoryShowIntroTextSetting"] : "D"), array('class' => 'form-control', 'label_class' => 'radio-inline'), $this->defaultCustomizeOption, " "); ?>
+				</div>
+			</div>
+		</div>	
+		<div class="form-group customCategoryShowIntroTextSetting" style="<?php echo  (isset($this->data["CategoryShowIntroTextSetting"]) ? $this->data["CategoryShowIntroTextSetting"] : "D") == "D" ? "display: none;" : ""; ?>">
+			<label class="col-md-3 control-label" for="CategoryShowIntroText">แสดงข้อความเกริ่นนำ</label> 
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('CategoryShowIntroText', (isset($this->data["CategoryShowIntroText"]) ? $this->data["CategoryShowIntroText"] : $this->dataDefault->categoryShowIntroText), array('class' => 'form-control', 'placeholder' => '', 'label_class' => 'radio-inline'), $this->yesNoOption, " "); ?>
+				</div>
+			</div>
+		</div>
+		<?php if($this->canAdd): ?>
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3">
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+			</div>
+		</div>
+	<?php endif;?>
+	</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script>
+$(function () {
+	
+	$("#formEdit").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+
+	$("#formEdit input[type=checkbox], #formEdit input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+	$('#formEdit input[type=radio][name$=Setting]').on('ifClicked', function(event){
+		var val = $(this).val();
+		var name = $(this).attr("name");
+		if (val == 'D') {
+			$(".custom" + name).css("display", "none");
+		} else {
+			$(".custom" + name).css("display", "");
+		}
+	});
+
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formEdit").valid();
+		if (valid) {
+			
+			$.post("<?php echo $this->url(array('module' => 'story', 'controller' => 'category', 'action' => 'settingsave'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'story', 'controller' => 'category', 'action' => 'setting', "itemid" => $this->dataInfo->ID), null, true); ?>" ;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+});
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'ATR2-0004'); ?>

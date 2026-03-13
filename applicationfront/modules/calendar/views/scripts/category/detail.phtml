@@ -1,0 +1,174 @@
+<!-- lightslider -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightslider-master/css/lightslider.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightslider-master/js/lightslider.min.js'); ?>"></script>
+
+<!-- lightgallery -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightgallery-master/css/lightgallery.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery-master/js/lightgallery.min.js'); ?>"></script>
+
+<!-- lightgallery Ext -->
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery-master/js/lg-fullscreen.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery-master/js/lg-thumbnail.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery-master/js/lg-video.min.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/lightgallery-master/js/lg-autoplay.min.js'); ?>"></script>
+
+<!-- lightbox -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/lightbox/css/lightbox.min.css'); ?>">
+<script src="<?php echo $this->baseUrl('plugins/lightbox/js/lightbox.min.js'); ?>"></script>
+
+<style>
+@media print {
+    body * {
+	    visibility: hidden;
+	}
+    .d2ms-box-main, .d2ms-box-main  * {
+    	visibility: visible;
+    }
+	.calendar-article .row{
+		margin-top:50px;
+		float:left;
+	}
+	.calendar-article .row .col-md-7{
+		float: left;
+    	width: 100%;
+	}
+	.calendar-article .row .col-md-5{
+    	width: 100%;
+	}
+	.calendar-article .row .article-detail2{
+		float: left;
+    	width: 100%;
+	}
+	.article-detail2 .info-box .row .col-md-8{
+		margin-left:10px;
+	}
+	.article-detail2 .info-box .row .col-md-4{
+		margin-left:10px;
+	}
+	.calendar-article .row .article-location{
+		width:100%;
+	}
+    header, footer {display: none;}
+    .calendar-wrapper {margin-top: 0px;}
+}
+
+@media all {
+  .watermark {
+    display: none;
+  }
+}
+
+@media print {
+  .watermark {
+    display: block; 
+    position: absolute;
+    top: 0; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+  	opacity: 0.3;
+  }
+  .watermark img {
+  	width: 100%;
+  }
+  .watermark p {
+  	text-align: center; 
+  	font-size: 2.4rem;
+  }
+}
+
+</style>
+<div class="watermark">
+	<img alt="image" src="<?php echo $this->baseUrl('images/logos/logo.png'); ?>" />
+	<p>
+		<?php echo System_Model_Setting::getValue("SiteName", "Site"); ?>
+	</p>
+</div>
+
+<div class="infodetail infopage calendar-article calendar-article-<?php echo $this->data->ID; ?> calendar-article-template-<?php echo $this->dataInfo->TemplateType; ?>">
+	<?php 
+	// Layout
+	switch ($this->dataInfo->TemplateType) : 
+		case "1" : 
+	?>
+	
+	<div class="information-panel printable">
+		
+		<?php  echo $this->partial("article/_partTitle.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partIntroImage.phtml", $this); ?>
+		
+		<div class="row" >
+			<div class="col-md-7">
+				<?php  echo $this->partial("article/_partDetail.phtml", $this); ?>
+			</div>
+			<div class="col-md-5">
+				<?php  echo $this->partial("article/_partDetail2.phtml", $this); ?>
+
+				<h3>Location</h3>
+				<?php  echo $this->partial("article/_partLocation.phtml", $this); ?>
+			</div>
+		</div>
+
+		<?php  echo $this->partial("article/_partGallery.phtml", $this); ?>
+
+		<?php  echo $this->partial("article/_partMulti.phtml", $this); ?>
+		
+		<?php  echo $this->partial("article/_partDocument.phtml", $this); ?>
+
+		<?php  echo $this->partial("article/_partSocial.phtml", $this); ?>
+
+	</div>
+	<?php 
+			break;
+		case "2" : 
+	?>
+	
+	<div class="information-panel printable">
+		
+			<?php  echo $this->partial("article/_partTitle.phtml", $this); ?>
+
+			<div class="row" >
+				<div class="col-md-7">
+					<?php  echo $this->partial("article/_partIntroImage.phtml", $this); ?>
+				</div>
+				<div class="col-md-5">
+					<?php  echo $this->partial("article/_partDetail2.phtml", $this); ?>
+				</div>
+			</div>
+			
+			<h3><?php echo Emwork_Translate::text($this->lang, 'calendar', 'detail'); ?></h3>
+			<?php  echo $this->partial("article/_partDetail.phtml", $this); ?>
+
+			<h3>Location</h3>
+			<?php  echo $this->partial("article/_partLocation.phtml", $this); ?>
+			
+			<?php  echo $this->partial("article/_partGallery.phtml", $this); ?>
+			
+			<?php  echo $this->partial("article/_partMulti.phtml", $this); ?>
+			
+			<?php  echo $this->partial("article/_partDocument.phtml", $this); ?>
+			
+			<?php  echo $this->partial("article/_partSocial.phtml", $this); ?>
+			
+	</div>
+	
+	<?php 
+			break;
+		default : 
+			break;
+	?>
+	<?php 
+	endswitch;
+	?>
+
+	<!-- Comment -->
+	<?php if($this->ArticleCanComment=='Y'){ ?>
+	<div class="information-comment-panel printable">
+		<?php echo $this->partial("article/_partComment.phtml", $this); ?>
+	</div>
+	<?php } ?>
+	
+</div>
+
+

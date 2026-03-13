@@ -1,0 +1,96 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formData" name="formData">
+		<?php echo $this->formHidden('hdfID', $this->data->ID, null, null); ?>
+		
+		<div class="row">
+			<?php 
+			if (count($this->menuGroups) > 0) :
+				foreach ($this->menuGroups as $menuGroup) : 
+			?>
+			<div class="col-md-4">
+				<div style="border: 1px solid #999; padding: 10px; border-radius: 5px; background-color: #eee;">
+					<?php 
+					echo "<div><strong>" . $menuGroup["MenuGroupName"] . "</strong></div>";
+					echo "<div class='checkbox with-icheck'>";
+					echo $this->formMultiCheckbox("MenuSelected", $this->data->MenuIds, array(), $menuGroup["MenuOption"]);
+					echo "</div>";
+					?>
+				</div>
+			</div>
+			<?php 
+				endforeach;
+			endif;
+			?>
+		</div>
+		
+		<hr />
+
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3 button-panel-zone">
+				<?php if ($this->canEdit) : ?>
+				<button type="button" class="btn btn-primary" id="btnSave">
+					<em class="fa fa-save"></em> บันทึก
+				</button>
+				<?php endif ; ?>
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+	</form>
+</div>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+
+<script>
+$(function () {
+	
+	$("#formData").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });    
+	$("#formData input[type=checkbox], #formData input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	function buttonZoneDisabled() {
+		$(".button-panel-zone button").attr("disabled", "disabled");
+		$(".button-panel-zone").append('<em class="fa fa-refresh fa-spin"></em>');
+	}
+	function buttonZoneActive() {
+		$(".button-panel-zone button").removeAttr("disabled");
+		$(".button-panel-zone > em").remove();
+	}
+	
+    <?php if ($this->canEdit) : ?>
+	// Save
+	$("#btnSave").click(function(){
+		buttonZoneDisabled();
+		var valid = $("#formData").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'system', 'controller' => 'template', 'action' => 'updateassignmenu'), null, true);?>", $("#formData").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'template', 'action' => 'assignmenu', 'itemid' => $this->data->ID), null, true); ?>";
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+				buttonZoneActive();
+			}, 'json');
+		} else {
+			buttonZoneActive();
+		}
+	});
+	<?php endif; ?>
+
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'system', 'controller' => 'template', 'action' => 'edit', 'itemid' => $this->data->ID), null, true); ?>";
+	});
+
+});
+
+
+</script>
+<?php echo $this->formHidden('hdfEMSAScreenCode', 'SYS-TMP-07'); ?>

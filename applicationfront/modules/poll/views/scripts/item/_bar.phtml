@@ -1,0 +1,96 @@
+<link rel="stylesheet" type="text/css" href="/assets/poll/css/style.css">
+<script src="<?php echo $this->baseUrl('assets/poll/js/chart.bundle.min.js'); ?>"></script>
+
+<div class="info infopage poll-item-bar">
+ 	<div class="item-title title-panel">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+		<hr />
+	</div>
+
+	<div class="result-list-panel">
+		<div class="row">
+
+			<form class="form-horizontal" id="formQuestion" name="formQuestion">
+			<input type="hidden" name="hdfID" value="<?php echo $id; ?>" title="HiddenID">
+		
+			<?php 
+			if(count($this->dataQuestion)>0){
+				$index = 1;
+				foreach($this->dataQuestion as $k1=>$v1){
+			?>
+
+			<div class="col-md-12" data-id="<?php echo $v1['ID']; ?>">
+			
+				<div class="poll-question col-md-12">
+					<span class="question-index"><?php echo $index . ". "; ?></span>
+					<span class="question-title"><?php echo $v1['Question']; ?></span>
+				</div>
+
+				<?php if($this->ShowIntroText && $v1['Description']){ ?>
+				<div class="poll-question-desc col-md-12">
+					<?php echo nl2br($v1['Description']); ?>
+				</div>
+				<?php } ?>
+
+				<div class="divControl">
+
+					<?php 
+					if(count($v1['OptionList'])>0){
+						foreach($v1['OptionList'] as $k2=>$v2){
+					?>
+
+						<div class="poll-option col-md-12">
+							<div class="col-md-8">
+								<em class="fa fa-circle"></em> &nbsp;&nbsp; <?php echo $v2['Name']; ?>
+							</div>
+							<div class="col-md-4">
+								<div class="rateBarTitle">
+									<div class="meter blue bar">
+										<span style="width : <?php echo empty($v2['Percentage']) ? '0%' : $v2['Percentage']; ?>;" title="<?php echo empty($v2['Percentage']) ? '0%' : $v2['Percentage']; ?>"></span>
+									</div>
+									<div class="rate">
+										<span><?php echo empty($v2['Percentage']) ? '0%' : $v2['Percentage']; ?></span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					<?php
+						}
+					}
+					?>
+
+				</div>
+
+			</div>
+
+			<?php
+				$index++;
+				}
+			}
+			?>
+
+			</form>
+
+		</div>
+	</div>
+
+	<div class="form-group text-center">
+		<div class="col-md-12 button-panel-zone">
+			<button type="button" class="btn btn-default" id="btnBack"><em class="fa fa-arrow-circle-left"></em> <?php echo Emwork_Translate::text($this->lang, 'poll', 'result_back'); ?></button>
+		</div>
+	</div>
+	
+</div>
+
+<script>
+jQuery(function(){
+
+	$('#btnBack').click(function(){
+		window.location = "<?php echo $this->HomeUrl; ?>";
+	});
+
+});
+</script>

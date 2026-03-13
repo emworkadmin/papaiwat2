@@ -1,0 +1,211 @@
+<?php 
+$defaultDataDetail = null;
+?>
+<!-- jQueryFiler -->
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+
+<!-- select2 -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/select2/select2.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/select2/select2.min.js'); ?>"></script>
+
+<!-- wickedpicker -->
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/wickedpicker/wickedpicker.min.css'); ?>">
+<script type="text/javascript" src="<?php echo $this->baseUrl('plugins/wickedpicker/wickedpicker.min.js'); ?>"></script>
+
+
+<style>
+.tt-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+
+.tt-selector input:active +.template-type {opacity: .9;}
+.tt-selector input:checked +.template-type {
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+
+.template-type {
+    border: 2px solid #00c0ef;
+    border-radius: 50%;
+    padding: 40px;
+}
+
+
+
+</style>
+
+
+<div class="panel-detail">	
+	<form class="form-horizontal" id="formEdit" name="formEdit">
+		<?php echo $this->formHidden("hdfID", $this->data->ID); ?>
+		<div class="title-label">รายละเอียด</div>
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtTitle">หัวข้อกระทู้</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formText('Title', $this->data->Title, array('class' => 'form-control required', 'placeholder' => '')); ?>
+			</div>
+		</div>
+
+        <div class="form-group" >
+            <label class="col-md-3 labelRequest control-label" for="txtDetail">รายละเอียด</label>		
+            <div class="col-md-9 divControl">
+                <?php echo $this->formTextarea("Detail", $this->data->Detail, array('class' => 'form-control', 'placeholder' => '', 'rows' => '5', 'maxlength' => '1000')); ?>
+            </div>
+        </div>	
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="txtBook">หมวดหมู่กระทู้</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->formSelect('Category', $this->data->CategoryID, array('class' => 'form-control'), Emwork_Utility::addEmptyOption($this->categoryOption)); ?>
+			</div>
+		</div>	
+		
+		<?php if (FALSE) :?>
+		<div class="form-group">
+			<label class="col-md-3  labelRequest control-label" for="txtTitleName">ชื่อ - นามสกุล</label>
+			<div class="col-md-1 divControl">
+				<?php echo $this->formText('TitleName', $this->data->TitleName, array('class' => 'form-control required', 'placeholder' => '')); ?>
+			</div>
+            <div class="col-md-4 divControl">
+				<?php echo $this->formText('FirstName', $this->data->FirstName, array('class' => 'form-control required', 'placeholder' => '')); ?>
+			</div>
+            <div class="col-md-4 divControl">
+				<?php echo $this->formText('LastName', $this->data->LastName, array('class' => 'form-control required', 'placeholder' => '')); ?>
+			</div>
+		</div>
+		<?php endif; ?>
+
+
+
+		<div class="title-label">ไฟล์ประกอบ</div>
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" for="">ไอคอน</label> 
+			<div class="col-md-9 divControl">
+				<input id="TemplateType-1" type="radio" name="IconID" value="1" <?php echo $this->data->IconID == 1 ? "checked='checked'" : ""; ?>/>
+				<label class="template-type" for="TemplateType-1" style="background-image:url(<?php echo $this->baseUrl("assets/webboard/p1.png"); ?>);"></label>
+				<input id="TemplateType-2" type="radio" name="IconID" value="2" <?php echo $this->data->IconID == 2 ? "checked='checked'" : ""; ?>/>
+				<label class="template-type"for="TemplateType-2" style="background-image:url(<?php echo $this->baseUrl("assets/webboard/p2.png"); ?>);"></label>
+				<input id="TemplateType-3" type="radio" name="IconID" value="3" <?php echo $this->data->IconID == 3 ? "checked='checked'" : ""; ?>/>
+				<label class="template-type"for="TemplateType-3" style="background-image:url(<?php echo $this->baseUrl("assets/webboard/p3.png"); ?>);"></label>
+				<input id="TemplateType-4" type="radio" name="IconID" value="4" <?php echo $this->data->IconID == 4 ? "checked='checked'" : ""; ?>/>
+				<label class="template-type"for="TemplateType-4" style="background-image:url(<?php echo $this->baseUrl("assets/webboard/p4.png"); ?>);"></label>
+				<input id="TemplateType-5" type="radio" name="IconID" value="5" <?php echo $this->data->IconID == 5 ? "checked='checked'" : ""; ?>/>
+				<label class="template-type"for="TemplateType-5" style="background-image:url(<?php echo $this->baseUrl("assets/webboard/p5.png"); ?>);"></label>
+				<input id="TemplateType-6" type="radio" name="IconID" value="6" <?php echo $this->data->IconID == 6 ? "checked='checked'" : ""; ?>/>
+				<label class="template-type"for="TemplateType-6" style="background-image:url(<?php echo $this->baseUrl("assets/webboard/p6.png"); ?>);"></label>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label" for=>ไฟล์เอกสาร</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->UploadHtmlControl("FileDocuments", "FileDocuments", null, array('png','jpeg','docx','pdf', 'jpg', 'gif')); ?>
+				<div class="help-block">ขนาดไฟล์ไม่เกิน 10 MB<br>เฉพาะไฟล์นามสกุล: .pdf</div>
+			</div>
+		</div>
+				
+		<div class="title-label">การเผยแพร่</div>
+
+		<?php if (FALSE) :?>
+		<div class="form-group has-feedback">
+			<label class="col-md-3  control-label" for="PublishDate">วันที่ตั้งกระทู้</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formText("Date", Emwork_Utility_DateTime::MSSqlToDateThai($this->data->Created), array('class' => 'form-control required', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+				<span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+			</div>
+			<label class="col-md-3  control-label" for="">เวลา</label>
+			<div class="col-md-3 divControl">
+				<?php echo $this->formText("Time", $this->data->Created != null ? $this->data->Created->format('H:i') : '0:00', array('class' => 'form-control required', 'id' => 'PublishDateTime')); ?>
+			</div>
+		</div>	
+		<?php endif ?>
+
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" >สถานะการอนุมัติ</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('IsStatusPost',"W", array('class' => 'form-inline', 'label_class' => 'radio-inline'), $this->statusPostOption, " "); ?>
+				</div>						
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-md-3 labelRequest control-label" >สถานะ</label>
+			<div class="col-md-9 divControl">
+				<div class="radio with-icheck">
+					<?php echo $this->formRadio('IsStatus',"Y", array('class' => 'form-inline', 'label_class' => 'radio-inline'), $this->statusOption, " "); ?>
+				</div>						
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-md-9 col-md-offset-3 button-panel-zone">
+				<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> บันทึก</button>
+				<button type="button" class="btn btn-default" id="btnCancel">ยกเลิก</button>
+			</div>
+		</div>
+		
+</form>
+</div>
+
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/ckeditor.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/ckeditor/adapters/jquery.js'); ?>"></script>
+
+<script type="text/javascript">
+$(function () {
+	
+	$("#formEdit").validate({
+		errorElement: "em",
+		errorPlacement: function(error, element) {
+			error.addClass( "help-block" );
+	        error.appendTo( element.parents("div.divControl"));
+        }
+    });
+    $('#Date').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+    $("input[type=text][id$=PublishDateTime]").wickedpicker({twentyFour: true, title : 'เวลา', now : '<?php echo $this->data->Created != null ? $this->data->Created->format("H:i") : "0:00"; ?>'});
+
+	$("#formEdit input[type=checkbox], #formEdit input[type=radio]").iCheck({checkboxClass: 'icheckbox_minimal-blue',radioClass: 'iradio_minimal-blue'});
+
+	function buttonZoneDisabled() {
+		$(".button-panel-zone button").attr("disabled", "disabled");
+		$(".button-panel-zone").append('<em class="fa fa-refresh fa-spin"></em>');
+	}
+	function buttonZoneActive() {
+		$(".button-panel-zone button").removeAttr("disabled");
+		$(".button-panel-zone > em").remove();
+	}
+		
+	// Save
+	$("#btnSave").click(function(){
+		var valid = $("#formEdit").valid();
+		if (valid) {
+			$.post("<?php echo $this->url(array('module' => 'webboard', 'controller' => 'post', 'action' => 'save'), null, true);?>", $("#formEdit").serializeArray(), function(data){
+				if (data.result) {
+					DialogComplete();
+					setTimeout(function(){
+						window.location = "<?php echo $this->url(array('module' => 'webboard', 'controller' => 'post', 'action' => 'edit'), null, true); ?>" + "/itemid/" + data.id;
+					}, 500);
+				} else {
+					DialogWarning(data.message);
+				}
+			}, 'json');
+		}
+	});
+	
+	// Cancel
+	$("#btnCancel").click(function(){
+		window.location = "<?php echo $this->url(array('module' => 'webboard', 'controller' => 'post', 'action' => 'index'), null, true); ?>";
+	});
+
+});
+</script>

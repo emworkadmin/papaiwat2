@@ -1,0 +1,773 @@
+<?php echo $this->partial("index/_pluginChartjs.phtml", $this); ?>
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/graph/css/graph.css'); ?>">
+
+<style>
+
+.TIC-footer {
+    font-size: 12px;
+    padding-top: 15px;
+}
+
+.graph-box.with-color.placeNation {background-color: #d4effa;}
+.graph-box.with-color.placeLocal {background-color: #e9e3f1;}
+
+
+.head1{background-color:#7fceef;padding: 10px;}
+.head2{background-color:#9fc4d6;padding: 10px;}
+.head3{background-color:#6ea8c0;padding: 10px;}
+.HeadInbound{text-align:center;}
+.top1{margin-top:1%;margin-right:-1%;}
+.lasttop{margin-bottom:5%;}
+.unit{font-size:2rem;color:#fff;}
+.unitS{font-size:2rem;}
+.in{background: #fff; padding: 20px 1px;min-height: 350px;}
+.inL{background: #fff; padding: 13px 20px 7px 20px; min-height: 350px;}
+.detail{margin-top: 20px;}
+.headleft{float:right;}
+.headright{float:left;}
+.boxL{    margin-top: 20px;}
+.headL2{    
+	background-color: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    width: 70%;
+	margin: auto;
+	border: 1px solid grey;
+}
+.chart{
+	/* padding: 30px; */
+    background: #fff;
+}
+.local{
+	margin-top: 50px;
+}
+.headL{    
+	background-color: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    width: 70%;
+	border: 1px solid grey;
+}
+.under{
+	font-size:1.8rem;
+	padding-top: 10px;
+    padding-bottom: 30px;
+}
+.value {font-size:4rem; line-height: 55px; color: #fff; font-family: "Kanit"; }
+.valueL{	font-size:3rem; line-height: 55px; color: #000; font-family: "Kanit";}
+.headNation{
+	background: #fbb03b;
+    text-align: center;
+    padding: 5px;
+    font-size: 2rem;
+	color: white;
+}
+.valueChart{
+	font-size: 1.6rem;
+    color: #31c7df;
+}
+.text{
+	font-size:1.4rem;
+	color: #fff;
+}
+.textL{
+	font-size:1.5rem;
+	color: #000;
+}
+.button{
+	text-align:center;
+	margin-top:30px;
+	margin-bottom:70px;
+}
+#btview{
+	display: inline-block; 
+    font-family: 'Mitr Light';
+    font-size: 17px;
+    padding: 12px 30px 12px;
+    margin-bottom: 15px;
+    color: white;
+    background: linear-gradient(to top, #3388BE, #27A8E2);
+    border-radius: 7px;
+    border: 1px solid white;
+}
+#btview a{
+	color:#fff;
+}
+@media only screen and (max-width:769px) {
+	.headL2{    
+		margin-left: 0px;
+		margin-right: 0px;
+		width:100%;
+		margin-top:10px;
+	}
+	.headL{width:100%;margin-top:10px;}
+	.headleft{float:none;margin-right: 0px;margin-top:10px;}
+	.headright{float:none;margin-right: 0px;margin-top:10px;}
+	/* #RangTime{width: 50%;margin-top: 5px;} */
+	#ExportLocal{margin-top: 5px;width: 49%;}
+}
+@media only screen and (max-width:322px) {
+	/* #RangTime{width: 48%;} */
+}
+
+.chartD1-subtitle {
+    font-size: 1.2rem;
+    text-align: right;
+    padding: 0 15px;
+}
+.chartD1-subtitle>span {
+    background: #ff00c6;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    margin-right: 5px;
+    border-radius: 50%;
+}
+</style>
+
+
+<div class="Graph-list Graph-Travelplace-Info">
+	<div class="Graph-title">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+    </div>
+    <div class="Graph-subtitle">
+        <div class="borderHead"></div>
+    </div>
+    
+    <div class="mb-15"></div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="col-md-12 head1">
+				<div class="HeadInbound row">
+					<div class="text">
+	                	<div class="img-icon">
+	                		<img src="<?php echo $this->baseUrl("assets/graph/img/icon_amount/01_attraction.png"); ?>" alt="icon" />
+	                	</div>
+						<span>จำนวนแหล่งท่องเที่ยวในพื้นที่อนุรักษ์</span>
+						<div class="value"><?php echo number_format($this->nationalparkAmount);?>
+							<span class="unit">แหล่ง</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="col-md-12 head2">
+				<div class="HeadInbound">
+					<div class="text">
+	                	<div class="img-icon">
+	                		<img src="<?php echo $this->baseUrl("assets/graph/img/icon_amount/01_tourist.png"); ?>" alt="icon" />
+	                	</div>
+						<span>จำนวนนักท่องเที่ยวที่เดินทางมาเที่ยวในพื้นที่อนุรักษ์</span>
+						<div class="value"><?php echo number_format($this->nationalparktouristAmount);?>
+							<span class="unit">คน</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="col-md-12 head3">
+				<div class="HeadInbound" style="text-align:center;">
+					<div class="text">
+	                	<div class="img-icon">
+	                		<img src="<?php echo $this->baseUrl("assets/graph/img/icon_amount/01_percent.png"); ?>" alt="icon" />
+	                	</div>
+						<span>ร้อยละความพึงพอใจของนักท่องเที่ยวในพื้นที่อนุรักษ์</span>
+						<div class="value"><?php echo number_format($this->nationalparkPercent,2); ?>
+							<span class="unit">%</span>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+	</div>
+	
+	<div class="graph-box with-color placeNation" id="placeNation">
+		<div class="graph-box-title">
+			<div class="row">
+				<div class="col-md-9">
+					<span>ข้อมูลการท่องเที่ยวในพื้นที่อนุรักษ์</span>
+				</div>
+				<div class="export col-md-3 col-sm-12 col-xs-12">
+					<div class="row">
+						<div class="col-sm-6">
+							<?php
+							if(empty($this->TravelPlaceNationDummy)){
+								echo $this->formSelect("nationalParkYear",  $this->nationalParkYear, array('class' => 'form-control', 'placeholder' => ''), $this->nationalParkYears);
+							}
+							?>
+						</div>
+						<div class="col-sm-6">
+							<?php echo $this->formSelect("ExportNation", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<div class="row mb-15">
+			<div class="col-md-5">
+				<div class="graph-box-subbox">
+					<div class="graph-box-subbox-body" style="min-height: 350px;">
+						<canvas id="AmountTravelChart" style="background-color:#ffffff;"width="100%" height="55"></canvas>
+						<div class="detail">
+							<div class="row detail">
+								<div class="col-md-6" style="text-align: center;">	
+									<div class="title">ชาวต่างชาติ</div>
+									<span class="valueChart"><?php echo number_format($this->nationaltouristForeignersAmount); ?></span>
+									<span class="unitS">คน</span>
+								</div>
+								<div class="col-md-6" style="text-align: center;">				
+									<div class="title">ชาวไทย</div>
+									<span class="valueChart"><?php echo number_format($this->nationaltouristThaiAmount); ?></span>
+									<span class="unitS">คน</span>		
+								</div>
+							</div>
+						</div>
+				
+					</div>
+				</div>
+				<div class="graph-box-subtitle">
+					จำนวนนักท่องเที่ยวในพื้นที่อนุรักษ์
+				</div>
+			</div>
+			<div class="col-md-7">
+				<div class="graph-box-subbox">
+					<div class="graph-box-subbox-body" style="min-height: 350px;">
+						<canvas id="StatTravelNation" style="background-color:#ffffff;"width="100%" height="50"></canvas>
+					</div>
+				</div>
+				<div class="graph-box-subtitle">
+					สถิติแนวโน้มของนักท่องเที่ยวที่เดินทางมาเที่ยวในพื้นที่อนุรักษ์
+				</div>
+			</div>		
+		</div>		
+		
+		<div class="graph-box-subbox">
+			<div class="graph-box-subbox-title">
+				เขตพื้นที่อนุรักษ์ที่มีนักท่องเที่ยวมาเยี่ยมเยือนมากที่สุด (ล้านคน)
+			</div>
+			<div class="graph-box-subbox-body">
+				<canvas id="PlaceNation" style="background-color:#ffffff;" width="100%" height="50%"></canvas>
+			</div>
+		</div>
+		<div class="GUIDE_SECTION1 TIC-footer">ที่มา : กรมอุทยานแห่งชาติ สัตว์ป่า และพันธุ์พืช</div>
+		<?php if (!empty($this->nationalParkLatestYear)) : ?><div class="GUIDE_SECTION1 TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->nationalParkLatestYear + 543; ?></div><?php endif; ?>
+	</div>
+	
+	<div class="graph-button-zone">
+		<a href="<?php echo $this->url(array("module"=>"graph", "controller"=>"travelplace", "action"=>"placenation"), null, true);?>" target="_blank" style="background: linear-gradient(to top, #3388BE, #27A8E2); ">
+			ดูข้อมูลสถิติทั้งหมด
+		</a>
+	</div>
+	<div class="mb-15"></div>
+	
+	<div class="graph-box with-color placeLocal" id="placeLocal">
+		<div class="graph-box-title">
+			<div class="row">
+				<div class="col-md-9">
+					<span>ข้อมูลการท่องเที่ยวในพื้นที่ชุมชน</span>
+				</div>
+				<div class="export col-md-3 col-sm-12 col-xs-12">
+					<div class="row">
+						<div class="col-sm-6">
+						</div>
+						<div class="col-sm-6">
+							<?php echo $this->formSelect("ExportLocal", null, array('class' => 'form-control', 'placeholder' => ''), $this->export); ?>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		
+		<div class="row boxL">
+			<div class="col-md-4 top2">
+				<div class="headL2 headleft">
+					<div class="HeadInbound">
+						<div class="textL">
+		                	<div class="img-icon">
+		                		<img src="<?php echo $this->baseUrl("assets/graph/img/icon_amount/02_before.png"); ?>" alt="icon" />
+		                	</div>
+							<span>รายได้ก่อนดำเนินกิจกรรม</span>
+							<div class="valueL">
+								<?php echo number_format($this->incomebeforeAmount);?>
+								บาท
+							</div>
+						</div> 
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4 top2">
+				<div class="headL2">
+					<div class="HeadInbound">
+						<div class="textL">
+		                	<div class="img-icon">
+		                		<img src="<?php echo $this->baseUrl("assets/graph/img/icon_amount/02_after.png"); ?>" alt="icon" />
+		                	</div>
+							<span>รายได้หลังดำเนินกิจกรรม</span>
+							<div class="valueL">
+								<?php echo number_format($this->incomeafterAmount);?>
+								บาท
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4 top2">
+				<div class="headL headright">
+					<div class="HeadInbound">
+						<div class="textL">
+		                	<div class="img-icon">
+		                		<img src="<?php echo $this->baseUrl("assets/graph/img/icon_amount/02_grow.png"); ?>" alt="icon" />
+		                	</div>
+							<span>อัตราการเติบโตของรายได้</span>
+							<div class="valueL"><?php echo number_format($this->rategrowthincomeAmount,2);?> %</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="mb-15"></div>
+		
+		<div class="graph-box-body">
+			<canvas id="TravelLocal" style="background-color:#ffffff;padding: 25px;"width="100%" height="50%"></canvas>
+		</div>
+		<div class="GUIDE_SECTION2 TIC-footer">ที่มา : อพท.</div>
+		<?php if (!empty($this->incomeLatestYear)) : ?><div class="GUIDE_SECTION2 TIC-footer">ข้อมูลอัพเดตล่าสุด ณ ปี <?php echo $this->incomeLatestYear + 543; ?></div><?php endif; ?>
+	</div>
+	
+	<div class="graph-button-zone">
+		<a href="<?php echo $this->url(array("module"=>"graph", "controller"=>"travelplace", "action"=>"placelocal"), null, true);?>" target="_blank" style="background: linear-gradient(to top, #3388BE, #27A8E2); ">
+			ดูข้อมูลสถิติทั้งหมด
+		</a>
+	</div>
+	
+	<div id="previewImage" style="display: none;"></div>
+	<a id="downloadImage" href="#In_Out" style="display: none;"></a>
+	
+</div>
+<script>
+jQuery(function() {
+
+	//StatTravelerComeToNation
+	var StatTravelNation = document.getElementById("StatTravelNation");
+	var myChart = new Chart(StatTravelNation, {
+		type: 'line',
+		data: {
+			labels: [<?php 
+					if (count($this->nationalparktouristStatic) > 0) :
+						$i = 0;
+						foreach ($this->nationalparktouristStatic as $item) :
+							$i++;
+							switch ($item['M']) {
+								case '01':
+									echo '"ม.ค."';
+									break;
+								case '02':
+									echo '"ก.พ."';
+									break;
+								case '03':
+									echo '"มี.ค."';
+									break;
+								case '04':
+									echo '"เม.ย."';
+									break;
+								case '05':
+									echo '"พ.ค."';
+									break;
+								case '06':
+									echo '"มิ.ย."';
+									break;
+								case '07':
+									echo '"ก.ค."';
+									break;
+								case '08':
+									echo '"ส.ค."';
+									break;
+								case '09':
+									echo '"ก.ย."';
+									break;
+								case '10':
+									echo '"ต.ค."';
+									break;
+								case '11':
+									echo '"พ.ย."';
+									break;
+								case '12':
+									echo '"ธ.ค."';
+									break;
+								default:
+									echo '"ธ.ค."';
+									break;
+							}
+							if($i!=count($this->nationalparktouristStatic)) {
+								echo ",";
+							}
+						endforeach;
+					else :
+						echo "'ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค','พ.ย.','ธ.ค.'";
+					endif;
+					?>],
+			datasets: [{
+				lineTension : 0,
+				label: 'จำนวนนักท่องเที่ยว',
+				data: [<?php 
+						if (count($this->nationalparktouristStatic) > 0):
+							$i=0;
+							foreach ($this->nationalparktouristStatic as $item):
+								$i++;
+								echo $item['Amount'];
+								if($i!=count($this->nationalparktouristStatic)){
+									echo ",";
+								}
+							endforeach;
+						// else :
+						// 	echo "2145120, 1400351, 1481110, 2110196, 1211727, 706346, 1301426, 1081673, 748307";
+						endif;
+						?>],
+				backgroundColor: "#ff9869",
+				backgroundColor: 'rgba(0,0,0,0)',
+				borderColor: '#ff9869',
+			}]
+		},
+		options: {
+
+			tooltips : {
+				enabled: true,
+				backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+				bodyFontColor : "black",
+				callbacks: {
+					label: function(tooltipItems, data) {
+						return "จำนวนนักท่องเที่ยว : "+data.datasets[0].data[tooltipItems.index]+" คน";
+					}
+				}
+			},
+			showTooltips: {
+				showValue: true,
+				typeValue : ' คน',
+                fontSize: 14
+			},
+			scales: {
+                yAxes: [{
+                    ticks: {
+                        fontSize: 14,
+                        beginAtZero:true,
+						min: 0,
+						callback: function(value, index, values) {
+							value = value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+							return value;
+						}
+                    },
+                }],
+				xAxes: [{
+                    ticks: {
+                        fontSize: 14
+                    },
+                    gridLines: { 
+                        display: false 
+                    }
+                }],
+			},
+			legend: {
+				display: false
+			},
+			responsive: true		
+		}
+	});
+
+
+	var AmountTravelChart = document.getElementById("AmountTravelChart");
+	var myChart = new Chart(AmountTravelChart, {
+		type: 'doughnut',
+		data: {
+			labels: [<?php 
+					if (count($this->nationaltouristAmount) > 0) :
+						foreach ($this->nationaltouristAmount as $item) :
+							echo "'".($item['TravelerNationalityTypeNameTH'])."'".",";						
+						endforeach;
+					// else :
+					// 	echo "'ชาวต่างชาติ','ชาวไทย'";
+					endif;
+					?>],
+			datasets: [{
+				label: 'จำนวนนักท่องเที่ยวที่เดินทางมาเที่ยวในเขตพื้นที่อนุรักษ์',
+				data: [<?php 
+						if (count($this->nationaltouristAmount) > 0) :
+							foreach ($this->nationaltouristAmount as $item) :
+								echo ($item['Amount']).",";							
+							endforeach;
+						// else :
+						// 	echo "3661224,8525214";
+						endif;
+						?>],
+				backgroundColor: ['rgba(16, 99, 177,0.5)','rgba(48, 198, 222,0.5)'],
+				borderWidth: 1
+			}]
+		},
+        options: {
+			legend: {
+                display: false
+            },
+            responsive: true,
+            showTooltips: {
+                showLabel: true,
+                showValue: true,
+                // typeValue: " ล้านบาท",
+                fontSize: 14
+            },
+            responsive: true,
+            legend : {
+                display: false
+			},
+			cutoutPercentage: 80        
+		}
+	});
+
+	
+	var Chart_2_2 = document.getElementById('PlaceNation');
+    var myChart_2_2  = new Chart(Chart_2_2, {
+		type: 'horizontalBar',
+		data: {
+			labels: [<?php 
+					if (count($this->mostnationalparktravelAmount) > 0) :
+						$i=0;
+						foreach ($this->mostnationalparktravelAmount as $item) :
+							$i++;
+							echo "'".($item['NationalParkNameTH'])."'";
+							if($i!=count($this->mostnationalparktravelAmount)){
+								echo ",";
+							}
+						endforeach;
+					// else :
+					// 	echo "'หาดนพรัตน์ธารา-หมู่เกาะพีพี','อ่าวพังงา','เขาใหญ่','น้ำตกพลิ้ว','เอราวัณ','ดอยอินทนนท์','น้ำตกเจ็ดสาวน้อย','ตาดโตน','หมู่เกาะสิมิลัน','เขาสก'";
+					endif;
+					?>],
+			datasets: [{
+				data: [<?php 
+						if (count($this->mostnationalparktravelAmount) > 0) :
+							$i=0;
+							foreach ($this->mostnationalparktravelAmount as $item) :
+								$i++;
+								echo number_format($item['Amount']/1000000,2);
+								if($i!=count($this->mostnationalparktravelAmount)){
+									echo ",";
+								}
+							endforeach;
+						// else :
+						// 	echo "1.4, 1.2, 0.8, 0.5, 0.5, 0.5, 0.4, 0.4, 0.4, 0.3";
+						endif;
+						?>],
+				backgroundColor: "rgba(48, 198, 222, 1)",
+				borderWidth: 1
+			}]
+		},
+		options: {
+			hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                    ctx = chartInstance.ctx;                    
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+							data = data.toString() + ' ล้านคน';
+                            ctx.fillText(data, bar._model.x + (ctx.measureText(data).width/2), bar._model.y + 7);
+                        });
+                    });
+                }
+            },
+			tooltips: {
+                enabled: true,
+                backgroundColor : "rgb(234, 234, 234)",
+                titleFontColor : "black",
+                bodyFontColor : "black"
+            },
+			scales: {
+                yAxes: [{
+					gridLines: {
+                        display : false
+                    },
+                    ticks: {
+                        beginAtZero:true,
+						fontSize:14
+                    }
+                }],
+				xAxes: [{ 
+					ticks: {
+						fontSize:14,
+						// max: 2,
+						min: 0,
+						// stepSize: 0.2,
+						callback: function(value, index, values) {
+							return value.toFixed(1)+' ล้านคน';
+						}
+					},
+					barPercentage: 0.2
+                }]
+			},
+			legend: {
+				display: false,
+				
+			},
+			responsive: true		
+		}
+	});
+
+	var ctx = document.getElementById("TravelLocal").getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'bar',
+		data: {
+			labels: [<?php 
+					if (count($this->communitydevelopmentplanData) > 0) :
+						foreach ($this->communitydevelopmentplanData as $item) :
+							echo "'".($item['Y'])."'".",";						
+						endforeach;
+					// else :
+					// 	echo "'2557', '2558', '2559', '2560'";
+					endif;
+					?>],
+			datasets: [{
+				label: 'อัตราการเติบโตของรายได้',
+				data: [<?php 
+						if (count($this->communitydevelopmentplanData) > 0) :
+							foreach ($this->communitydevelopmentplanData as $item) :
+								echo ($item['Amount']).",";							
+							endforeach;
+						// else :
+						// 	echo "58.08, 0, 0, 0";
+						endif;
+						?>],
+				backgroundColor: "#FF7875",
+				borderWidth: 1
+			}]	
+		},
+		options: {
+            hover: {
+                animationDuration: 0
+            },
+            animation: {
+                duration: 0,
+                onComplete: function () {
+                    var chartInstance = this.chart,ctx = chartInstance.ctx;                    
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.font = Chart.helpers.fontString(14, 'normal', 'Tahoma');
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            var data = dataset.data[index];
+							data = data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+							data = parseFloat(data).toFixed(2);
+							var y = 0;
+							if(data<0) {
+								y = 16;
+							}
+                            ctx.fillText(data + "%", bar._model.x, bar._model.y + y);
+                        });
+                    });
+                }
+            },
+			scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true,
+						fontSize: 14,
+						max: 100,
+						// min: 0,
+						stepSize: 25,
+						callback: function(value, index, values) {
+							return value+'%';
+						}
+                    }
+                }],
+				xAxes: [{
+					ticks: {
+						fontSize:14
+					},
+                    barPercentage: 0.5
+                }]
+			},
+			tooltips: {
+				enabled: true,
+				backgroundColor : "rgb(234, 234, 234)",
+				titleFontColor : "black",
+				bodyFontColor : "black",
+				callbacks: {
+					label: function(tooltipItems, data) {
+						return "อัตราการเติบโตของรายได้ : "+parseFloat(tooltipItems.yLabel).toFixed(2) + "%";
+					}
+				}
+			},
+			legend: {
+				display: false,
+				
+			},
+			responsive: true		
+		}
+	});
+    function setCanvas_SituationExportZoneplaceNation(val) {
+        html2canvas(document.querySelector("#placeNation")).then(function(canvas) {
+            $("#previewImage").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage").attr("download", "ข้อมูลการท่องเที่ยวในพื้นที่อนุรักษ์.png").attr("href", newData);
+                $("#downloadImage")[0].click();
+                $("#ExportNation").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("ข้อมูลการท่องเที่ยวในพื้นที่อนุรักษ์.pdf");
+                $("#ExportNation").val('export');
+            }
+        });
+    }
+    $("#ExportNation").change(function() {
+        setCanvas_SituationExportZoneplaceNation($(this).val());
+	});
+	
+    function setCanvas_SituationExportZone(val) {
+        html2canvas(document.querySelector("#placeLocal")).then(function(canvas) {
+            $("#previewImage").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage").attr("download", "ข้อมูลการท่องเที่ยวในพื้นที่ชุมชน.png").attr("href", newData);
+                $("#downloadImage")[0].click();
+                $("#ExportLocal").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("ข้อมูลการท่องเที่ยวในพื้นที่ชุมชน.pdf");
+                $("#ExportLocal").val('export');
+            }
+        });
+    }
+    $("#ExportLocal").change(function() {
+        setCanvas_SituationExportZone($(this).val());
+	});
+	
+	$("#nationalParkYear").change(function() {
+		var year = $('#nationalParkYear').val();
+		window.location = "<?php echo $this->url(array('module' => 'graph', 'controller' => 'travelplace', 'action' => 'search'), null, true); ?>/nationalParkYear/"+year;
+	});
+
+	
+	
+});
+</script>

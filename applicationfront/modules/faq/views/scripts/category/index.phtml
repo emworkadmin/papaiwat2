@@ -1,0 +1,140 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/faq/css/theme.css'); ?>">
+
+<div class="info infopage">
+ 	<div class="item-title title-panel">
+		<span class="title">
+			<span class="faq-hilight"><?php echo Emwork_Translate::text($this->lang, 'faq', 'title_1'); ?></span><?php echo Emwork_Translate::text($this->lang, 'faq', 'title_2'); ?>
+		</span>
+		<hr />
+	</div>
+ 
+    <div class="result-list-panel">
+		<div class="row">
+
+			<?php 
+			if(count($this->dataList)>0){
+				foreach($this->dataList as $k1=>$v1){
+			?>
+			
+			<div class="faq-category-box col-md-12">
+				<div class="faq-category faq-text-overflow col-md-12">
+					<?php echo $v1['mainName']; ?>
+					<em class="fa fa-plus faq-icon-swing" id="mainCategoryShow-<?php echo $v1['mainId']; ?>" <?php if($this->faqDisplaySetting=='Y'){ echo 'style="display:none;"'; } ?> ></em>
+					<em class="fa fa-minus faq-icon-swing" id="mainCategoryHide-<?php echo $v1['mainId']; ?>" <?php if($this->faqDisplaySetting=='N'){ echo 'style="display:none;"'; } ?> ></em>
+				</div>
+
+				<div class="row" id="mainBox-<?php echo $v1['mainId']; ?>">
+					<?php 
+					if(count($v1['subList'])>0){
+						foreach($v1['subList'] as $k2=>$v2){
+					?>
+
+					<div class="faq-sub-category-box col-md-12">
+						<div class="faq-sub-category faq-text-overflow col-md-12">
+							<?php echo $v2['subName']; ?>
+							<em class="fa fa-plus faq-icon-swing" id="subCategoryShow-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>" <?php if($this->faqDisplaySetting=='Y'){ echo 'style="display:none;"'; } ?> ></em>
+							<em class="fa fa-minus faq-icon-swing" id="subCategoryHide-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>" <?php if($this->faqDisplaySetting=='N'){ echo 'style="display:none;"'; } ?> ></em>
+						</div>
+
+						<div class="row" id="subBox-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>">
+							<?php 
+							if(count($v2['faqList'])>0){
+								foreach($v2['faqList'] as $k3=>$v3){
+							?>
+
+							<div class="faq-description-box col-md-12">
+								<div class="faq-topic faq-text-overflow col-md-12">
+									<?php echo $v3['Topic']; ?>
+									<em class="fa fa-chevron-down faq-icon-swing" id="detailShow-<?php echo $v3['Id']; ?>" <?php if($this->faqDisplaySetting=='Y'){ echo 'style="display:none;"'; } ?> ></em>
+									<em class="fa fa-chevron-up faq-icon-swing" id="detailHide-<?php echo $v3['Id']; ?>" <?php if($this->faqDisplaySetting=='N'){ echo 'style="display:none;"'; } ?> ></em>
+								</div>
+								<div class="faq-detail faq-scrollbar col-md-12" id="detailBox-<?php echo $v3['Id']; ?>">
+									<?php echo $v3['Detail']; ?>
+								</div>
+							</div>
+							
+							<script>
+							jQuery(function(){
+								$("#detailShow-<?php echo $v3['Id']; ?>").click(function(e) {
+									$("#detailBox-<?php echo $v3['Id']; ?>").slideDown(600, "swing");
+									$("#detailShow-<?php echo $v3['Id']; ?>").hide();
+									$("#detailHide-<?php echo $v3['Id']; ?>").show();
+								});
+								$("#detailHide-<?php echo $v3['Id']; ?>").click(function(e) {
+									$("#detailBox-<?php echo $v3['Id']; ?>").slideUp(600, "swing");
+									$("#detailShow-<?php echo $v3['Id']; ?>").show();
+									$("#detailHide-<?php echo $v3['Id']; ?>").hide();
+								});
+								<?php if($this->faqDisplaySetting=='Y'){ ?>
+								$("#detailBox-<?php echo $v3['Id']; ?>").show();
+								<?php }else{ ?>
+								$("#detailBox-<?php echo $v3['Id']; ?>").hide();
+								<?php } ?>
+							});
+							</script>
+
+							<?php
+								}
+							}
+							?>
+						</div>
+
+					</div>
+					
+					<script>
+					jQuery(function(){
+						$("#subCategoryShow-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").click(function(e) {
+							$("#subBox-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").slideDown(600, "swing");
+							$("#subCategoryShow-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").hide();
+							$("#subCategoryHide-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").show();
+						});
+						$("#subCategoryHide-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").click(function(e) {
+							$("#subBox-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").slideUp(600, "swing");
+							$("#subCategoryShow-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").show();
+							$("#subCategoryHide-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").hide();
+						});
+						<?php if($this->faqDisplaySetting=='Y'){ ?>
+						$("#subBox-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").show();
+						<?php }else{ ?>
+						$("#subBox-<?php echo $v1['mainId'].'-'.$v2['subId']; ?>").hide();
+						<?php } ?>
+					});
+					</script>
+
+					<?php
+						}
+					}
+					?>
+				</div>
+			
+			</div>
+
+			<script>
+			jQuery(function(){
+				$("#mainCategoryShow-<?php echo $v1['mainId']; ?>").click(function(e) {
+					$("#mainBox-<?php echo $v1['mainId']; ?>").slideDown(600, "swing");
+					$("#mainCategoryShow-<?php echo $v1['mainId']; ?>").hide();
+					$("#mainCategoryHide-<?php echo $v1['mainId']; ?>").show();
+				});
+				$("#mainCategoryHide-<?php echo $v1['mainId']; ?>").click(function(e) {
+					$("#mainBox-<?php echo $v1['mainId']; ?>").slideUp(600, "swing");
+					$("#mainCategoryShow-<?php echo $v1['mainId']; ?>").show();
+					$("#mainCategoryHide-<?php echo $v1['mainId']; ?>").hide();
+				});
+				<?php if($this->faqDisplaySetting=='Y'){ ?>
+					$("#mainBox-<?php echo $v1['mainId']; ?>").show();
+				<?php }else{ ?>
+					$("#mainBox-<?php echo $v1['mainId']; ?>").hide();
+				<?php } ?>
+			});
+			</script>
+
+			<?php
+				}
+			}
+			?>
+
+		</div>
+    </div>
+
+</div>

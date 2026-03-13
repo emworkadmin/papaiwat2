@@ -1,0 +1,10 @@
+<div class="item-detail">
+	<?php echo Emwork_Utility::notShowNull ($this->data->Detail); ?>
+	<div class="Source">
+	<?php if($this->data->Source){?>
+
+		<b><?php echo Emwork_Translate::text($this->lang, 'graphdata', 'detail_info_form'); ?> : </b><br><?php echo $this->data->Source ?>
+
+	<?php } ?>
+	</div>
+</div>

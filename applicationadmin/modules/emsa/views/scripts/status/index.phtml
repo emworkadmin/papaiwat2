@@ -1,0 +1,256 @@
+<div>
+	<div class="row emsa-mb15">
+		<div class="col-xs-6 text-center"><strong>สถานะการรับประกัน:</strong></div>
+		<div class="col-xs-6 text-center">
+			<?php if($this->data['WarrantyID']=='Y'){ ?>
+			<span class="label label-success"><?php echo $this->data['WarrantyName']; ?></span>
+			<?php }else{ ?>
+			<span class="label label-danger"><?php echo $this->data['WarrantyName']; ?></span>
+			<?php } ?>
+		</div>
+	</div>
+	<div class="row emsa-mb15">
+		<div class="col-xs-12 text-center">
+			<span class="emsa-label-green">
+				<em class="fa fa-clock-o"></em> 
+				<strong>ระยะเวลารับประกัน</strong>
+			</span>
+		</div>
+	</div>
+	<div class="row emsa-mb15">
+		<div class="col-xs-12 text-center">ตั้งแต่วันที่ <?php echo $this->data['WarrantyStartDate']; ?> ถึง <?php echo $this->data['WarrantyEndDate']; ?></div>
+	</div>
+	<hr />	
+	<div class="row emsa-mb15">
+		<div class="col-xs-12 text-center">ขอบเขตการดูแล</div>
+	</div>
+	
+	<div class="panel-group emsa-panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+	  <div class="panel panel-default">
+	    <div class="panel-heading" role="tab" id="headingOne">
+	      <h4 class="panel-title">
+	        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+	          M.A. Corrective
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+	      <div class="panel-body">
+	      
+			<div class="row emsa-mb15">
+				<div class="col-xs-12 text-center"><strong>ข้อมูลระดับความสำคัญของการให้บริการตาม SLA</strong></div>
+			</div>
+			<?php 
+			if(count($this->data['CorrectiveList'])>0){
+				foreach ($this->data['CorrectiveList'] as $k=>$v){
+			?>
+			<div class="row emsa-mb15">
+				<div class="col-xs-4"><strong><?php echo $v['Name']; ?>: </strong></div>
+				<div class="col-xs-8"><?php echo $v['Time']; ?></div>
+			</div>
+			<?php
+				}
+			}
+			?>
+			
+			<table class="emsa-tbl ">
+				<col width="50%" />
+				<col width="50%" />
+				<thead>
+					<tr>
+						<th>ลำดับความสำคัญ</th>
+						<th>รายละเอียด</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php 
+					if(count($this->data['CorrectiveList'])>0){
+						foreach ($this->data['CorrectiveList'] as $k=>$v){
+					?>
+					<tr>
+						<td class="text-center"><?php echo $v['Name']; ?></td>
+						<td><?php echo nl2br($v['Description']); ?></td>
+					</tr>
+					<?php
+						}
+					}
+					?>
+					<tr>
+						<td colspan="2">* ผลกระทบขึ้นอยู่กับการประเมินสถานการณ์ร่วมกันของเจ้าหน้าที่</td>
+					</tr>
+				</tbody>
+			</table>
+			<br />
+			
+			<?php if($this->data['CorrectiveRemark']){ ?>
+			<div class="row emsa-mb15">
+				<div class="col-xs-12"><span class="emsa-label-red ">หมายเหตุ *</span></div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<?php echo nl2br($this->data['CorrectiveRemark']); ?>
+				</div>
+			</div>
+			<?php } ?>
+	        
+	      </div>
+	    </div>
+	  </div>
+	  <div class="panel panel-default">
+	    <div class="panel-heading" role="tab" id="headingTwo">
+	      <h4 class="panel-title">
+	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+	          M.A. Preventive
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+	      <div class="panel-body">
+	        
+	       <table class="emsa-tbl ">
+				<col  />
+				<col width="90" />
+				<col width="90" />
+	        	<thead>
+	        		<tr>
+	        			<th rowspan="2">รายละเอียดกิจกรรม Preventive</th>
+	        			<th colspan="2">รายละเอียด</th>
+	        		</tr>
+	        		<tr>
+	        			<th>การให้บริการ</th>
+	        			<th>ปริมาณ/ความถี่</th>
+	        		</tr>
+	        	</thead>
+	        	<tbody>
+	        		<?php 
+					if(count($this->data['PreventiveList'])>0){
+						$index = 1;
+						foreach ($this->data['PreventiveList'] as $k=>$v){
+					?>
+	        		<tr class="emsa-tr-main">
+	        			<td><?php echo $index . '. ' . $v['Name']; ?></td>
+	        			<td>&nbsp;</td>
+	        			<td>&nbsp;</td>
+	        		</tr>
+	        		<?php 
+			        		if(count($v['List'])>0){
+			        			foreach ($v['List'] as $k2=>$v2){
+	        		?>
+	        		<tr>
+	        			<td style="padding-left: 25px;"><?php echo $v2['Name']; ?></td>
+	        			<td class="text-center"><em class="fa fa-check"></em></td>
+	        			<td class="text-center"><?php echo $v2['Time']; ?></td>
+	        		</tr>
+	        		<?php 
+			        			}
+			        		}
+		        		$index++;
+						}
+					}
+	        		?>
+	        	</tbody>
+	        </table>
+	        <br />
+			
+			<?php if($this->data['PreventiveRemark']){ ?>
+			<div class="row emsa-mb15">
+				<div class="col-xs-12"><span class="emsa-label-red ">หมายเหตุ *</span></div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<?php echo nl2br($this->data['PreventiveRemark']); ?>
+				</div>
+			</div>
+			<?php } ?>
+	        
+	      </div>
+	    </div>
+	  </div>
+	  <div class="panel panel-default">
+	    <div class="panel-heading" role="tab" id="headingThree">
+	      <h4 class="panel-title">
+	        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+	          Content Service
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+	      <div class="panel-body">
+	      
+	        <table class="emsa-tbl ">
+				<col  />
+				<col width="90" />
+				<col width="90" />
+	        	<thead>
+	        		<tr>
+	        			<th rowspan="2">รายละเอียดกิจกรรม Content Service</th>
+	        			<th colspan="2">รายละเอียด</th>
+	        		</tr>
+	        		<tr>
+	        			<th>การให้บริการ</th>
+	        			<th>ปริมาณ/ความถี่</th>
+	        		</tr>
+	        	</thead>
+	        	<tbody>
+	        		<?php 
+					if(count($this->data['ContentServiceList'])>0){
+						$index = 1;
+						foreach ($this->data['ContentServiceList'] as $k=>$v){
+					?>
+					<tr>
+	        			<td ><?php echo $v['Name']; ?></td>
+	        			<td class="text-center">
+	        				<?php if($v['Time']){ ?>
+	        				<em class="fa fa-check"></em>
+	        				<?php }else{ ?>
+	        				<em class="fa fa-times"></em>
+	        				<?php } ?>
+        				</td>
+	        			<td class="text-center"><?php echo empty($v['Time']) ? '-' : $v['Time']; ?></td>
+	        		</tr>
+					<?php 
+						}
+					}
+					?>
+	        	</tbody>
+	        </table>
+	        <br />
+			
+			<?php if($this->data['ContentServiceRemark']){ ?>
+			<div class="row emsa-mb15">
+				<div class="col-xs-12"><span class="emsa-label-red ">หมายเหตุ *</span></div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<?php echo nl2br($this->data['ContentServiceRemark']); ?>
+				</div>
+			</div>
+			<?php } ?>
+	        
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<div class="row">
+		<div class="col-xs-6 emsa-text-ellipsis"><strong>รหัสโครงการ :</strong> <span class="emsa-label-blue"><?php echo $this->data['ProjectCode']; ?></span></div>
+		<div class="col-xs-6 emsa-text-ellipsis"><strong>รหัสลูกค้า :</strong> <span class="emsa-label-blue"><?php echo $this->data['DepartmentCode']; ?></span></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6 emsa-text-ellipsis"><strong>ชื่อโครงการ :</strong> <span class="emsa-label-blue"><?php echo $this->data['ProjectName']; ?></span></div>
+		<div class="col-xs-6 emsa-text-ellipsis"><strong>ชื่อลูกค้า :</strong> <span class="emsa-label-blue"><?php echo $this->data['DepartmentName']; ?></span></div>
+	</div>
+	
+</div>
+<div class="emsa-footer-contact">
+	มีข้อสงสัย หรือติดปัญหาเกี่ยวกับการให้บริการโปรดติดต่อ <br />
+	สายด่วน EMWORK CARE โทร 0 2555 5555
+</div>
+
+<script type="text/javascript">
+jQuery(function(){
+	if (emsaDialog != null) {
+		emsaDialog.setTitle("<?php echo $this->title; ?>");
+	}
+});    
+</script>

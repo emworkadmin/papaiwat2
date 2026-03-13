@@ -1,0 +1,147 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+<div>
+	<div class="searchPanel form-horizontal" id="formSearch">
+		<div class="form-group">
+			<div class="col-md-12">
+				<div class="input-group">
+					<p class="form-control-static">ค้นหาคำถามคำตอบ</p>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-12">
+				<div class="input-group">
+						<?php echo $this->formText('textsearch', $this->InfoSearch->searchText, array('class' => 'form-control', 'placeholder' => 'ค้นหาคำถาม ชื่อผู้ส่งคำถาม หรือ อีเมล์ผู้ส่งข้อมูล'));?>
+						<span class="input-group-btn">
+						<button type="button" class="btn btn-primary" id="btnSearch">
+							<em class="fa fa-search"></em> ค้นหา
+						</button>
+						<button type="button" class="btn btn-warning" id="btnReset">
+							<em class="fa fa-refresh"></em> เริ่มใหม่
+						</button>
+						<button type="button" class="btn btn-default" id="btnAdvance">
+							<em class="fa fa-minus-circle"></em> ลดเงื่อนไขการค้นหา
+						</button>
+					</span>
+				</div>
+
+			</div>
+		</div>
+		<div id="AdvanceSearch">
+			<?php echo $this->formHidden('hdfAdvanceSearch', 'S', null, null); ?>
+			<div class="form-group">
+				<label for="status" class="control-label col-md-2">สถานะ : </label>
+				<div class="col-md-4">
+					<?php echo $this->formSelect('status', $this->InfoSearch->status, array('class' => 'form-control'), $this->questionStatusOption); ?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<table id="tblData" class="table table-bordered table-hover">
+	<caption>รายการ Q&A</caption>
+	<thead>
+		<tr>
+			<th>ลำดับ</th>
+			<th>รายการคำถาม</th>
+			<th>ชื่อผู้ส่งคำถาม</th>
+			<th>วันส่งคำถาม</th>
+			<th>สถานะ</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script type="text/javascript">
+    jQuery(function(){
+		<?php if($this->canAdd) : ?>
+    	$("#btnGoAdd").click(function(e) {
+    		window.location = "<?php echo $this->url(array('module' => 'faq', 'controller' => 'question', 'action' => 'add'), null, true); ?>";
+		});
+		<?php endif; ?>
+
+		// --------------- Begin: Table & Search Zone -------------------------    	
+    	function renderColumn ( data, type, row, meta ) {
+    		return data;
+    	}
+    	function renderColumnLink ( data, type, row, meta ) {
+    		return '<a href="<?php echo $this->url(array('module' => 'faq', 'controller' => 'question', 'action' => 'edit'), null, true);?>/itemid/' + row.DT_RowId + '">' + data + '</a>';
+    	}
+    	function renderColumnStatus ( data, type, row, meta ) {
+        	if (row.StatusCode == 'A') {
+				return '<span class="label label-success">' + data + '</span>';
+        	} else {
+				return '<span class="label label-warning">' + data + '</span>';
+        	}
+    	}
+    	var rows_selected = [];
+    	
+    	var tblData = $('#tblData').DataTable({
+    		processing: true,
+    		serverSide: true,
+    		responsive: true,
+    		<?php
+			if ($this->InfoSearch->tblPage) {
+				echo 'displayStart: ' . $this->InfoSearch->tblPage . ',';
+			}
+			if ($this->InfoSearch->tblRow) {
+				echo 'pageLength: ' . $this->InfoSearch->tblRow . ',';
+			}
+			if ($this->InfoSearch->tblOrderCol && $this->InfoSearch->tblOrderDir) {
+				echo 'order: [[ ' . $this->InfoSearch->tblOrderCol . ', "' . $this->InfoSearch->tblOrderDir . '" ]],';
+			} else {
+				echo 'order: [[ 3, "desc" ]],';
+			}
+			?>
+    		ajax: {
+    	        url: '<?php echo $this->url(array('module' => 'faq', 'controller' => 'question', 'action' => 'getlist'), null, true); ?>',
+    	        type: 'POST',
+    	        data: function(d) {
+        	        d.textstr = $("#formSearch #textsearch").val();
+        	        d.status = $("#formSearch #status").val();
+    	        }
+    	    },
+    	    language : {
+				url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+    	    },
+    		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+    		"columns": [
+    		            { "width": "40px", 'orderable': false, 'data' : 'NO', "class" : "text-center"},
+    		            { 'data' : 'Question' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "15%", 'data' : 'FullName' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "15%", 'data' : 'QuestionDate' , 'render' : renderColumnLink, "class" : "ratio"},
+    		            { "width": "10%", 'data' : 'Status' , 'render' : renderColumnStatus, "class" : "ratio"},
+    		          ]
+        });
+        
+
+		$('#btnSearch').click(function(){
+			tblData.ajax.reload();
+		});
+
+		$('#btnReset').click(function(){
+			$(".searchPanel input[type=text]").val('');
+			$(".searchPanel select").val('');
+			tblData.ajax.reload();
+		});
+		
+		// --------------- Toogle Advance Search ---------------
+		$("#btnAdvance").click(function(e) {
+			var val = $('#hdfAdvanceSearch').val();
+			if(val == 'H'){
+				$("#AdvanceSearch").slideDown(600, "swing");
+				$("#hdfAdvanceSearch").val('S');
+			}else{
+				$("#AdvanceSearch").slideUp(600, "swing");
+				$("#hdfAdvanceSearch").val('H');
+			}
+		});
+    	
+    });
+    
+</script>

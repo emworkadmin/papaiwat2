@@ -1,0 +1,206 @@
+<style>
+.CheckPoint { margin-bottom: 15px;  background: #E6E6E6; padding: 30px 5px 20px; display: inline-block; width: 100%; }
+.CheckPoint .export { display: inline-block; width: 100%; font-family: 'Kanit Medium'; }
+.CheckPoint .export select { width: 48%; border-radius: 5px; background: transparent; border-color: grey; }
+.CheckPoint .export #CheckPoint_Year { margin-right: 4%; }
+.CheckPoint .content-box { margin-bottom: 15px; padding-top: 10px; }
+.CheckPoint .content-box .title { color: white; text-align: center; font-family: 'Kanit Medium'; }
+.CheckPoint .content-box .title.monthly { background: #FF9667; padding: 0 15px; }
+.CheckPoint .content-box .title.airplan { background: #0071BD; padding: 0 15px; }
+.CheckPoint .content-box .half_group { display: inline-block; width: 100%; padding: 10px; background: #D0EEF8; }
+.CheckPoint .content-box .half_group #chart_airgroup { display: inline-block; width: 100%; padding: 0 10px; }
+.CheckPoint .content-box .chart_airplan { font-size: 16px; text-align: center; width: 19.2%; margin-right: 1%; padding: 10px; float: left; background: white; }
+.CheckPoint .content-box .chart_airplan div { padding: 5px; }
+.CheckPoint .content-box .chart_airplan:last-child { margin-right: 0; }
+.CheckPoint_seeAll { margin-bottom: 15px; color: white; background: linear-gradient(to top, #3388BE, #27A8E2); padding: 7px 30px 2px; border-radius: 7px; border: 1px solid white; }
+.CheckPoint_seeAll a { color: white; }
+
+@media screen and (max-width: 768px) {
+    .CheckPoint .content-box .chart_airplan { width: 100%; margin-right: 0; }
+    .CheckPoint .content-box .chart_airplan { width: 100%; margin-right: 0; }
+}
+
+</style>
+
+<div class="CheckPoint bg" id="CheckPointExportZone">
+
+    <div class="export">
+        <div class="col-md-9">จำนวนนักท่องเที่ยวต่างชาติรายด่าน</div>
+        <div class="col-md-3">
+            <?php echo $this->formSelect("CheckPoint_Year", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->year); ?>
+            <?php echo $this->formSelect("CheckPoint_Export", null, array('class' => 'form-control col-md-6 col-sm-6 col-xs-6', 'placeholder' => ''), $this->export); ?>
+        </div>
+    </div>
+
+    <div class="col-md-12 content-box">
+        <div class="title monthly">จำนวนนักท่องเที่ยวต่างชาติขาเข้า รายเดือน</div>
+        <canvas id="CheckPoint"></canvas>
+    </div>
+
+    <div class="col-md-12 content-box">
+        <div class="title airplan">อัตราการใช้สนามบิน</div>
+
+        <div class="half_group">
+            <div id="chart_airgroup">
+            </div>
+
+            <div id="chart_airtext">
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="previewImage_CheckPoint" style="display: none;"></div>
+<a id="downloadImage_CheckPoint" href="#CheckPoint" style="display: none;"></a>
+
+<div class="col-md-12" style="text-align: center;">
+    <button class="CheckPoint_seeAll"><a href="https://app.powerbi.com/view?r=eyJrIjoiMjk0ZTM2Y2EtYzRmOS00NjQ5LTg5MzctMjFlMjI4NjQ2ZjQwIiwidCI6IjdhNTlkMDM0LTEzNGYtNDI1Ny1hNmJiLTllYWZkNzg5NjA2ZCIsImMiOjEwfQ%3D%3D" target="_blank">ดูข้อมูลสถิติทั้งหมด</a></button>
+</div>
+
+<script>
+
+    var CheckPoint = document.getElementById("CheckPoint");
+    var myChart_CheckPoint = new Chart(CheckPoint, {
+        type: 'line',
+        data : {
+            labels: ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"],
+            datasets: [
+                {
+                    label: '2558',
+                    data: ["2.5"," 2.6"," 2"," 1.8"," 1.5"," 1.3"," 2.5"," 2.4"," 0.3"," 1"," 2.7"," 3.9"],
+                    backgroundColor: 'rgba(92, 110, 110, 0.2)',
+                    lineTension : 0,
+                    pointRadius: 0,
+                    borderWidth: 3,
+                    borderColor: 'rgba(92, 110, 110, 0.2)'
+                },
+                {
+                    label: '2559',
+                    data: ["3","3.3","2.9","2.4","2.1","1.9","3.8","2.7","1.8","1.1","2.3","4.1"],
+                    backgroundColor: 'rgba(255, 101, 91, 0.2)',
+                    lineTension : 0,
+                    pointRadius: 0,
+                    borderWidth: 3,
+                    borderColor: 'rgba(255, 101, 91, 0.2)'
+                },
+                {
+                    label: '2560',
+                    data: ["3.4","3","3","2.7","2.4","2.6","4.1","3","2","2.8","4","5.7"],
+                    backgroundColor: 'rgba(1, 185, 175, 0.2)',
+                    lineTension : 0,
+                    pointRadius: 0,
+                    borderWidth: 3,
+                    borderColor: 'rgba(1, 185, 175, 0.2)'
+                }
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    },
+                    display: true
+                }],
+                xAxes: [{ 
+                    gridLines: { 
+                        display: false 
+                    }
+                }]
+            },
+            tooltips: {
+                enabled: false,
+            },
+            responsive: true,
+            showTooltips: {
+                showLabel: false,
+                showValue: true,
+            }
+        }
+    });
+    
+    <?php
+
+        $x_air = array("ทอ.สุวรรณภูมิ","ทอ.ดอนเมือง","ทอ.เชียงใหม่","ทอ.ภูเก็ต","ทอ.หาดใหญ่");
+        $x_data = array(45,16,8,12.5,2);
+        $x_data_final = array(3821918,1358904,679452,1061554,169863);
+        $x_data_label = array(1468439,505610,100664,418028,11114);
+        foreach($x_air as $x => $xx) :
+    ?>
+        $("#chart_airgroup").append("<div class='chart_airplan'><?php echo $xx;?><canvas id='air_<?php echo $x;?>'></canvas><div class='col-md-3 col-sm-3 col-xs-3'>0</div><div class='col-md-6 col-sm-6 col-xs-6'><?php echo $x_data[$x];?> ล้านคน/ปี*</div><div class='col-md-3 col-sm-3 col-xs-3'><?php echo number_format($x_data_final[$x],0);?></div></div>");
+        var air_<?=$x;?> = $("#air_<?=$x;?>");
+        air_<?=$x;?>.height = 250;
+        var myChart_air_<?=$x;?> = new Chart(air_<?=$x;?>, {
+            type: 'doughnut',
+            data: {
+                labels: ["จำนวนผู้โดยสารที่ท่าอากาศยานสามารถรองรับได้", "จำนวนผู้เดินทางรวมทั้งขาเข้าและขาออก"],
+                datasets: [{
+                    data: [<?php echo $x_data_label[$x] . ',' . $x_data_final[$x]; ?>],
+                    backgroundColor: [
+                        '#68A0AF',
+                        '#EAEAEA',
+                    ],
+                    borderColor: [
+                        '#68A0AF',
+                        '#EAEAEA',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                legend: {
+                    display: false,
+                },
+                tooltips: {
+                    enabled: false,
+                },
+                responsive: true,
+                rotation: 1 * Math.PI,
+                circumference: 1 * Math.PI,
+                elements: {
+                    center: {
+                        text: '<?php echo number_format($x_data_label[$x],0); ?>',
+                        color: '#000',
+                        sidePadding: 0,
+                        textAlign: 'center',
+                        textBaseline : 'top',
+                        centerY: 70,
+                        fontSize: '14px'
+                    }
+                },
+            }
+        });
+
+        if(<?=$x;?>==4) {
+            $("#chart_airtext").append("<div class='as'>Capacity Utilication - จำนวนผู้เดินทางรวมทั้งขาเข้าและขาออก เปรียบเทียบกับจำนวนผู้โดยสารที่ท่าอากาศยานสามารถรองรับได้</div><div>* จำนวนผู้โดยสารที่ท่าอากาศยานรองรับได้ต่อปีอ้างอิงจาก บริษัท ท่าอากาศยานไทย จำกัด (มหาชน)</div>");
+        }
+        
+    <?php
+        endforeach;
+    ?>
+
+    function setCanvas_CheckPointExportZone(val) {
+        html2canvas(document.querySelector("#CheckPointExportZone")).then(function(canvas) {
+            $("#previewImage_CheckPoint").html(canvas);
+            if(val == 'image') {
+                let imgageData = canvas.toDataURL("image/png");
+                let newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+                $("#downloadImage_CheckPoint").attr("download", "จำนวนผู้เดินทางเข้าและออกประเทศไทย.png").attr("href", newData);
+                $("#downloadImage_CheckPoint")[0].click();
+                $("#CheckPoint_Export").val('export');
+            } else if(val == 'pdf') {
+                let canvas = $("#previewImage_CheckPoint canvas")[0];
+                let imgData = canvas.toDataURL("image/jpeg");
+                let pdf = new jsPDF("l", "mm", "a4");
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("จำนวนผู้เดินทางเข้าและออกประเทศไทย.pdf");
+                $("#CheckPoint_Export").val('export');
+            }
+        });
+    }
+    $("#CheckPoint_Export").change(function() {
+        setCanvas_CheckPointExportZone($(this).val());
+    });
+</script>

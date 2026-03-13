@@ -1,0 +1,20 @@
+{
+	"name" : "แบบฟอร์ม",
+	"controller" : "item",
+	"description" : "แสดงรายการแบบฟอร์มที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "item",
+			"type" : "select",
+			"size" : "",
+			"label" : "หมวดหมู่",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Eform_Service_Item",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}	
+	]
+}

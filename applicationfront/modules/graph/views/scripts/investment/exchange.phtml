@@ -1,0 +1,18 @@
+<?php echo $this->partial("index/_pluginChartjs.phtml", $this); ?>
+<link rel="stylesheet" href="<?php echo $this->baseUrl('assets/graph/css/graph.css'); ?>">
+
+
+<div class="Graph-list Graph-Investment-Exchange">
+	<div class="Graph-title">
+		<span class="title">
+			<?php echo $this->pageTitle; ?>
+		</span>
+    </div>
+    <div class="Graph-subtitle">
+        <div class="borderHead"></div>
+    </div>
+    
+    <div class="powerBI">
+    	<iframe style="width: 100%; height: 900px;" src="https://app.powerbi.com/view?r=eyJrIjoiZGJlMzJkNjEtZTQxZi00Njk4LWFjZTctNjZmNWNiZGJjMjdhIiwidCI6IjE1MzI4OGE4LTc2MDYtNGM1OS05NDAwLTQwZmVmNmQ4N2JiNiIsImMiOjEwfQ%3D%3D"></iframe>
+    </div>
+</div>

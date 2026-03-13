@@ -1,0 +1,215 @@
+			<div class="wat-detail-infomation">
+				<?php 
+				$address = "";
+				$address .= empty($this->data->Address) ? "" : $this->data->Address;
+				$address .= empty($this->data->Moo) ? "" : " " . sprintf(Emwork_Translate::text($this->lang, "wat", "detail_value_address_moo"), $this->data->Moo);
+				$address .= empty($this->data->Soi) ? "" : " " . sprintf(Emwork_Translate::text($this->lang, "wat", "detail_value_address_soi"), $this->data->Soi);
+				$address .= empty($this->data->Road) ? "" : " " . sprintf(Emwork_Translate::text($this->lang, "wat", "detail_value_address_road"), $this->data->Road);
+				$address .= empty($this->data->WatSubDistrictName) ? "" : " " . sprintf(($this->data->WatProvinceCode == 10 ? Emwork_Translate::text($this->lang, "wat", "detail_value_address_subdistrict1") : Emwork_Translate::text($this->lang, "wat", "detail_value_address_subdistrict2")), $this->data->WatSubDistrictName);
+				$address .= empty($this->data->WatDistrictName) ? "" : " " . sprintf(($this->data->WatProvinceCode == 10 ? Emwork_Translate::text($this->lang, "wat", "detail_value_address_district1") : Emwork_Translate::text($this->lang, "wat", "detail_value_address_district2")), $this->data->WatDistrictName);
+				$address .= empty($this->data->WatProvinceName) ? "" : " " . sprintf(($this->data->WatProvinceCode == 10 ? Emwork_Translate::text($this->lang, "wat", "detail_value_address_province1") : Emwork_Translate::text($this->lang, "wat", "detail_value_address_province2")), $this->data->WatProvinceName);
+				$address .= empty($this->data->PostCode) ? "" : " <span class='num'>" . $this->data->PostCode . "</span>";
+				
+				$watTypeNames = "";
+				if (count($this->dataWatTypeList) > 0) : 
+					foreach ($this->dataWatTypeList as $dataWatType) :
+						$watTypeNames .= (empty($watTypeNames) ? "" : ", ") .  $dataWatType["WatTypeName"];
+					endforeach;
+				endif; 
+				?>
+				<div class="title">
+					<?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_title_general"); ?>
+				</div>
+				<div class="body">
+					<ul>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_name"); ?> : </span>
+							<span class=""><?php echo $this->data->Title; ?></span>
+						</li>
+						<?php if (!empty($address)) : ?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_address"); ?> : </span>
+							<span class=""><?php echo $address; ?></span>
+						</li>
+						<?php endif; ?>
+						<?php if (!empty($this->data->WatSectTitle)) : ?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_sect"); ?> : </span>
+							<span class=""><?php echo $this->data->WatSectTitle; ?></span>
+						</li>
+						<?php endif; ?>
+						<?php if (!empty($this->data->WatKindID)) : ?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_kind"); ?> : </span>
+							<span class=""><?php echo $this->watKindOption[$this->data->WatKindID]; ?></span>
+						</li>
+						<?php endif; ?>
+						<?php if (!empty($watTypeNames)) : ?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_wattype"); ?> : </span>
+							<span class=""><?php echo $watTypeNames; ?></span>
+						</li>
+						<?php endif; ?>
+						<?php if (!empty($this->data->WatClassID)) : ?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_class"); ?> : </span>
+							<span class=""><?php echo $this->watClassOption[$this->data->WatClassID]; ?></span>
+						</li>
+						<?php endif; ?>
+						<?php if (count($this->dataOpenHourList) > 0) : ?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_openhour"); ?> : </span>
+							<div class="row">
+							<?php
+							if (count($this->dataOpenHourList) > 0) :
+								foreach ($this->dataOpenHourList as $openHour) :
+									$dataDayObj = new stdClass();
+									$dataDayObj->day = $openHour['DayID'];
+									$dataDayObj->dayName = $this->dayOption[$openHour['DayID']];
+									$dataDayObj->startHour = ($openHour["StartTime"] != null ? $openHour["StartTime"]->format("H") : "0");
+									$dataDayObj->startMinute = ($openHour["StartTime"] != null ? $openHour["StartTime"]->format("i") : "00");
+									$dataDayObj->endHour = ($openHour["EndTime"] != null ? $openHour["EndTime"]->format("H") : "0");
+									$dataDayObj->endMinute = ($openHour["EndTime"] != null ? $openHour["EndTime"]->format("i") : "00");
+									$dataDayObj->endHour = (($dataDayObj->endHour == "0" || $dataDayObj->endHour == "00") && ($dataDayObj->endMinute == "0" || $dataDayObj->endMinute == "00")) ? "24" : $dataDayObj->endHour;
+							?>
+								<div class="col-md-5 col-sm-5 col-xs-5  p-0"><?php echo $dataDayObj->dayName; ?></div>
+								<div class="col-md-7 col-sm-7 col-xs-7 p-0">: <?php echo $dataDayObj->startHour . ":" . $dataDayObj->startMinute; ?> - <?php echo $dataDayObj->endHour . ":" . $dataDayObj->endMinute; ?></div>
+							<?php 
+								endforeach;
+							endif;
+							?>
+							</div>
+							<?php if (!empty($this->data->OpenHourRemark)) : ?>
+							<div><?php echo $this->data->OpenHourRemark; ?></div>
+							<?php endif; ?>
+						</li>
+						<?php endif; ?>
+						<?php if ($this->data->IsForTravel == "Y") : ?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_remark"); ?> : </span>
+							<span class=""><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_label_isfortravel"); ?></span>
+						</li>
+						<?php endif; ?>
+					</ul>
+				</div>
+				<?php 
+				
+				$website = $this->data->Website == "-" ? "" : $this->data->Website;
+				$lineID = $this->data->LineID == "-" ? "" : $this->data->LineID;
+				$facebookUrl = $this->data->FacebookUrl == "-" ? "" : $this->data->FacebookUrl;
+				$twitter = $this->data->Twitter == "-" ? "" : $this->data->Twitter;
+				
+				if (!empty($this->data->Telephone) || 
+						!empty($this->data->Mobile) ||
+						!empty($this->data->Fax) || 
+						!empty($website) || 
+						!empty($facebookUrl) || 
+						!empty($lineID) || 
+						!empty($twitter)) : 
+				?>
+				<div class="title">
+					<?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_title_contact"); ?>
+				</div>
+				<div class="body">
+					<ul>
+						<?php if (!empty($this->data->Telephone)) : ?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_telephone"); ?> : </span>
+							<span class=""><?php echo $this->data->Telephone; ?></span>
+						</li>
+						<?php endif; ?>
+						<?php if (!empty($this->data->Mobile)) : ?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_mobile"); ?> : </span>
+							<span class=""><?php echo $this->data->Mobile; ?></span>
+						</li>
+						<?php endif; ?>
+						<?php if (!empty($this->data->Fax)) : ?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_fax"); ?> : </span>
+							<span class=""><?php echo $this->data->Fax; ?></span>
+						</li>
+						<?php endif; ?>
+						<?php if (!empty($this->data->Email)) : ?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_email"); ?> : </span>
+							<span class=""><?php echo $this->data->Email; ?></span>
+						</li>
+						<?php endif; ?>
+						<?php 
+						if (!empty($website)) : 
+							$websiteLink = $website;
+							if (substr($websiteLink, 0, 4) == "http") {
+								// do nothing
+							} else {
+								if (substr($websiteLink, 0, 1) != "/") {
+									$websiteLink = "http://" . $websiteLink;
+								}
+							}
+						?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_website"); ?> : </span>
+							<span class=""><a href="<?php echo $websiteLink; ?>" target="_blank"><?php echo $website; ?></a></span>
+						</li>
+						<?php endif; ?>
+						<?php 
+						$facebookUrlLink = '';
+						if (!empty($facebookUrl)) : 
+							$facebookUrlLink = $facebookUrl;
+							if (strpos($facebookUrlLink, "facebook.com") !== false) {
+								if (strpos($facebookUrlLink, "http") === 0) {
+									// Do nothing
+								} else {
+									$facebookUrlLink = "https://" . $facebookUrlLink;
+								}
+							} else {
+								$facebookUrlLink = "https://www.facebook.com/" . $facebookUrlLink;
+							}
+						?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_facebook"); ?> : </span>
+							<span class=""><a href="<?php echo $facebookUrlLink; ?>" target="_blank"><?php echo $facebookUrl; ?></a></span>
+						</li>
+						<?php endif; ?>
+						<?php 
+						if (!empty($twitter)) : 
+							$twitterLink = $twitter;
+							if (strpos($twitterLink, "twitter.com") !== false) {
+								if (strpos($twitterLink, "http") === 0) {
+									// Do nothing
+								} else {
+									$twitterLink = "https://" . $twitterLink;
+								}
+							} else {
+								$twitterLink = "https://www.twitter.com/" . $twitterLink;
+							}
+						?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_twitter"); ?> : </span>
+							<span class=""><a href="<?php echo $twitterLink; ?>" target="_blank"><?php echo $twitter; ?></a></span>
+						</li>
+						<?php endif; ?>
+						<?php 
+						if (!empty($lineID)) :
+							$lineIDLink = $lineID;
+							if (strpos($lineIDLink, "line.me") !== false) {
+								if (strpos($lineIDLink, "http") === 0) {
+									// Do nothing
+								} else {
+									$lineIDLink = "http://" . $lineIDLink;
+								}
+							} elseif (strpos($lineIDLink, "@") === 0) {
+								$lineIDLink = "https://line.me/R/ti/p/%40" . substr($lineIDLink, 1);
+							} else {
+								$lineIDLink = "http://line.me/ti/p/~" . $lineIDLink;
+							}
+						?>
+						<li>
+							<span class="topic"><?php echo Emwork_Translate::text($this->lang, "wat", "detail_information_topic_lineid"); ?> : </span>
+							<span class=""><a href="<?php echo $lineIDLink; ?>" target="_blank"><?php echo $lineID; ?></a></span>
+						</li>
+						<?php endif; ?>
+					</ul>
+				</div>	
+				<?php endif; ?>
+			</div>

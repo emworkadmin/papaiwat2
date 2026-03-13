@@ -1,0 +1,20 @@
+{
+	"name" : "บทความ",
+	"controller" : "page",
+	"description" : "แสดงบทความที่ได้เลือก",
+	"fields" : [
+		{
+			"name" : "page",
+			"type" : "select",
+			"size" : "",
+			"label" : "บทความ",
+			"optiontype" : "dynamic",
+			"optionfunction" : {
+				"class" : "Ebook_Service_Book",
+				"method" : "getOption"
+			},
+			"description" : "",
+			"required" : true
+		}
+	]
+}

@@ -1,0 +1,5 @@
+{
+	"name" : "ถามคำถาม",
+	"controller" : "question",
+	"description" : "แบบฟอร์มถามคำถาม"
+}

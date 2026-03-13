@@ -1,0 +1,84 @@
+<?php 
+/**
+ * SMART D2MS
+ *
+ * @copyright  Copyright (c) 2018 EMWORK Group
+ * @license	EMWORK Group
+ * @version	1.0.0 applicationfront/views/scripts/forgetpassword/activatesuccess.phtml 2018-02-20
+ * @author	EMWORK Group
+ */
+?>
+<style>
+	#resetPassword-panel { padding: 50px 0; }
+	#resetPassword-panel input {
+		background: #f2f2f2;
+		border: unset;
+		border-radius: 3px;
+		box-shadow: 1px 1px 4px 1px gainsboro;
+	}
+</style>
+
+	<div class="row">
+		<div class="col-md-12" id="resetPassword-panel">
+			<div class="panel panel-default panel-detail">
+				<div class="panel-body">
+					<div class="title-label">
+						<?php echo Emwork_Translate::text($this->lang, 'auth', 'forgetpassword_view_success_title'); ?>
+					</div>
+					<?php
+					if (!empty($this->data->errorMessage)) : 
+						echo '<div class="alert alert-warning alert-dismissible"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>' . $this->data->errorMessage . '</div>';
+					endif; 
+					if (!empty($this->data->successMessage)) : 
+						echo '<div class="alert alert-success alert-dismissible"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>' . $this->data->successMessage . '</div>';
+					endif; 
+					?>				
+					<form id="formEdit" name="formEdit" class="form-horizontal" method="post">
+						<?php echo $this->formHidden('hdfCode', $this->data->code); ?>
+						<div class="form-group">
+							<label class="col-md-4 labelRequest control-label" for="txtPassword"><?php echo Emwork_Translate::text($this->lang, 'auth', 'forgetpassword_view_new_password'); ?></label>
+							<div class="col-md-8 divControl">
+								<?php echo $this->formPassword('txtPassword', null, array('class' => 'form-control', 'placeholder' => '')); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-4 labelRequest control-label" for="txtConfirmPassword"><?php echo Emwork_Translate::text($this->lang, 'auth', 'forgetpassword_view_confirm_password'); ?></label>
+							<div class="col-md-8 divControl">
+								<?php echo $this->formPassword('txtConfirmPassword', null, array('class' => 'form-control', 'placeholder' => '')); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-8 col-md-offset-4">
+								<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-key"></em> <?php echo Emwork_Translate::text($this->lang, 'auth', 'forgetpassword_view_change_password'); ?></button>
+								<a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'auth', 'action' => 'login'), null, true); ?>" class="btn btn-link" title="ย้อนกลับไปลงชื่อเข้าใช้"><?php echo Emwork_Translate::text($this->lang, 'auth', 'forgetpassword_view_back_to_login'); ?></a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+	<?php if($this->lang == 'th'){ ?>
+	<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+	<?php } ?>
+	<script>
+	jQuery(function(){
+
+		$("#formEdit").validate({
+			errorElement: "em",
+			errorPlacement: function(error, element) {
+				error.addClass( "help-block" );
+		        error.appendTo( element.parents("div.divControl"));
+	        }
+	    });
+
+		$("#btnSave").click(function(){
+			var valid = $("#formEdit").valid();
+			if (valid) {
+				$("#formEdit").submit();
+			}
+		});
+	});
+	</script>

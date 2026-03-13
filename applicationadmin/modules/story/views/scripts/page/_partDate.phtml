@@ -1,0 +1,15 @@
+<div class="book-date">
+	<span class="article-date-date">
+		<em class="fa fa-calendar"></em> <?php echo $this->Created == null ? '' : Emwork_Utility_DateTime::MSSqlToDateThai($this->Created); ?>
+		|
+	</span>
+	<span class="article-date-view">
+		<em class="fa fa-eye"></em> <?php echo number_format($this->ViewAmount); ?> 
+	</span>
+	<?php if ($this->dataInfo->ShowPrint == 'Y') : ?>			
+	<span class="article-date-print">
+		|
+		<em class="fa fa-print" onclick="javascript:window.print();"></em>
+	</span>
+	<?php endif; ?>
+</div>

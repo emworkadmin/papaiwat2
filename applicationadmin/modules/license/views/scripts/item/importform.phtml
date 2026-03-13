@@ -1,0 +1,19 @@
+<div class="panel-detail">
+	<form class="form-horizontal" id="formImportLicense" name="formImportLicense">
+		<div class="form-group">
+			<label class="col-md-3 control-label labelRequest" for="">ไฟล์ข้อมูล</label>
+			<div class="col-md-9 divControl">
+				<?php echo $this->uploadHtmlControl('ImportFile', 'ImportFile',  null , array('multi'=>true,'isimage'=>false,'showimage'=>false,'exts' => array('xlsx'))) ; ?>
+				<div class="help-block">เฉพาะไฟล์นามสกุล: .xlsx ตาม Template ที่กำหนดให้เท่านั้น</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-3 control-label" for="">Template</label>
+			<div class="col-md-9 divControl">
+				<p class="form-control-static">
+					<a href="/admin/assets/license/Template.xlsx" title="Template.xlsx" target="_blank" style="font-weight:bold;" download>ดาวน์โหลด Excel Template ที่นี่ !</a>
+				</p>
+			</div>
+		</div>				
+	</form>
+</div>

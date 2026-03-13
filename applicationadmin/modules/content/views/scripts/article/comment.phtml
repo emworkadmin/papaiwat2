@@ -1,0 +1,204 @@
+<link rel="stylesheet" href="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.css'); ?>">
+<div>
+	<div class="searchPanel form-horizontal" id="formSearch">
+		<div class="form-group">
+			<div class="col-md-12">
+				<div class="text-right">
+					<?php if($this->canAdd) : ?>
+					<button type="button" id="btnPublish" class="btn btn-default">
+						<em class="fa fa-check"></em> เผยแพร่
+					</button>
+					<button type="button" id="btnUnpublish" class="btn btn-default">
+						<em class="fa fa-times"></em> ไม่เผยแพร่
+					</button>
+					<button type="button" id="btnSpam" class="btn btn-default">
+						<em class="fa fa-copy"></em> สแปม
+					</button>
+					<button type="button" id="btnDelete" class="btn btn-danger">
+						<em class="fa fa-trash"></em> ลบ
+					</button>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<table id="tblData" class="table table-bordered table-hover">
+	<caption>รายการความคิดเห็น</caption>
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>ชื่อผู้ใช้งาน</th>
+			<th>วันที่</th>
+			<th>สถานะ</th>
+			<th>ความคิดเห็น</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+
+<!-- DataTables -->
+<script src="<?php echo $this->baseUrl('plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo $this->baseUrl('plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<script type="text/javascript">
+    jQuery(function(){
+
+    	// --------------- Begin: Table & Search Zone --------------------------    	
+    	function renderColumn ( data, type, row, meta ) {
+    		return data;
+    	}
+    	function renderColumnLink ( data, type, row, meta ) {
+    		return '<a href="<?php echo $this->url(array('module' => 'content', 'controller' => 'article', 'action' => 'edit'), null, true);?>/itemid/' + row.DT_RowId + '">' + data + '</a>';
+    	}
+    	function renderColumnCheckbox ( data, type, row, meta ) {
+        	return '<input type="checkbox" name="ids[]" value="' + row.DT_RowId + '" />';
+    	}
+    	function renderColumnStatus ( data, type, row, meta ) {
+        	if (row.IsEnableCode == 'Y') {
+				return '<span class="label label-success">' + data + '</span>';
+        	} else if (row.IsEnableCode == 'S') {
+				return '<span class="label label-warning">' + data + '</span>';
+        	} else {
+				return '<span class="label label-danger">' + data + '</span>';
+        	}
+    	}
+    	var rows_selected = [];
+    	
+    	var tblData = $('#tblData').DataTable({
+    		processing: true,
+    		serverSide: true,
+    		responsive: true,
+    		order: [[ 2, "desc" ]],
+    		ajax: {
+    	        url: '<?php echo $this->url(array('module' => 'content', 'controller' => 'article', 'action' => 'getcommentlist', 'itemid' => $this->itemID), null, true); ?>',
+    	        type: 'POST',
+    	    },
+    	    language : {
+				url : '<?php echo $this->baseUrl('plugins/datatables/localization/jquery.dataTables.thai.json'); ?>'
+    	    },
+    		"dom": '<"dataTable"rt<"bottom"ilp<"clear">>>',
+    		"columns": [
+    		            { "width": "40px", 'orderable': false, 'data' : 'NO', 'render' : renderColumnCheckbox, "class" : "text-center"},
+    		            { "width": "20%", 'data' : 'FullName' , "class" : "ratio"},
+    		            { "width": "15%", 'data' : 'ActionDate' , "class" : "ratio"},
+    		            { "width": "10%", 'data' : 'IsEnable', 'render' : renderColumnStatus, "class" : "ratio"},
+    		            { 'data' : 'Message' , "class" : "ratio"}
+    		          ]
+        });
+
+		$('#btnSearch').click(function(){
+			tblData.ajax.reload();
+		});
+
+		$('#btnReset').click(function(){
+			$(".searchPanel input[type=text]").val('');
+			$(".searchPanel select").val('');
+			tblData.ajax.reload();
+		});
+
+		<?php if($this->canAdd) : ?>
+		
+		$('#btnPublish').click(function(){
+			var ids = [];
+			$.each($('#tblData input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+				ids.push($(e).val());
+			});
+			if (ids.length > 0) {
+				DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการเผยแพร่", function() {
+					$.post("<?php echo $this->url(array("module" => 'content', "controller" => 'article', 'action' => 'commentupdate', 'itemid' => $this->itemID), null, true); ?>", {"ids" : ids, "status": "Y", 'title' : '<?php  echo $this->dataDetails[$this->defaultLanguage]->Title; ?>'}, function(data){
+						if (data.result) {
+							tblData.ajax.reload();
+							DialogComplete("ปรับปรุงสถานะสำเร็จ");
+						} else {
+							DialogWarning(data.message);
+						}
+					}, 'json');
+				});
+			} else {
+				DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+			}
+		});
+		
+		$('#btnUnpublish').click(function(){
+			var ids = [];
+			$.each($('#tblData input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+				ids.push($(e).val());
+			});
+			if (ids.length > 0) {
+				DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการไม่เผยแพร่", function() {
+					$.post("<?php echo $this->url(array("module" => 'content', "controller" => 'article', 'action' => 'commentupdate', 'itemid' => $this->itemID), null, true); ?>", {"ids" : ids, "status": "N", 'title' : '<?php  echo $this->dataDetails[$this->defaultLanguage]->Title; ?>'}, function(data){
+						if (data.result) {
+							tblData.ajax.reload();
+							DialogComplete("ปรับปรุงสถานะสำเร็จ");
+						} else {
+							DialogWarning(data.message);
+						}
+					}, 'json');
+				});
+			} else {
+				DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+			}
+		});
+		
+		$('#btnSpam').click(function(){
+			var ids = [];
+			$.each($('#tblData input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+				ids.push($(e).val());
+			});
+			if (ids.length > 0) {
+				DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการสแปม", function() {
+					$.post("<?php echo $this->url(array("module" => 'content', "controller" => 'article', 'action' => 'commentupdate', 'itemid' => $this->itemID), null, true); ?>", {"ids" : ids, "status": "S", 'title' : '<?php  echo $this->dataDetails[$this->defaultLanguage]->Title; ?>'}, function(data){
+						if (data.result) {
+							tblData.ajax.reload();
+							DialogComplete("ปรับปรุงสถานะสำเร็จ");
+						} else {
+							DialogWarning(data.message);
+						}
+					}, 'json');
+				});
+			} else {
+				DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+			}
+		});
+		
+		$('#btnDelete').click(function(){
+			var ids = [];
+			$.each($('#tblData input[type=checkbox]:not([name=chkAll]):checked'), function(i, e){
+				ids.push($(e).val());
+			});
+			if (ids.length > 0) {
+				DialogConfirm("คุณแน่ใจหรือไม่?", "แจ้งเตือนการลบ", function() {
+					$.post("<?php echo $this->url(array("module" => 'content', "controller" => 'article', 'action' => 'commentdelete', 'itemid' => $this->itemID), null, true); ?>", {"ids" : ids}, function(data){
+						if (data.result) {
+							tblData.ajax.reload();
+							DialogComplete("ลบสำเร็จ");
+						} else {
+							DialogWarning(data.message);
+						}
+					}, 'json');
+				});
+			} else {
+				DialogWarning("โปรดเลือกอย่างน้อยหนึ่งรายการ");
+			}
+		});
+
+		<?php endif; ?>
+    	        
+		
+		// --------------- Toogle Advance Search ---------------
+		$("#btnAdvance").click(function(e) {
+			var val = $('#hdfAdvanceSearch').val();
+			if(val == 'H'){
+				$("#AdvanceSearch").slideDown(600, "swing");
+				$("#hdfAdvanceSearch").val('S');
+			}else{
+				$("#AdvanceSearch").slideUp(600, "swing");
+				$("#hdfAdvanceSearch").val('H');
+			}
+		});
+    	
+    });
+    
+</script>

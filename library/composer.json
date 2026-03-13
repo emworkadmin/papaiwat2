@@ -1,0 +1,9 @@
+{
+  "require" : {
+    "facebook/graph-sdk" : "~5.0",
+    "chillerlan/php-qrcode": "^2.0",
+    "google/apiclient": "^2.0",
+    "spipu/html2pdf": "^5.2",
+    "kittinan/php-promptpay-qr": "^0.1.5"
+  }
+}

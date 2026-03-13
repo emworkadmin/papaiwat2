@@ -1,0 +1,60 @@
+	<?php 
+	if (count($this->itemData) > 0) :
+		foreach ($this->itemData as $item) :
+
+				$id = $item["ID"];
+				$title = $item["Title"];
+				$name = $item["TitleName"]." ".$item["FirstName"]." ".$item["LastName"];
+				$departmentName = $item["DepartmentName"];
+				$detail = $item["Detail"];
+				$date = $item['Created']->format("d/m/y H:i");
+
+	?>
+				<div class="inforowitemt">
+
+					<div class="detail">
+
+						<div class="detail-intro" >
+							<?php echo $detail; ?>
+						</div>
+
+						<div class="col-md-6 detail-title">
+						<em class="fa fa-user"></em>
+							<span class = 'text'>
+								<?php echo Emwork_Translate::text($this->lang, 'guestbook', 'fullname'); ?> 
+							</span>
+							<?php echo $name; ?>
+						</div>		
+
+						<div class="col-md-6 detail-title">
+						<em class="	fa fa-map-marker"></em>
+							<span class = ' text'>
+								<?php echo Emwork_Translate::text($this->lang, 'guestbook', 'department'); ?> 
+							</span>	
+							<?php echo $departmentName; ?>
+						</div>
+
+						<div class="col-md-6 detail-title">
+						<em class="fa fa-clock-o"></em>
+							<span class = 'text'>
+								<?php echo Emwork_Translate::text($this->lang, 'guestbook', 'sign_date'); ?> :
+							</span>			
+							<?php echo $date; ?>
+						</div>
+
+					<div class="col-md-6 detail-title">
+						<em class="fa fa-list"></em>
+							<span class = 'text'>
+								<?php echo Emwork_Translate::text($this->lang, 'guestbook', 'text_order'); ?> :
+							</span>			
+							<?php echo $id; ?>
+						</div>
+					</div>
+
+				</div>
+	<?php 
+
+
+		endforeach;
+	endif;
+	?>

@@ -1,0 +1,386 @@
+	<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/themes/jquery.filer-dragdropbox-theme.css"); ?>" />
+	<link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->baseUrl("plugins/jQueryFiler/css/jquery.filer.css"); ?>" />
+	
+	<script type="text/javascript" src='<?php echo $this->baseUrl("plugins/jQueryFiler/js/jquery.filer.js"); ?>'></script>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default panel-detail">
+				<div class="panel-body">
+				
+					<div class="title-label"><?php echo $this->Translate('register', $this->lang, 'register_title'); ?></div>
+					
+					<?php
+					if (!empty($this->data->errorMessage)) : 
+						echo '<div class="alert alert-warning alert-dismissible"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>' . $this->data->errorMessage . '</div>';
+					endif; 
+					?>		
+
+					<form id="formRegister" name="formRegister" class="form-horizontal" method="post">
+						
+						<?php // -------------------------------------------------- ข้อมูลทั่วไป ------------------------------------------------- // ?>
+						<!-- <div class="form-group">
+							<label class="col-md-4 control-label" for="Username"><?php echo $this->Translate('profile', $this->lang, 'profile_form_username'); ?></label>
+							<div class="col-md-8 divControl">
+								<p class="form-control-static">
+									<?php echo $this->data->fb_email; ?>
+								</p>
+							</div>
+						</div> -->
+						<div class="form-group">
+							<label class="col-md-4 control-label labelRequest" for="memberNameTH"><?php echo $this->Translate('profile', $this->lang, 'profile_form_name_th'); ?></label>
+							<div class="col-md-8 divControl">
+								<?php echo $this->formText('txtTitleOtherTH', null, array('class' => 'required form-control', 'placeholder' => '', 'maxlength' => '50', 'style' => 'width: 18%; float: left; margin-right: 5px;')); ?>
+								<?php echo $this->formText('txtFirstNameTH', $this->data->fb_firstname, array('class' => 'required form-control', 'placeholder' => '', 'maxlength' => '50', 'style' => 'width: 40%; float: left; margin-right: 5px;')); ?>
+								<?php echo $this->formText('txtLastNameTH', $this->data->fb_lastname, array('class' => 'required form-control', 'placeholder' => '', 'maxlength' => '50', 'style' => 'width: 40%;')); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-4 control-label labelRequest" for="memberNameEN"><?php echo $this->Translate('profile', $this->lang, 'profile_form_name_en'); ?></label>
+							<div class="col-md-8 divControl">
+								<?php echo $this->formText('txtTitleOtherEN', null, array('class' => 'required form-control', 'placeholder' => '', 'maxlength' => '50', 'style' => 'width: 18%; float: left; margin-right: 5px;')); ?>
+								<?php echo $this->formText('txtFirstNameEN', $this->data->fb_firstname, array('class' => 'required form-control', 'placeholder' => '', 'maxlength' => '50', 'style' => 'width: 40%; float: left; margin-right: 5px;')); ?>
+								<?php echo $this->formText('txtLastNameEN', $this->data->fb_lastname, array('class' => 'required form-control', 'placeholder' => '', 'maxlength' => '50', 'style' => 'width: 40%;')); ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-4 control-label <?php if(empty($this->data->fb_email)){ echo 'labelRequest'; } ?>" for="txtEmail"><?php echo $this->Translate('profile', $this->lang, 'profile_form_email'); ?></label>
+							<div class="col-md-8 divControl">
+								<p class="form-control-static">
+									<?php 
+									if(!empty($this->data->fb_email)){
+										echo $this->data->fb_email;
+									}else{
+										echo $this->formText('txtEmail', null, array('class'=>'form-control required email', 'maxlength'=>'100'));
+									}
+									?>
+								</p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-4 control-label" for="profilePicture"><?php echo $this->Translate('profile', $this->lang, 'profile_form_profile_picture'); ?></label>
+							<div class="col-md-8 divControl">
+								<?php echo $this->UploadHtmlControl("profile_picture", "profile_picture", $this->data->fb_picture, array('multi' => false, 'exts' => array('png', 'jpg', 'jpeg', 'gif'))); ?>
+								<div class="help-block"><?php echo $this->Translate('profile', $this->lang, 'profile_form_profile_picture_help'); ?></div>
+							</div>
+						</div>
+						<div class="form-group" id="divIsSeller">
+							<div class="col-md-offset-4 col-md-8 divControl">
+								<div class="checkbox with-icheck">
+									<?php echo $this->formCheckbox('isSeller', null, array('class' => 'form-control')); ?>
+									&nbsp;<?php echo $this->Translate('profile', $this->lang, 'profile_form_is_seller'); ?>
+								</div>
+							</div>
+						</div>
+						
+						<?php // ------------------------------------------------ กรณีเป็นผู้ขาย ------------------------------------------------ // ?>
+						<div id="divSellerDetail">
+							<div class="form-group">
+								<label class="col-md-4 control-label labelRequest" for="txtSellerType"><?php echo $this->Translate('profile', $this->lang, 'profile_form_seller_type'); ?></label>
+								<div class="col-md-8 divControl">
+									<div class="radio with-icheck">
+										<?php echo $this->formRadio('txtSellerType', 'P', array('class' => 'form-control required'), $this->sellerTypeOption, '&nbsp;&nbsp;'); ?>
+									</div>
+								</div>
+							</div>
+							<div class="form-group juristic-detail">
+								<label class="col-md-4 control-label labelRequest" for="txtJuristicNameTH"><?php echo $this->Translate('profile', $this->lang, 'profile_form_juristic_name_th'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtJuristicNameTH', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '250')); ?>
+								</div>
+							</div>
+							<div class="form-group juristic-detail">
+								<label class="col-md-4 control-label labelRequest" for="txtJuristicNameEN"><?php echo $this->Translate('profile', $this->lang, 'profile_form_juristic_name_en'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtJuristicNameEN', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '250')); ?>
+								</div>
+							</div>
+							<div class="form-group juristic-detail">
+								<label class="col-md-4 control-label" for="txtRegisteredCapital"><?php echo $this->Translate('profile', $this->lang, 'profile_form_registered_capital'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtRegisteredCapital', null, array('class' => 'form-control number', 'placeholder' => '', 'maxlength' => '20')); ?>
+								</div>
+							</div>
+							<div class="form-group juristic-detail">
+								<label class="col-md-4 control-label" for="shareholderList"><?php echo $this->Translate('profile', $this->lang, 'profile_form_shareholder'); ?></label>
+								<div class="col-md-8" id="divShareholder">
+									<div class="row">
+										<div class="col-md-12 divControl" style="margin-bottom: 10px;">
+											<label class="shareholderNo" style="width: 10px; float: left; margin-right: 15px;"">1.</label>
+											<input type="text" name="shareholder[0][titlename]" id="shareholder-0-titlename" value="" alt="titleName" class=" form-control" maxlength="50" style="width: 16%; float: left; margin-right: 5px;">
+											<input type="text" name="shareholder[0][firstname]" id="shareholder-0-firstname" value="" alt="firstName" class=" form-control" maxlength="50" style="width: 37%; float: left; margin-right: 5px;">
+											<input type="text" name="shareholder[0][lastname]" id="shareholder-0-lastname" value="" alt="lastName" class=" form-control" maxlength="50" style="width: 37%; float: left; margin-right: 5px;">
+											<em class="fa fa-trash-o lnkDeleteShareholder pointer"></em>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-8 col-md-offset-4">
+									<a class="btn btn-primary" id="lnkAddShareholder">
+										<em class="fa fa-plus-circle"></em>&nbsp;<?php echo $this->Translate('profile', $this->lang, 'button_add_shareholder'); ?>
+									</a>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="txtIntroduceTH"><?php echo $this->Translate('profile', $this->lang, 'profile_form_introduce_th'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formTextarea('txtIntroduceTH', null, array('class' => 'form-control', 'maxlength' => '500', 'rows' => '3')); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="txtIntroduceEN"><?php echo $this->Translate('profile', $this->lang, 'profile_form_introduce_en'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formTextarea('txtIntroduceEN', null, array('class' => 'form-control', 'maxlength' => '500', 'rows' => '3')); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label labelRequest" for="txtIdentification">
+									<span id='identification_person'><?php echo $this->Translate('profile', $this->lang, 'profile_form_identification'); ?></span>
+									<span id='identification_juristic'><?php echo $this->Translate('profile', $this->lang, 'profile_form_identification_juristic'); ?></span>
+								</label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtIdentification', null, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '13')); ?>
+								</div>
+							</div>
+							
+							<div class="title-label">
+								<em class="fa fa-comment"></em>&nbsp;<?php echo $this->Translate('profile', $this->lang, 'profile_detail_contact_title'); ?>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="txtAddressTH"><?php echo $this->Translate('profile', $this->lang, 'profile_form_address_th'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtAddressTH', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '500')); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="txtAddressEN"><?php echo $this->Translate('profile', $this->lang, 'profile_form_address_en'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtAddressEN', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '500')); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label labelRequest" for="lstProvince"><?php echo $this->Translate('profile', $this->lang, 'profile_form_province'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formSelect('lstProvince', null, array('class' => 'form-control required'), $this->provinceOption); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="lstDistrict"><?php echo $this->Translate('profile', $this->lang, 'profile_form_district'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formSelect('lstDistrict', null, array('class' => 'form-control'), array()); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="lstSubdistrict"><?php echo $this->Translate('profile', $this->lang, 'profile_form_subdistrict'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formSelect('lstSubdistrict', null, array('class' => 'form-control'), array()); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="txtPostcode"><?php echo $this->Translate('profile', $this->lang, 'profile_form_postcode'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtPostcode', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '5')); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label labelRequest" for="txtTelephone"><?php echo $this->Translate('profile', $this->lang, 'profile_form_telephone'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtTelephone', null, array('class' => 'form-control required', 'placeholder' => '', 'maxlength' => '50', 'style' => 'width: 70%; float: left;')); ?>
+									<label style="float: left; margin: 0px 5px 0px 5px;"><?php echo $this->Translate('profile', $this->lang, 'profile_form_telephone_ext'); ?></label>
+									<?php echo $this->formText('txtTelephoneExt', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '50', 'style' => 'width: 24%; float: left;')); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="txtFax"><?php echo $this->Translate('profile', $this->lang, 'profile_form_mobile'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtFax', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '20')); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="txtMobile"><?php echo $this->Translate('profile', $this->lang, 'profile_form_fax'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtMobile', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '20')); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="txtWebsite"><?php echo $this->Translate('profile', $this->lang, 'profile_form_website'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtWebsite', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '500')); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="txtFacebookUrl"><?php echo $this->Translate('profile', $this->lang, 'profile_form_facebook'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtFacebookUrl', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '500')); ?>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-4 control-label" for="txtLineId"><?php echo $this->Translate('profile', $this->lang, 'profile_form_line'); ?></label>
+								<div class="col-md-8 divControl">
+									<?php echo $this->formText('txtLineId', null, array('class' => 'form-control', 'placeholder' => '', 'maxlength' => '250')); ?>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-md-offset-4 col-md-8 divControl">
+									<div class="checkbox with-icheck">
+										<?php echo $this->formCheckbox('isAccept', null, array('class' => 'form-control')); ?>
+										&nbsp;<?php echo $this->Translate('profile', $this->lang, 'profile_form_accept'); ?>&nbsp;
+										<a href="<?php echo $this->url(array('module' => 'profile', 'controller' => 'index', 'action' => 'sellercondition'), null, true);?>"  target="_blank">
+											<?php echo $this->Translate('profile', $this->lang, 'profile_form_accept_link'); ?>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-md-8 col-md-offset-4">
+								<button type="button" class="btn btn-primary" id="btnSave"><em class="fa fa-save"></em> <?php echo $this->Translate('register', $this->lang, 'register_save'); ?></button>
+								<button type="button" class="btn btn-default" id="btnCancel"><?php echo $this->Translate('register', $this->lang, 'register_cancel'); ?></button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/jquery.validate.min.js'); ?>"></script>
+	<?php if($this->lang == 'th'){ ?>
+	<script src="<?php echo $this->baseUrl('plugins/jQueryValidation/localization/messages_th.min.js'); ?>"></script>
+	<?php } ?>
+	<script>
+	jQuery(function(){
+		
+		$("#formRegister").validate({
+			errorElement: "em",
+			errorPlacement: function(error, element) {
+				error.addClass( "help-block" );
+		        error.appendTo( element.parents("div.divControl"));
+	        }
+	    });
+
+		$('#divIsSeller').show();
+		$('#divSellerDetail').hide();
+
+	    // iCheck
+    	$('#formRegister input[type=checkbox], #formRegister input[type=radio]').iCheck({checkboxClass: 'icheckbox_minimal-orange',radioClass: 'iradio_minimal-orange'});
+
+		$("#btnSave").click(function(){
+			
+			var valid = $("#formRegister").valid();
+			if (valid) {
+				$("#btnSave").attr("disabled", "disabled");
+
+				var isSeller = $("#isSeller").is(':checked');
+				var isAccept = $("#isAccept").is(':checked');
+				if(isSeller){
+					if(!isAccept){
+						DialogWarning('<?php echo $this->Translate('register', $this->lang, 'register_warning_accept'); ?>', '<?php if($this->lang != 'th'){ echo 'Warning'; } ?>');
+						$("#btnSave").removeAttr("disabled");
+						return;
+					}
+				}
+
+				$.post("<?php echo $this->url(array('module' => 'default', 'controller' => 'register', 'action' => 'savefacebook'), null, true);?>", $("#formRegister").serializeArray(), function(data){
+					if (data.result) {
+						DialogComplete();
+						setTimeout(function(){
+							window.location = "<?php echo $this->url(array('module' => 'default', 'controller' => 'register', 'action' => 'facebookfinish'), null, true); ?>";
+						}, 500);
+					} else {
+						DialogWarning(data.message, '<?php if($this->lang != 'th'){ echo 'Warning'; } ?>');
+						$("#btnSave").removeAttr("disabled");
+					}
+				}, 'json');
+			}
+		});
+		
+		$("#btnCancel").click(function(){
+			window.location = "<?php echo $this->url(array('module' => 'default', 'controller' => 'auth', 'action' => 'login'), null, true); ?>";
+		});
+
+		// Remove Facebook URL
+		if (window.location.hash && window.location.hash == '#_=_') {
+	        if (window.history && history.pushState) {
+	            window.history.pushState("", document.title, window.location.pathname);
+	        } else {
+	            // Prevent scrolling by storing the page's current scroll offset
+	            var scroll = {
+	                top: document.body.scrollTop,
+	                left: document.body.scrollLeft
+	            };
+	            window.location.hash = '';
+	            // Restore the scroll offset, should be flicker free
+	            document.body.scrollTop = scroll.top;
+	            document.body.scrollLeft = scroll.left;
+	        }
+	    }
+
+		// --------------------------------------- Function is-Seller ----------------------------------------- //
+		$('#formRegister').on('ifChanged', '#isSeller', function(e){
+			if(e.target.checked){
+				$(this).val('Y');
+				$('#divSellerDetail').show();
+			}else{
+				$(this).val('N');
+				$('#divSellerDetail').hide();
+			}
+		});	
+
+		// ---------------------------------- Function toogle seller type ------------------------------------- //
+		$('#formRegister').on('ifClicked', 'input[name=txtSellerType]', function(e){
+			toogleSellertype($(this).val());
+		});
+		toogleSellertype('P');
+		function toogleSellertype(val){
+			if(val == 'J'){
+				$('.juristic-detail').show();
+				$('#txtJuristicNameEN').addClass('required');
+				$('#txtJuristicNameTH').addClass('required');
+				$('#identification_person').hide();
+				$('#identification_juristic').show();
+			}else{
+				$('.juristic-detail').hide();
+				$('#txtJuristicNameEN').removeClass('required');
+				$('#txtJuristicNameTH').removeClass('required');
+				$('#identification_person').show();
+				$('#identification_juristic').hide();
+			}
+		}
+
+		// ---------------------------------------- Shareholder List ----------------------------------------- //
+		$("#lnkAddShareholder").click(function(){
+			var index =  $("#divShareholder div.row").length ; 
+			var html = "";
+			html += '<div class="row">' + '\n';
+			html += '	<div class="col-md-12 divControl" style="margin-bottom: 10px;">' + '\n';
+			html += '		<label class="shareholderNo" style="width: 10px; float: left; margin-right: 15px;"">' + (index+1) + '.</label>' + '\n';
+			html += '		<input type="text" name="shareholder[' + index + '][titlename]" id="shareholder-' + index + '-titlename" value="" alt="titleName" class=" form-control" maxlength="50" style="width: 16%; float: left; margin-right: 5px;">' + '\n';
+			html += '		<input type="text" name="shareholder[' + index + '][firstname]" id="shareholder-' + index + '-firstname" value="" alt="firstName" class=" form-control" maxlength="50" style="width: 37%; float: left; margin-right: 5px;">' + '\n';
+			html += '		<input type="text" name="shareholder[' + index + '][lastname]" id="shareholder-' + index + '-lastname" value="" alt="lastName" class=" form-control" maxlength="50" style="width: 37%; float: left; margin-right: 5px;">' + '\n';
+			html += '		<em class="fa fa-trash-o lnkDeleteShareholder pointer"></em>' + '\n';
+			html += '	</div>' + '\n';
+			html += '</div>' + '\n';
+
+			$("#divShareholder").append(html); 
+		});
+
+		$("#divShareholder").bind('click', function(e){
+			var target = $(e.target);
+			if (target.hasClass("lnkDeleteShareholder")) { 
+				target.parent("div.divControl").parent("div.row").fadeOut('fast', function(){
+					$(this).remove();
+					// reindex
+					$("#divShareholder div.row div.divControl").each(function(i, e){ 
+						$(e).find('label.shareholderNo').html((i+1) + '.');   
+						$(e).find('input[alt=titleName]').attr("name", "shareholder[" + i + "][titlename]").attr("id", "shareholder-" + i + "-titlename"); 
+						$(e).find('input[alt=firstName]').attr("name", "shareholder[" + i + "][firstname]").attr("id", "shareholder-" + i + "-firstname"); 
+						$(e).find('input[alt=lastName]').attr("name", "shareholder[" + i + "][lastname]").attr("id", "shareholder-" + i + "-lastname"); 
+					});  
+				});  
+			} 
+		});
+
+	});
+	</script>

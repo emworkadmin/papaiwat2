@@ -1,0 +1,111 @@
+<script src="<?php echo $this->baseUrl('assets/chartjs/Chart.min.js'); ?>"></script>
+
+<style>
+    #tblData { width: 100%; }
+    #tblData caption { background: lightgrey; padding: 10px; color: black; border: 1px solid gainsboro; }
+    #tblData td { padding: 5px; }
+    #tblData tbody { height: 275px; display: block; width: 100%; overflow: hidden; overflow-y: scroll; }
+    #tblData tbody tr { float: left; width: 100%; display: block; border-bottom: 1px solid gainsboro; border-left: 1px solid gainsboro; border-right: 1px solid gainsboro; }
+    #tblData tbody tr td { display: block; float: left; padding: 5px; border-right: 1px solid gainsboro; }
+    #tblData tbody tr td:nth-child(1) { width: 90%; border-right: 1px solid gainsboro; }
+    #tblData tbody tr td:nth-child(2) { width: 10%; text-align:center; }
+
+</style>
+
+<div class="panel-detail">
+    <form class="form-horizontal" id="formStatic" name="formStatic">
+        <?php echo $this->formHidden("hdfID", $this->itemID); ?>
+
+        <div class="form-group">
+            <div class="col-md-12 text-right">
+                <button type="button" class="btn btn-success" id="reportExcel"><em class="fa fa-file-excel-o"></em> Excel</button>
+            </div>
+        </div>
+    
+        <div class="title-label">ภาพรวม
+        </div>
+
+        <div class="form-group has-feedback">
+		    <label for="status" class="control-label col-md-1">จาก : </label>
+            <div class="col-md-4 divControl">
+                <?php echo $this->formText("sendform", Emwork_Utility_DateTime::MsSqlToDateThai($this->data->sendform), array('class' => 'form-control required', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+                <span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+                <span id="sendformClose" class="fa fa-times-circle" style="right: 50px; top: 10px; position: absolute; cursor: pointer; <?php echo ($this->data->sendform == null ? 'display: none;' : '');?>"></span>
+            </div>
+		    <label for="status" class="control-label col-md-1">ถึง : </label>
+            <div class="col-md-4 divControl">
+                <?php echo $this->formText("sendto", Emwork_Utility_DateTime::MsSqlToDateThai($this->data->sendto), array('class' => 'form-control required', 'data-date-language' => 'th-th', 'readonly' => 'readonly')); ?>
+                <span class="fa fa-calendar form-control-feedback" aria-hidden="true"></span>
+                <span id="sendtoClose" class="fa fa-times-circle" style="right: 50px; top: 10px; position: absolute; cursor: pointer; <?php echo ($this->data->sendto == null ? 'display: none;' : '');?>"></span>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary" id="btnSearch"><em class="fa fa-search"></em> ค้นหา</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div id="interview"></div>
+        </div>
+
+        <div class="form-group">
+            <div id="static"></div>
+        </div>
+        
+    </form>
+</div>
+
+<script>
+$(function() {
+
+    $("#reportExcel").click(function() {
+        window.open("<?php echo $this->url(array('module'=>'eform', 'controller'=>'item','action'=>'exportexcelstatic', 'itemid' => $this->itemID), null, true); ?>");
+    });
+
+    loadLine();
+    loadstat();
+
+    function loadLine()
+    {
+        var sendform = btoa($('#sendform').val());
+        var sendto = btoa($('#sendto').val());
+        var eformid = $("#hdfID").val();
+        $("#interview").empty().load("<?php echo $this->url(array('action'=>'interview')); ?>/sendform/"+sendform+"/sendto/"+sendto+"/eformid/"+eformid).css("display","");
+        
+    }
+
+    function loadstat()
+    {
+        var sendform = btoa($('#sendform').val());
+        var sendto = btoa($('#sendto').val());
+        var eformid = $("#hdfID").val();
+        $("#static").empty().load("<?php echo $this->url(array('action'=>'static')); ?>/sendform/"+sendform+"/sendto/"+sendto+"/eformid/"+eformid).css("display","");
+        
+    }
+	$('#btnSearch').click(function() {
+		loadLine();
+        loadstat();
+	});
+
+
+    $('#sendform').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+    $('#sendform').change(function() {
+        if ($(this).val() != "") {
+            $("#sendformClose").css("display", "block");
+        }
+    });
+    $("#sendformClose").click(function() {
+        $('#sendform').val('');
+        $("#sendformClose").css("display", "none");
+    });
+    $('#sendto').datepicker({autoclose: true, format: 'dd/mm/yyyy'});
+    $('#sendto').change(function() {
+        if ($(this).val() != "") {
+            $("#sendtoClose").css("display", "block");
+        }
+    });
+    $("#sendtoClose").click(function() {
+        $('#sendto').val('');
+        $("#sendtoClose").css("display", "none");
+    });
+});
+</script>
