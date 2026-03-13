@@ -62,10 +62,10 @@ class IndexController extends Zend_Controller_Action
 		$this->view->useronline = $useronline->Amount;
 		$this->view->useramount = $useramount;
 		$this->view->lastlogin = $lastlogin;
-		$this->view->newscategory = $newscategory;
-		$this->view->complain = $complain;
-		$this->view->poll = $poll;
-		$this->view->question = $question;
+		$this->view->newscategory = isset($newscategory) ? $newscategory : null;
+		$this->view->complain = isset($complain) ? $complain : null;
+		$this->view->poll = isset($poll) ? $poll : null;
+		$this->view->question = isset($question) ? $question : null;
 		
 		// Set view
 		$this->view->pageName = "หน้าแรก";

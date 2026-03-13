@@ -15,7 +15,7 @@ class Zend_View_Helper_Rights extends Zend_View_Helper_Abstract
 		$usergroupActionList = System_Model_Usergroup::getActions($this->userGroupID);
 		if (count($usergroupActionList)) {
 			foreach ($usergroupActionList as $usergropAction) {
-				$this->actions[] = strtolower($usergropAction["action_code"]);
+				$this->actions[] = strtolower($usergropAction["ActionCode"]);
 			}
 		}
 		

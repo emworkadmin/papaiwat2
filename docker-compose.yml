@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    ports:
+      - "${APP_PORT:-8008}:8080"
+    environment:
+      APPLICATION_ENV: "${APPLICATION_ENV:-production}"
+      # Database
+      DB_HOST: "${DB_HOST:-host.docker.internal}"
+      DB_PORT: "${DB_PORT:-3306}"
+      DB_DATABASE: "${DB_DATABASE:-d2ms_papaiwat_db}"
+      DB_USERNAME: "${DB_USERNAME:-papaiwat2}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - ./public/uploads:/var/www/html/public/uploads
+      - ./files:/var/www/html/files
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

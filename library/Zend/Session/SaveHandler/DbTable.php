@@ -353,8 +353,20 @@ class Zend_Session_SaveHandler_DbTable
         } else {
             $data[$this->_lifetimeColumn] = $this->_lifetime;
 
-            if ($this->insert(array_merge($this->_getPrimary($id, self::PRIMARY_TYPE_ASSOC), $data))) {
-                $return = true;
+            try {
+                if ($this->insert(array_merge($this->_getPrimary($id, self::PRIMARY_TYPE_ASSOC), $data))) {
+                    $return = true;
+                }
+            } catch (Zend_Db_Statement_Mysqli_Exception $e) {
+                // Race condition: another request inserted this session between our find() and insert().
+                // Fall back to update.
+                if (strpos($e->getMessage(), 'Duplicate entry') !== false) {
+                    if ($this->update($data, $this->_getPrimary($id, self::PRIMARY_TYPE_WHERECLAUSE))) {
+                        $return = true;
+                    }
+                } else {
+                    throw $e;
+                }
             }
         }
 
