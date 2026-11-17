@@ -98,6 +98,18 @@ RUN { \
         echo '</Directory>'; \
     } >> /etc/apache2/sites-available/000-default.conf
 
+# Never execute scripts from upload/content directories.
+# Written after the document-root sed above so the paths are not rewritten.
+RUN { \
+        echo '<DirectoryMatch "^/var/www/html/(files|public/(uploads|cms|cache|vr))(/|$)">'; \
+        echo '    <FilesMatch "\.(php|phtml|phar|php[0-9]|inc|cgi|pl|py|sh)$">'; \
+        echo '        Require all denied'; \
+        echo '    </FilesMatch>'; \
+        echo '    php_admin_flag engine off'; \
+        echo '</DirectoryMatch>'; \
+    } > /etc/apache2/conf-available/no-exec-uploads.conf \
+    && a2enconf no-exec-uploads
+
 # Allow www-data to write Apache runtime files
 RUN chown -R www-data:www-data /var/run/apache2 /var/lock/apache2 /var/log/apache2
 

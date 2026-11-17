@@ -30,6 +30,7 @@ set_include_path(
 	)
 );
  
+require_once 'compat.php';
 require_once 'Zend/Loader/Autoloader.php';
 $loader = Zend_Loader_Autoloader::getInstance();
 $loader->setFallbackAutoloader(true);

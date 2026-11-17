@@ -1,2 +1,12 @@
 .env
 /tmp/log
+
+# Content migrated from the legacy site (served via bind mounts, see docker-compose.yml)
+/public/vr/
+/public/cache/qrcode/*
+!/public/cache/qrcode/index.html
+/public/cms/document/
+/public/cms/image/
+/public/cms/video/
+/public/cms/u1/*
+!/public/cms/u1/slide[1-4].png

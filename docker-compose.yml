@@ -14,6 +14,10 @@ services:
     volumes:
       - ./public/uploads:/var/www/html/public/uploads
       - ./files:/var/www/html/files
+      # Content assets migrated from the legacy site (not tracked in git)
+      - ./public/vr:/var/www/html/public/vr
+      - ./public/cms:/var/www/html/public/cms
+      - ./public/cache:/var/www/html/public/cache
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
