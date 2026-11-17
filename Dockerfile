@@ -1,6 +1,10 @@
 # ---- Stage 1: Install PHP dependencies ----
 FROM php:7.4-cli AS vendor
 
+# Debian 11 (bullseye) is EOL: packages moved from deb.debian.org to archive.debian.org
+RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+    && echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99archive
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libzip-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
         unzip git \
@@ -17,6 +21,10 @@ RUN composer install --no-dev --no-scripts --no-interaction --prefer-dist --opti
 
 # ---- Stage 2: Runtime ----
 FROM php:7.4-apache
+
+# Debian 11 (bullseye) is EOL: packages moved from deb.debian.org to archive.debian.org
+RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+    && echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99archive
 
 # Install PHP extensions
 RUN apt-get update \
